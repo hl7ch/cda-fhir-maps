@@ -28,6 +28,15 @@
   <license value="CC-BY-SA-4.0"/>
   <fhirVersion value="4.0.1"/>
   <definition>
+    <!-- References to structure definitions -->
+    <resource>
+      <reference>
+        <reference value="StructureDefinition/cda-fhir-maps-patient"/>
+      </reference>
+      <exampleBoolean value="false"/>
+    </resource>
+
+    <!-- pages -->
     <page>
       <nameUrl value="toc.html"/>
       <title value="Table of Contents"/>
