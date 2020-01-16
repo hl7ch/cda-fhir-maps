@@ -1,0 +1,207 @@
+map "http://ahdis.ch/ig/cda-fhir-maps/StructureMap/CdaToBundle" = "CDA Document to FHIR"
+
+/**
+* CDA document
+* 2020-01-16 Oliver Egger, copyright ahdis ag, Apache License 
+* CDA:  http://build.fhir.org/ig/ahdis/cda-core-2.0/branches/master/index.html
+* FHIR: http://hl7.org/fhir/r4/
+*/
+
+conceptmap "cm-v3-administrative-gender" {
+  prefix s = "http://terminology.hl7.org/ValueSet/v3-AdministrativeGender"
+  prefix t = "http://hl7.org/fhir/ValueSet/administrative-gender"
+
+  s:M == t:male
+  s:F == t:female
+}
+
+uses "http://hl7.org/fhir/cda/StructureDefinition/ClinicalDocument" alias ClinicalDocument as source
+uses "http://hl7.org/fhir/cda/StructureDefinition/AssignedAuthor" alias AssignedAuthor as queried
+uses "http://hl7.org/fhir/cda/StructureDefinition/AssignedEntity" alias AssignedEntity as queried
+uses "http://hl7.org/fhir/cda/StructureDefinition/CustodianOrganization" alias CustodianOrganization as queried
+uses "http://hl7.org/fhir/cda/StructureDefinition/Section" alias Section as queried
+uses "http://hl7.org/fhir/cda/StructureDefinition/PatientRole" alias PatientRole as queried
+uses "http://hl7.org/fhir/StructureDefinition/Bundle" alias Bundle as target
+uses "http://hl7.org/fhir/StructureDefinition/Composition" alias Composition as produced
+uses "http://hl7.org/fhir/StructureDefinition/Patient" alias Patient as produced
+uses "http://hl7.org/fhir/StructureDefinition/Practitioner" alias Practitioner as produced
+uses "http://hl7.org/fhir/StructureDefinition/Organization" alias Organization as produced
+
+imports "http://ahdis.ch/ig/cda-fhir-maps/StructureMap/CdaToFhirTypes"
+
+
+// _________________________ Document Level Template  _________________________ 
+
+group CdaToBundle(source cda : ClinicalDocument, target bundle : Bundle) {
+  cda ->  bundle.entry as e first,  e.resource = create('Composition') as composition share composition, 
+             bundle.entry as e2, e2.resource = create('Patient') as patient share patient
+             then ClinicalDocumentToBundle(cda, patient, composition, bundle) "ClinicalDocumentToBody";
+}
+
+group ClinicalDocumentToBundle(source cda : ClinicalDocument, target patient : Patient, target composition : Composition, target bundle : Bundle) {
+  cda.id -> bundle.identifier;
+  cda -> bundle.type = 'document' "type";
+  cda.effectiveTime -> bundle.timestamp;
+  cda then ClinicalDocumentComposition(cda, composition, patient, bundle) "composition";
+  cda.component as component then {
+    component.structuredBody as body then {
+      body.component as component log 'component' then {
+        component.section as srcSection where $this.code.empty() -> composition.section as tgtSection then ClinicalDocumentSection(srcSection, patient, tgtSection, bundle);
+      } "component";
+    } "body";
+  } "component";
+}
+
+// _________________________ Section Level Templates _________________________ 
+
+group ClinicalDocumentSection(source source : Section, source patient : Patient, target target, target bundle: Bundle) {
+  source.title as t -> target.title = (t.dataString);
+  source.code -> target.code;
+  source.text as cdaText -> target.text as fhirText then {
+    cdaText -> fhirText.status = 'generated' "narrativestatus";
+    cdaText as t -> fhirText.div = t "narrativeText";
+  };
+  source.section as srcSection -> target.section as tgtSection then ClinicalDocumentSection(srcSection, patient, tgtSection, bundle);
+}
+
+// _________________________ Entry Level Templates   ________________________ 
+
+// _________________________ Header Level Templates _________________________ 
+
+
+group ClinicalDocumentComposition(source source : ClinicalDocument, target target : Composition, target patientResource: Patient, target bundle : Bundle) {
+  source.languageCode -> target.language;
+  source.setId -> target.identifier "setID";
+  source -> target.status = 'final' "status";
+  source.code -> target.type;
+  source.title as t -> target.title = (t.dataString);
+  source.recordTarget as recordTarget then {
+    recordTarget.patientRole as patient -> target.subject = create('Reference') as reference, reference.reference = reference(patientResource) then ClinicalDocumentPatientRole(patient, patientResource, bundle) "subject";
+  };
+  source.componentOf as comp ->  bundle.entry as e,  e.resource = create('Encounter') as encounter then {
+    comp.encompassingEncounter as srcEnc -> target.encounter = create('Reference') as reference, reference.reference = reference(encounter) then ClinicalDocumentEncounter(srcEnc, bundle, encounter) "srcEncounter";
+  } "encompassingEncounter";
+  source.effectiveTime -> target.date;
+  source.author as srcAuthor ->  bundle.entry as e,  e.resource = create('Practitioner') as practitioner then {
+    srcAuthor.assignedAuthor as assignedAuthor -> target.author = create('Reference') as reference, reference.reference = reference(practitioner) then {
+      assignedAuthor.id -> practitioner.identifier;
+      assignedAuthor.addr -> practitioner.address;
+      assignedAuthor.telecom -> practitioner.telecom;
+      assignedAuthor.assignedPerson as person then {
+        person.name -> practitioner.name;
+      };
+      assignedAuthor.representedOrganization as srcOrg ->  bundle.entry as e2,  e2.resource = create('Organization') as organization, target.author = create('Reference') as reference2, reference2.reference = reference(organization) then ClinicalDocumentOrganization(srcOrg, organization);
+    } "author";
+  };
+  source.confidentialityCode -> target.confidentiality share confidentialityCode;
+  source.legalAuthenticator as legalAuth ->  bundle.entry as e,  e.resource = create('Practitioner') as practitioner then {
+    legalAuth -> target.attester as attester then {
+      legalAuth -> attester.mode = 'legal' "mode";
+      legalAuth.time -> attester.time;
+      legalAuth.assignedEntity as entity -> attester.party = create('Reference') as reference, reference.reference = reference(practitioner) then ClinicalDocumentEntityPractitioner(entity, practitioner) "entity";
+    } "attester";
+  };
+  source.authenticator as auth ->  bundle.entry as e,  e.resource = create('Practitioner') as practitioner then {
+    auth -> target.attester as attester then {
+      auth -> attester.mode = 'official' "mode";
+      auth.time -> attester.time;
+      auth.assignedEntity as entity -> attester.party = create('Reference') as reference, reference.reference = reference(practitioner) then ClinicalDocumentEntityPractitioner(entity, practitioner) "entity";
+    } "attester";
+  };
+  source.custodian as custodian -> bundle.entry as e then {
+    custodian.assignedCustodian as assignedCustodian -> e.resource = create('Organization') as organization then {
+      assignedCustodian.representedCustodianOrganization as srcOrg -> target.custodian = create('Reference') as reference, reference.reference = reference(organization) then ClinicalDocumentOrganization(srcOrg, organization) "assignedCustodian";
+    } "custodian";
+  };
+  source.documentationOf as docOf then {
+    docOf.serviceEvent as serviceEvent -> target.event as event then {
+      serviceEvent.code -> event.code "eventCode";
+      serviceEvent.effectiveTime -> event.period "eventTime"; // performerType: for source.performer.typeCode ...
+    };
+  };
+  source.relatedDocument as relatedDoc -> target.relatesTo as relates then {
+    relatedDoc.typeCode -> relates.code;
+    relatedDoc.parentDocument as parentDoc then {
+      parentDoc.setId -> relates.targetIdentifier;
+    } "parentDoc";
+  };
+}
+
+group ClinicalDocumentEntityPractitioner(source source : AssignedEntity, target target : Practitioner) {
+  source.id -> target.identifier;
+  source.addr -> target.address;
+  source.telecom -> target.telecom;
+  source.assignedPerson as person then {
+    person.name -> target.name;
+  };
+}
+
+group ClinicalDocumentOrganization(source source : CustodianOrganization, target target : Organization) {
+  source.id -> target.identifier;
+  source.name as v -> target.name = (v.other);
+  source.telecom -> target.telecom;
+  source.addr -> target.address;
+}
+
+group ClinicalDocumentPatientRole(source source : PatientRole, target target : Patient, target bundle : Bundle) {
+  source.id -> target.identifier;
+  source.addr -> target.address;
+  source.telecom -> target.telecom;
+  source.patient as patient then {
+    patient.name -> target.name; 
+    patient.administrativeGenderCode as gender then {
+      gender.code as v -> target.gender = translate(v, '#cm-v3-administrative-gender', 'code') "gender";
+    } "gender";
+    patient.birthTime -> target.birthDate "birthDate";
+    patient.deceasedInd as indicator where patient.deceasedTime.empty() -> target.deceased = create('boolean') as bool then boolean(indicator, bool) "deceasedBL";
+    patient.deceasedTime -> target.deceased;
+    patient.maritalStatusCode -> target.maritalStatus "maritalStatus";
+    patient.languageCommunication as language -> target.communication as communication then {
+      language.languageCode -> communication.language "communication"; // preference: for language.preferenceInd make communication.preferred
+    } "language";
+  };
+  source.providerOrganization as org ->  bundle.entry as e,  e.resource = create('Organization') as organization then {
+    org -> target.managingOrganization = create('Reference') as reference, reference.reference = reference(organization) "reference";
+    org.id -> organization.identifier;
+    org.name as v -> organization.name = (v.other);
+    org.telecom -> organization.telecom;
+    org.addr -> organization.address;
+  } "organization";
+}
+
+group ClinicalDocumentEncounter(source source : EncompassingEncounter, target bundle : Bundle, target target : Encounter) {
+  source.id -> target.identifier;
+  source.code -> target.type;
+  source.effectiveTime -> target.period;
+  source where admissionReferralSourceCode.exists() or dischargeDispositionCode.exists() -> target.hospitalization as hosp then {
+    source.admissionReferralSourceCode -> hosp.admitSource "adminReferral";
+    source.dischargeDispositionCode -> hosp.dischargeDisposition "discDisposition";
+  } "hospitalization";
+  source.encounterParticipant as srcPart -> target.participant as tgtPart then {
+    srcPart.typeCode as code -> tgtPart.type = cc('http://terminology.hl7.org/CodeSystem/v3-ParticipationType', code);
+    srcPart.time -> tgtPart.period;
+    srcPart.assignedEntity as entity ->  bundle.entry as e,  e.resource = create('Practitioner') as practitioner then {
+      entity -> tgtPart.individual = create('Reference') as reference, reference.reference = reference(practitioner) then ClinicalDocumentEntityPractitioner(entity, practitioner) "entry";
+    } "entity";
+  } "participant";
+  source.location as srcLocation then {
+    srcLocation.healthCareFacility as facility ->  bundle.entry as e,  e.resource = create('Location') as location then {
+      facility ->  target.location as tgtLocation,  tgtLocation.location = create('Reference') as reference, reference.reference = reference(location) then ClinicalDocumentLocation(facility, bundle, location) "facLocation";
+    } "facility";
+  };
+}
+
+group ClinicalDocumentLocation(source source : HealthCareFacility, target bundle : Bundle, target target : Location) {
+  source.id -> target.identifier;
+  source.code -> target.type;
+  source.location as location then {
+ // place names are usually stored with no parts    location.name as srcName -> target.name = cast(srcName, 'string');
+    location.addr -> target.address;
+    location.serviceProviderOrganization as srcOrg ->  bundle.entry as e,  e.resource = create('Organization') as organization then {
+      srcOrg -> target.managingOrganization = create('Reference') as reference, reference.reference = reference(organization) then ClinicalDocumentOrganization(srcOrg, organization) "organization";
+    } "org";
+  }; // place names are usually stored with no parts
+}
+
+// _________________________ Template Type not specified  ___________________ 
+

@@ -1,0 +1,128 @@
+map "http://ahdis.ch/ig/cda-fhir-maps/StructureMap/CdaChToBundle" = "CDA-CH Document to FHIR"
+
+/**
+* CDA-CH document, 2.16.756.5.30.1.1.10.1.14
+* 2020-01-16 Oliver Egger, copyright ahdis ag, Apache License 
+* CDA-CH:  https://art-decor.org/art-decor/decor-templates--hl7chcda-
+* FHIR CH-Core: http://fhir.ch/ig/ch-core/index.html
+*/
+
+uses "http://hl7.org/fhir/cda/StructureDefinition/ClinicalDocument" alias ClinicalDocument as source
+uses "http://hl7.org/fhir/cda/StructureDefinition/Section" alias Section as queried
+uses "http://hl7.org/fhir/cda/StructureDefinition/PatientRole" alias PatientRole as queried
+
+uses "http://hl7.org/fhir/StructureDefinition/Bundle" alias Bundle as target
+uses "http://hl7.org/fhir/StructureDefinition/Composition" alias Composition as produced
+uses "http://hl7.org/fhir/StructureDefinition/Patient" alias Patient as produced
+uses "http://hl7.org/fhir/StructureDefinition/Practitioner" alias Practitioner as produced
+uses "http://hl7.org/fhir/StructureDefinition/Organization" alias Organization as produced
+
+imports "http://ahdis.ch/ig/cda-fhir-maps/StructureMap/CdaToFhirTypes"
+imports "http://ahdis.ch/ig/cda-fhir-maps/StructureMap/CdaToBundle"
+
+// _________________________ Document Level Template  _________________________ 
+
+// source: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5.30.1.1.10.1.14
+// target: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefinition-ch-core-document.html
+group CdaChToBundle(source cda : ClinicalDocument, target bundle : Bundle) {
+  cda ->  bundle.entry as e first,  e.resource = create('Composition') as composition share composition, 
+             bundle.entry as e2, e2.resource = create('Patient') as patient share patient
+             then ClinicalDocumentChToBundle(cda, patient, composition, bundle) "ClinicalDocumentToBody";
+}
+
+// source: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5.30.1.1.10.1.14
+// target: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefinition-ch-core-document.html
+group ClinicalDocumentChToBundle(source cda : ClinicalDocument, target patient : Patient, target composition : Composition, target bundle : Bundle) extends ClinicalDocumentToBundle {
+  cda then ClinicalDocumentCompositionCh(cda, composition, patient, bundle) "composition";
+  cda.component as component then {
+    component.structuredBody as body then {
+      body.component as component then {
+        component.section as srcSection where (templateId.where(root='2.16.756.5.30.1.1.10.3.2')) -> composition.section as tgtSection then ClinicalDocumentSection(srcSection, patient, tgtSection, bundle);
+        component.section as srcSection where (templateId.where(root='2.16.756.5.30.1.1.10.3.45')) -> composition.section as tgtSection then SectionOriginalRepresentation(srcSection, patient, tgtSection, bundle);
+      } "component";
+    } "body";
+  } "component";
+}
+
+// _________________________ Section Level Templates _________________________ 
+
+
+// source: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5.30.1.1.10.1.14
+// target: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefinition-ch-core-composition-definitions.html#Composition.section
+// TODO: not excplicitly modeled in CH-Core
+group SectionOriginalRepresentation(source source : Section, source patient : Patient, target target, target bundle: Bundle) extends ClinicalDocumentSection {
+  source.entry as cdaEntry ->  bundle.entry as e,  e.resource = create('Binary') as binary, binary.id = (cdaEntry.observationMedia.ID), target.entry = create('Reference') as reference, reference.reference = reference(binary) then {
+    cdaEntry.observationMedia as observationMedia then ObservationMedia(observationMedia, binary);
+  };
+}
+
+
+// _________________________ Entry Level Templates   ________________________ 
+
+
+// source: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5.30.1.1.10.4.83
+// TODO: not excplicitly modeled in CH-Core
+group ObservationMedia(source observationMedia, target binary : Binary) {
+  observationMedia.value as value then {
+    value.mediaType as mediaType -> binary.contentType = mediaType "contentType";
+    value -> binary.data = (value.dataBase64Binary) "dataString";
+  } "value";
+  observationMedia.languageCode as languageCode then {
+    languageCode.code as lang -> binary.language = lang "lang";
+  } "languageCode";
+}
+
+
+// _________________________ Header Level Templates _________________________ 
+
+// source: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5.30.1.1.10.9.36
+// target: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefinition-ch-ext-epr-confidentialitycode.html
+group ChExtEprConfidentialityCode(source source: CE, target ext: Extension) {
+  source -> ext.url = 'http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-confidentialitycode' "url";
+  source -> ext.value = create('CodeableConcept') as value then CECodeableConcept(source, value) "code";
+}
+
+// source: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5.30.1.1.10.9.36
+// target: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefinition-ch-ext-epr-setid.html
+group ChExtEprSetId(source source: II, target ext: Extension) {
+  source -> ext.url = 'http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-setid' "url";
+  source -> ext.value = create('Identifier') as value then II(source, value) "value";
+}
+
+// source: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5.30.1.1.10.9.36
+// target: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefinition-ch-ext-epr-versionnumber.html
+group ChExtEprVersionNumber(source source: INT, target ext: Extension) {
+  source -> ext.url = 'http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-versionnumber' "url";
+  source -> ext.value = create('integer') as value then INT(source, value) "value";
+}
+
+// source: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5.30.1.1.10.9.36
+// target: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefinition-ch-ext-epr-informationrecipient.html
+group ChExtEprInformationRecipient(source source: IntendedRecipient, target patient: Patient, target ext: Extension) {
+  source -> ext.url = 'http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-informationrecipient' "url";
+  source -> ext.value = create('Reference') as reference, reference.reference = reference(patient) "value";
+  source.addr as addr -> patient.address as address then ADAddress(addr, address) "address";
+  source.informationRecipient as informationRecipient then {
+    informationRecipient.name as cdaname -> patient.name as fhirname then ENHumanName(cdaname, fhirname) "name";
+  } "informationRecipient";
+}
+
+// _________________________ Template Type not specified  ___________________ 
+
+
+// source: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5.30.1.1.10.9.36
+// target: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefinition-ch-core-composition-epr.html
+group ClinicalDocumentCompositionCh(source source : ClinicalDocument, target target : Composition, target patientResource: Patient, target bundle : Bundle) {
+  source.confidentialityCode as confidentialityCode then {
+    confidentialityCode.code as v -> 
+      target.confidentiality = translate(v, 'http://fhir.ch/ig/ch-core/ConceptMap/documententry-confidentialitycode-to-fhir', 'code') as fhirconf share confidentialityCode,
+            fhirconf.extension as ext then ChExtEprConfidentialityCode(confidentialityCode, ext) "confcode";
+  } "confidentialityCode";
+  source.setId as setId -> target.extension as ext then ChExtEprSetId(setId, ext) "setId";
+  source.versionNumber as versionNumber -> target.extension as ext2 then ChExtEprVersionNumber(versionNumber, ext2) "versionNumber";
+  source.informationRecipient as informationRecipient -> bundle.entry as e then {
+    informationRecipient.intendedRecipient as intendedRecipient -> e.resource = create('Patient') as recipient, target.extension as ext 
+            then ChExtEprInformationRecipient(intendedRecipient, recipient, ext) "informationRecipient";
+  };
+}
+

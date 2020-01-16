@@ -1,0 +1,136 @@
+map "http://ahdis.ch/ig/cda-fhir-maps/StructureMap/BundleToCdaCh" = "FHIR Bundle to CDA-CH"
+
+/**
+* CDA-CH document, 2.16.756.5.30.1.1.10.1.14
+* 2020-01-16 Oliver Egger, copyright ahdis ag, Apache License 
+* CDA-CH:  https://art-decor.org/art-decor/decor-templates--hl7chcda-
+* FHIR CH-Core: http://fhir.ch/ig/ch-core/index.html
+*/
+
+uses "http://hl7.org/fhir/cda/StructureDefinition/ClinicalDocument" alias ClinicalDocument as target
+uses "http://hl7.org/fhir/cda/StructureDefinition/Author" alias Author as target
+uses "http://hl7.org/fhir/cda/StructureDefinition/RecordTarget" alias RecordTarget as target
+
+uses "http://hl7.org/fhir/StructureDefinition/Bundle" alias Bundle as source
+uses "http://hl7.org/fhir/StructureDefinition/Composition" alias Composition as source
+
+imports "http://ahdis.ch/ig/cda-fhir-maps/StructureMap/FhirToCdaTypes"
+imports "http://ahdis.ch/ig/cda-fhir-maps/StructureMap/BundleToCda"
+
+
+// _________________________ Document Level Template  _________________________ 
+
+// source: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefinition-ch-core-document.html
+// target: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5.30.1.1.10.1.14
+group BundleToCdaCh(source bundle : Bundle, target cda : ClinicalDocument) {
+    bundle -> cda.recordTarget as recordTarget, cda.author as author then BundleToClinicalDocumentCh(bundle, recordTarget, author, cda) "bundle";
+}
+
+// source: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefinition-ch-core-document.html
+// target: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5.30.1.1.10.1.14
+group BundleToClinicalDocumentCh(source bundle : Bundle, target recordTarget: RecordTarget, target author: Author, target cda : ClinicalDocument) extends BundleToClinicalDocument {
+  bundle -> author.templateId as templateId, templateId.root='2.16.756.5.30.1.1.10.9.23' "tempalteId";
+  bundle -> recordTarget.templateId as templateId, templateId.root='2.16.756.5.30.1.1.10.2.1' "tempalteId";
+  bundle -> cda.custodian as custodian, custodian.templateId as templateId, templateId.root='2.16.756.5.30.1.1.10.2.3' "tempalteId";
+  bundle -> cda.realmCode as realmCode then {
+    bundle -> realmCode.code = 'CHE' "CHE";
+  } "realmCode";
+  bundle -> cda.templateId as templateId then {
+    bundle -> templateId.root = '2.16.840.1.113883.10.12.2' "root";
+  } "HL7 CDA R2 (2005); contains ClinicalDocument.component as structuredBody.";
+  bundle -> cda.templateId as templateId then {
+    bundle -> templateId.root = '2.16.756.5.30.1.1.10.1.9' "root";
+  } "CDA-CH v2.0 structuredBody";
+  bundle.entry as entry then {
+    entry.resource as resource where $this.ofType(FHIR.Composition) then CompositionClinicalDocumentCH(bundle, resource, cda);
+  };
+}
+
+// _________________________ Section Level Templates _________________________ 
+
+// source: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefinition-ch-core-composition-definitions.html#Composition.section
+// target: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5.30.1.1.10.3.2
+group SectionCdaRemarksCoded(source bundle : Bundle, source section: Section, target cdasection: CdaSection) extends SectionCdaSection{
+  section -> cdasection.templateId as templateId, templateId.root='2.16.756.5.30.1.1.10.3.2' "templateId";
+  section -> cdasection.entry as entry, entry.act as act, act.classCode='ACT', act.moodCode='EVN' then {
+    section -> act.templateId as templateId, templateId.root='2.16.756.5.30.1.1.10.4.2' "templateId";
+    section -> act.templateId as templateId, templateId.root='2.16.840.1.113883.10.20.1.40' "templateId";
+    section -> act.templateId as templateId, templateId.root='1.3.6.1.4.1.19376.1.5.3.1.4.2' "templateId";
+    section -> act.code as code, code.code='48767-8', code.codeSystem='2.16.840.1.113883.6.1', code.codeSystemName='LOINC', code.displayName='Annotation comment' "code";    
+    // <span id="co1">
+    section.text as text then {
+      text.div as div -> act.text as text, text.reference as reference, reference.value= ('#' + %div.substring(%div.indexOf('id')+%div.substring(%div.indexOf('id')).indexOf('"')+1,%div.substring(%div.indexOf('id')+%div.substring(%div.indexOf('id')).indexOf('"')+1).indexOf('"'))) "id=";  
+    } "section.text";     
+    section -> act.statusCode as statusCode, statusCode.code='completed' "completed";
+  } "entry";
+}
+
+// source: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefinition-ch-core-composition-definitions.html#Composition.section
+// target: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5.30.1.1.10.1.14
+// target: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5.30.1.1.10.4.83
+group SectionCdaOriginalRepresentation(source bundle : Bundle, source section: Section, target cdasection: CdaSection) extends SectionCdaSection{
+  section -> cdasection.templateId as templateId, templateId.root='2.16.756.5.30.1.1.10.3.45' "templateId";
+  bundle.entry as entry then {
+    entry.resource as binary where ('Binary'+'/'+$this.id) in %section.entry.reference -> cdasection.entry as entry then {
+      binary -> entry.typeCode = 'DRIV' "driv";
+      binary -> entry.observationMedia as observationMedia, observationMedia.classCode = 'OBS', observationMedia.moodCode='EVN' then {
+        binary.id as id -> observationMedia.ID = id "id";
+        binary -> observationMedia.templateId as templateId, templateId.root='2.16.756.5.30.1.1.10.4.83' "templateId";
+        binary -> observationMedia.value as value, value.mediaType='2.16.756.5.30.1.1.10.4.83', value.representation='B64' then {
+          binary.contentType as contentType -> value.mediaType = contentType "contentType";
+          binary.data as data -> value.data = data "data";
+          binary.language as lang -> observationMedia.languageCode as languageCode, languageCode.code = lang "lang";
+          binary where $this.language.exists()=false -> observationMedia.languageCode as languageCode, languageCode.nullFlavor = 'UNK' "lang unknown";
+        } "value";
+      } "observationMedia";
+    } "entry";
+  } "patient";
+}
+
+// _________________________ Entry Level Templates   ________________________ 
+
+// _________________________ Header Level Templates _________________________ 
+
+// _________________________ Template Type not specified  ___________________ 
+// source: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefinition-ch-core-composition-epr.html
+// target: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5.30.1.1.10.9.36
+
+group CompositionClinicalDocumentCH(source bundle : Bundle, source composition : Composition, target cda : ClinicalDocument) {
+  composition.type as type then {
+    type.coding as coding where $this.system='http://snomed.info/sct' -> cda.code as code share docCode, code.translation as translation then CodingCE(coding,translation) "translation";
+  } "type";  
+  composition.confidentiality as conf where $this.extension.where(url='http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-confidentialitycode').exists() -> cda.confidentialityCode as cdaconf then {
+    conf.extension as extension then {
+      extension.valueCodeableConcept as valueCodeableConcept then {
+        valueCodeableConcept.coding as coding then CodingCE(coding,cdaconf) "coding";
+      } "valueCodeableConcept";
+    } "extension";
+  } "confidentialityCode";
+  composition.extension as extension where $this.url='http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-setid' -> cda.setId as setId then {
+    extension.valueIdentifier as valueIdentifier then IdentifierII(valueIdentifier,setId) "IdentifierII";
+  } "valueIdentifier";
+  composition.extension as extension where $this.url='http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-versionnumber' -> cda.versionNumber as versionNumber then {
+    extension.valueInteger as valueInteger then IntegerINT(valueInteger,versionNumber) "IntegerInt";
+  } "valueIdentifier";  
+  composition.extension as extension where $this.url='http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-informationrecipient' -> cda.informationRecipient as informationRecipient then {
+    extension -> informationRecipient.typeCode = 'PRCP' "PRCP";
+    extension -> informationRecipient.templateId as templateId, templateId.root='2.16.756.5.30.1.1.10.2.4' "templateId";
+    extension.valueReference as valueReference then {
+      bundle.entry as entry then {
+         entry.resource as patient where ($this.id=%valueReference.reference.substring(8)) -> informationRecipient.intendedRecipient as intendedRecipient then {
+            patient.address as address ->  intendedRecipient.addr as addr then AddressAD(address, addr) "address";
+            patient.name as humanname -> intendedRecipient.informationRecipient as informationRecipient2, informationRecipient2.name as en then HumanNameEN(humanname, en) "name";
+         } "intendedRecipient";
+      } "patient";
+    } "valueReference";
+  } "informationRecipient";  
+
+  composition.section as section where $this.code.coding.where(system='http://loinc.org' and code='55108-5') -> cda.component as component then {
+    section -> component.contextConductionInd = true "contextConductionInd";
+    section -> component.structuredBody as structuredBody, structuredBody.component as component, component.section as cdasection then SectionCdaOriginalRepresentation(bundle, section,cdasection) "cdasection";
+  } "SectionCdaOriginalRepresentation";
+  composition.section as section where $this.code.coding.where(system='http://loinc.org' and code='48767-8') -> cda.component as component then {
+    section -> component.contextConductionInd = true "contextConductionInd";
+    section -> component.structuredBody as structuredBody, structuredBody.component as component, component.section as cdasection then SectionCdaRemarksCoded(bundle, section,cdasection) "cdasection";
+  } "SectionCdaOriginalRepresentation";
+}

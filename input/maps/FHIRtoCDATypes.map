@@ -1,0 +1,155 @@
+map "http://ahdis.ch/ig/cda-fhir-maps/StructureMap/FhirToCdaTypes" = "Transform for FHIR types to CDA types"
+
+/**
+* Adapted from https://github.com/HL7/ccda-to-fhir/tree/master/mappings
+* CDA:  http://build.fhir.org/ig/ahdis/cda-core-2.0/branches/master/index.html
+* FHIR: http://hl7.org/fhir/r4/
+*/
+
+conceptmap "uri2oid" {
+  prefix s = "http://hl7.org/fhir"
+  prefix t = "http://hl7.org/cda"
+
+  s:"http://snomed.info/sct" == t:"2.16.840.1.113883.6.96"
+  s:"http://loinc.org" == t:"2.16.840.1.113883.6.1"
+  s:"http://hl7.org/fhir/sid/atc" == t:"2.16.840.1.113883.6.73"
+}
+
+conceptmap "uri2system" {
+  prefix s = "http://hl7.org/fhir"
+  prefix t = "http://hl7.org/cda"
+
+  s:"http://snomed.info/sct" == t:"SNOMED CT"
+  s:"http://loinc.org" == t:"LOINC"
+  s:"http://hl7.org/fhir/sid/atc" == t:"ATC WHO"
+}
+
+uses "http://hl7.org/fhir/StructureDefinition/Identifier" as source
+uses "http://hl7.org/fhir/cda/StructureDefinition/II" as target
+
+group Any() {
+  source.extension as ext where ext.url = 'http://hl7.org/fhir/StructureDefinition/iso21090-nullFlavor' -> target.nullFlavor as nullFlavor then {
+    ext.value as v -> nullFlavor.value = cast(v, 'string');
+  } "nullFlavor";
+}
+
+group IdentifierII(source source : Identifier, target target : II) extends Any <<types>> {
+  source.value as value where source.system.empty() and source.value.startsWith('urn:uuid:') -> target.root = (value.substring(9).upper()) "id as uuid";
+  source.value as value where source.system.startsWith('urn:oid:') then {
+    source.system as system -> target.root = (system.substring(8)), target.extension = value "oidident"; 
+  } "system";
+}
+
+group IntegerINT(source source : integer, target target : INT) extends Any <<types>> {
+  source.value as v -> target.value = v "integer";
+}
+
+// group Identifier(source source : Identifier, target target : II) extends Any <<types>> {
+//   source.system as system then {
+//     source.value as value then {
+//       value.value as v where system.value = 'urn:ietf:rfc:3986' -> target.root = cast(v, 'string') "noextension";
+//       system.value as v where system.value != 'urn:ietf:rfc:3986' -> target.root = v then {
+//         value.value as val -> target.extension = cast(val, 'string') "extension";
+//       } "withextension";
+//     } "rootValue";
+//   } "root";
+//  source.value as value -> target.root = '123' "test";
+//  source -> target.root = '123' "test";
+//   source.assigner as a then {
+//     a.display as display then {
+//      display.value as val -> target.assigningAuthorityName = cast(val, 'string');
+//     };
+//   };
+//   source.extension as ext where ext.url = 'http://hl7.org/fhir/cdaStructureDefinition/extension-displayable' -> target.displayable as displayable then {
+//     ext.value as v -> displayable.value = cast(v, 'string');
+//   } "displayable";
+// }
+
+group InstantTS(source source : instant, target target : TS) extends Any <<types>> {
+  source.value as v -> target.value = v "copy";
+}
+
+group DateTimeTS(source source : dateTime, target target : TS) extends InstantTS <<types>> {
+}
+
+group DateTS(source source : date, target target : TS) extends InstantTS <<types>> {
+}
+
+group CodeCS(source source : code, target target : CS) extends Any <<types>> {
+  source.code as c -> target.value = cast(c, 'string');
+}
+
+group CodeCE(source source : code, target target : CE) extends CodeCS <<types>> {
+}
+
+group CodeCD(source source : code, target target : CD) extends CodeCS <<types>> {
+}
+
+group CodingCE(source source : Coding, target target : CE) extends Any <<types>> {
+    source.code as code -> target.code = code "code";
+    source.system as system where $this.startsWith('http:') -> target.codeSystem = translate(system, '#uri2oid', 'code') "system";
+    source.system as system where $this.startsWith('urn:oid:') then {
+      source.system as system -> target.codeSystem = (system.substring(8)) "oidident"; 
+    } "system";
+    source.system as system where $this.startsWith('http:') -> target.codeSystemName = translate(system, '#uri2system', 'code') "systemNane";
+    source.display as display -> target.displayName = display "display";
+}
+
+group CodeableConceptCE(source source : CodeableConcept, target target : CE) extends Any <<types>> {
+  source.text as text -> target.orginialText as originalText, originalText.data = text;
+  source.coding first as coding then CodingCE(coding, target) "first";
+  source.coding not_first as coding -> target.translation as translation then CodingCE(coding, translation) "translation";
+}
+
+//group CECodeableConcept(source source : CE, target target : CodeableConcept) extends Any <<types>> {
+//  source.originalText -> target.text;
+//  source -> target.coding as coding then {
+//    source.code as code -> coding.code = cast(code, 'string');
+//    source.codeSystem as system -> coding.system = translate(system, 'http://hl7.org/fhir/ConceptMap/special-oid2uri', 'uri');
+//    source.displayName as display -> coding.display = cast(display, 'string');
+//  } "code";
+//  source.translation as translation -> target.coding as coding then {
+//    translation.code as code -> coding.code = cast(code, 'string');
+//    translation.codeSystem as system -> coding.system = translate(system, 'http://hl7.org/fhir/ConceptMap/special-oid2uri', 'uri');
+//    translation.displayName as display -> coding.display = cast(display, 'string');
+//  };
+//}
+
+//group CSCodeableConcept(source source : CS, target target : CodeableConcept) extends CECodeableConcept <<types>> {
+//}
+
+//group CDCodeableConcept(source source : CD, target target : CodeableConcept) extends CECodeableConcept <<types>> {
+//}
+
+group AddressAD(source source : Address, target target : AD) extends Any <<types>> {
+  source.line as v -> target.streetAddressLine as line, line.data = v "streetAddress";
+  source.postalCode as v -> target.postalCode as postalCode, postalCode.data = v;
+  source.city as v -> target.city as city, city.data = v;
+  source.state as v -> target.state as state, state.data = v;
+  source.district as v -> target.county as county, county.data = v;
+  source.country as v -> target.country as country, country.data = v;
+//  source.use as c -> target.use = translate(c, 'http://hl7.org/fhir/ConceptMap/cm-address-use-v3', 'code');
+//  source.useablePeriod -> target.period;
+}
+
+group HumanNameEN(source source : HumanName, target target : EN) extends Any <<types>> {
+  source.family as v -> target.family as family, family.data = v;
+  source.given as v -> target.given as given, given.data = v;
+  source.prefix as v -> target.prefix as prefix, prefix.data = v;
+  source.suffix as v -> target.suffix as suffix, suffix.data = v;
+//  source.use as c -> target.use = translate(c, 'http://hl7.org/fhir/ConceptMap/cm-name-use-v3', 'code');
+//  source.validTime -> target.period;
+}
+
+group QuantityPQ(source source : Quantity, target target : PQ) extends Any <<types>> {
+  source.code as code -> target.unit = code;
+  source.value as value -> target.value = value;
+}
+
+group RatioRTOPQPQ(source source : Ratio, target target : RTO_PQ_PQ) extends Any <<types>> {
+  source.numerator as numerator -> target.numerator as targetNumerator then QuantityPQ(numerator, targetNumerator) "numerator";
+  source.denominator as denominator -> target.denominator as targetDenominator then QuantityPQ(denominator, targetDenominator) "denominator"; 
+}
+
+
+

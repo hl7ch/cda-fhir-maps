@@ -1,0 +1,154 @@
+map "http://ahdis.ch/ig/cda-fhir-maps/StructureMap/BundleToCda" = "FHIR Bundle to CDA"
+
+/**
+* CDA document
+* 2020-01-16 Oliver Egger, copyright ahdis ag, Apache License 
+* CDA:  http://build.fhir.org/ig/ahdis/cda-core-2.0/branches/master/index.html
+* FHIR: http://hl7.org/fhir/r4/
+*/
+
+
+uses "http://hl7.org/fhir/cda/StructureDefinition/ClinicalDocument" alias ClinicalDocument as target
+uses "http://hl7.org/fhir/cda/StructureDefinition/Author" alias Author as target
+uses "http://hl7.org/fhir/cda/StructureDefinition/RecordTarget" alias RecordTarget as target
+uses "http://hl7.org/fhir/cda/StructureDefinition/Custodian" alias Custodian as target
+uses "http://hl7.org/fhir/cda/StructureDefinition/Organization" alias CdaOrganization as target
+uses "http://hl7.org/fhir/cda/StructureDefinition/Section" alias CdaSection as target
+
+uses "http://hl7.org/fhir/StructureDefinition/Bundle" alias Bundle as source
+uses "http://hl7.org/fhir/StructureDefinition/Composition" alias Composition as source
+uses "http://hl7.org/fhir/StructureDefinition/Practitioner" alias Practitioner as source
+uses "http://hl7.org/fhir/StructureDefinition/Patient" alias Patient as source
+uses "http://hl7.org/fhir/StructureDefinition/Organization" alias Organization as source
+uses "http://hl7.org/fhir/StructureDefinition/Section" alias Section as source
+
+imports "http://ahdis.ch/ig/cda-fhir-maps/StructureMap/FhirToCdaTypes"
+
+
+// _________________________ Document Level Template  _________________________ 
+
+group BundleToCda(source bundle : Bundle, target cda : ClinicalDocument) {
+  bundle -> cda.recordTarget as recordTarget, cda.author as author then BundleToClinicalDocument(bundle, recordTarget, author, cda) "bundle";
+}
+
+group BundleToClinicalDocument(source bundle : Bundle, target recordTarget: RecordTarget, target author: Author, target cda : ClinicalDocument) {
+  bundle -> cda.typeId as typeId then {
+    bundle -> typeId.root = '2.16.840.1.113883.1.3' "root";
+    bundle -> typeId.extension = 'POCD_HD000040' "extension";
+  } "typeId";
+  bundle -> cda.templateId as templateId then {
+    bundle -> templateId.root = '2.16.840.1.113883.10.12.1' "root";
+  } "HL7 CDA R2 (2005).";
+  bundle.identifier as identifier -> cda.id as id then IdentifierII(identifier, id) "id";
+  bundle.timestamp as timestamp -> cda.effectiveTime as effectiveTime then InstantTS(timestamp, effectiveTime) "effectiveTime";
+  bundle.entry as entry then {
+    entry.resource as resource where $this.ofType(FHIR.Composition) then CompositionClinicalDocument(bundle, resource, recordTarget, author, cda);
+  };
+}
+
+// _________________________ Section Level Templates _________________________ 
+
+group SectionCdaSection(source bundle : Bundle, source section: Section, target cdasection: CdaSection) {
+  section.code as code then {
+    code.coding as coding where $this.system='http://loinc.org' -> cdasection.code as cdacode then CodingCE(coding, cdacode) "codingsection";
+  } "code"; 
+  section.title as title -> cdasection.title as cdatitle, cdatitle.data = title "title";
+  section.text as text then {
+    text.div as div -> cdasection.text = div "div";
+  } "text";
+}
+
+// _________________________ Entry Level Templates   ________________________ 
+
+// _________________________ Header Level Templates _________________________ 
+
+
+group CompositionClinicalDocument(source bundle : Bundle, source composition : Composition, target recordTarget: RecordTarget, target author: Author, target cda : ClinicalDocument) {
+  composition.type as type then {
+    type.coding as coding where $this.system='http://loinc.org' -> cda.code as code share docCode then CodingCE(coding,code) "code";
+  } "type";  
+  composition.title as title -> cda.title as t then {
+    title -> t.data = title "title inner";
+  } "title";
+  composition.confidentiality as conf -> cda.confidentialityCode as cdaconf then {
+    conf -> cdaconf.code = conf "conf";
+    conf -> cdaconf.codeSystem = '2.16.840.1.113883.5.25' "codeSystem";
+  } "confidentialityCode";
+  composition.language as language -> cda.languageCode as languageCode, languageCode.code = language  "languageCode";
+  bundle.entry as entry then {
+    entry.resource as patient where ('Patient'+'/'+$this.id) in %composition.subject.reference then PatientRecordTarget(patient, recordTarget) "patient";
+    entry.resource as organization where ('Organization'+'/'+$this.id) in %composition.custodian.reference -> cda.custodian as custodian then OrganizationCustodian(organization, custodian) "custodian";
+    entry.resource as practitioner where ('Practitioner'+'/'+$this.id) in %composition.author.reference then PractitionerAuthor(bundle, composition, practitioner, author) "author";    
+  } "patient";
+  
+  //  source.date -> target.effectiveTime "effectiveTime";
+//  source.event as srcEvent ->  target.documentationOf as doc,  doc.serviceEvent as event then {
+//    srcEvent.period -> event.effectiveTime;
+//  };
+
+    composition.section as section where $this.code.exists()=false -> cda.component as component then {
+      section -> component.contextConductionInd = true "contextConductionInd";
+      section -> component.structuredBody as structuredBody, structuredBody.component as component, component.section as cdasection then SectionCdaSection(bundle, section,cdasection) "cdasection";
+    } "section";
+}
+
+group PatientRecordTarget(source source : Patient, target target : RecordTarget) {
+  source -> target.patientRole as patientRole then {
+    source.identifier as identifier -> patientRole.id as id then IdentifierII(identifier, id) "identifier";
+    source.address as address -> patientRole.addr as ad then AddressAD(address, ad) "address";
+    source -> patientRole.patient as patient then {
+      source.name as humanname -> patient.name as en then HumanNameEN(humanname, en) "name";
+      source.birthDate as birthDate -> patient.birthTime as birthTime then DateTS(birthDate, birthTime) "birthDate";
+      source.gender as v log $this -> patient.administrativeGenderCode as adminGender then {
+        v -> adminGender.code = translate(v, 'http://hl7.org/fhir/ConceptMap/cm-administrative-gender-v3', 'code') "gender";
+        v -> adminGender.codeSystem ='2.16.840.1.113883.5.1' "codeSytem";
+        v -> adminGender.codeSystemName='HL7 AdministrativeGender' "codeSystemName";
+      } "gender";
+    } "patient";
+  } "patientRole";
+
+//  source.telecom -> target.telecom;
+//  source.patient as patient then {
+//    patient.name -> target.name; // gender: for patient.administrativeGenderCode make target.gender
+//    patient.birthTime -> target.birthDate "birthDate";
+//    patient.deceasedInd as indicator where patient.deceasedTime.empty() -> target.deceased = create('boolean') as bool then boolean(indicator, bool) "deceasedBL";
+//    patient.deceasedTime -> target.deceased;
+//    patient.maritalStatusCode -> target.maritalStatus "maritalStatus";
+//    patient.languageCommunication as language -> target.communication as communication then {
+//     language.languageCode -> communication.language "communication"; // preference: for language.preferenceInd make communication.preferred
+//    } "language";
+//  };
+//  source.providerOrganization as org ->  bundle.entry as e,  e.resource = create('Organization') as organization then {
+//    org -> target.managingOrganization = create('Reference') as reference, reference.reference = reference(organization) "reference";
+//    org.id -> organization.identifier;
+//    org.name as v -> organization.name = (v.other);
+//    org.telecom -> organization.telecom;
+//    org.addr -> organization.address;
+//  } "organization";
+}
+
+group PractitionerAuthor(source bundle : Bundle, source composition : Composition, source source : Practitioner, target target : Author) {
+  source -> target.assignedAuthor as assignedAuthor then {
+      source.identifier as identifier -> assignedAuthor.id as id then IdentifierII(identifier, id) "id";
+      source.name as name -> assignedAuthor.assignedPerson as assignedPerson, assignedPerson.name as en then HumanNameEN(name, en) "name";
+      bundle.entry as entry then {
+         entry.resource as organization where ('Organization'+'/'+$this.id) in %composition.author.reference -> assignedAuthor.representedOrganization as cdaorganization then Organization2CdaOrganization(organization, cdaorganization) "organization";
+      } "patient";
+  } "assignedAuthor";
+} 
+
+group OrganizationCustodian(source source : Organization, target target : Custodian) {
+  source -> target.assignedCustodian as assignedCustodian then {
+    source -> assignedCustodian.representedCustodianOrganization as representedCustodianOrganization then Organization2CdaOrganization(source, representedCustodianOrganization) "representedCustodianOrganization";
+  } "assignedCustodian";
+}
+
+group Organization2CdaOrganization(source source : Organization, target target : CdaOrganization) {
+  source.identifier as identifier -> target.id as id then IdentifierII(identifier, id) "id";
+  source.name as name -> target.name as orgname, orgname.other = name "name";
+  source.address as address -> target.addr as ad then AddressAD(address, ad) "address";
+//  source.telecom -> target.telecom;
+}
+
+// _________________________ Template Type not specified  ___________________ 
+
