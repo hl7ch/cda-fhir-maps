@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Patient xmlns="http://hl7.org/fhir">
+  <id value="FranzMuster"/>
+  <meta>
+    <profile value="http://fhir.ch/ig/ch-ig/StructureDefinition/ch-ig-patient"/>
+  </meta>
+  <name>
+    <family value="Muster"/>
+    <given value="Franz"/>
+  </name>
+  <gender value="male"/>
+  <birthDate value="1995-01-27"/>
+</Patient>

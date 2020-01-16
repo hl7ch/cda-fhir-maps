@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<StructureDefinition xmlns="http://hl7.org/fhir">
+    <id value="ch-ig-composition"/>
+    <url value="http://fhir.ch/ig/ch-ig/StructureDefinition/ch-ig-composition"/>
+    <version value="0.1.0"/>
+    <name value="CHIGComposition"/>
+    <title value="CH IG Composition Profile"/>
+    <status value="draft"/>
+    <date value="2020-01-13T00:00:00+00:00"/>
+    <publisher value="HL7 Switzerland"/>
+    <contact>
+        <name value="HL7 Switzerland"/>
+        <telecom>
+            <system value="url"/>
+            <value value="https://www.hl7.ch/"/>
+        </telecom>
+    </contact>
+    <description value="IG composition definition is just an example!"/>
+    <jurisdiction>
+        <coding>
+            <system value="urn:iso:std:iso:3166"/>
+            <code value="CH"/>
+        </coding>
+    </jurisdiction>
+    <fhirVersion value="4.0.1"/>
+    <mapping>
+        <identity value="rim"/>
+        <uri value="http://hl7.org/v3"/>
+        <name value="RIM Mapping"/>
+    </mapping>
+    <mapping>
+        <identity value="cda"/>
+        <uri value="http://hl7.org/v3/cda"/>
+        <name value="CDA (R2)"/>
+    </mapping>
+    <kind value="resource"/>
+    <abstract value="false"/>
+    <type value="Composition"/>
+    <baseDefinition value="http://hl7.org/fhir/StructureDefinition/Composition"/>
+    <derivation value="constraint"/>
+    <differential>
+        <element id="Composition">
+            <path value="Composition"/>
+            <short value="CH IG Composition"/>
+        </element>
+        <element id="Composition.subject">
+            <path value="Composition.subject"/>
+            <type>
+                <code value="Reference"/>
+                <targetProfile value="http://fhir.ch/ig/ch-ig/StructureDefinition/ch-ig-patient"/>
+            </type>
+        </element>
+        <element id="Composition.subject.reference">
+            <path value="Composition.subject.reference"/>
+            <min value="1"/>
+        </element>
+    </differential>
+</StructureDefinition>

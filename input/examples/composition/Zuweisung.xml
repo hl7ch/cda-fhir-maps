@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Composition xmlns="http://hl7.org/fhir">
+  <id value="Zuweisung"/>
+  <meta>
+    <profile value="http://fhir.ch/ig/ch-ig/StructureDefinition/ch-ig-composition"/>
+  </meta>
+  <status value="final"/>
+  <type>
+    <coding>
+      <system value="http://loinc.org"/>
+      <code value="18761-7"/>
+      <display value="Transfer summary note"/>
+    </coding>
+  </type>
+  <subject>
+    <reference value="Patient/FranzMuster"/>
+  </subject>
+  <date value="2019-10-03T17:33:00+01:00"/>
+  <author>
+    <reference value="Patient/FranzMuster"/>
+  </author>
+  <title value="Zuweisung"/>
+</Composition>

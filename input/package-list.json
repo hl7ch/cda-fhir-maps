@@ -1,0 +1,22 @@
+{
+  "package-id": "ch.fhir.ig.ch-ig",
+  "title": "CH-IG (R4)",
+  "introduction": "Implementation guide for ...",
+  "canonical": "http://fhir.ch/ig/ch-ig",
+  "list": [
+    {
+      "version": "current",
+      "date": "n/a",
+      "desc": "Continuous Integration Build (latest in version control)",
+      "path": "http://fhir.ch/ig/ch-ig/index.html",
+      "status": "ci-build"
+    },
+    {
+      "version": "dev",
+      "date": "n/a",
+      "desc": "Continuous Integration Build (latest in version control)",
+      "path": "http://build.fhir.org/ig/ch-ig/index.html",
+      "status": "ci-build"
+    }
+  ]
+}
