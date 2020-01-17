@@ -61,4 +61,4 @@ Accept: application/fhir+xml;fhirVersion=4.0
 Content-Type: application/fhir+xml;fhirVersion=4.0
 
 
-< ../hl7ch-cda/projects/eHealthSuisse/eMedikation/v1.0/2-7-MedicationCard.xml
+< ./input/cda-ch-emed/2-7-MedicationCard.xml
