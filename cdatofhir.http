@@ -3,8 +3,10 @@
 
 
 ### CDA ClinicalDocument TO FHIR Bundle
+### Note: Post the maps in the following order, if you update the map you need to repost also the maps below
 
-### POST CdaToFhirTypes.map
+
+### 1. POST CdaToFhirTypes.map
 
 POST {{host}}/StructureMap HTTP/1.1
 Accept: application/fhir+xml;fhirVersion=4.0

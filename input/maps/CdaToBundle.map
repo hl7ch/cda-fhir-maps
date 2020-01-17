@@ -1,11 +1,11 @@
 map "http://ahdis.ch/ig/cda-fhir-maps/StructureMap/CdaToBundle" = "CDA Document to FHIR"
 
-/**
-* CDA document
-* 2020-01-16 Oliver Egger, copyright ahdis ag, Apache License 
-* CDA:  http://build.fhir.org/ig/ahdis/cda-core-2.0/branches/master/index.html
-* FHIR: http://hl7.org/fhir/r4/
-*/
+//
+// CDA document
+// 2020-01-16 Oliver Egger, copyright ahdis ag, Apache License 
+// CDA:  http://build.fhir.org/ig/ahdis/cda-core-2.0/branches/master/index.html
+// FHIR: http://hl7.org/fhir/r4/
+//
 
 conceptmap "cm-v3-administrative-gender" {
   prefix s = "http://terminology.hl7.org/ValueSet/v3-AdministrativeGender"

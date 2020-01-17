@@ -1,10 +1,10 @@
 map "http://ahdis.ch/ig/cda-fhir-maps/StructureMap/FhirToCdaTypes" = "Transform for FHIR types to CDA types"
 
-/**
-* Adapted from https://github.com/HL7/ccda-to-fhir/tree/master/mappings
-* CDA:  http://build.fhir.org/ig/ahdis/cda-core-2.0/branches/master/index.html
-* FHIR: http://hl7.org/fhir/r4/
-*/
+//
+// Adapted from https://github.com/HL7/ccda-to-fhir/tree/master/mappings
+// CDA:  http://build.fhir.org/ig/ahdis/cda-core-2.0/branches/master/index.html
+// FHIR: http://hl7.org/fhir/r4/
+//
 
 conceptmap "uri2oid" {
   prefix s = "http://hl7.org/fhir"

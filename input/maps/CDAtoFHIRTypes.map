@@ -1,10 +1,10 @@
 map "http://ahdis.ch/ig/cda-fhir-maps/StructureMap/CdaToFhirTypes" = "Transform for CDA types to FHIR types"
 
-/**
-* Adapted from https://github.com/HL7/ccda-to-fhir/tree/master/mappings
-* CDA:  http://build.fhir.org/ig/ahdis/cda-core-2.0/branches/master/index.html
-* FHIR: http://hl7.org/fhir/r4/
-*/
+//
+// Adapted from https://github.com/HL7/ccda-to-fhir/tree/master/mappings
+// CDA:  http://build.fhir.org/ig/ahdis/cda-core-2.0/branches/master/index.html
+// FHIR: http://hl7.org/fhir/r4/
+//
 
 uses "http://hl7.org/fhir/cda/StructureDefinition/ED" alias ED as source
 uses "http://hl7.org/fhir/cda/StructureDefinition/II" as source

@@ -1,11 +1,11 @@
 map "http://ahdis.ch/ig/cda-fhir-maps/StructureMap/CdaChToBundle" = "CDA-CH Document to FHIR"
 
-/**
-* CDA-CH document, 2.16.756.5.30.1.1.10.1.14
-* 2020-01-16 Oliver Egger, copyright ahdis ag, Apache License 
-* CDA-CH:  https://art-decor.org/art-decor/decor-templates--hl7chcda-
-* FHIR CH-Core: http://fhir.ch/ig/ch-core/index.html
-*/
+//
+// CDA-CH document, 2.16.756.5.30.1.1.10.1.14
+// 2020-01-16 Oliver Egger, copyright ahdis ag, Apache License 
+// CDA-CH:  https://art-decor.org/art-decor/decor-templates--hl7chcda-
+// FHIR CH-Core: http://fhir.ch/ig/ch-core/index.html
+//
 
 uses "http://hl7.org/fhir/cda/StructureDefinition/ClinicalDocument" alias ClinicalDocument as source
 uses "http://hl7.org/fhir/cda/StructureDefinition/Section" alias Section as queried
