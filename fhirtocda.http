@@ -1,7 +1,13 @@
+### Create and Update FHIR maps for converting to CDA with RESTClient and running matchbox locally
+### Note: POST the maps in the following order, if you update one map you need to repost also the maps below
 
 @host = http://localhost:8080/r4
 
 ### FHIR to CDA
+### Note: POST the maps in the following order, if you update one map you need to repost also the maps below
+
+
+### 1. POST FhirtoCdaTypes.map
 
 POST {{host}}/StructureMap HTTP/1.1
 Accept: application/fhir+xml;fhirVersion=4.0
@@ -9,7 +15,7 @@ Content-Type: text/fhir-mapping
 
 < ./input/maps/FhirtoCdaTypes.map
 
-###
+### 2. POST BundleToCda.map
 
 POST {{host}}/StructureMap HTTP/1.1
 Accept: application/fhir+xml;fhirVersion=4.0
@@ -17,7 +23,7 @@ Content-Type: text/fhir-mapping
 
 < ./input/maps/BundleToCda.map
 
-###
+### 3. POST BundleToCdaCh.map
 
 POST {{host}}/StructureMap HTTP/1.1
 Accept: application/fhir+xml;fhirVersion=4.0
@@ -25,9 +31,7 @@ Content-Type: text/fhir-mapping
 
 < ./input/maps/BundleToCdaCh.map
 
-
-### BundleToCdaChEmedMedicationCardDocument
-
+### 4. POST BundleToCdaChEmedMedicationCardDocument
 
 POST {{host}}/StructureMap HTTP/1.1
 Accept: application/fhir+xml;fhirVersion=4.0
@@ -36,12 +40,10 @@ Content-Type: text/fhir-mapping
 < ./input/maps/BundleToCdaChEmedMedicationCardDocument.map
 
 
-
-### Transform 2-7-MedicationCard.fhir.xml
+### Transform 2-7-MedicationCard.xml from FIR to CDA
 
 POST {{host}}/StructureMap/$transform?source=http://ahdis.ch/ig/cda-fhir-maps/StructureMap/BundleToCdaChEmedMedicationCardDocument
 Accept: application/fhir+xml;fhirVersion=4.0
 Content-Type: application/fhir+xml;fhirVersion=4.0
 
-
-< ./resources/examples/2-7-MedicationCard.fhir.xml
+< ./input/ch-emed/2-7-MedicationCard.xml
