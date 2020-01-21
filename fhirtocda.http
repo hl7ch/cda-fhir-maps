@@ -47,3 +47,12 @@ Accept: application/fhir+xml;fhirVersion=4.0
 Content-Type: application/fhir+xml;fhirVersion=4.0
 
 < ./input/ch-emed/2-7-MedicationCard.xml
+
+
+### Transform 1-Zuweisung zur Radiologischen Diagnostik.xml from FIR to CDA
+
+POST {{host}}/StructureMap/$transform?source=http://ahdis.ch/ig/cda-fhir-maps/StructureMap/BundleToCdaCh
+Accept: application/fhir+xml;fhirVersion=4.0
+Content-Type: application/fhir+xml;fhirVersion=4.0
+
+< ./input/ch-core/1-Zuweisung zur Radiologischen Diagnostik.xml

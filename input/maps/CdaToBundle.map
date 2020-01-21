@@ -24,6 +24,7 @@ uses "http://hl7.org/fhir/cda/StructureDefinition/PatientRole" alias PatientRole
 uses "http://hl7.org/fhir/StructureDefinition/Bundle" alias Bundle as target
 uses "http://hl7.org/fhir/StructureDefinition/Composition" alias Composition as produced
 uses "http://hl7.org/fhir/StructureDefinition/Patient" alias Patient as produced
+uses "http://hl7.org/fhir/StructureDefinition/Person" alias Patient as produced
 uses "http://hl7.org/fhir/StructureDefinition/Practitioner" alias Practitioner as produced
 uses "http://hl7.org/fhir/StructureDefinition/Organization" alias Organization as produced
 
@@ -124,6 +125,15 @@ group ClinicalDocumentComposition(source source : ClinicalDocument, target targe
     relatedDoc.parentDocument as parentDoc then {
       parentDoc.setId -> relates.targetIdentifier;
     } "parentDoc";
+  };
+}
+
+group ClinicalDocumentEntityPerson(source source : AssignedEntity, target target : Person) {
+  source.id -> target.identifier;
+  source.addr -> target.address;
+  source.telecom -> target.telecom;
+  source.assignedPerson as person then {
+    person.name -> target.name;
   };
 }
 
