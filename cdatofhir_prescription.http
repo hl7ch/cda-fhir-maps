@@ -28,7 +28,7 @@ Content-Type: text/fhir-mapping
 < ./input/maps/CdaChToBundle.map
 
 
-### 4. POST CdaChEmedMedicationCardDocumentToBundle.map 
+### 4. POST CdaChEmedMedicationPrescriptionDocumentToBundle.map 
 POST {{host}}/StructureMap HTTP/1.1
 Accept: application/fhir+xml;fhirVersion=4.0
 Content-Type: text/fhir-mapping
@@ -36,9 +36,9 @@ Content-Type: text/fhir-mapping
 < ./input/maps/CdaChEmedMedicationPrescriptionDocumentToBundle.map
 
   
-### 5. Transform CDAMedicationCardDocument from CDA to FHIR
+### 5. Transform CDAMedicationPrescriptionDocument from CDA to FHIR
 POST {{host}}/StructureMap/$transform?source=http://ahdis.ch/ig/cda-fhir-maps/StructureMap/CdaChEmedMedicationPrescriptionDocumentToBundle
 Accept: application/fhir+xml;fhirVersion=4.0
 Content-Type: application/fhir+xml;fhirVersion=4.0
 
-< ./input/cda-ch-emed/2-7-MedicationCard.xml
+< ./input/cda-ch-emed/2-6-MedicationPrescription.xml
