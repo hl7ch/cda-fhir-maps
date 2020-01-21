@@ -132,6 +132,17 @@ group AddressAD(source source : Address, target target : AD) extends Any <<types
 //  source.useablePeriod -> target.period;
 }
 
+group ContactPointTEL(source source : ContactPoint, target target : TEL) extends Any <<types>> {
+    source.value as value -> target.value = (iif (%source.system='phone','tel:','') + iif(%source.system='fax','fax:','') + iif (%source.system='email','mailto:','') +iif (%source.system='url','http:','') +value) "value";
+    source.use as use where $this = 'home' -> target.use = 'HP';
+    source.use as use where $this = 'work' -> target.use = 'WP';  // not complete see belowe
+//  source.use where ((source.use = 'WP') or (source.use = 'DIR') or (source.use = 'PUB')) -> target.use = 'work' "usework";
+    source.use as use where $this = 'old' -> target.use = 'BAD';  
+    source.use as use where $this = 'temp' -> target.use = 'TMP';  
+    source.use as use where $this = 'mobile' -> target.use = 'MC';  
+//  source.useablePeriod -> target.period; // use: for source.use as c make target.use = translate(c, 'http://hl7.org/fhir/ConceptMap/cm-telecom-use-v3', 'code')
+}
+
 group HumanNameEN(source source : HumanName, target target : EN) extends Any <<types>> {
   source.family as v -> target.family as family, family.data = v;
   source.given as v -> target.given as given, given.data = v;

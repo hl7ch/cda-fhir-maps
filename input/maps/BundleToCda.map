@@ -105,9 +105,8 @@ group PatientRecordTarget(source source : Patient, target target : RecordTarget)
         v -> adminGender.codeSystemName='HL7 AdministrativeGender' "codeSystemName";
       } "gender";
     } "patient";
+    source.telecom as telecom -> patientRole.telecom as tel then ContactPointTEL(telecom, tel);
   } "patientRole";
-
-//  source.telecom -> target.telecom;
 //  source.patient as patient then {
 //    patient.name -> target.name; // gender: for patient.administrativeGenderCode make target.gender
 //    patient.birthTime -> target.birthDate "birthDate";
