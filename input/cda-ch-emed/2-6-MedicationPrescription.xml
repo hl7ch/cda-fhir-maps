@@ -66,6 +66,12 @@
 		<patientRole>
 			<!-- The patient's id. -->
 			<id extension="11111111" root="2.999" />
+			<addr>
+				<streetAddressLine>Wiesenstr. 12</streetAddressLine>
+				<postalCode>8003</postalCode>
+				<city>Zürich</city>
+				<country>CH</country>
+			</addr>
 			<patient>
 				<name>
 					<family>Wegmüller</family>

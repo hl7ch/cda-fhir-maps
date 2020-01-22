@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Bundle xmlns="http://hl7.org/fhir">
   <identifier>
+    <system value="urn:ietf:rfc:3986"/>
     <value value="urn:uuid:d41d72ba-2100-11e6-b67b-9e71128cae77"/>
   </identifier>
   <type value="document"/>
@@ -11,6 +12,7 @@
         <language value="de-CH"/>
         <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-setid">
           <valueIdentifier>
+            <system value="urn:ietf:rfc:3986"/>
             <value value="urn:uuid:d41d72ba-2100-11e6-b67b-9e71128cae77"/>
           </valueIdentifier>
         </extension>
@@ -19,10 +21,11 @@
         </extension>
         <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-informationrecipient">
           <valueReference>
-            <reference value="Patient/cf63376d-48cc-42f2-ae99-39bc58d03139"/>
+            <reference value="Patient/ef7a6405-0511-4523-be1b-2e2412dafe75"/>
           </valueReference>
         </extension>
         <identifier>
+          <system value="urn:ietf:rfc:3986"/>
           <value value="urn:uuid:d41d72ba-2100-11e6-b67b-9e71128cae77"/>
         </identifier>
         <status value="final"/>
@@ -39,11 +42,14 @@
           </coding>
         </type>
         <subject>
-          <reference value="Patient/14dd4ce7-278e-45b9-9529-77d771ee0291"/>
+          <reference value="Patient/cd79918d-1f7b-41c3-a90f-7f12148d9ac7"/>
         </subject>
         <date value="2012-02-04T14:00:00+01:00"/>
         <author>
-          <reference value="Practitioner/5aeb8b2d-80bd-49f7-b692-7a849a407454"/>
+          <reference value="Practitioner/09ca0071-21ca-485f-84eb-85fd714a0d99"/>
+        </author>
+        <author>
+          <reference value="Organization/afcee4cc-5fdd-4e59-8e09-985bb4ea555b"/>
         </author>
         <title value="Rezept"/>
         <confidentiality value="N">
@@ -58,7 +64,7 @@
           </extension>
         </confidentiality>
         <custodian>
-          <reference value="Organization/a19e2e9f-c486-4e2d-9780-32f252aa34a3"/>
+          <reference value="Organization/0b65978b-d97a-4571-9909-6b226230a5b1"/>
         </custodian>
         <section>
           <title value="Arzneimittelverordnung"/>
@@ -71,7 +77,8 @@
           </code>
           <text>
             <status value="generated"/>
-            <div xmlns="http://www.w3.org/1999/xhtml">
+            <div 
+              xmlns="http://www.w3.org/1999/xhtml">
               <table>
                 <thead>
                   <tr>
@@ -118,7 +125,7 @@
             </div>
           </text>
           <entry>
-            <reference value="MedicationRequest/3ffcbf2e-a3c2-43d8-876e-550badecdc35"/>
+            <reference value="MedicationRequest/355e4225-25c9-4eaf-8371-c9dba8830733"/>
           </entry>
         </section>
       </Composition>
@@ -127,7 +134,7 @@
   <entry>
     <resource>
       <Patient>
-        <id value="14dd4ce7-278e-45b9-9529-77d771ee0291"/>
+        <id value="cd79918d-1f7b-41c3-a90f-7f12148d9ac7"/>
         <identifier>
           <system value="urn:oid:2.999"/>
           <value value="11111111"/>
@@ -144,7 +151,7 @@
   <entry>
     <resource>
       <Practitioner>
-        <id value="5aeb8b2d-80bd-49f7-b692-7a849a407454"/>
+        <id value="09ca0071-21ca-485f-84eb-85fd714a0d99"/>
         <identifier>
           <system value="urn:oid:2.51.1.3"/>
           <value value="7601000234438"/>
@@ -159,7 +166,24 @@
   <entry>
     <resource>
       <Organization>
-        <id value="a19e2e9f-c486-4e2d-9780-32f252aa34a3"/>
+        <id value="afcee4cc-5fdd-4e59-8e09-985bb4ea555b"/>
+        <identifier>
+          <system value="urn:oid:2.51.1.3"/>
+          <value value="7601000234438"/>
+        </identifier>
+        <name value="Hausarzt"/>
+        <telecom>
+          <extension url="http://hl7.org/fhir/StructureDefinition/iso21090-nullFlavor">
+            <valueString value="NI"/>
+          </extension>
+        </telecom>
+      </Organization>
+    </resource>
+  </entry>
+  <entry>
+    <resource>
+      <Organization>
+        <id value="0b65978b-d97a-4571-9909-6b226230a5b1"/>
         <identifier>
           <system value="urn:oid:2.51.1.3"/>
           <value value="7601000234438"/>
@@ -171,7 +195,7 @@
   <entry>
     <resource>
       <Patient>
-        <id value="cf63376d-48cc-42f2-ae99-39bc58d03139"/>
+        <id value="ef7a6405-0511-4523-be1b-2e2412dafe75"/>
         <name>
           <family value="Wegm&#xFC;ller"/>
           <given value="Monika"/>
@@ -182,7 +206,7 @@
   <entry>
     <resource>
       <MedicationRequest>
-        <id value="3ffcbf2e-a3c2-43d8-876e-550badecdc35"/>
+        <id value="355e4225-25c9-4eaf-8371-c9dba8830733"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -241,16 +265,19 @@
         <extension url="http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-treatmentplan">
           <extension url="id">
             <valueIdentifier>
+              <system value="urn:ietf:rfc:3986"/>
               <value value="urn:uuid:5712fffe-20c6-11e6-b67b-9e71128cae77"/>
             </valueIdentifier>
           </extension>
           <extension url="externalDocumentId">
             <valueIdentifier>
+              <system value="urn:ietf:rfc:3986"/>
               <value value="urn:uuid:5712fffe-20c6-11e6-b67b-9e71128cae77"/>
             </valueIdentifier>
           </extension>
         </extension>
         <identifier>
+          <system value="urn:ietf:rfc:3986"/>
           <value value="urn:uuid:d41d72ba-2100-11e6-b67b-9e71128cae77"/>
         </identifier>
         <status value="completed"/>
@@ -259,7 +286,7 @@
           <reference value="#med"/>
         </medicationReference>
         <subject>
-          <reference value="Patient/14dd4ce7-278e-45b9-9529-77d771ee0291"/>
+          <reference value="Patient/cd79918d-1f7b-41c3-a90f-7f12148d9ac7"/>
         </subject>
         <note>
           <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
