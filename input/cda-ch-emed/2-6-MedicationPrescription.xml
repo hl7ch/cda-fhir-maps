@@ -33,7 +33,7 @@
 	<templateId root="1.3.6.1.4.1.19376.1.5.3.1.1.1" />
 	<!-- IHE PRE -->
 	<templateId root="1.3.6.1.4.1.19376.1.9.1.1.1" />
-	<!-- CDA-CH-EMED Medication Treatment Plan document --> <!-- ziegm: CDA-CH-EMED Medication Prescription document-->
+	<!-- CDA-CH-EMED Medication Prescription document -->
 	<templateId root="2.16.756.5.30.1.1.10.1.4" />
 
 	<!-- id of this Prescription -->
