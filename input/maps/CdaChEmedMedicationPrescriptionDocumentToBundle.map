@@ -151,6 +151,11 @@ group PrescriptionItemEntryContentModule(source section : Section, source source
   source.entryRelationship as entry where (typeCode='COMP' and act.templateId.where(root='2.16.756.5.30.1.1.10.4.2').exists()) then {
     entry.act as act -> medicationRequest.note as note then AnnotationComment(section, act, note) "annotation";
   } "entryRelationShip 2.16.756.5.30.1.1.10.4.2";  
+
+  source -> medicationRequest.dispenseRequest as dispenseRequest then {
+    source -> dispenseRequest.numberOfRepeatsAllowed = 'abcd' "abdc";
+  } "abcde";
+   // ziegm: TBD numberOfRepeatsAllowed
 }
 
 
@@ -200,11 +205,6 @@ group DosageInstructionsEntryDosageChange(source entryRelationship, target dosag
   entryRelationship.sequenceNumber as sequenceNumber -> dosage.sequence = sequenceNumber "sequenceNumber";
   entryRelationship.substanceAdministration as substanceAdministration then DosageInstructionsEntryDosageChange(substanceAdministration, dosage) "dosage";
 }
-
-
-// source: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&id=2.16.756.5.30.1.1.10.4.41
-// target: reasonCode Coding (e.g. http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition/ch-emed-medicationstatement)
-// note: TBD group TreatmentReasonEntryContentModule
 
 
 // source: https://art-decor.org/art-decor/decor-templates--ch-pharm-?section=templates&id=2.16.756.5.30.1.1.10.4.45
