@@ -152,10 +152,9 @@ group PrescriptionItemEntryContentModule(source section : Section, source source
     entry.act as act -> medicationRequest.note as note then AnnotationComment(section, act, note) "annotation";
   } "entryRelationShip 2.16.756.5.30.1.1.10.4.2";  
 
-  source -> medicationRequest.dispenseRequest as dispenseRequest then {
-    source -> dispenseRequest.numberOfRepeatsAllowed = 'abcd' "abdc";
-  } "abcde";
-   // ziegm: TBD numberOfRepeatsAllowed
+  source.repeatNumber as repeatNumber -> medicationRequest.dispenseRequest as dispenseRequest then {
+    repeatNumber -> dispenseRequest.numberOfRepeatsAllowed = repeatNumber "repeatNumber";
+  } "repeats";
 }
 
 

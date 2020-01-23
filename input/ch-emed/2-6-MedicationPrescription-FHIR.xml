@@ -37,7 +37,7 @@
                </coding>
                <coding>
                   <system value="http://snomed.info/sct"/>
-                  <code value="761938008"/><!-- ziegm: muss im CDA angepasst werden? -->
+                  <code value="761938008"/>
                   <display value="Medical Prescription record (record artifact)"/>
                </coding>
             </type>
@@ -141,7 +141,7 @@
             </name>
             <gender value="female"/>
             <birthDate value="1943-05-15"/>
-            <address> <!-- ziegm: CDAtoFHIRTypes.map -->
+            <address>
                <line value="Wiesenstr. 12"/>
                <city value="Zürich"/>
                <postalCode value="8003"/>
@@ -196,7 +196,7 @@
             </name>
             <gender value="female"/> <!-- ziegm: fehlt noch, nicht im CDA, FHIR-Profil verlangt es-->
             <birthDate value="1943-05-15"/> <!-- ziegm: fehlt noch, nicht im CDA, FHIR-Profil verlangt es -->
-            <address> <!-- ziegm: CDAtoFHIRTypes.map -->
+            <address>
                <line value="Wiesenstr. 12"/>
                <city value="Zürich"/>
                <postalCode value="8003"/>
@@ -333,7 +333,7 @@
                </extension>
                <text value="Morgens und abends je 1 Tablette nehmen"/>
             </dosageInstruction>
-            <dispenseRequest> <!-- ziegm: fehlt noch -->
+            <dispenseRequest>
                <numberOfRepeatsAllowed value="2"/>
             </dispenseRequest>
          </MedicationRequest>
