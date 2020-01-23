@@ -76,7 +76,7 @@ group CompositionClinicalDocument(source bundle : Bundle, source composition : C
   } "confidentialityCode";
   composition.language as language -> cda.languageCode as languageCode, languageCode.code = language  "languageCode";
   bundle.entry as entry then {
-    entry.resource as patient where ('Patient'+'/'+$this.id) in %composition.subject.reference then PatientRecordTarget(patient, recordTarget) "patient";
+    entry.resource as patient where ('Patient'+'/'+$this.id) in %composition.subject.reference then PatientRecordTarget(patient, bundle, recordTarget) "patient";
     entry.resource as organization where ('Organization'+'/'+$this.id) in %composition.custodian.reference -> cda.custodian as custodian then OrganizationCustodian(organization, custodian) "custodian";
     entry.resource as practitioner where ('Practitioner'+'/'+$this.id) in %composition.author.reference then PractitionerAuthor(bundle, composition, practitioner, author) "author";    
   } "patient";
@@ -92,7 +92,7 @@ group CompositionClinicalDocument(source bundle : Bundle, source composition : C
     } "section";
 }
 
-group PatientRecordTarget(source source : Patient, target target : RecordTarget) {
+group PatientRecordTarget(source source : Patient, source bundle: Bundle, target target : RecordTarget) {
   source -> target.patientRole as patientRole then {
     source.identifier as identifier -> patientRole.id as id then IdentifierII(identifier, id) "identifier";
     source.address as address -> patientRole.addr as ad then AddressAD(address, ad) "address";
@@ -106,10 +106,13 @@ group PatientRecordTarget(source source : Patient, target target : RecordTarget)
       } "gender";
     } "patient";
     source.telecom as telecom -> patientRole.telecom as tel then ContactPointTEL(telecom, tel);
+    source.managingOrganization as managingOrganization then {
+      bundle.entry as entry then {
+        entry.resource as organization where ('Organization'+'/'+$this.id) in %managingOrganization.reference -> patientRole.providerOrganization as providerOrganization then Organization2CdaOrganization(organization, providerOrganization) "providerOrganization";
+      } "entry";
+    } "managingOrganization";
   } "patientRole";
 //  source.patient as patient then {
-//    patient.name -> target.name; // gender: for patient.administrativeGenderCode make target.gender
-//    patient.birthTime -> target.birthDate "birthDate";
 //    patient.deceasedInd as indicator where patient.deceasedTime.empty() -> target.deceased = create('boolean') as bool then boolean(indicator, bool) "deceasedBL";
 //    patient.deceasedTime -> target.deceased;
 //    patient.maritalStatusCode -> target.maritalStatus "maritalStatus";
@@ -117,13 +120,6 @@ group PatientRecordTarget(source source : Patient, target target : RecordTarget)
 //     language.languageCode -> communication.language "communication"; // preference: for language.preferenceInd make communication.preferred
 //    } "language";
 //  };
-//  source.providerOrganization as org ->  bundle.entry as e,  e.resource = create('Organization') as organization then {
-//    org -> target.managingOrganization = create('Reference') as reference, reference.reference = reference(organization) "reference";
-//    org.id -> organization.identifier;
-//    org.name as v -> organization.name = (v.other);
-//    org.telecom -> organization.telecom;
-//    org.addr -> organization.address;
-//  } "organization";
 }
 
 group PractitionerAuthor(source bundle : Bundle, source composition : Composition, source source : Practitioner, target target : Author) {
@@ -146,7 +142,7 @@ group Organization2CdaOrganization(source source : Organization, target target :
   source.identifier as identifier -> target.id as id then IdentifierII(identifier, id) "id";
   source.name as name -> target.name as orgname, orgname.other = name "name";
   source.address as address -> target.addr as ad then AddressAD(address, ad) "address";
-//  source.telecom -> target.telecom;
+  source.telecom as telecom -> target.telecom as tel then ContactPointTEL(telecom, tel);
 }
 
 // _________________________ Template Type not specified  ___________________ 
