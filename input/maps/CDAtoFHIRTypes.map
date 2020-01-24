@@ -37,7 +37,7 @@ group Any() {
 
 group II(source source : II, target target : Identifier) extends Any <<types>> {
   source.root as r where source.extension.exists() -> target.system = translate(r, 'http://hl7.org/fhir/ConceptMap/special-oid2uri', 'uri') "root1";
-  source.root as r where source.extension.empty() and source.root.matches('[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}') -> target.value = ('urn:uuid:' + r.lower()) "rootuuid";
+  source.root as r where source.extension.empty() and source.root.matches('[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}') -> target.system = 'urn:ietf:rfc:3986', target.value = ('urn:uuid:' + r.lower()) "rootuuid";
   source.root as r where source.extension.empty() and source.root.contains('.') ->  target.system = 'urn:ietf:rfc:3986',  target.value = append('urn:oid:', r) "rootoid";
   source.extension as e -> target.value = e;
   source.assigningAuthorityName as s ->  target.assigner as a,  a.display = s; // there's no equivalent for displayable in FHIR - and it probably will never matter, but if it does, it might map to Identifier.use.

@@ -227,7 +227,7 @@
           <system value="urn:oid:2.51.1.3"/>
           <value value="7601000234438"/>
         </identifier>
-        <name value="Hauszarzt"/>
+        <name value="Hausarzt"/>
         <telecom>
           <extension url="http://hl7.org/fhir/StructureDefinition/iso21090-nullFlavor">
             <valueString value="NI"/>
