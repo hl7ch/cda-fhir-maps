@@ -212,10 +212,7 @@
                         <code value="7680500440334"/>
                         <display value="NORVASC Tabl 10 mg"/>
                      </coding>
-                     <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
-                        <valueUrl value="#pre.1.brandedmedication"/>
-                     </extension>
-                     <text value="Norvasc"/>
+                     <text value="NORVASC Tabl 10 mg"/> <!-- ziegm: value= fehlt noch -->
                   </code>
                   <form>
                      <coding>

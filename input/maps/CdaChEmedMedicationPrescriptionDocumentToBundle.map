@@ -91,7 +91,8 @@ group ManufacturedMaterialEntryContentModule(source source : SubstanceAdministra
       manufacturedProduct.manufacturedMaterial as manufacturedMaterial then {
         manufacturedMaterial.asContent as asContent then {
           asContent.containerPackagedMedicine as containerPackagedMedicine then {
-            containerPackagedMedicine.code as code -> medication.code as fhircode then CECodeableConcept(code, fhircode) "medication.code";
+            //containerPackagedMedicine.code as code -> medication.code as fhircode then CECodeableConcept(code, fhircode) "medication.code";
+            containerPackagedMedicine.code as code -> medication.code as fhircode, fhircode.text = (%manufacturedMaterial.name) then CECodeableConcept(code, fhircode) "medication.code"; 
             containerPackagedMedicine.formCode as formCode -> medication.form as form then CECodeableConcept(formCode, form)  "medication.formCode";
             containerPackagedMedicine.capacityQuantity as capacityQuantity where (%containerPackagedMedicine.formCode.code='10219000') -> medication.amount = create('Ratio') as ratio then {
               capacityQuantity.value as value -> ratio.numerator = create('Quantity') as quantity, 
@@ -109,11 +110,6 @@ group ManufacturedMaterialEntryContentModule(source source : SubstanceAdministra
             } "ratio";
           } "containerPackagedMedicine";
         } "asContent";
-
-        manufacturedMaterial.name as name -> medication.code as code then {
-          name -> code.text = name "name";
-        } "medname";
-
         manufacturedMaterial.ingredient as ingredient -> medication.ingredient as ing then {
           ingredient.quantity as quantity -> ing.strength = create('Ratio') as strength then RTOPQPQRatio(quantity, strength) "strength";
           ingredient.ingredient as medingredient then {
@@ -122,7 +118,6 @@ group ManufacturedMaterialEntryContentModule(source source : SubstanceAdministra
         } "ingredient";
       } "manufacturedMaterial";
     } "manufacturedProduct";
-
     source -> medicationRequest.dosageInstruction as dosage then DosageInstructionsStartStopFrequency(source, dosage) "dosage";
   } "consumable";
 }

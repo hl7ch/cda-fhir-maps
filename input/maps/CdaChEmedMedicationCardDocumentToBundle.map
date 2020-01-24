@@ -104,12 +104,7 @@ group ManufacturedMaterialEntryContentModule(source source : SubstanceAdministra
                        "capacityQuantity"; 
             } "ratio";
           } "containerPackagedMedicine";
-        } "asContent";
-
-        manufacturedMaterial.name as name -> medication.code as code then {
-          name -> code.text = name "name";
-        } "medname";
-        
+        } "asContent";       
         manufacturedMaterial.ingredient as ingredient -> medication.ingredient as ing then {
           ingredient.quantity as quantity -> ing.strength = create('Ratio') as strength then RTOPQPQRatio(quantity, strength) "strength";
           ingredient.ingredient as medingredient then {
