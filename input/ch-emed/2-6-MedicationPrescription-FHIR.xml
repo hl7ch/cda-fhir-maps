@@ -186,16 +186,10 @@
       <resource>
          <Patient>
             <id value="1"/> <!--  Composition.ch-ext-epr-informationrecipient -->
-            <identifier> <!-- ziegm: fehlt noch, nicht im CDA, FHIR-Profil verlangt es -->
-               <system value="urn:oid:2.999"/>
-               <value value="11111111"/>
-            </identifier>
             <name>
                <family value="Wegmüller"/>
                <given value="Monika"/>
             </name>
-            <gender value="female"/> <!-- ziegm: fehlt noch, nicht im CDA, FHIR-Profil verlangt es-->
-            <birthDate value="1943-05-15"/> <!-- ziegm: fehlt noch, nicht im CDA, FHIR-Profil verlangt es -->
             <address>
                <line value="Wiesenstr. 12"/>
                <city value="Zürich"/>
@@ -218,7 +212,10 @@
                         <code value="7680500440334"/>
                         <display value="NORVASC Tabl 10 mg"/>
                      </coding>
-                     <text value="NORVASC Tabl 10 mg"/> <!-- ziegm: fehlt noch -->
+                     <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
+                        <valueUrl value="#pre.1.brandedmedication"/>
+                     </extension>
+                     <text value="Norvasc"/>
                   </code>
                   <form>
                      <coding>
@@ -253,15 +250,10 @@
                      <strength>
                         <numerator>
                            <value value="10"/>
-                           <unit value="milligram"/> <!-- ziegm: fehlt noch -->
-                           <system value="http://unitsofmeasure.org"/> <!-- ziegm: fehlt noch -->
                            <code value="mg"/>
                         </numerator>
                         <denominator>
                            <value value="1"/>
-                           <unit value="tablets"/> <!-- ziegm: fehlt noch -->
-                           <system value="http://unitsofmeasure.org"/> <!-- ziegm: fehlt noch -->
-                           <code value="1"/>
                         </denominator>
                      </strength>
                   </ingredient>
@@ -318,14 +310,6 @@
                      <display value="Oral use"/>
                   </coding>
                </route>
-               <doseAndRate> <!-- ziegm: fehlt noch -->
-                  <doseQuantity>
-                     <value value="1"/>
-                     <unit value="tablets"/>
-                     <system value="http://unitsofmeasure.org"/>
-                     <code value="1"/>
-                  </doseQuantity>
-               </doseAndRate>
             </dosageInstruction>
             <dosageInstruction>
                <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
