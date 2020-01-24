@@ -132,6 +132,8 @@ group CompositionClinicalDocumentCH(source bundle : Bundle, source composition :
             patient.address as address ->  intendedRecipient.addr as addr then AddressAD(address, addr) "address";
             patient.name as humanname -> intendedRecipient.informationRecipient as informationRecipient2, informationRecipient2.name as en then HumanNameEN(humanname, en) "name";
          } "intendedRecipient";
+         entry.resource as organization where ($this.id=%valueReference.reference.substring(13)) -> 
+           informationRecipient.intendedRecipient as intendedRecipient, intendedRecipient.receivedOrganization as receivedOrganization then Organization2CdaOrganization(organization, receivedOrganization) "organization";	
       } "patient";
     } "valueReference";
   } "informationRecipient";  

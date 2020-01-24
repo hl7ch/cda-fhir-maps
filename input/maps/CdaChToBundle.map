@@ -109,6 +109,14 @@ group ChExtEprInformationRecipient(source source: IntendedRecipient, target pati
   } "informationRecipient";
 }
 
+// source: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5.30.1.1.10.9.36
+// target: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefinition-ch-ext-epr-informationrecipient.html
+group ChExtEprInformationRecipientOrganization(source source: IntendedRecipient, target organization: Organization, target ext: Extension) {
+  source -> ext.url = 'http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-informationrecipient' "url";
+  source -> ext.value = create('Reference') as reference, reference.reference = reference(organization) "value";
+  source.receivedOrganization as receivedOrganization then ClinicalDocumentOrganization(receivedOrganization, organization) "organization";
+}
+
 // source: https://art-decor.org/art-decor/decor-templates--hl7chcda-?section=templates&id=2.16.756.5.30.1.1.10.2.7
 // target: http://build.fhir.org/ig/hl7ch/ch-core/StructureDefinition-ch-ext-epr-dataenterer.html
 group ChExtEprDataEnterer(source source: DataEnterer, target person: Person, target ext: Extension) {
@@ -131,9 +139,13 @@ group ClinicalDocumentCompositionCh(source source : ClinicalDocument, target tar
   source.setId as setId -> target.extension as ext then ChExtEprSetId(setId, ext) "setId";
   source.versionNumber as versionNumber -> target.extension as ext2 then ChExtEprVersionNumber(versionNumber, ext2) "versionNumber";
   source.informationRecipient as informationRecipient -> bundle.entry as e then {
-    informationRecipient.intendedRecipient as intendedRecipient -> e.resource = create('Patient') as recipient, target.extension as ext 
-            then ChExtEprInformationRecipient(intendedRecipient, recipient, ext) "informationRecipient";
-  };
+    informationRecipient.intendedRecipient as intendedRecipient where $this.receivedOrganization.exists()=false 
+       -> e.resource = create('Patient') as recipient, target.extension as ext then ChExtEprInformationRecipient(intendedRecipient, recipient, ext) "informationRecipient";
+    informationRecipient.intendedRecipient as intendedRecipient then {
+      intendedRecipient.receivedOrganization -> e.resource = create('Organization') as recipient, target.extension as ext 
+           then ChExtEprInformationRecipientOrganization(intendedRecipient, recipient, ext) "informationRecipient Organization";
+    } "intendedRecipient as orgnaization";
+  } "entry";
   source.dataEnterer as dataEnterer -> bundle.entry as e, e.resource = create('Person') as person, target.extension as ext then ChExtEprDataEnterer(dataEnterer, person, ext) "dateEnterer";
 }
 
