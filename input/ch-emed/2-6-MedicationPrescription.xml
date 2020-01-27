@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <Bundle xmlns="http://hl7.org/fhir" 
   xmlns:v3="urn:hl7-org:v3">
   <identifier>
@@ -22,7 +23,7 @@
         </extension>
         <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-informationrecipient">
           <valueReference>
-            <reference value="Patient/4c6452c0-70c0-4ffe-a26f-6ec7d761616c"/>
+            <reference value="Patient/548ca43b-d37c-4297-bc85-9306638dbc3b"/>
           </valueReference>
         </extension>
         <identifier>
@@ -43,11 +44,11 @@
           </coding>
         </type>
         <subject>
-          <reference value="Patient/ef5db6db-99e1-41ad-a5d3-365982e6ea03"/>
+          <reference value="Patient/d4865fe1-76b4-42df-b62f-0daa4099fbf4"/>
         </subject>
         <date value="2012-02-04T14:00:00+01:00"/>
         <author>
-          <reference value="Practitioner/7d9c8641-490f-4d71-802f-7ca989ed42aa"/>
+          <reference value="Practitioner/75be8c4d-19ca-499f-9f49-f1d236f06ee4"/>
         </author>
         <title value="Rezept"/>
         <confidentiality value="N">
@@ -62,8 +63,30 @@
           </extension>
         </confidentiality>
         <custodian>
-          <reference value="Organization/d18756fe-b65d-452e-9ce1-1ec262806504"/>
+          <reference value="Organization/e1ef3b27-e67f-4e1e-93eb-13c551c92df6"/>
         </custodian>
+        <section>
+          <title value="Original representation"/>
+          <code>
+            <coding>
+              <system value="http://loinc.org"/>
+              <code value="55108-5"/>
+              <display value="Clinical presentation"/>
+            </coding>
+          </code>
+          <text>
+            <status value="generated"/>
+            <div xmlns="http://www.w3.org/1999/xhtml">
+            			Representation of the original view:
+
+
+              <img src="pdf1"/>
+            </div>
+          </text>
+          <entry>
+            <reference value="Binary/pdf1"/>
+          </entry>
+        </section>
         <section>
           <title value="Kommentar"/>
           <code>
@@ -81,27 +104,6 @@
               </span>
             </div>
           </text>
-        </section>
-        <section>
-          <title value="Original representation"/>
-          <code>
-            <coding>
-              <system value="http://loinc.org"/>
-              <code value="55108-5"/>
-              <display value="Clinical presentation"/>
-            </coding>
-          </code>
-          <text>
-            <status value="generated"/>
-            <div xmlns="http://www.w3.org/1999/xhtml">
-            			Representation of the original view:
-            			
-              <img src="pdf1"/>
-            </div>
-          </text>
-          <entry>
-            <reference value="Binary/pdf1"/>
-          </entry>
         </section>
         <section>
           <title value="Arzneimittelverordnung"/>
@@ -140,7 +142,7 @@
                     <td id="pre.1.brandedmedication">Norvasc</td>
                     <td id="pre.1.ingredient">Amlodipin</td>
                     <td id="pre.1.dosequantity">Tbl</td>
-                    <td id="pre.1.packageform">10 mg/TblaTabl</td>
+                    <td id="pre.1.packageform">10 mg/Tabl</td>
                     <td id="pre.1.repeat">Dauerrezept 3 Monate</td>
                     <td id="pre.1.dosageintakemode">Morgens und abends je 1 Tablette nehmen</td>
                     <td id="pre.1.packagesize">30</td>
@@ -159,7 +161,7 @@
             </div>
           </text>
           <entry>
-            <reference value="MedicationRequest/12b51115-7f8f-4543-bf13-c0e2bcdf878f"/>
+            <reference value="MedicationRequest/1721b017-beda-4c6b-b957-c54d6b5003bd"/>
           </entry>
         </section>
       </Composition>
@@ -168,7 +170,7 @@
   <entry>
     <resource>
       <Patient>
-        <id value="ef5db6db-99e1-41ad-a5d3-365982e6ea03"/>
+        <id value="d4865fe1-76b4-42df-b62f-0daa4099fbf4"/>
         <identifier>
           <system value="urn:oid:2.999"/>
           <value value="11111111"/>
@@ -191,7 +193,7 @@
   <entry>
     <resource>
       <Practitioner>
-        <id value="7d9c8641-490f-4d71-802f-7ca989ed42aa"/>
+        <id value="75be8c4d-19ca-499f-9f49-f1d236f06ee4"/>
         <identifier>
           <system value="urn:oid:2.51.1.3"/>
           <value value="7601000234438"/>
@@ -206,7 +208,7 @@
   <entry>
     <resource>
       <Organization>
-        <id value="d18756fe-b65d-452e-9ce1-1ec262806504"/>
+        <id value="e1ef3b27-e67f-4e1e-93eb-13c551c92df6"/>
         <identifier>
           <system value="urn:oid:2.51.1.3"/>
           <value value="7601000234438"/>
@@ -218,7 +220,7 @@
   <entry>
     <resource>
       <Patient>
-        <id value="4c6452c0-70c0-4ffe-a26f-6ec7d761616c"/>
+        <id value="548ca43b-d37c-4297-bc85-9306638dbc3b"/>
         <name>
           <family value="Wegm&#xFC;ller"/>
           <given value="Monika"/>
@@ -245,7 +247,7 @@
   <entry>
     <resource>
       <MedicationRequest>
-        <id value="12b51115-7f8f-4543-bf13-c0e2bcdf878f"/>
+        <id value="1721b017-beda-4c6b-b957-c54d6b5003bd"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -326,8 +328,13 @@
           <reference value="#med"/>
         </medicationReference>
         <subject>
-          <reference value="Patient/ef5db6db-99e1-41ad-a5d3-365982e6ea03"/>
+          <reference value="Patient/d4865fe1-76b4-42df-b62f-0daa4099fbf4"/>
         </subject>
+        <reasonCode>
+          <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
+            <valueUrl value="#pre.1.reason"/>
+          </extension>
+        </reasonCode>
         <note>
           <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
             <valueUrl value="#pre.1.note"/>

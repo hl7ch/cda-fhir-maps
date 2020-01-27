@@ -138,6 +138,12 @@ group PrescriptionItemEntryContentModule(source section : Section, source source
   } "text";
   source -> medicationRequest.contained = create('Medication') as medication then ManufacturedMaterialEntryContentModule(source, medicationRequest, medication) "medication";
 
+  source.entryRelationship as entry where typeCode = 'RSON' then {
+    entry.observation as observation 
+      -> medicationRequest.reasonCode as reasonCode 
+          then TreatmentReasonEntryContentModule(section, observation, reasonCode) "reasonCode";
+  } "entryRelationShip 2.16.756.5.30.1.1.10.4.41";
+
   source.entryRelationship as entry where (typeCode='COMP' and substanceAdministration.templateId.root='2.16.756.5.30.1.1.10.4.37') 
     -> medicationRequest.dosageInstruction as dosage 
         then DosageInstructionsNonStructuredEntryContentModule(section, entry, dosage) "entryRelationShip 2.16.756.5.30.1.1.10.4.37";  
@@ -206,6 +212,22 @@ group DosageInstructionsEntryDosageChange(source entryRelationship, target dosag
   entryRelationship.substanceAdministration as substanceAdministration then DosageInstructionsEntryDosageChange(substanceAdministration, dosage) "dosage";
 }
 
+// source: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&id=2.16.756.5.30.1.1.10.4.41
+// target: reasonCode Coding (e.g. http://build.fhir.org/ig/hl7ch/ig/ch-emed/StructureDefinition/ch-emed-medicationrequest)
+group TreatmentReasonEntryContentModule(source section : Section, source observation: Observation, target reasonCode : Coding) {
+    // extraxt text (Bluthochdruck) from id #mtpc.1.reason in section text <td ID="mtpc.1.reason">Bluthochdruck</td>
+    //                                                                             a--------------b------------c
+    // id = (%observation.text.reference.value.substring(1))
+    // a = %section.text.substring(%section.text.indexOf(%id))
+    // res = (%a.substring(%a.indexOf('>')+1, %a.indexOf('<')-%a.indexOf('>')-1))
+    // a = %section.text.substring(%section.text.indexOf((%observation.text.reference.value.substring(1))))
+    observation -> reasonCode.text =  (%section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).substring(%section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).indexOf('>')+1, %section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).indexOf('<')-%section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).indexOf('>')-1)) "idRef"; 
+    observation.text as text then {
+      text.reference as reference then {
+        reference.value as value -> reasonCode.extension as ext then NarrativeLink(value, ext) "narrativeLink";
+      } "reference";
+    } "text";
+}
 
 // source: https://art-decor.org/art-decor/decor-templates--ch-pharm-?section=templates&id=2.16.756.5.30.1.1.10.4.45
 // target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-ext-treatmentplan.html

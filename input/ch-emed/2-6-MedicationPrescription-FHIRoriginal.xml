@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <Bundle xmlns="http://hl7.org/fhir" 
-   xmlns:v3="urn:hl7-org:v3">
+  xmlns:v3="urn:hl7-org:v3">
    <identifier>
       <system value="urn:ietf:rfc:3986"/>
       <value value="urn:uuid:d41d72ba-2100-11e6-b67b-9e71128cae77"/>
@@ -65,6 +66,28 @@
                <reference value="Organization/2"/>
             </custodian>
             <section>
+               <title value="Original representation"/>
+               <code>
+                  <coding>
+                     <system value="http://loinc.org"/>
+                     <code value="55108-5"/>
+                     <display value="Clinical presentation"/>
+                  </coding>
+               </code>
+               <text>
+                  <status value="generated"/>
+                  <div xmlns="http://www.w3.org/1999/xhtml">
+                           Representation of the original view:
+                           
+                           
+                     <img src="pdf1"/>
+                  </div>
+               </text>
+               <entry>
+                  <reference value="Binary/pdf1"/>
+               </entry>
+            </section>
+            <section>
                <title value="Kommentar"/>
                <code>
                   <coding>
@@ -81,27 +104,6 @@
                      </span>
                   </div>
                </text>
-            </section>
-            <section>
-               <title value="Original representation"/>
-               <code>
-                  <coding>
-                     <system value="http://loinc.org"/>
-                     <code value="55108-5"/>
-                     <display value="Clinical presentation"/>
-                  </coding>
-               </code>
-               <text>
-                  <status value="generated"/>
-                  <div xmlns="http://www.w3.org/1999/xhtml">
-                           Representation of the original view:
-                           
-                     <img src="pdf1"/>
-                  </div>
-               </text>
-               <entry>
-                  <reference value="Binary/pdf1"/>
-               </entry>
             </section>
             <section>
                <title value="Arzneimittelverordnung"/>
@@ -140,7 +142,7 @@
                               <td id="pre.1.brandedmedication">Norvasc</td>
                               <td id="pre.1.ingredient">Amlodipin</td>
                               <td id="pre.1.dosequantity">Tbl</td>
-                              <td id="pre.1.packageform">10 mg/TblaTabl</td>
+                              <td id="pre.1.packageform">10 mg/Tabl</td>
                               <td id="pre.1.repeat">Dauerrezept 3 Monate</td>
                               <td id="pre.1.dosageintakemode">Morgens und abends je 1 Tablette nehmen</td>
                               <td id="pre.1.packagesize">30</td>
@@ -335,6 +337,11 @@
             <subject>
                <reference value="Patient/2"/>
             </subject>
+            <reasonCode>
+               <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
+                  <valueUrl value="#pre.1.reason"/>
+               </extension>
+            </reasonCode>
             <note>
                <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
                   <valueUrl value="#pre.1.note"/>
