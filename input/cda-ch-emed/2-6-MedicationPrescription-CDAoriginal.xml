@@ -103,7 +103,6 @@
           			<text>
             			Representation of the original view:
 
-
             			<renderMultiMedia referencedObject="pdf1"/>
 
 					</text>
@@ -261,9 +260,8 @@
 							<repeatNumber value="2"/>
 							<routeCode code="20053000" codeSystem="0.4.0.127.0.16.1.1.2.1" displayName="Oral use"/>
 							<doseQuantity>
-								<center value="1" >
-								</center>
-							</doseQuantity>
+                                <center value="1"/>
+                            </doseQuantity>
 							<consumable>
 								<manufacturedProduct classCode="MANU">
 									<templateId root="1.3.6.1.4.1.19376.1.5.3.1.4.7.2"/>
@@ -299,6 +297,16 @@
 									</manufacturedMaterial>
 								</manufacturedProduct>
 							</consumable>
+							<entryRelationship typeCode="RSON">
+								<observation classCode="OBS" moodCode="EVN">
+									<templateId root="2.16.756.5.30.1.1.10.4.41"/>
+									<code code="75326-9" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Problem"/>
+									<text>
+										<reference value="#pre.1.reason"/>
+									</text>
+									<statusCode code="completed"/>
+								</observation>
+							</entryRelationship>
 							<entryRelationship typeCode="REFR">
 								<substanceAdministration classCode="SBADM" moodCode="INT">
 									<templateId root="1.3.6.1.4.1.19376.1.9.1.3.10"/>
@@ -317,16 +325,6 @@
 									</reference>
 								</substanceAdministration>
 							</entryRelationship>
-							<entryRelationship typeCode="RSON">
-								<observation classCode="OBS" moodCode="EVN">
-									<templateId root="2.16.756.5.30.1.1.10.4.41"/>
-									<code code="75326-9" codeSystem="2.16.840.1.113883.6.1" displayName="Problem" codeSystemName='LOINC'/>
-									<text>
-										<reference value="#pre.1.reason"/>
-									</text>
-									<statusCode code="completed"/>
-								</observation>
-							</entryRelationship>
 							<entryRelationship typeCode="COMP">
 								<substanceAdministration classCode="SBADM" moodCode="INT">
 									<templateId root="2.16.756.5.30.1.1.10.4.37"/>
@@ -340,7 +338,7 @@
 									</consumable>
 								</substanceAdministration>
 							</entryRelationship>
-							<entryRelationship typeCode='COMP'>
+							<entryRelationship typeCode="COMP">
 								<supply moodCode="RQO" classCode="SPLY">
 									<templateId root="1.3.6.1.4.1.19376.1.9.1.3.8"/>
 									<independentInd value="false"/>

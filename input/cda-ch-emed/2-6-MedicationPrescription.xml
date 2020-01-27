@@ -108,9 +108,8 @@
                     <code code="55108-5" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Clinical presentation"/>
                     <title>Original representation</title>
                     <text>
-                           Representation of the original view:
+                        Representation of the original view:
                            
-                     
                         <renderMultiMedia referencedObject="pdf1"/>
 
                     </text>
@@ -207,7 +206,7 @@
 
                                     <td ID="pre.1.dosequantity">Tbl</td>
 
-                                    <td ID="pre.1.packageform">10 mg/TblaTabl</td>
+                                    <td ID="pre.1.packageform">10 mg/Tabl</td>
 
                                     <td ID="pre.1.repeat">Dauerrezept 3 Monate</td>
 
@@ -312,6 +311,16 @@
                                     </manufacturedMaterial>
                                 </manufacturedProduct>
                             </consumable>
+                            <entryRelationship typeCode="RSON">
+                                <observation classCode="OBS" moodCode="EVN">
+                                    <templateId root="2.16.756.5.30.1.1.10.4.41"/>
+                                    <code xsi:type="CD" code="75326-9" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Problem"/>
+                                    <text xsi:type="ED">
+                                        <reference value="#pre.1.reason"/>
+                                    </text>
+                                    <statusCode code="completed"/>
+                                </observation>
+                            </entryRelationship>
                             <entryRelationship typeCode="REFR">
                                 <substanceAdministration classCode="SBADM" moodCode="INT">
                                     <templateId root="1.3.6.1.4.1.19376.1.9.1.3.10"/>
