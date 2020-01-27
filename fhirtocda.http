@@ -3,9 +3,6 @@
 
 @host = http://localhost:8080/r4
 
-### FHIR to CDA
-### Note: POST the maps in the following order, if you update one map you need to repost also the maps below
-
 
 ### 1. POST FhirtoCdaTypes.map
 
@@ -40,7 +37,7 @@ Content-Type: text/fhir-mapping
 < ./input/maps/BundleToCdaChEmedMedicationCardDocument.map
 
 
-### Transform 2-7-MedicationCard.xml from FIR to CDA
+### Transform 2-7-MedicationCard.xml from FHIR to CDA
 
 POST {{host}}/StructureMap/$transform?source=http://ahdis.ch/ig/cda-fhir-maps/StructureMap/BundleToCdaChEmedMedicationCardDocument
 Accept: application/fhir+xml;fhirVersion=4.0
@@ -49,7 +46,7 @@ Content-Type: application/fhir+xml;fhirVersion=4.0
 < ./input/ch-emed/2-7-MedicationCard.xml
 
 
-### Transform 1-Zuweisung zur Radiologischen Diagnostik.xml from FIR to CDA
+### Transform 1-Zuweisung zur Radiologischen Diagnostik.xml from FHIR to CDA
 
 POST {{host}}/StructureMap/$transform?source=http://ahdis.ch/ig/cda-fhir-maps/StructureMap/BundleToCdaCh
 Accept: application/fhir+xml;fhirVersion=4.0

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Bundle xmlns="http://hl7.org/fhir">
+<Bundle 
+   xmlns="http://hl7.org/fhir">
    <identifier>
       <system value="urn:ietf:rfc:3986"/>
       <value value="urn:uuid:d41d72ba-2100-11e6-b67b-9e71128cae77"/>
@@ -129,8 +130,9 @@
    </entry>
    <entry>
       <resource>
+         <!-- Composition.subject -->
          <Patient>
-            <id value="2"/> <!-- Composition.subject -->
+            <id value="2"/>
             <identifier>
                <system value="urn:oid:2.999"/>
                <value value="11111111"/>
@@ -184,8 +186,9 @@
   </entry>
   <entry>
       <resource>
+         <!--  Composition.informationrecipient -->
          <Patient>
-            <id value="1"/> <!--  Composition.ch-ext-epr-informationrecipient -->
+            <id value="1"/>
             <name>
                <family value="Wegmüller"/>
                <given value="Monika"/>
@@ -212,7 +215,7 @@
                         <code value="7680500440334"/>
                         <display value="NORVASC Tabl 10 mg"/>
                      </coding>
-                     <text value="NORVASC Tabl 10 mg"/> <!-- ziegm: value= fehlt noch -->
+                     <text value="NORVASC Tabl 10 mg"/> <!-- ziegm: "value=" fehlt noch -->
                   </code>
                   <form>
                      <coding>
@@ -238,7 +241,7 @@
                   <ingredient>
                      <itemCodeableConcept>
                         <coding>
-                           <system value="urn:oid:2.16.840.1.113883.6.73"/> <!-- ziegm: http://hl7.org/fhir/sid/atc-->
+                           <system value="http://hl7.org/fhir/sid/atc"/> <!-- ziegm: http://www.whocc.no/atc -->
                            <code value="C08CA01"/>
                            <display value="amlodipine"/>
                         </coding>

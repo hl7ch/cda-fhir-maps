@@ -1,44 +1,44 @@
-### Create and Update CDA maps for converting to FHIR with RESTClient and running matchbox locally
+### Create and Update FHIR maps for converting to CDA with RESTClient and running matchbox locally
 ### Note: POST the maps in the following order, if you update one map you need to repost also the maps below
 
 @host = http://localhost:8080/r4
 
 
-### 1. POST CdaToFhirTypes.map
+### 1. POST FhirtoCdaTypes.map
 POST {{host}}/StructureMap HTTP/1.1
 Accept: application/fhir+xml;fhirVersion=4.0
 Content-Type: text/fhir-mapping
 
-< ./input/maps/CdaToFhirTypes.map
+< ./input/maps/FhirtoCdaTypes.map
 
 
-### 2. POST CdaToBundle
+### 2. POST BundleToCda.map
 POST {{host}}/StructureMap HTTP/1.1
 Accept: application/fhir+xml;fhirVersion=4.0
 Content-Type: text/fhir-mapping
 
-< ./input/maps/CdaToBundle.map
+< ./input/maps/BundleToCda.map
 
 
-### 3. POST CdaChToBundle
+### 3. POST BundleToCdaCh.map
 POST {{host}}/StructureMap HTTP/1.1
 Accept: application/fhir+xml;fhirVersion=4.0
 Content-Type: text/fhir-mapping
 
-< ./input/maps/CdaChToBundle.map
+< ./input/maps/BundleToCdaCh.map
 
 
-### 4. POST CdaChEmedMedicationPrescriptionDocumentToBundle.map 
+### 4. POST BundleToCdaChEmedMedicationPrescriptionDocument
 POST {{host}}/StructureMap HTTP/1.1
 Accept: application/fhir+xml;fhirVersion=4.0
 Content-Type: text/fhir-mapping
 
-< ./input/maps/CdaChEmedMedicationPrescriptionDocumentToBundle.map
+< ./input/maps/BundleToCdaChEmedMedicationPrescriptionDocument.map
 
-  
-### 5. Transform CDAMedicationPrescriptionDocument from CDA to FHIR
-POST {{host}}/StructureMap/$transform?source=http://ahdis.ch/ig/cda-fhir-maps/StructureMap/CdaChEmedMedicationPrescriptionDocumentToBundle
+
+### Transform 2-6-MedicationPrescription.xml from FHIR to CDA
+POST {{host}}/StructureMap/$transform?source=http://ahdis.ch/ig/cda-fhir-maps/StructureMap/BundleToCdaChEmedMedicationPrescriptionDocument
 Accept: application/fhir+xml;fhirVersion=4.0
 Content-Type: application/fhir+xml;fhirVersion=4.0
 
-< ./input/cda-ch-emed/2-6-MedicationPrescription-CDAoriginal.xml
+< ./input/ch-emed/2-7-MedicationCard-FHIRoriginal.xml
