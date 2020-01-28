@@ -91,8 +91,7 @@ group ClinicalDocumentComposition(source source : ClinicalDocument, target targe
       assignedAuthor.assignedPerson as person then {
         person.name -> practitioner.name;
       };
-      // ziegm: organization nicht als composition.author
-      //assignedAuthor.representedOrganization as srcOrg ->  bundle.entry as e2,  e2.resource = create('Organization') as organization, target.author = create('Reference') as reference2, reference2.reference = reference(organization) then ClinicalDocumentOrganization(srcOrg, organization);
+      assignedAuthor.representedOrganization as srcOrg ->  bundle.entry as e2,  e2.resource = create('Organization') as organization, target.author = create('Reference') as reference2, reference2.reference = reference(organization) then ClinicalDocumentOrganization(srcOrg, organization);
     } "author";
   };
   source.confidentialityCode -> target.confidentiality share confidentialityCode;
