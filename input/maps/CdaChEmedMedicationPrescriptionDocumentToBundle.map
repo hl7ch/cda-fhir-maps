@@ -91,8 +91,7 @@ group ManufacturedMaterialEntryContentModule(source source : SubstanceAdministra
       manufacturedProduct.manufacturedMaterial as manufacturedMaterial then {
         manufacturedMaterial.asContent as asContent then {
           asContent.containerPackagedMedicine as containerPackagedMedicine then {
-            //containerPackagedMedicine.code as code -> medication.code as fhircode then CECodeableConcept(code, fhircode) "medication.code";
-            containerPackagedMedicine.code as code -> medication.code as fhircode, fhircode.text = (%manufacturedMaterial.name) then CECodeableConcept(code, fhircode) "medication.code"; 
+            containerPackagedMedicine.code as code -> medication.code as fhircode, fhircode.text = (%manufacturedMaterial.name.other) then CECodeableConcept(code, fhircode) "medication.code"; 
             containerPackagedMedicine.formCode as formCode -> medication.form as form then CECodeableConcept(formCode, form)  "medication.formCode";
             containerPackagedMedicine.capacityQuantity as capacityQuantity where (%containerPackagedMedicine.formCode.code='10219000') -> medication.amount = create('Ratio') as ratio then {
               capacityQuantity.value as value -> ratio.numerator = create('Quantity') as quantity, 

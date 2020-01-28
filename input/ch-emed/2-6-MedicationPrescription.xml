@@ -256,7 +256,7 @@
                 <code value="7680500440334"/>
                 <display value="NORVASC Tabl 10 mg"/>
               </coding>
-              <text>NORVASC Tabl 10 mg</text>
+              <text value="NORVASC Tabl 10 mg"/>
             </code>
             <form>
               <coding>
