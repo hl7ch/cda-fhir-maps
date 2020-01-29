@@ -36,7 +36,7 @@
       <exampleBoolean value="false"/>
     </resource>
 
-    <!-- pages -->
+    <!-- pages, parameters -->
     <page>
       <nameUrl value="toc.html"/>
       <title value="Table of Contents"/>
@@ -47,5 +47,17 @@
         <generation value="markdown"/>
       </page>
     </page>
+    <parameter>
+      <code value="releaselabel"/>
+      <value value="CI build"/>
+    </parameter>
+    <parameter>
+      <code value="path-pages" />
+      <value value="input/pages"/>
+    </parameter>
+    <parameter>
+      <code value="copyrightyear"/>
+      <value value="2020+"/>
+    </parameter>
   </definition>
 </ImplementationGuide>
