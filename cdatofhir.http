@@ -5,7 +5,6 @@
 
 
 ### 1. POST CdaToFhirTypes.map
-
 POST {{host}}/StructureMap HTTP/1.1
 Accept: application/fhir+xml;fhirVersion=4.0
 Content-Type: text/fhir-mapping
@@ -20,12 +19,14 @@ Content-Type: text/fhir-mapping
 
 < ./input/maps/CdaToBundle.map
 
+
 ### 3. POST CdaChToBundle
 POST {{host}}/StructureMap HTTP/1.1
 Accept: application/fhir+xml;fhirVersion=4.0
 Content-Type: text/fhir-mapping
 
 < ./input/maps/CdaChToBundle.map
+
 
 ### 4. POST CdaChEmedMedicationCardDocumentToBundle.map 
 POST {{host}}/StructureMap HTTP/1.1
@@ -35,8 +36,7 @@ Content-Type: text/fhir-mapping
 < ./input/maps/CdaChEmedMedicationCardDocumentToBundle.map
 
   
-### Transform CDAMedicationCardDocument from CDA to FHIR
-
+### 5.a Transform CDAMedicationCardDocument from CDA to FHIR
 POST {{host}}/StructureMap/$transform?source=http://ahdis.ch/ig/cda-fhir-maps/StructureMap/CdaChEmedMedicationCardDocumentToBundle
 Accept: application/fhir+xml;fhirVersion=4.0
 Content-Type: application/fhir+xml;fhirVersion=4.0
@@ -44,9 +44,7 @@ Content-Type: application/fhir+xml;fhirVersion=4.0
 < ./input/cda-ch-emed/2-7-MedicationCard.xml
 
 
-
-### Transform 1-Zuweisung zur Radiologischen Diagnostik.xml from CDA to FHIR
-
+### 5.b Transform 1-Zuweisung zur Radiologischen Diagnostik.xml from CDA to FHIR
 POST {{host}}/StructureMap/$transform?source=http://ahdis.ch/ig/cda-fhir-maps/StructureMap/CdaChToBundle
 Accept: application/fhir+xml;fhirVersion=4.0
 Content-Type: application/fhir+xml;fhirVersion=4.0

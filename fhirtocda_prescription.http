@@ -41,4 +41,4 @@ POST {{host}}/StructureMap/$transform?source=http://ahdis.ch/ig/cda-fhir-maps/St
 Accept: application/fhir+xml;fhirVersion=4.0
 Content-Type: application/fhir+xml;fhirVersion=4.0
 
-< ./input/ch-emed/2-6-MedicationPrescription-FHIRoriginal.xml
+< ./input/ch-emed/2-6-MedicationPrescription.xml

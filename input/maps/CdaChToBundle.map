@@ -121,9 +121,9 @@ group ChExtEprInformationRecipientOrganization(source source: IntendedRecipient,
 // target: http://build.fhir.org/ig/hl7ch/ch-core/StructureDefinition-ch-ext-epr-dataenterer.html
 group ChExtEprDataEnterer(source source: DataEnterer, target person: Person, target ext: Extension) {
   source -> ext.url = 'http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-dataenterer' "url";
-  source.time as time -> ext.extension as ext, ext.url='time', ext.value = create('dateTime') as value then TSDateTime(time, value) "time";
-  source.assignedEntity as assignedEntity -> ext.extension as ext, ext.url='person', ext.value = create('Reference') as reference, 
+  source.assignedEntity as assignedEntity -> ext.extension as ext, ext.url='enterer', ext.value = create('Reference') as reference, 
                 reference.reference = reference(person) then ClinicalDocumentEntityPerson(assignedEntity, person) "person";
+  source.time as time -> ext.extension as exttime then ChExtEprTime(time, exttime) "time";
 }
 
 // _________________________ Template Type not specified  ___________________ 

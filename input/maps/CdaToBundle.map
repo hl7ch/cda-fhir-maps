@@ -83,8 +83,9 @@ group ClinicalDocumentComposition(source source : ClinicalDocument, target targe
     comp.encompassingEncounter as srcEnc -> target.encounter = create('Reference') as reference, reference.reference = reference(encounter) then ClinicalDocumentEncounter(srcEnc, bundle, encounter) "srcEncounter";
   } "encompassingEncounter";
   source.effectiveTime -> target.date;
-  source.author as srcAuthor ->  bundle.entry as e,  e.resource = create('Practitioner') as practitioner then {
-    srcAuthor.assignedAuthor as assignedAuthor -> target.author = create('Reference') as reference, reference.reference = reference(practitioner) then {
+  source.author as srcAuthor ->  bundle.entry as e,  e.resource = create('Practitioner') as practitioner, target.author = create('Reference') as reference, reference.reference = reference(practitioner) then {
+    srcAuthor.time as time -> reference.extension as exttime then ChExtEprTime(time, exttime) "time";
+    srcAuthor.assignedAuthor as assignedAuthor then {
       assignedAuthor.id -> practitioner.identifier;
       assignedAuthor.addr -> practitioner.address;
       assignedAuthor.telecom -> practitioner.telecom;
@@ -211,6 +212,15 @@ group ClinicalDocumentLocation(source source : HealthCareFacility, target bundle
       srcOrg -> target.managingOrganization = create('Reference') as reference, reference.reference = reference(organization) then ClinicalDocumentOrganization(srcOrg, organization) "organization";
     } "org";
   }; // place names are usually stored with no parts
+}
+
+
+// source dataEnterer: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5.30.1.1.10.2.7
+// source author: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.840.1.113883.10.12.102
+// target: https://build.fhir.org/ig/hl7ch/ch-core//StructureDefinition-ch-ext-epr-time.html
+group ChExtEprTime(source source: TSDateTime, target ext: Extension) {
+  source -> ext.url = 'http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-time' "url";
+  source -> ext.value = create('dateTime') as value then TSDateTime(source, value) "value";
 }
 
 // _________________________ Template Type not specified  ___________________ 
