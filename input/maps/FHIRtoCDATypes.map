@@ -35,6 +35,7 @@ group Any() {
 
 group IdentifierII(source source : Identifier, target target : II) extends Any <<types>> {
   source.value as value where source.system.empty() and source.value.startsWith('urn:uuid:') -> target.root = (value.substring(9).upper()) "id as uuid";
+  source.value as value where source.system = 'urn:ietf:rfc:3986' -> target.root = (value.substring(9).upper()) "id as uuid";
   source.value as value where source.system.startsWith('urn:oid:') then {
     source.system as system -> target.root = (system.substring(8)), target.extension = value "oidident"; 
   } "system";
