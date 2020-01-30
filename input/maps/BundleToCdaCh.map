@@ -139,17 +139,17 @@ group CompositionClinicalDocumentCH(source bundle : Bundle, source composition :
   } "informationRecipient";  
   composition.extension as extension where $this.url='http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-dataenterer' -> cda.dataEnterer as dataEnterer then {
     extension -> dataEnterer.templateId as templateId, templateId.root='2.16.756.5.30.1.1.10.2.7' "templateId";
-    extension.extension as extensionTime where $this.url='time' then {
+    extension.extension as extensionTime where $this.url='http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-time' then {
       extensionTime.valueDateTime as valueDateTime -> dataEnterer.time as time then DateTimeTS(valueDateTime,time) "DateTime";
-    } "extensionTime";  
-    extension.extension as extensionPerson where $this.url='person' then {
+    } "extensionTime";
+    extension.extension as extensionPerson where $this.url='enterer' then {
       extensionPerson.valueReference as valueReference then {
         bundle.entry as entry then {
           entry.resource as person where ($this.id=%valueReference.reference.substring(7)) -> dataEnterer.assignedEntity as assignedEntity then PersonAssignedEntityWithId(person,assignedEntity) "AssignedEntityWithId";
         } "person";
       } "valueReference";
     } "extensionPerson";  
-  } "dateEnterer";  
+  } "dataEnterer";  
   composition.section as section where $this.code.coding.where(system='http://loinc.org' and code='55108-5') -> cda.component as component then {
     section -> component.contextConductionInd = true "contextConductionInd";
     section -> component.structuredBody as structuredBody, structuredBody.component as component, component.section as cdasection then SectionCdaOriginalRepresentation(bundle, section,cdasection) "cdasection";

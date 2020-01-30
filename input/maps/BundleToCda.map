@@ -123,6 +123,11 @@ group PatientRecordTarget(source source : Patient, source bundle: Bundle, target
 }
 
 group PractitionerAuthor(source bundle : Bundle, source composition : Composition, source source : Practitioner, target target : Author) {
+  composition.author as srcauthor then{
+    srcauthor.extension as extensionTime where $this.url='http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-time' then {
+        extensionTime.valueDateTime as valueDateTime -> target.time as time then DateTimeTS(valueDateTime,time) "DateTime";
+    } "extensionTime";
+  };  
   source -> target.assignedAuthor as assignedAuthor then {
       source.identifier as identifier -> assignedAuthor.id as id then IdentifierII(identifier, id) "id";
       source.name as name -> assignedAuthor.assignedPerson as assignedPerson, assignedPerson.name as en then HumanNameEN(name, en) "name";
