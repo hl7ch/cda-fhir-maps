@@ -142,7 +142,11 @@ group ADAddress(source source : AD, target target : Address) extends Any <<types
   source.streetAddressLine as v -> target.line = (v.dataString) "streetAddress";
   source.streetName as v -> target.line = (v.dataString);
   source.houseNumber as v -> target.line = (v.dataString);
-  source.use as c -> target.use = translate(c, 'http://hl7.org/fhir/ConceptMap/cm-address-use-v3', 'code');
+  //source.use as c -> target.use = translate(c, 'http://hl7.org/fhir/ConceptMap/cm-address-use-v3', 'code');
+  source.use where (source.use.startsWith('H')) -> target.use = 'home' "usehome";
+  source.use where (source.use = 'WP') -> target.use = 'work' "usework";
+  source.use where (source.use = 'TMP') -> target.use = 'temp' "usetemp";
+  source.use where ((source.use = 'OLD') or (source.use = 'BAD')) -> target.use = 'old' "useold";
   source.useablePeriod -> target.period;
 }
 

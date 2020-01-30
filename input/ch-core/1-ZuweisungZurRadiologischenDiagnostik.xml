@@ -181,6 +181,7 @@
         <gender value="male"/>
         <birthDate value="1938-12-12"/>
         <address>
+          <use value="home"/>
           <line value="Leidensweg"/>
           <line value="10"/>
           <city value="Specimendorf"/>
@@ -252,6 +253,7 @@
           <use value="work"/>
         </telecom>
         <address>
+          <use value="work"/>
           <line value="Doktorgasse"/>
           <line value="2"/>
           <city value="Musterhausen"/>
@@ -288,6 +290,7 @@
         </identifier>
         <name value="Gruppenpraxis CH, Dr. med. Allzeit Bereit, Facharzt für Allgemeine Medizin"/>
         <address>
+          <use value="work"/>
           <line value="Doktorgasse"/>
           <line value="2"/>
           <city value="Musterhausen"/>
@@ -303,6 +306,7 @@
         <id value="55f9fd9f-7f45-4fbd-8130-5b37224bf59d"/>
         <name value="RoDiag Radiologieinstitut"/>
         <address>
+          <use value="work"/>
           <line value="Röntgenstr."/>
           <line value="1"/>
           <city value="Musterhausen"/>
