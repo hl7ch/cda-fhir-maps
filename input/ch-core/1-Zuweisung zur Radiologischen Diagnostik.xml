@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Bundle 
-  xmlns="http://hl7.org/fhir">
+<Bundle xmlns="http://hl7.org/fhir">
   <identifier>
     <value value="urn:uuid:31397b31-be60-47e1-bec6-f37816d42b0c"/>
   </identifier>
@@ -24,13 +23,13 @@
           </valueReference>
         </extension>
         <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-dataenterer">
-          <extension url="time">
-            <valueDateTime value="2017-10-03T13:15:00+01:00"/>
-          </extension>
-          <extension url="person">
+          <extension url="enterer">
             <valueReference>
               <reference value="Person/fae0243a-9800-44f5-ba5b-0fe78f5cdf51"/>
             </valueReference>
+          </extension>
+          <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-time">
+            <valueDateTime value="2017-10-03T13:15:00+01:00"/>
           </extension>
         </extension>
         <identifier>
@@ -54,6 +53,9 @@
         </subject>
         <date value="2017-10-03T17:33:00+01:00"/>
         <author>
+          <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-time">
+            <valueDateTime value="2017-10-03T16:09:00+01:00"/>
+          </extension>
           <reference value="Practitioner/62727069-d7c1-463c-87a7-7bf0d19581be"/>
         </author>
         <author>
@@ -85,8 +87,7 @@
           <title value="Gew&#xFC;nschte Untersuchung"/>
           <text>
             <status value="generated"/>
-            <div 
-              xmlns="http://www.w3.org/1999/xhtml">
+            <div xmlns="http://www.w3.org/1999/xhtml">
               <span>
 							Der Patient erwartet Ihr Aufgebot zur Untersuchung.
                 <br/>
@@ -102,11 +103,10 @@
           <title value="Dringlichkeit / Wunschtermin"/>
           <text>
             <status value="generated"/>
-            <div 
-              xmlns="http://www.w3.org/1999/xhtml">
+            <div xmlns="http://www.w3.org/1999/xhtml">
               <span style="font-style: italic">
 							Angaben zum gewünschten Termin
-						</span>
+              </span>
             </div>
           </text>
         </section>
@@ -114,11 +114,10 @@
           <title value="Fragestellung"/>
           <text>
             <status value="generated"/>
-            <div 
-              xmlns="http://www.w3.org/1999/xhtml">
+            <div xmlns="http://www.w3.org/1999/xhtml">
               <span style="font-style: italic">
 							Grund für die Durchführung der Untersuchung und Angaben zum aktuellen Leiden resp. zum Grund der Untersuchung
-						</span>
+              </span>
             </div>
           </text>
         </section>
@@ -126,8 +125,7 @@
           <title value="Angaben zum Patienten"/>
           <text>
             <status value="generated"/>
-            <div 
-              xmlns="http://www.w3.org/1999/xhtml">
+            <div xmlns="http://www.w3.org/1999/xhtml">
               <span style="font-style: italic">
 							Erfolgte Voruntersuchungen
                 <br/>
@@ -141,8 +139,7 @@
           <title value="Klinische Angaben"/>
           <text>
             <status value="generated"/>
-            <div 
-              xmlns="http://www.w3.org/1999/xhtml">
+            <div xmlns="http://www.w3.org/1999/xhtml">
               <span style="font-style: italic">
 							Beschreibung des aktuellen Leidens
                 <br/>

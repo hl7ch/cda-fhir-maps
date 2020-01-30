@@ -1,5 +1,4 @@
-<Bundle 
-  xmlns="http://hl7.org/fhir" 
+<Bundle xmlns="http://hl7.org/fhir" 
   xmlns:v3="urn:hl7-org:v3">
   <identifier>
     <value value="urn:uuid:6b6ed376-a7da-44cb-92d1-e75ce1ae73b0"/>
@@ -44,6 +43,9 @@
         </subject>
         <date value="2012-02-04T14:05:00+01:00"/>
         <author>
+          <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-time">
+            <valueDateTime value="2012-02-04T13:55:00+01:00"/>
+          </extension>
           <reference value="Practitioner/a8fc26b2-5ea2-41ea-83f0-79e5f233c924"/>
         </author>
         <author>
@@ -75,11 +77,10 @@
           </code>
           <text>
             <status value="generated"/>
-            <div 
-              xmlns="http://www.w3.org/1999/xhtml">
+            <div xmlns="http://www.w3.org/1999/xhtml">
               <span id="co1">
                   Kommentar zu Medication Treatment
-                </span>
+              </span>
             </div>
           </text>
         </section>
@@ -94,8 +95,7 @@
           </code>
           <text>
             <status value="generated"/>
-            <div 
-              xmlns="http://www.w3.org/1999/xhtml">
+            <div xmlns="http://www.w3.org/1999/xhtml">
             Representation of the original view:
             
               <img src="pdf1"/>
@@ -116,8 +116,7 @@
           </code>
           <text>
             <status value="generated"/>
-            <div 
-              xmlns="http://www.w3.org/1999/xhtml">
+            <div xmlns="http://www.w3.org/1999/xhtml">
               <table>
                 <thead>
                   <tr>
