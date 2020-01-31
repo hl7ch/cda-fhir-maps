@@ -13,6 +13,7 @@ uses "http://hl7.org/fhir/cda/StructureDefinition/Author" alias Author as target
 uses "http://hl7.org/fhir/cda/StructureDefinition/RecordTarget" alias RecordTarget as target
 uses "http://hl7.org/fhir/cda/StructureDefinition/Custodian" alias Custodian as target
 uses "http://hl7.org/fhir/cda/StructureDefinition/Organization" alias CdaOrganization as target
+uses "http://hl7.org/fhir/cda/StructureDefinition/LegalAuthenticator" alias LegalAuthenticator as target
 uses "http://hl7.org/fhir/cda/StructureDefinition/Section" alias CdaSection as target
 
 uses "http://hl7.org/fhir/StructureDefinition/Bundle" alias Bundle as source
@@ -78,7 +79,8 @@ group CompositionClinicalDocument(source bundle : Bundle, source composition : C
   bundle.entry as entry then {
     entry.resource as patient where ('Patient'+'/'+$this.id) in %composition.subject.reference then PatientRecordTarget(patient, bundle, recordTarget) "patient";
     entry.resource as organization where ('Organization'+'/'+$this.id) in %composition.custodian.reference -> cda.custodian as custodian then OrganizationCustodian(organization, custodian) "custodian";
-    entry.resource as practitioner where ('Practitioner'+'/'+$this.id) in %composition.author.reference then PractitionerAuthor(bundle, composition, practitioner, author) "author";    
+    entry.resource as practitioner where ('Practitioner'+'/'+$this.id) in %composition.author.reference then PractitionerAuthor(bundle, composition, practitioner, author) "author";
+    entry.resource as practitioner where ('Practitioner'+'/'+$this.id) in %composition.attester.party.reference -> cda.legalAuthenticator as legalAuthenticator then PractitionerLegalAuthenticator(bundle, composition, practitioner, legalAuthenticator) "legalAuthenticator";
   } "patient";
   
   //  source.date -> target.effectiveTime "effectiveTime";
@@ -152,6 +154,23 @@ group Organization2CdaOrganization(source source : Organization, target target :
   source.address as address -> target.addr as ad then AddressAD(address, ad) "address";
   source.telecom as telecom -> target.telecom as tel then ContactPointTEL(telecom, tel);
 }
+
+
+group PractitionerLegalAuthenticator(source bundle : Bundle, source composition : Composition, source source : Practitioner, target target : LegalAuthenticator) {
+  source -> target.templateId as templateId, templateId.root='2.16.756.5.30.1.1.10.2.5' "templateId";
+  composition.attester as attester then{
+    attester.time as srcTime -> target.time as time then InstantTS(srcTime, time) "timestamp";
+  } "time";
+  //source -> target.signatureCode = 'S' "S";
+  //source = 'S' as srcCode -> target.signatureCode as signature then CodeCS(srcCode, signature) "signature";
+  source -> target.signatureCode as signatureCode, signatureCode.code='S' "signature";
+  source -> target.assignedEntity as assignedEntity then {
+    source.identifier as identifier -> assignedEntity.id as id then IdentifierII(identifier, id) "identifier";
+    source.name as name -> assignedEntity.assignedPerson as assignedPerson, assignedPerson.name as en then HumanNameEN(name, en) "name";
+  } "assignedEntity";
+} 
+
+
 
 // _________________________ Template Type not specified  ___________________ 
 
