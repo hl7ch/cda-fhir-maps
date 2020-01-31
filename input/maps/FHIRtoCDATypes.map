@@ -154,6 +154,13 @@ group HumanNameEN(source source : HumanName, target target : EN) extends Any <<t
   source.prefix as v -> target.prefix as prefix, prefix.data = v;
   source.suffix as v -> target.suffix as suffix, suffix.data = v;
 //  source.use as c -> target.use = translate(c, 'http://hl7.org/fhir/ConceptMap/cm-name-use-v3', 'code');
+  source.use as use where $this = 'usual' -> target.use = 'D';
+  source.use as use where $this = 'official' -> target.use = 'L';
+  source.use as use where $this = 'temp' -> target.use = 'TEMP';
+  source.use as use where $this = 'nickname' -> target.use = 'N';
+  source.use as use where $this = 'anonymous' -> target.use = 'S';
+  source.use as use where $this = 'old' -> target.use = 'BAD'; // could also be 'NOUSE'
+  source.use as use where $this = 'maiden' -> target.use = 'M';
 //  source.validTime -> target.period;
 }
 

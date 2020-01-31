@@ -160,6 +160,7 @@
           <value value="8733"/>
         </identifier>
         <name>
+          <use value="official"/>
           <family value="MUSTER"/>
           <given value="Max"/>
         </name>
@@ -215,6 +216,7 @@
           <value value="7601000201041"/>
         </identifier>
         <name>
+          <use value="official"/>
           <family value="Bereit"/>
           <given value="Allzeit"/>
           <prefix value="Dr. med."/>
@@ -272,6 +274,7 @@
           <value value="7601000201041"/>
         </identifier>
         <name>
+          <use value="official"/>
           <family value="Bereit"/>
           <given value="Allzeit"/>
           <prefix value="Dr. med."/>
@@ -325,6 +328,7 @@
           <value value="0812763"/>
         </identifier>
         <name>
+          <use value="official"/>
           <family value="Kraft"/>
           <given value="Schreib"/>
         </name>
