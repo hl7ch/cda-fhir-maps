@@ -22,13 +22,13 @@
         </extension>
         <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-informationrecipient">
           <valueReference>
-            <reference value="Organization/f7fe8ba7-7a47-4765-847e-ce4eeb47d51c"/>
+            <reference value="Organization/2a921b75-b64c-4b0c-a118-f83dbd969076"/>
           </valueReference>
         </extension>
         <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-dataenterer">
           <extension url="enterer">
             <valueReference>
-              <reference value="Person/c152515e-938a-4709-81f9-0571034e3d90"/>
+              <reference value="Person/2730d83f-62db-4967-9536-fbdc4877fe0e"/>
             </valueReference>
           </extension>
           <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-time">
@@ -53,17 +53,17 @@
           </coding>
         </type>
         <subject>
-          <reference value="Patient/4fc05f3f-f409-4e8d-afb9-4c4433898dab"/>
+          <reference value="Patient/14352087-86af-4bd3-a388-33eeea1d2b9a"/>
         </subject>
         <date value="2018-02-06T16:57:00+01:00"/>
         <author>
           <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-time">
             <valueDateTime value="2017-10-03T16:09:00+01:00"/>
           </extension>
-          <reference value="Practitioner/1503fdb5-7949-4288-8e47-65eb00e64bc9"/>
+          <reference value="Practitioner/2beb1afb-40e4-4b7a-8f6b-e1a0e0a121bc"/>
         </author>
         <author>
-          <reference value="Organization/ea74d94c-f5f4-4ee7-a53d-3ca286c67d03"/>
+          <reference value="Organization/76046060-15fd-4e3a-ba7d-6e16e9a299f2"/>
         </author>
         <title value="Transfer note for radiological diagnostics"/>
         <confidentiality value="N">
@@ -81,11 +81,11 @@
           <mode value="legal"/>
           <time value="2017-10-03"/>
           <party>
-            <reference value="Practitioner/e42b7ca2-7837-4b95-b1f1-a82403e30a2d"/>
+            <reference value="Practitioner/10eb6744-c625-474b-93eb-8aec62c7bd42"/>
           </party>
         </attester>
         <custodian>
-          <reference value="Organization/68eb791a-8f10-480a-b247-d39a0b9c0269"/>
+          <reference value="Organization/52b8eed2-8196-472e-be76-de8373a15dd9"/>
         </custodian>
         <section>
           <title value="Ordered diagnostics"/>
@@ -153,7 +153,7 @@
   <entry>
     <resource>
       <Patient>
-        <id value="4fc05f3f-f409-4e8d-afb9-4c4433898dab"/>
+        <id value="14352087-86af-4bd3-a388-33eeea1d2b9a"/>
         <identifier>
           <system value="urn:oid:2.999"/>
           <value value="8733"/>
@@ -189,7 +189,7 @@
           <country value="CH"/>
         </address>
         <managingOrganization>
-          <reference value="Organization/3c28e311-d6e7-4481-9c4d-fe1e569684d7"/>
+          <reference value="Organization/9f59806f-9b70-42ee-9a42-c7c1874ec1da"/>
         </managingOrganization>
       </Patient>
     </resource>
@@ -197,7 +197,7 @@
   <entry>
     <resource>
       <Organization>
-        <id value="3c28e311-d6e7-4481-9c4d-fe1e569684d7"/>
+        <id value="9f59806f-9b70-42ee-9a42-c7c1874ec1da"/>
         <identifier>
           <system value="urn:oid:2.51.1.3"/>
           <value value="7608888888888"/>
@@ -209,7 +209,7 @@
   <entry>
     <resource>
       <Practitioner>
-        <id value="1503fdb5-7949-4288-8e47-65eb00e64bc9"/>
+        <id value="2beb1afb-40e4-4b7a-8f6b-e1a0e0a121bc"/>
         <identifier>
           <system value="urn:oid:2.51.1.3"/>
           <value value="7608888888888"/>
@@ -227,7 +227,7 @@
   <entry>
     <resource>
       <Organization>
-        <id value="ea74d94c-f5f4-4ee7-a53d-3ca286c67d03"/>
+        <id value="76046060-15fd-4e3a-ba7d-6e16e9a299f2"/>
         <identifier>
           <system value="urn:oid:2.51.1.3"/>
           <value value="7609999999999"/>
@@ -267,7 +267,7 @@
   <entry>
     <resource>
       <Practitioner>
-        <id value="e42b7ca2-7837-4b95-b1f1-a82403e30a2d"/>
+        <id value="10eb6744-c625-474b-93eb-8aec62c7bd42"/>
         <identifier>
           <system value="urn:oid:2.51.1.3"/>
           <value value="7607777777777"/>
@@ -285,7 +285,7 @@
   <entry>
     <resource>
       <Organization>
-        <id value="68eb791a-8f10-480a-b247-d39a0b9c0269"/>
+        <id value="52b8eed2-8196-472e-be76-de8373a15dd9"/>
         <identifier>
           <system value="urn:oid:2.51.1.3"/>
           <value value="7608888888888"/>
@@ -305,7 +305,7 @@
   <entry>
     <resource>
       <Organization>
-        <id value="f7fe8ba7-7a47-4765-847e-ce4eeb47d51c"/>
+        <id value="2a921b75-b64c-4b0c-a118-f83dbd969076"/>
         <name value="RoDiag Radiology Institute"/>
         <address>
           <use value="work"/>
@@ -321,7 +321,7 @@
   <entry>
     <resource>
       <Person>
-        <id value="c152515e-938a-4709-81f9-0571034e3d90"/>
+        <id value="2730d83f-62db-4967-9536-fbdc4877fe0e"/>
         <identifier>
           <system value="urn:oid:2.999"/>
           <value value="0812763"/>
