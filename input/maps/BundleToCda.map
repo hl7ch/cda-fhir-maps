@@ -103,6 +103,9 @@ group PatientRecordTarget(source source : Patient, source bundle: Bundle, target
         v -> adminGender.code = translate(v, 'http://hl7.org/fhir/ConceptMap/cm-administrative-gender-v3', 'code') "gender";
         v -> adminGender.codeSystem ='2.16.840.1.113883.5.1' "codeSytem";
         v -> adminGender.codeSystemName='HL7 AdministrativeGender' "codeSystemName";
+        v as v where $this = 'male' -> adminGender.displayName = 'Male' "male";
+        v as v where $this = 'female' -> adminGender.displayName = 'Female' "female";
+        v as v where $this = 'other' -> adminGender.displayName = 'Undifferentiated' "other";
       } "gender";
     } "patient";
     source.telecom as telecom -> patientRole.telecom as tel then ContactPointTEL(telecom, tel);
