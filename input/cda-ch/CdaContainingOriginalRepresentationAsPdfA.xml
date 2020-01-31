@@ -132,7 +132,7 @@ History:
 				<!-- The author's means of communication: eMail work place.-->
 				<telecom value="mailto:ready@gruppenpraxis.ch" use="WP"/>
 				<!-- The author's means of communication: website work place.-->
-				<telecom value="http:www.grouppractice.ch" use="WP"/>
+				<telecom value="http:http:www.grouppractice.ch" use="WP"/>
 				<!-- The author's address - also according to eCH-0010. -->
 				<addr use="WP">
 					<streetName>doctors street</streetName>
@@ -208,6 +208,7 @@ History:
 
 	<!-- The legal authenticator of the document according to CDA-CH v2.0. -->
 	<legalAuthenticator>
+		<templateId root="2.16.756.5.30.1.1.10.2.5"/>
 		<!-- Timestamp of the signature. -->
 		<time value="20171003"/>
 		<signatureCode code="S"/>
