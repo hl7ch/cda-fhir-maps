@@ -387,7 +387,7 @@
                                         <pharm:formCode code="10219000" codeSystem="0.4.0.127.0.16.1.1.2.1" displayName="Tablet"/>
                                         <pharm:asContent classCode="CONT">
                                             <pharm:containerPackagedMedicine classCode="CONT" determinerCode="INSTANCE">
-                                                <pharm:code code="7680500440334" codeSystem="2.51.1.1" displayName="NORVASC Tabl 10 mg"/>
+                                                <pharm:code code="7680500440334" codeSystem="2.51.1.1" codeSystemName="GTIN" displayName="NORVASC Tabl 10 mg"/>
                                                 <pharm:capacityQuantity value="30"/>
                                             </pharm:containerPackagedMedicine>
                                         </pharm:asContent>

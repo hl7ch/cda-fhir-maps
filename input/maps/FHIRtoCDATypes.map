@@ -24,6 +24,13 @@ conceptmap "uri2system" {
   s:"http://hl7.org/fhir/sid/atc" == t:"ATC WHO"
 }
 
+conceptmap "oid2system" {
+  prefix s = "http://hl7.org/fhir"
+  prefix t = "http://hl7.org/cda"
+
+  s:"urn:oid:2.51.1.1" == t:"GTIN"
+}
+
 uses "http://hl7.org/fhir/StructureDefinition/Identifier" as source
 uses "http://hl7.org/fhir/cda/StructureDefinition/II" as target
 
@@ -92,7 +99,8 @@ group CodingCE(source source : Coding, target target : CE) extends Any <<types>>
     source.system as system where $this.startsWith('urn:oid:') then {
       source.system as system -> target.codeSystem = (system.substring(8)) "oidident"; 
     } "system";
-    source.system as system where $this.startsWith('http:') -> target.codeSystemName = translate(system, '#uri2system', 'code') "systemNane";
+    source.system as system where $this.startsWith('http:') -> target.codeSystemName = translate(system, '#uri2system', 'code') "systemName1";
+    source.system as system where $this.startsWith('urn:oid:') -> target.codeSystemName = translate(system, '#oid2system', 'code') "systemName2";
     source.display as display -> target.displayName = display "display";
 }
 
