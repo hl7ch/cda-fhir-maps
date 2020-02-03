@@ -254,6 +254,7 @@
 						</table>
 
 					</text>
+					<!-- 1. entry -->
 					<entry>
 						<substanceAdministration classCode="SBADM" moodCode="INT">
 							<templateId root="2.16.756.5.30.1.1.10.4.34"/>
@@ -277,12 +278,12 @@
 									<manufacturedMaterial classCode="MMAT" determinerCode="KIND">
 										<templateId root="2.16.756.5.30.1.1.10.4.33"/>
 										<templateId root="1.3.6.1.4.1.19376.1.9.1.3.1"/>
-										<name>BELOC ZOK Ret Tabl 50 mg</name>
 										<code code="C07AB02" codeSystem="2.16.840.1.113883.6.73" codeSystemName="ATC WHO" displayName="Metoprolol">
-											<originalText>
-												<reference value="#mtp.1.ingredient"/>
+											<originalText> <!-- ziegm?: CDA 0..1, im FHIR nicht als Referenz abgebildet -->
+												<reference value="#mtpc.1.ingredient"/>
 											</originalText>
-										</code> <!-- ziegm: code element fehlt noch-->
+										</code>
+										<name>BELOC ZOK Ret Tabl 50 mg</name>
 										<pharm:formCode code="10219000" codeSystem="0.4.0.127.0.16.1.1.2.1" displayName="Tablet"/>
 										<pharm:asContent classCode="CONT">
 											<pharm:containerPackagedMedicine classCode="CONT" determinerCode="INSTANCE"> <!-- ziegm: classCode="MMAT" determinerCode="KIND"-->
@@ -392,13 +393,14 @@
 							</entryRelationship>
 						</substanceAdministration>
 					</entry>
+					<!-- 2. entry -->
 					<entry>
 						<substanceAdministration classCode="SBADM" moodCode="INT">
 							<templateId root="2.16.756.5.30.1.1.10.4.34"/>
 							<templateId root="1.3.6.1.4.1.19376.1.9.1.3.7"/>
 							<templateId root="2.16.840.1.113883.10.20.1.24"/>
 							<templateId root="1.3.6.1.4.1.19376.1.5.3.1.4.7"/>
-							<templateId root="1.3.6.1.4.1.19376.1.5.3.1.4.7.1"/> <!-- ziegm: wird noch nicht generiert -->
+							<templateId root="1.3.6.1.4.1.19376.1.5.3.1.4.7.1"/> <!-- ziegm: dito 1. entry -->
 							<id root="534996FE-5E45-40ED-9388-06FA268E13D8"/>
 							<text>
 								<reference value="#mtpc.2"/>
@@ -419,15 +421,15 @@
 							<doseQuantity>
 								<center value="1"/>
 							</doseQuantity>
-							<consumable> <!-- ziegm: dito felder oben -->
-								<manufacturedProduct classCode="MANU">
+							<consumable>
+								<manufacturedProduct classCode="MANU"> <!-- ziegm: dito 1. entry -->
 									<templateId root="1.3.6.1.4.1.19376.1.5.3.1.4.7.2"/>
 									<templateId root="2.16.840.1.113883.10.20.1.53"/>
 									<manufacturedMaterial classCode="MMAT" determinerCode="KIND">
 										<templateId root="2.16.756.5.30.1.1.10.4.33"/>
 										<templateId root="1.3.6.1.4.1.19376.1.9.1.3.1"/>
 										<code code="C08CA01" codeSystem="2.16.840.1.113883.6.73" codeSystemName="ATC WHO" displayName="amlodipine">
-											<originalText>
+											<originalText> <!-- ziegm: dito 1. entry-->
 												<reference value="#mtpc.1.ingredient"/>
 											</originalText>
 										</code>

@@ -272,6 +272,7 @@
                                     <manufacturedMaterial classCode="MMAT" determinerCode="KIND">
                                         <templateId root="2.16.756.5.30.1.1.10.4.33"/>
                                         <templateId root="1.3.6.1.4.1.19376.1.9.1.3.1"/>
+                                        <code code="C07AB02" codeSystem="2.16.840.1.113883.6.73" codeSystemName="ATC WHO" displayName="Metoprolol"/>
                                         <name>BELOC ZOK Ret Tabl 50 mg</name>
                                         <pharm:formCode code="10219000" codeSystem="0.4.0.127.0.16.1.1.2.1" displayName="Tablet"/>
                                         <pharm:asContent classCode="CONT">
@@ -381,6 +382,7 @@
                                     <manufacturedMaterial classCode="MMAT" determinerCode="KIND">
                                         <templateId root="2.16.756.5.30.1.1.10.4.33"/>
                                         <templateId root="1.3.6.1.4.1.19376.1.9.1.3.1"/>
+                                        <code code="C08CA01" codeSystem="2.16.840.1.113883.6.73" codeSystemName="ATC WHO" displayName="amlodipine"/>
                                         <name>NORVASC Tabl 10 mg</name>
                                         <pharm:formCode code="10219000" codeSystem="0.4.0.127.0.16.1.1.2.1" displayName="Tablet"/>
                                         <pharm:asContent classCode="CONT">

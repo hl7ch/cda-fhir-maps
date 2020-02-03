@@ -91,7 +91,12 @@ group ManufacturedMaterialEntryContentModule(source bundle : Bundle, source medi
   medication -> manufacturedMaterial.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.9.1.3.1' "TemplateId";
   medication.code as code then {
     code.text as text -> manufacturedMaterial.name as name, name.other = text "brandname";
-  } "code";
+  } "name";
+  medication.ingredient as ingredient then {
+    ingredient.itemCodeableConcept as itemCodeableConcept then {
+      itemCodeableConcept.coding as coding -> manufacturedMaterial.code as ce then CodingCE(coding,ce) "code";
+    } "itemCC";
+  } "ingredientCC";
   medication.form as form then {
     form.coding as coding -> manufacturedMaterial.formCode as formCode then CodingCE(coding, formCode) "formCode";
   } "form";
