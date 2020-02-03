@@ -1,11 +1,11 @@
 map "http://ahdis.ch/ig/cda-fhir-maps/StructureMap/BundleToCdaChEmedMedicationCardDocument" = "FHIR Bundle to CDA-CH-EMED Medication Card document"
 
-//
+
 // Medication Card document, 2.16.756.5.30.1.1.10.1.3
 // 2020-01-09 Oliver Egger, copyright ahdis ag, Apache License 
 // CDA-CH-EMED:  https://art-decor.org/art-decor/decor-project--cdachemed-
 // FHIR CH-EMED: http://fhir.ch/ig/ch-emed/index.html
-//
+
 
 uses "http://hl7.org/fhir/cda/StructureDefinition/ClinicalDocument" alias ClinicalDocument as target
 uses "http://hl7.org/fhir/cda/StructureDefinition/AssignedAuthor" alias AssignedAuthor as target
@@ -90,9 +90,7 @@ group ManufacturedMaterialEntryContentModule(source bundle : Bundle, source medi
   medication -> manufacturedMaterial.templateId as templateId, templateId.root = '2.16.756.5.30.1.1.10.4.33' "CH-PHARM Manufactured Material Content Modul";
   medication -> manufacturedMaterial.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.9.1.3.1' "TemplateId";
   medication.code as code then {
-    code.coding as coding then {
-      coding.display as display -> manufacturedMaterial.name as name, name.other = display "brandname";
-    } "coding";
+    code.text as text -> manufacturedMaterial.name as name, name.other = text "brandname";
   } "code";
   medication.form as form then {
     form.coding as coding -> manufacturedMaterial.formCode as formCode then CodingCE(coding, formCode) "formCode";
@@ -129,6 +127,9 @@ group MedicationTreatmentPlanEntryContentModule(source bundle : Bundle, source m
   medicationStatement -> substanceAdministration.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.5.3.1.4.7' "PCC Medication Entry Content Module";
 
   // TODO: Normal / Split / Tapered Dose
+  //medicationStatement -> substanceAdministration.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.5.3.1.4.7.1' "Normal Dose";
+  //medicationStatement -> substanceAdministration.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.5.3.1.4.8' "Tapered Dose";
+  //medicationStatement -> substanceAdministration.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.5.3.1.4.9' "Split Dose";
 
   medicationStatement.identifier as identifier -> substanceAdministration.id as id then IdentifierII(identifier, id) "id";
   medicationStatement.extension as extension where $this.url='http://hl7.org/fhir/StructureDefinition/narrativeLink' -> substanceAdministration.text as text, text.reference as reference then {
@@ -178,6 +179,7 @@ group MedicationTreatmentPlanEntryContentModule(source bundle : Bundle, source m
         entryRelationship.act as act 
           then AnnotationComment(note, act) "AnnotationComment";
 }
+
 
 // source: http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured
 // target: https://art-decor.org/art-decor/decor-templates--ch-pharm-?id=2.16.756.5.30.1.1.10.4.35 
@@ -288,5 +290,6 @@ group BundleToClinicalDocumentEmedMedicationCardDocument(source bundle : Bundle,
     entry.resource as resource where $this.ofType(FHIR.Composition) then CompositionClinicalDocumentChEmedMedicationCardDocument(bundle, resource, cda);
   };
 }
+
 
 // _________________________ Template Type not specified   _________________________ 

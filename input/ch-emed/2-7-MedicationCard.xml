@@ -297,6 +297,7 @@
                 <code value="7680521101306"/>
                 <display value="BELOC ZOK Ret Tabl 50 mg 30 Stk"/>
               </coding>
+              <text value="BELOC ZOK Ret Tabl 50 mg"/>
             </code>
             <form>
               <coding>
@@ -424,6 +425,7 @@
                 <code value="7680500440334"/>
                 <display value="NORVASC Tabl 10 mg"/>
               </coding>
+              <text value="NORVASC Tabl 10 mg"/>
             </code>
             <form>
               <coding>

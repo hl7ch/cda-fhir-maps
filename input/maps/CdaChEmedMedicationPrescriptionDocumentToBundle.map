@@ -37,7 +37,6 @@ imports "http://ahdis.ch/ig/cda-fhir-maps/StructureMap/CdaChToBundle"
 
 // source: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&id=2.16.756.5.30.1.1.10.1.4
 // target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-composition-medicationprescription.html
-// note: entry point, bundle.entry -> composition
 group CdaChEmedMedicationPrescriptionDocumentToBundle(source cda : ClinicalDocument, target bundle : Bundle) {
   cda ->  bundle.entry as e first,  e.resource = create('Composition') as composition share composition, 
              bundle.entry as e2, e2.resource = create('Patient') as patient share patient
@@ -46,7 +45,6 @@ group CdaChEmedMedicationPrescriptionDocumentToBundle(source cda : ClinicalDocum
 
 // source: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&id=2.16.756.5.30.1.1.10.1.4
 // target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-composition-medicationprescription.html
-// note: composition.section
 group ClinicalDocumentChEmedMedicationPrescriptionDocumentToBundle(source cda : ClinicalDocument, target patient : Patient, target composition : Composition, target bundle : Bundle) extends ClinicalDocumentChToBundle {
   cda.component as component then {
     component.structuredBody as body then {
@@ -61,7 +59,6 @@ group ClinicalDocumentChEmedMedicationPrescriptionDocumentToBundle(source cda : 
 
 // source: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&id=2.16.756.5.30.1.1.10.3.10
 // target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-composition-medicationprescription.html
-// note: composition.section.entry -> MedicationRequest
 group SectionPrescriptionSectionContentModule(source source : Section, source patient : Patient, target target, target bundle: Bundle) extends ClinicalDocumentSection {
   source.entry as cdaEntry ->  bundle.entry as e,  e.resource = create('MedicationRequest') as medicationrequest,  target.entry = create('Reference') as reference, reference.reference = reference(medicationrequest) then {
     cdaEntry.substanceAdministration as substanceAdministration then PrescriptionItemEntryContentModule(source, substanceAdministration, patient, medicationrequest);
@@ -72,7 +69,6 @@ group SectionPrescriptionSectionContentModule(source source : Section, source pa
 
 // source: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&id=2.16.756.5.30.1.1.10.4.2
 // target: Annotation note (e.g. http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-medicationrequest.html)
-// note: MedicationRequest.note
 group AnnotationComment(source section: Section, source act: Act, target note: Annotation) {
   act -> note.text =  (%section.text.substring(%section.text.indexOf(%act.text.reference.value.substring(1))).substring(%section.text.substring(%section.text.indexOf(%act.text.reference.value.substring(1))).indexOf('>')+1, %section.text.substring(%section.text.indexOf(%act.text.reference.value.substring(1))).indexOf('<')-%section.text.substring(%section.text.indexOf(%act.text.reference.value.substring(1))).indexOf('>')-1)) "idRef"; 
   act.text as text then {
@@ -124,8 +120,8 @@ group ManufacturedMaterialEntryContentModule(source source : SubstanceAdministra
 
 // source: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&id=2.16.756.5.30.1.1.10.4.43
 // target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-medicationrequest.html
-// note: MedicationRequest
 group PrescriptionItemEntryContentModule(source section : Section, source source : SubstanceAdministration, source patient : Patient, target medicationRequest : MedicationRequest) {
+  
   source.id -> medicationRequest.identifier;
   patient -> medicationRequest.subject = create('Reference') as reference, reference.reference = reference(patient) "patient";
   source -> medicationRequest.status = 'completed' "completed";
@@ -266,14 +262,12 @@ group NarrativeLink(source url, target ext: Extension) {
 }
 
 // target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-ext-treatmentplan.html
-// note: TBD group InnerExtensionExternalDocumentId
 group InnerExtensionExternalDocumentId(source source, target ext: Extension) {
   source -> ext.url = 'externalDocumentId' "url";
   source -> ext.value = create('Identifier') as id then II(source, id) "value";
 }
 
 // target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-ext-treatmentplan.html
-// note: TBD group InnerExtensionId
 group InnerExtensionId(source source, target ext: Extension) {
   source -> ext.url = 'id' "url";
   source -> ext.value = create('Identifier') as id then II(source, id) "value";

@@ -117,7 +117,7 @@
 			</component>
 			<component>
 				<section>
-					<templateId root="2.16.756.5.30.1.1.10.3.73"/> <!-- ziegm: fehlt noch -->
+					<templateId root="2.16.756.5.30.1.1.10.3.73"/> <!-- ziegm?: ist das hier richtig? http://e-health-wiki.ch/index.php/2.16.756.5.30.1.1.10.1.11 -->
 					<templateId root="2.16.756.5.30.1.1.10.3.2"/>
 					<code code="48767-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Annotation comment [Interpretation] Narrative"/>
 					<title>Kommentar</title>
@@ -146,7 +146,7 @@
 				<section>
 					<templateId root="2.16.756.5.30.1.1.10.3.9"/>
 					<templateId root="1.3.6.1.4.1.19376.1.9.1.2.5"/>
-					<id root="5FB3EACF-BE0D-42AA-9619-ABF008C50051"/><!-- ziegm: wird noch nicht generiert -->
+					<id root="5FB3EACF-BE0D-42AA-9619-ABF008C50051"/><!-- ziegm?: in FHIR (noch) nicht abgebildet, wäre das section.id? -->
 					<code code="10160-0" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="History of medication use"/>
 					<title>Medikamentenliste</title>
 					<text>
@@ -260,7 +260,7 @@
 							<templateId root="1.3.6.1.4.1.19376.1.9.1.3.7"/>
 							<templateId root="2.16.840.1.113883.10.20.1.24"/>
 							<templateId root="1.3.6.1.4.1.19376.1.5.3.1.4.7"/>
-							<templateId root="1.3.6.1.4.1.19376.1.5.3.1.4.7.1"/><!-- ziegm: wird noch nicht generiert -->
+							<templateId root="1.3.6.1.4.1.19376.1.5.3.1.4.7.1"/> <!-- ziegm: TODO: Normal / Split / Tapered Dose, wäre das hier nicht ein split dosing (1.3.6.1.4.1.19376.1.5.3.1.4.9)? -->
 							<id root="D0F885CA-AFA6-4E7E-905D-F7698F9607AA"/>
 							<text>
 								<reference value="#mtpc.1"/>
@@ -271,13 +271,13 @@
 							</effectiveTime>
 							<routeCode code="20053000" codeSystem="0.4.0.127.0.16.1.1.2.1" displayName="Oral use"/>
 							<consumable>
-								<manufacturedProduct classCode="MANU"> <!-- ziegm: classCode fehlt noch-->
+								<manufacturedProduct classCode="MANU"> <!-- ziegm?: CDA hat keinen classCode-->
 									<templateId root="1.3.6.1.4.1.19376.1.5.3.1.4.7.2"/>
 									<templateId root="2.16.840.1.113883.10.20.1.53"/>
 									<manufacturedMaterial classCode="MMAT" determinerCode="KIND">
 										<templateId root="2.16.756.5.30.1.1.10.4.33"/>
 										<templateId root="1.3.6.1.4.1.19376.1.9.1.3.1"/>
-										<name>BELOC ZOK Ret Tabl 50 mg</name> <!-- ziegm: 30 Stk werden zusätzlich generiert -->
+										<name>BELOC ZOK Ret Tabl 50 mg</name>
 										<code code="C07AB02" codeSystem="2.16.840.1.113883.6.73" codeSystemName="ATC WHO" displayName="Metoprolol">
 											<originalText>
 												<reference value="#mtp.1.ingredient"/>
@@ -294,8 +294,8 @@
 										</pharm:asContent>
 										<pharm:ingredient classCode="ACTI">
 											<pharm:quantity>
-												<numerator unit="mg" value="50" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="PQ"/><!-- ziegm: xmlns:xsi & xsi:type werden nicht generiert -->
-												<denominator value="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="PQ"/><!-- ziegm: xmlns:xsi & xsi:type werden nicht generiert -->
+												<numerator unit="mg" value="50" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="PQ"/> <!-- ziegm: xmlns:xsi & xsi:type werden nicht generiert -->
+												<denominator value="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="PQ"/> <!-- ziegm: xmlns:xsi & xsi:type werden nicht generiert -->
 											</pharm:quantity>
 											<pharm:ingredient classCode="MMAT" determinerCode="KIND"><!-- ziegm: classCode & determinerCode werden nicht generiert -->
 												<pharm:code code="C07AB02" codeSystem="2.16.840.1.113883.6.73" codeSystemName="ATC WHO" displayName="Metoprolol"/>
