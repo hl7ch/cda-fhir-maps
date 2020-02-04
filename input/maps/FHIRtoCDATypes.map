@@ -12,7 +12,8 @@ conceptmap "uri2oid" {
 
   s:"http://snomed.info/sct" == t:"2.16.840.1.113883.6.96"
   s:"http://loinc.org" == t:"2.16.840.1.113883.6.1"
-  s:"http://hl7.org/fhir/sid/atc" == t:"2.16.840.1.113883.6.73"
+  s:"http://hl7.org/fhir/sid/atc" == t:"2.16.840.1.113883.6.73" //see issue #4
+  s:"http://www.whocc.no/atc" == t:"2.16.840.1.113883.6.73"
 }
 
 conceptmap "uri2system" {
@@ -21,7 +22,8 @@ conceptmap "uri2system" {
 
   s:"http://snomed.info/sct" == t:"SNOMED CT"
   s:"http://loinc.org" == t:"LOINC"
-  s:"http://hl7.org/fhir/sid/atc" == t:"ATC WHO"
+  s:"http://hl7.org/fhir/sid/atc" == t:"ATC WHO" //see issue #4
+  s:"http://www.whocc.no/atc" == t:"ATC WHO"
 }
 
 conceptmap "oid2system" {
