@@ -323,7 +323,7 @@
             <ingredient>
               <itemCodeableConcept>
                 <coding>
-                  <system value="http://hl7.org/fhir/sid/atc"/>
+                  <system value="http://hl7.org/fhir/sid/atc"/> <!-- http://www.whocc.no/atc -->
                   <code value="C07AB02"/>
                   <display value="Metoprolol"/>
                 </coding>
@@ -382,11 +382,19 @@
           <text value="-"/>
         </note>
         <dosage>
+          <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
+            <valueUrl value="#mtpc.1.dosageintakemode"/>
+          </extension>
+          <text value="Morgens 1 und abends 1/2 Tablette nehmen"/>
+        </dosage>
+        <dosage>
+          <sequence value="1"/>
           <timing>
             <repeat>
               <boundsPeriod>
                 <start value="2012-02-04"/>
               </boundsPeriod>
+              <when value="ACM"/>
             </repeat>
           </timing>
           <route>
@@ -396,18 +404,34 @@
               <display value="Oral use"/>
             </coding>
           </route>
-        </dosage>
-        <dosage>
-          <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
-            <valueUrl value="#mtpc.1.dosageintakemode"/>
-          </extension>
-          <text value="Morgens 1 und abends 1/2 Tablette nehmen"/>
-        </dosage>
-        <dosage>
-          <sequence value="1"/>
+          <doseAndRate>
+            <doseQuantity>
+              <value value="1"/>
+            </doseQuantity>
+          </doseAndRate>
         </dosage>
         <dosage>
           <sequence value="2"/>
+          <timing>
+            <repeat>
+              <boundsPeriod>
+                <start value="2012-02-04"/>
+              </boundsPeriod>
+              <when value="ACV"/>
+            </repeat>
+          </timing>
+          <route>
+            <coding>
+              <system value="urn:oid:0.4.0.127.0.16.1.1.2.1"/>
+              <code value="20053000"/>
+              <display value="Oral use"/>
+            </coding>
+          </route>
+          <doseAndRate>
+            <doseQuantity>
+              <value value="0.5"/>
+            </doseQuantity>
+          </doseAndRate>
         </dosage>
       </MedicationStatement>
     </resource>
@@ -451,7 +475,7 @@
             <ingredient>
               <itemCodeableConcept>
                 <coding>
-                  <system value="http://hl7.org/fhir/sid/atc"/>
+                  <system value="http://hl7.org/fhir/sid/atc"/> <!-- http://www.whocc.no/atc -->
                   <code value="C08CA01"/>
                   <display value="amlodipine"/>
                 </coding>

@@ -113,7 +113,8 @@ group ManufacturedMaterialEntryContentModule(source source : SubstanceAdministra
         } "ingredient";
       } "manufacturedMaterial";
     } "manufacturedProduct";
-    source -> medicationRequest.dosageInstruction as dosage then DosageInstructionsStartStopFrequency(source, dosage) "dosage";
+    source where $this.entryRelationship.sequenceNumber.exists()=false
+      -> medicationRequest.dosageInstruction as dosage then DosageInstructionsStartStopFrequency(source, dosage) "dosage";
   } "consumable";
 }
 
@@ -145,7 +146,7 @@ group PrescriptionItemEntryContentModule(source section : Section, source source
 
   source.entryRelationship as entry where (typeCode='COMP' and sequenceNumber.value>=0) 
     -> medicationRequest.dosageInstruction as dosage 
-        then DosageInstructionsEntryDosageChange(entry, dosage) "entryRelationShip 2.16.756.5.30.1.1.10.4.36";  
+        then DosageInstructionsEntryDosageChange(source, entry, dosage) "entryRelationShip 2.16.756.5.30.1.1.10.4.36";  
   
   source.entryRelationship as entry where (typeCode='REFR' and substanceAdministration.templateId.where(root='1.3.6.1.4.1.19376.1.9.1.3.10').exists()) 
     -> medicationRequest.extension as ext then MTPReferenceEntryContentModule(entry, ext) "MTPReferenceEntry";   
@@ -202,9 +203,46 @@ group DosageInstructionsStartStopFrequency(source source : SubstanceAdministrati
 
 // source https://art-decor.org/art-decor/decor-templates--ch-pharm-?id=2.16.756.5.30.1.1.10.4.36
 // target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition/ch-emed-dosage-structured
-group DosageInstructionsEntryDosageChange(source entryRelationship, target dosage: Dosage) {
-  entryRelationship.sequenceNumber as sequenceNumber -> dosage.sequence = sequenceNumber "sequenceNumber";
-  entryRelationship.substanceAdministration as substanceAdministration then DosageInstructionsEntryDosageChange(substanceAdministration, dosage) "dosage";
+group DosageInstructionsEntryDosageChange(source source: substanceAdministration, source entry: entryRelationship, target dosage: Dosage) {
+  entry.sequenceNumber as sequenceNumber -> dosage.sequence = sequenceNumber "sequenceNumber";
+  
+  source.effectiveTime: IVL_TS as effectiveTime -> dosage.timing as timing share sharetiming then {
+    effectiveTime -> timing.repeat as repeat then {
+      effectiveTime -> repeat.bounds = create('Period') as period then {
+        effectiveTime.low as low then {
+          low.value as lowDate -> period.start = lowDate "lowDate";
+        } "low";
+        effectiveTime.high as high then {
+          high.value as highDate -> period.end = highDate "highDate";
+        } "high";
+      } "period";
+    } "repeat";
+  } "effectiveTime IVL_TS";
+
+  entry.substanceAdministration as source then {
+    source.effectiveTime: EIVL_TS as effectiveTime -> dosage.timing as timing share sharetiming then {
+      effectiveTime -> timing.repeat as repeat then {
+        effectiveTime.event as event then {
+          event.code as code -> repeat.when = code "code";
+        } "event";
+      } "repeat";
+    } "effectiveTime EIVL_TS";
+    source.effectiveTime: SXPR_TS as effectiveTime -> dosage.timing as timing share sharetiming then {
+      effectiveTime -> timing.repeat as repeat then {
+        effectiveTime.comp as comp then {
+          comp.event as event then {
+            event.code as code -> repeat.when = code "code";
+          } "event";
+        } "comp";
+      } "repeat";
+    } "effectiveTime SXPR_TS";
+    source.doseQuantity as doseQuantity -> dosage.doseAndRate as doseAndRate then {
+      doseQuantity.center as center -> doseAndRate.dose = create('Quantity') as quantity then {
+        center.value as value -> quantity.value = value "value";
+      } "quantity";
+    } "doseQuantity";
+  } "sA";
+  source.routeCode as routeCode -> dosage.route as route then CECodeableConcept(routeCode, route) "routeCode";
 }
 
 // source: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&id=2.16.756.5.30.1.1.10.4.41

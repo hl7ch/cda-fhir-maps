@@ -306,23 +306,25 @@
 									</manufacturedMaterial>
 								</manufacturedProduct>
 							</consumable>
-							<entryRelationship typeCode="COMP"> <!-- ziegm: ganzes Element fehlt noch -->
+							<entryRelationship typeCode="COMP">
 								<sequenceNumber value="1"/>
 								<substanceAdministration classCode="SBADM" moodCode="INT">
+									<!-- ziegm: effectiveTime.low fehlt noch-->
 									<effectiveTime xsi:type="EIVL_TS">
 										<event code="ACM"/>
 									</effectiveTime>
+									<!-- ziegm: routeCode fehlt noch -->
 									<doseQuantity>
 										<center value="1"/>
 									</doseQuantity>
-									<consumable>
+									<consumable> <!-- ziegm?: kann weggelassen werden? CDA: 0..1-->
 										<manufacturedProduct>
 											<manufacturedMaterial nullFlavor="NA"/>
 										</manufacturedProduct>
 									</consumable>
 								</substanceAdministration>
 							</entryRelationship>
-							<entryRelationship typeCode="COMP"><!-- ziegm: ganzes Element fehlt noch -->
+							<entryRelationship typeCode="COMP"> <!-- ziegm: siehe oben-->
 								<sequenceNumber value="2"/>
 								<substanceAdministration classCode="SBADM" moodCode="INT">
 									<effectiveTime xsi:type="EIVL_TS">
@@ -331,7 +333,7 @@
 									<doseQuantity>
 										<center value="0.5"/>
 									</doseQuantity>
-									<consumable>
+									<consumable> <!-- ziegm?: kann weggelassen werden? CDA: 0..1-->
 										<manufacturedProduct>
 											<manufacturedMaterial nullFlavor="NA"/>
 										</manufacturedProduct>
