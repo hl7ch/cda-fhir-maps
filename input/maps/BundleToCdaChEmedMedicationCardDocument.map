@@ -116,6 +116,8 @@ group ManufacturedMaterialEntryContentModule(source bundle : Bundle, source medi
   } "code";
   medication.ingredient as ingredient -> manufacturedMaterial.ingredient as ingredient, ingredient.classCode = 'ACTI' then {
     ingredient.itemCodeableConcept as itemCodeableConcept -> ingredient.ingredient as pharmsubstance	then {
+      itemCodeableConcept -> pharmsubstance.classCode = 'MMAT' "MMAT";
+      itemCodeableConcept -> pharmsubstance.determinerCode = 'KIND' "KIND";
       itemCodeableConcept.text as text -> pharmsubstance.name as name, name.other = text "name";
       itemCodeableConcept.coding as coding then {
         coding -> pharmsubstance.code as ce then CodingCE(coding, ce) "formCode";

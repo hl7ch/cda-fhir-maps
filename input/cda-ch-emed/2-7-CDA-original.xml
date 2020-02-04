@@ -295,10 +295,10 @@
 										</pharm:asContent>
 										<pharm:ingredient classCode="ACTI">
 											<pharm:quantity>
-												<numerator unit="mg" value="50" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="PQ"/> <!-- ziegm: xmlns:xsi & xsi:type werden nicht generiert -->
-												<denominator value="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="PQ"/> <!-- ziegm: xmlns:xsi & xsi:type werden nicht generiert -->
+												<numerator unit="mg" value="50" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="PQ"/> <!-- ziegm?: xmlns:xsi & xsi:type werden nicht generiert -->
+												<denominator value="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="PQ"/> <!-- ziegm?: xmlns:xsi & xsi:type werden nicht generiert -->
 											</pharm:quantity>
-											<pharm:ingredient classCode="MMAT" determinerCode="KIND"><!-- ziegm: classCode & determinerCode werden nicht generiert -->
+											<pharm:ingredient classCode="MMAT" determinerCode="KIND">
 												<pharm:code code="C07AB02" codeSystem="2.16.840.1.113883.6.73" codeSystemName="ATC WHO" displayName="Metoprolol"/>
 												<pharm:name>Metoprolol</pharm:name>
 											</pharm:ingredient>

@@ -398,7 +398,7 @@
                                                 <numerator unit="mg" value="10"/>
                                                 <denominator value="1"/>
                                             </pharm:quantity>
-                                            <pharm:ingredient>
+                                            <pharm:ingredient classCode="MMAT" determinerCode="KIND">
                                                 <pharm:code code="C08CA01" displayName="amlodipine"/>
                                                 <pharm:name>amlodipine</pharm:name>
                                             </pharm:ingredient>

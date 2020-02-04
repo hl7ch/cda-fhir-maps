@@ -288,7 +288,7 @@
                                                 <numerator unit="mg" value="50"/>
                                                 <denominator value="1"/>
                                             </pharm:quantity>
-                                            <pharm:ingredient>
+                                            <pharm:ingredient classCode="MMAT" determinerCode="KIND">
                                                 <pharm:code code="C07AB02" codeSystem="2.16.840.1.113883.6.73" codeSystemName="ATC WHO" displayName="Metoprolol"/>
                                                 <pharm:name>Metoprolol</pharm:name>
                                             </pharm:ingredient>
@@ -400,7 +400,7 @@
                                                 <numerator unit="mg" value="10"/>
                                                 <denominator value="1"/>
                                             </pharm:quantity>
-                                            <pharm:ingredient>
+                                            <pharm:ingredient classCode="MMAT" determinerCode="KIND">
                                                 <pharm:code code="C08CA01" codeSystem="2.16.840.1.113883.6.73" codeSystemName="ATC WHO" displayName="amlodipine"/>
                                                 <pharm:name>amlodipine</pharm:name>
                                             </pharm:ingredient>
