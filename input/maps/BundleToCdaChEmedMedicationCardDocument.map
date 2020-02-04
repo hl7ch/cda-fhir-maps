@@ -105,7 +105,9 @@ group ManufacturedMaterialEntryContentModule(source bundle : Bundle, source medi
     code -> containerPackagedMedicine.determinerCode = 'INSTANCE' "INSTANCE";  
     code.coding as coding -> containerPackagedMedicine.code as ce then CodingCE(coding,ce) "pharm:code";
     code.text as text -> containerPackagedMedicine.name as name, name.other = text "pharm:name";
-    //TODO: pharm:formCode
+    medication.form as form then {
+      form.coding as coding -> containerPackagedMedicine.formCode as formCode then CodingCE(coding, formCode) "pharm:formCode";
+    } "form";   
     medication.amount as amount then {
       amount.numerator as numerator then {
         numerator.value as value -> containerPackagedMedicine.capacityQuantity as capacityQuantity, capacityQuantity.value = value "value";	    

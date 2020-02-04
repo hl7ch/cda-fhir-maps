@@ -279,6 +279,7 @@
                                             <pharm:containerPackagedMedicine classCode="CONT" determinerCode="INSTANCE">
                                                 <pharm:code code="7680521101306" codeSystem="2.51.1.1" codeSystemName="GTIN" displayName="BELOC ZOK Ret Tabl 50 mg 30 Stk"/>
                                                 <pharm:name>BELOC ZOK Ret Tabl 50 mg</pharm:name>
+                                                <pharm:formCode code="10219000" codeSystem="0.4.0.127.0.16.1.1.2.1" displayName="Tablet"/>
                                                 <pharm:capacityQuantity value="30"/>
                                             </pharm:containerPackagedMedicine>
                                         </pharm:asContent>
@@ -390,6 +391,7 @@
                                             <pharm:containerPackagedMedicine classCode="CONT" determinerCode="INSTANCE">
                                                 <pharm:code code="7680500440334" codeSystem="2.51.1.1" codeSystemName="GTIN" displayName="NORVASC Tabl 10 mg"/>
                                                 <pharm:name>NORVASC Tabl 10 mg</pharm:name>
+                                                <pharm:formCode code="10219000" codeSystem="0.4.0.127.0.16.1.1.2.1" displayName="Tablet"/>
                                                 <pharm:capacityQuantity value="30"/>
                                             </pharm:containerPackagedMedicine>
                                         </pharm:asContent>
