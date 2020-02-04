@@ -326,7 +326,7 @@
                             </entryRelationship>
                             <entryRelationship typeCode="COMP">
                                 <substanceAdministration classCode="SBADM" moodCode="INT">
-                                    <templateId root="2.16.756.5.30.1.1.10.4.52"/>
+                                    <templateId root="2.16.756.5.30.1.1.10.4.37"/>
                                     <text>
                                         <reference value="#mtpc.1.dosageintakemode"/>
                                     </text>
@@ -438,7 +438,7 @@
                             </entryRelationship>
                             <entryRelationship typeCode="COMP">
                                 <substanceAdministration classCode="SBADM" moodCode="INT">
-                                    <templateId root="2.16.756.5.30.1.1.10.4.52"/>
+                                    <templateId root="2.16.756.5.30.1.1.10.4.37"/>
                                     <text>
                                         <reference value="#mtpc.2.dosageintakemode"/>
                                     </text>

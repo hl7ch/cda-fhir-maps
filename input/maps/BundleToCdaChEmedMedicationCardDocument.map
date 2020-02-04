@@ -184,6 +184,7 @@ group MedicationTreatmentPlanEntryContentModule(source bundle : Bundle, source m
           then DosageInstructionsNonStructuredEntryContentModule(dosage, substanceAdministration) "DosageInstructionsNonStructuredEntryContentModule";
 
   // TODO: Contains 2.16.756.5.30.1.1.10.4.37 Dosage Intake Mode Entry Content Module (DYNAMIC)
+  //       see group DosageInstructionsNonStructuredEntryContentModule
 
   medicationStatement.note as note 
     -> substanceAdministration.entryRelationship as entryRelationship, entryRelationship.typeCode='COMP', 
@@ -274,11 +275,12 @@ group MTPReferenceEntryContentModule(source ext: Extension, target substanceAdmi
 
 // source: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefinition-ch-emed-dosage-nonstructured.html
 // target: https://art-decor.org/art-decor/decor-templates--ch-pharm-?section=templates&id=2.16.756.5.30.1.1.10.4.52
+// target: https://art-decor.org/art-decor/decor-templates--ch-pharm-?section=templates&id=2.16.756.5.30.1.1.10.4.37
 // Note/Warning: we assume that there is a narrativeLink extension which refers to the text which should be the same as in note.text
 group DosageInstructionsNonStructuredEntryContentModule(source dosage : Dosage, target substanceAdministration : SubstanceAdministration) {
   dosage -> substanceAdministration.classCode = 'SBADM' "SBADM";  
   dosage -> substanceAdministration.moodCode = 'INT' "INT";  
-  dosage -> substanceAdministration.templateId as templateId, templateId.root = '2.16.756.5.30.1.1.10.4.52' "template ID	";
+  dosage -> substanceAdministration.templateId as templateId, templateId.root = '2.16.756.5.30.1.1.10.4.37' "template ID	";
   dosage.extension as extension where $this.url='http://hl7.org/fhir/StructureDefinition/narrativeLink' then {
     extension.valueUrl as valueUrl -> substanceAdministration.text as text,
       text.reference as reference, reference.value=valueUrl "reference";

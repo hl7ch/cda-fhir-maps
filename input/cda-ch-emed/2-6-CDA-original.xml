@@ -272,7 +272,7 @@
 									<event code="ACV"/>
 								</comp>
 							</effectiveTime>
-							<repeatNumber value="2"/>
+							<repeatNumber value="2"/> <!-- ziegm: TBD -->
 							<routeCode code="20053000" codeSystem="0.4.0.127.0.16.1.1.2.1" displayName="Oral use"/>
 							<doseQuantity>
                                 <center value="1"/>
@@ -353,7 +353,7 @@
 									</consumable>
 								</substanceAdministration>
 							</entryRelationship>
-							<entryRelationship typeCode="COMP">
+							<entryRelationship typeCode="COMP"> <!-- ziegm: TBD -->
 								<supply moodCode="RQO" classCode="SPLY">
 									<templateId root="1.3.6.1.4.1.19376.1.9.1.3.8"/>
 									<independentInd value="false"/>
