@@ -144,6 +144,11 @@ group PrescriptionItemEntryContentModule(source bundle : Bundle, source medicati
     extension.valueUrl as valueUrl -> reference.value = valueUrl "valueUrl";
   } "narrativeLink";
   medicationRequest -> substanceAdministration.statusCode as statusCode, statusCode.code = 'completed' "code";  
+
+  medicationRequest.dispenseRequest as dispenseRequest -> substanceAdministration.repeatNumber as repeatNumber then {
+    dispenseRequest.numberOfRepeatsAllowed as number -> repeatNumber.value = number "repeat number";
+  } "dispense request";
+
   medicationRequest.contained as medication where ('#'+$this.id) in %medicationRequest.medicationReference.reference -> substanceAdministration.consumable as consumable, consumable.manufacturedProduct as manufacturedProduct then {
     medication -> manufacturedProduct.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.5.3.1.4.7.2' "MP TemplateId";
     medication -> manufacturedProduct.templateId as templateId, templateId.root = '2.16.840.1.113883.10.20.1.53' "MP TemplateId";

@@ -206,7 +206,7 @@ group DosageInstructionsStartStopFrequency(source dosage: Dosage, target substan
 // target: https://art-decor.org/art-decor/decor-templates--ch-pharm-?id=2.16.756.5.30.1.1.10.4.36
 group DosageInstructionsEntryDosageChange(source dosage: Dosage, target substanceAdministration: substanceAdministration, target entry: entryRelationship) {
   
-  // effectiveTime wird noch 2x generiert  
+  // ziegm: effectiveTime wird noch 2x (Anzahl Sequenzen) generiert  
   dosage as dosage -> substanceAdministration as substanceAdministration then EffectiveTimeStartEnd(dosage, substanceAdministration) "effective time start end";
   
   dosage.route as route -> substanceAdministration.routeCode as routeCode then CodeableConceptCE(route, routeCode) "route";

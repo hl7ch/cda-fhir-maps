@@ -272,7 +272,7 @@
 									<event code="ACV"/>
 								</comp>
 							</effectiveTime>
-							<repeatNumber value="2"/> <!-- ziegm: TBD -->
+							<repeatNumber value="2"/>
 							<routeCode code="20053000" codeSystem="0.4.0.127.0.16.1.1.2.1" displayName="Oral use"/>
 							<doseQuantity>
                                 <center value="1"/>
