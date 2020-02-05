@@ -264,6 +264,9 @@
                             <effectiveTime xsi:type="IVL_TS">
                                 <low value="20120204"/>
                             </effectiveTime>
+                            <effectiveTime xsi:type="IVL_TS">
+                                <low value="20120204"/>
+                            </effectiveTime>
                             <routeCode code="20053000" codeSystem="0.4.0.127.0.16.1.1.2.1" displayName="Oral use"/>
                             <consumable>
                                 <manufacturedProduct>
@@ -296,6 +299,28 @@
                                     </manufacturedMaterial>
                                 </manufacturedProduct>
                             </consumable>
+                            <entryRelationship typeCode="COMP">
+                                <sequenceNumber value="1"/>
+                                <substanceAdministration classCode="SBADM" moodCode="INT">
+                                    <effectiveTime xsi:type="EIVL_TS">
+                                        <event code="ACM"/>
+                                    </effectiveTime>
+                                    <doseQuantity>
+                                        <center value="1"/>
+                                    </doseQuantity>
+                                </substanceAdministration>
+                            </entryRelationship>
+                            <entryRelationship typeCode="COMP">
+                                <sequenceNumber value="2"/>
+                                <substanceAdministration classCode="SBADM" moodCode="INT">
+                                    <effectiveTime xsi:type="EIVL_TS">
+                                        <event code="ACV"/>
+                                    </effectiveTime>
+                                    <doseQuantity>
+                                        <center value="0.5"/>
+                                    </doseQuantity>
+                                </substanceAdministration>
+                            </entryRelationship>
                             <entryRelationship typeCode="RSON">
                                 <observation classCode="OBS" moodCode="EVN">
                                     <templateId root="2.16.756.5.30.1.1.10.4.41"/>

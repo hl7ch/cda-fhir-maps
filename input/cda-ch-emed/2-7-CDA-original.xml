@@ -267,7 +267,7 @@
 								<reference value="#mtpc.1"/>
 							</text>
 							<statusCode code="completed"/>
-							<effectiveTime xsi:type="IVL_TS">
+							<effectiveTime xsi:type="IVL_TS"> <!-- ziegm: wird noch 2x (Anzahl Sequenzen) generiert-->
 								<low value="20120204"/>
 							</effectiveTime>
 							<routeCode code="20053000" codeSystem="0.4.0.127.0.16.1.1.2.1" displayName="Oral use"/>
@@ -309,11 +309,9 @@
 							<entryRelationship typeCode="COMP">
 								<sequenceNumber value="1"/>
 								<substanceAdministration classCode="SBADM" moodCode="INT">
-									<!-- ziegm: effectiveTime.low fehlt noch-->
 									<effectiveTime xsi:type="EIVL_TS">
 										<event code="ACM"/>
 									</effectiveTime>
-									<!-- ziegm: routeCode fehlt noch -->
 									<doseQuantity>
 										<center value="1"/>
 									</doseQuantity>
@@ -324,7 +322,7 @@
 									</consumable>
 								</substanceAdministration>
 							</entryRelationship>
-							<entryRelationship typeCode="COMP"> <!-- ziegm: siehe oben-->
+							<entryRelationship typeCode="COMP">
 								<sequenceNumber value="2"/>
 								<substanceAdministration classCode="SBADM" moodCode="INT">
 									<effectiveTime xsi:type="EIVL_TS">

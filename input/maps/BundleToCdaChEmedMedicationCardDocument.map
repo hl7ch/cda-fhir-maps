@@ -160,7 +160,7 @@ group MedicationTreatmentPlanEntryContentModule(source bundle : Bundle, source m
 
   medicationStatement.dosage as dosage where $this.conformsTo('http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured') and $this.sequence.exists()
     -> substanceAdministration.entryRelationship as entryRelationship, entryRelationship.typeCode = 'COMP'
-       then DosageInstructionsEntryDosageChange(dosage, entryRelationship) "DosageSubstanceAdministration";
+       then DosageInstructionsEntryDosageChange(dosage, substanceAdministration, entryRelationship) "DosageSubstanceAdministration";  
 
   medicationStatement.reasonCode as reasonCode 
     -> substanceAdministration.entryRelationship as entryRelationship, entryRelationship.typeCode='RSON', 
@@ -196,12 +196,43 @@ group MedicationTreatmentPlanEntryContentModule(source bundle : Bundle, source m
 // source: http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured
 // target: https://art-decor.org/art-decor/decor-templates--ch-pharm-?id=2.16.756.5.30.1.1.10.4.35 
 group DosageInstructionsStartStopFrequency(source dosage: Dosage, target substanceAdministration : SubstanceAdministration) {
+  dosage as dosage -> substanceAdministration as substanceAdministration then EffectiveTimeStartEnd(dosage, substanceAdministration) "effective time start end";
+  dosage as dosage -> substanceAdministration as substanceAdministration then EffectiveTimeWhen(dosage, substanceAdministration) "effective time when";
+  dosage.route as route -> substanceAdministration.routeCode as routeCode then CodeableConceptCE(route, routeCode) "route";
+  dosage as dosage -> substanceAdministration as substanceAdministration then DoseQuantity(dosage, substanceAdministration) "dose quantity";
+}
+
+// source: http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured
+// target: https://art-decor.org/art-decor/decor-templates--ch-pharm-?id=2.16.756.5.30.1.1.10.4.36
+group DosageInstructionsEntryDosageChange(source dosage: Dosage, target substanceAdministration: substanceAdministration, target entry: entryRelationship) {
+  
+  // effectiveTime wird noch 2x generiert  
+  dosage as dosage -> substanceAdministration as substanceAdministration then EffectiveTimeStartEnd(dosage, substanceAdministration) "effective time start end";
+  
+  dosage.route as route -> substanceAdministration.routeCode as routeCode then CodeableConceptCE(route, routeCode) "route";
+  dosage.sequence as sequence -> entry.sequenceNumber as sequenceNumber, sequenceNumber.value = sequence "sequence";
+  dosage -> entry.substanceAdministration as substanceAdministration, 
+    substanceAdministration.classCode = 'SBADM',
+    substanceAdministration.moodCode = 'INT' then {
+      dosage as dosage -> substanceAdministration as substanceAdministration then EffectiveTimeWhen(dosage, substanceAdministration) "effective time when";
+      dosage as dosage -> substanceAdministration as substanceAdministration then DoseQuantity(dosage, substanceAdministration) "dose quantity";
+    } "dosage";
+}
+
+group EffectiveTimeStartEnd(source dosage: Dosage, target substanceAdministration: SubstanceAdministration) {
   dosage.timing as timing then {
     timing.repeat as repeat then {
       repeat.bounds: Period as bounds -> substanceAdministration.effectiveTime = create('IVL_TS') as effectiveTime then {
         bounds.start as start -> effectiveTime.low as low then DateTS(start, low) "low"; 
-        bounds.end as end -> effectiveTime.high as high then DateTS(start, high) "high"; 
+        bounds.end as end -> effectiveTime.high as high then DateTS(end, high) "high"; 
       } "bounds";
+    } "repeat";
+  } "timing"; 
+}
+
+group EffectiveTimeWhen (source dosage: Dosage, target substanceAdministration : SubstanceAdministration) {
+  dosage.timing as timing then {
+    timing.repeat as repeat then {
       repeat where $this.when.count()=1 -> substanceAdministration.effectiveTime = create('EIVL_TS') as effectiveTime then {
           repeat.when as when -> effectiveTime.event as event, event.code = when "when";
       } "when";
@@ -215,8 +246,9 @@ group DosageInstructionsStartStopFrequency(source dosage: Dosage, target substan
       } "when";
     } "repeat";
   } "timing"; 
+}
 
-  dosage.route as route -> substanceAdministration.routeCode as routeCode then CodeableConceptCE(route, routeCode) "route";
+group DoseQuantity(source dosage: Dosage, target substanceAdministration : SubstanceAdministration) {
   dosage.doseAndRate as doseAndRate -> substanceAdministration.doseQuantity as doseQuantity then {
     doseAndRate.dose : Quantity as quantity then {
       quantity.value as value -> doseQuantity.center as center, center.value = value "value";
@@ -224,14 +256,6 @@ group DosageInstructionsStartStopFrequency(source dosage: Dosage, target substan
   } "doseQuantity";
 }
 
-// source: http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured
-// target: https://art-decor.org/art-decor/decor-templates--ch-pharm-?id=2.16.756.5.30.1.1.10.4.36
-group DosageInstructionsEntryDosageChange(source dosage: Dosage, target entryRelationship) {
-  dosage.sequence as sequence -> entryRelationship.sequenceNumber as sequenceNumber, sequenceNumber.value = sequence "sequence";
-  dosage -> entryRelationship.substanceAdministration as substanceAdministration, 
-            substanceAdministration.classCode = 'SBADM',
-            substanceAdministration.moodCode = 'INT' then DosageInstructionsStartStopFrequency(dosage, substanceAdministration) "dosage";
-}
 
 // source: reasonCode Coding (e.g. http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-medicationstatement)
 // target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&id=2.16.756.5.30.1.1.10.4.41
