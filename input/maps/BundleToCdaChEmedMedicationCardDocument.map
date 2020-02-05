@@ -82,6 +82,17 @@ group AnnotationComment(source note: Annotation, target act: Act) {
   note -> act.statusCode as code, code.code = 'completed' "statuscode";
 }
 
+
+// source: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefinition-ch-emed-medicationstatement.html
+// target: Substitution permission Contains 1.3.6.1.4.1.19376.1.9.1.3.9.1 IHE Substitution Permission Content Module (DYNAMIC)
+group Substitution(source substitution: Substitution, target supply: Supply) {
+  substitution -> supply.classCode = 'SPLY' "SPLY";  
+  substitution -> supply.moodCode = 'RQO' "RQO";  
+  substitution -> supply.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.9.1.3.8' "TemplateId";
+  substitution.valueBoolean as boolean -> supply.independentInd as ind, ind.value = boolean "boolean";
+}
+
+
 // source: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefinition-ch-emed-medicationstatement.html
 // target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&id=2.16.756.5.30.1.1.10.4.33&effectiveDate=2019-12-11T11:34:24&language=en-US
 group ManufacturedMaterialEntryContentModule(source bundle : Bundle, source medicationStatement: MedicationStatement, source medication: Medication, target manufacturedMaterial: ManufacturedMaterial) {
@@ -174,7 +185,6 @@ group MedicationTreatmentPlanEntryContentModule(source bundle : Bundle, source m
 
   // TODO: Patient Medication Instructions Contains 1.3.6.1.4.1.19376.1.5.3.1.4.3 IHE Patient Medication Instructions (DYNAMIC)
   // TODO: Amount of units of the consumable to dispense
-  // TODO: Substitution permission Contains 1.3.6.1.4.1.19376.1.9.1.3.9.1 IHE Substitution Permission Content Module (DYNAMIC)
   // TODO: ID of parent container (Community Medication Treatment Plan document)
   // TODO: Precondition Criterion
 
@@ -190,6 +200,11 @@ group MedicationTreatmentPlanEntryContentModule(source bundle : Bundle, source m
     -> substanceAdministration.entryRelationship as entryRelationship, entryRelationship.typeCode='COMP', 
         entryRelationship.act as act 
           then AnnotationComment(note, act) "AnnotationComment";
+
+    medicationStatement.extension as substitution where $this.url='http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-substitution' 
+    -> substanceAdministration.entryRelationship as entryRelationship, entryRelationship.typeCode='COMP', 
+        entryRelationship.supply as supply
+          then Substitution(substitution, supply) "Substitution";
 }
 
 

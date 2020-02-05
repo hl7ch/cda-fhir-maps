@@ -82,6 +82,7 @@ group AnnotationComment(source note: Annotation, target act: Act) {
   note -> act.statusCode as code, code.code = 'completed' "statuscode";
 }
 
+
 // source: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefinition-ch-emed-medicationrequest.html
 // target: Substitution permission Contains 1.3.6.1.4.1.19376.1.9.1.3.9.1 IHE Substitution Permission Content Module (DYNAMIC)
 group Substitution(source substitution: Substitution, target supply: Supply) {
@@ -90,6 +91,7 @@ group Substitution(source substitution: Substitution, target supply: Supply) {
   substitution -> supply.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.9.1.3.8' "TemplateId";
   substitution.allowedBoolean as boolean -> supply.independentInd as ind, ind.value = boolean "boolean";
 }
+
 
 // source: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefinition-ch-emed-medicationrequest.html
 // target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&id=2.16.756.5.30.1.1.10.4.33
