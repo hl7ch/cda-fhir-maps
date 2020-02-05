@@ -78,6 +78,15 @@ group AnnotationComment(source section: Section, source act: Act, target note: A
   } "text";
 }
 
+
+// source: Substitution permission Contains 1.3.6.1.4.1.19376.1.9.1.3.9.1 IHE Substitution Permission Content Module (DYNAMIC)
+// target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-medicationstatement.html
+group Substitution(source supply: Supply, target medicationStatement: MedicationStatement) {
+  supply.independentInd as ind -> medicationStatement.extension as ext 
+    then ExtensionSubstitution(ind, ext) "substitution";
+}
+
+
 // source: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&id=2.16.756.5.30.1.1.10.4.33
 // target: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefinition-ch-emed-medicationstatement.html
 group ManufacturedMaterialEntryContentModule(source source : SubstanceAdministration, target medicationStatement : MedicationStatement, target medication : Medication) {
@@ -153,7 +162,10 @@ group MedicationTreatmentPlanEntryContentModule(source section : Section, source
   source.entryRelationship as entry where (typeCode='COMP' and act.templateId.where(root='2.16.756.5.30.1.1.10.4.2').exists()) then {
     entry.act as act -> medicationStatement.note as note then AnnotationComment(section, act, note) "annotation";
   } "entryRelationShip 2.16.756.5.30.1.1.10.4.2";  
-  
+
+  source.entryRelationship as entry where (typeCode='COMP' and supply.templateId.where(root='1.3.6.1.4.1.19376.1.9.1.3.8').exists()) then {
+    entry.supply as supply -> medicationStatement as medicationStatement then Substitution(supply, medicationStatement) "substitution";
+  } "entryRelationShip 1.3.6.1.4.1.19376.1.9.1.3.8";
 }
 
 
@@ -284,4 +296,10 @@ group InnerExtensionExternalDocumentId(source source, target ext: Extension) {
 group InnerExtensionId(source source, target ext: Extension) {
   source -> ext.url = 'id' "url";
   source -> ext.value = create('Identifier') as id then II(source, id) "value";
+}
+
+// target: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefinition-ch-emed-ext-substitution.html
+group ExtensionSubstitution(source url, target ext: Extension) {
+  url -> ext.url = 'http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-substitution' "url";
+  url -> ext.value = create('boolean') as bool, bool.value = url "value";
 }
