@@ -405,6 +405,9 @@
             <dispenseRequest>
                <numberOfRepeatsAllowed value="2"/>
             </dispenseRequest>
+            <substitution>
+               <allowedBoolean value="false"/>
+            </substitution>
          </MedicationRequest>
       </resource>
    </entry>

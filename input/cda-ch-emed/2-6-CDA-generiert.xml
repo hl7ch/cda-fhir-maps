@@ -460,6 +460,12 @@
                                     <statusCode code="completed"/>
                                 </act>
                             </entryRelationship>
+                            <entryRelationship typeCode="COMP">
+                                <supply classCode="SPLY" moodCode="RQO">
+                                    <templateId root="1.3.6.1.4.1.19376.1.9.1.3.8"/>
+                                    <independentInd value="false"/>
+                                </supply>
+                            </entryRelationship>
                         </substanceAdministration>
                     </entry>
                 </section>
