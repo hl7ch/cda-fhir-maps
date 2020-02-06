@@ -9,7 +9,8 @@
 <!-- 2018.04.11: Oliver Egger, ahdis gmbh (Adaption to feedback from consultation 
 	of ordonnace) -->
 <!-- 2018.06.16: Tony Schaller, medshare GmbH (Refactoring for better validation results: Schematron using eHealth Connector and 'HL7 - CDA Release 2 (strict)' using IHE EVS Client, Gazelle ObjectsChecker validation) -->
-<!-- 2019.10.15: Oliver Egger, ahdis ag: Update from CDA-CH v2.0 (2017) to CDA-CH v2.1 (2019) -->
+<!-- 2019.10.15: Oliver Egger, ahdis ag: Update from CDA-CH v2.0 (2017) to CDA-CH v2.1 (2020) -->
+<!-- 2020.02.03: Oliver Egger, ahdis ag: Update to CDA-CH EMED (2020) -->
 <!-- ************************************************************ -->
 <?xml-stylesheet type='text/xsl' href='../../../../stylesheets/HL7.ch/CDA-CH/v2.0/cda-ch.xsl'?>
 <ClinicalDocument xmlns:pharm="urn:ihe:pharm"
@@ -226,8 +227,10 @@
 							<!-- CH-PHARM Medication Treatment Plan Item Entry Content Module -->
 							<templateId root="2.16.756.5.30.1.1.10.4.34" />
 
-							<!-- split dosing -->
-							<templateId root="1.3.6.1.4.1.19376.1.5.3.1.4.9" />
+			
+                            <!-- split dosing -->
+                            <templateId root="1.3.6.1.4.1.19376.1.5.3.1.4.9" />
+              
 
 							<!-- consolidated mtp -->
 							<id root="D0F885CA-AFA6-4E7E-905D-F7698F9607AA" />
@@ -250,10 +253,10 @@
 										determinerCode="KIND">
 										<templateId root="2.16.756.5.30.1.1.10.4.33" />
 										<templateId root="1.3.6.1.4.1.19376.1.9.1.3.1" />
-										<code code="C07AB02" codeSystem="2.16.840.1.113883.6.73"
-											codeSystemName="ATC WHO" displayName="Metoprolol">
+										<code code="7680521101306" codeSystem="2.51.1.1"
+													codeSystemName="GTIN" displayName="BELOC ZOK Ret Tabl 50 mg 30 Stk">
 											<originalText>
-												<reference value="#mtp.1.ingredient" />
+												<reference value="#mtp.1.brandedmedication" />
 											</originalText>
 										</code>
 										<name>BELOC ZOK Ret Tabl 50 mg</name>
@@ -281,7 +284,8 @@
 											</pharm:quantity>
 											<pharm:ingredient classCode="MMAT"
 												determinerCode="KIND">
-												<pharm:code code="372826007" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED CT" displayName="Metoprolol"/>
+                                                <pharm:code code="372826007" codeSystem="2.16.840.1.113883.6.96"
+                                                codeSystemName="SNOMED CT" displayName="Metoprolol (substance)" />
 												<pharm:name>Metoprolol</pharm:name>
 											</pharm:ingredient>
 										</pharm:ingredient>
@@ -300,11 +304,11 @@
 									<doseQuantity>
 										<center value="1" />
 									</doseQuantity>
-									<consumable>
-										<manufacturedProduct>
-											<manufacturedMaterial nullFlavor="NA" />
-										</manufacturedProduct>
-									</consumable>
+                                    <consumable>
+                                      <manufacturedProduct>
+                                           <manufacturedMaterial nullFlavor="NA" />
+                                       </manufacturedProduct>
+                                    </consumable>      
 								</substanceAdministration>
 							</entryRelationship>
 							<entryRelationship typeCode='COMP'>
@@ -318,11 +322,11 @@
 									<doseQuantity>
 										<center value="0.5" />
 									</doseQuantity>
-									<consumable>
-										<manufacturedProduct>
-											<manufacturedMaterial nullFlavor="NA" />
-										</manufacturedProduct>
-									</consumable>
+                                    <consumable>
+                                       <manufacturedProduct>
+                                           <manufacturedMaterial nullFlavor="NA" />
+                                       </manufacturedProduct>
+                                    </consumable>      
 								</substanceAdministration>
 							</entryRelationship>
 							<entryRelationship typeCode="RSON">
@@ -437,8 +441,8 @@
 										determinerCode="KIND">
 										<templateId root="2.16.756.5.30.1.1.10.4.33" />
 										<templateId root="1.3.6.1.4.1.19376.1.9.1.3.1" />
-										<code code="C08CA01" codeSystem="2.16.840.1.113883.6.73"
-											codeSystemName="ATC WHO" displayName="amlodipine">
+										<code code="7680500440334" codeSystem="2.51.1.1"
+													codeSystemName="GTIN" displayName="NORVASC Tabl 10 mg">
 											<originalText>
 												<reference value="#mtpc.1.ingredient" />
 											</originalText>
@@ -468,8 +472,9 @@
 											</pharm:quantity>
 											<pharm:ingredient classCode="MMAT"
 												determinerCode="KIND">
-												<pharm:code code="386864001" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED CT" displayName="Amlodipine"/>
-												<pharm:name>amlodipine</pharm:name>
+												<pharm:code code="386864001" codeSystem="2.16.840.1.113883.6.96"
+                                                    codeSystemName="SNOMED CT" displayName="Amlodipine (substance)" />
+												<pharm:name>Amlodipine</pharm:name>
 											</pharm:ingredient>
 										</pharm:ingredient>
 									</manufacturedMaterial>
@@ -546,7 +551,7 @@
            <component>
             <section>
               <templateId root="2.16.756.5.30.1.1.10.3.2"/>
-              <code code="48767-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Annotation comment [Interpretation] Narrative"/>
+              <code code="48767-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Annotation comment"/>
               <title>Kommentar</title>
               <text>
                 <content ID='co1'>
