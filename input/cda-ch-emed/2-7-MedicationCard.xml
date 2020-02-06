@@ -226,9 +226,8 @@
 							<!-- CH-PHARM Medication Treatment Plan Item Entry Content Module -->
 							<templateId root="2.16.756.5.30.1.1.10.4.34" />
 
-							<!-- A normal substanceAdministration act that may not contain any 
-								subordinate substanceAdministration acts. -->
-							<templateId root="1.3.6.1.4.1.19376.1.5.3.1.4.7.1" />
+							<!-- split dosing -->
+							<templateId root="1.3.6.1.4.1.19376.1.5.3.1.4.9" />
 
 							<!-- consolidated mtp -->
 							<id root="D0F885CA-AFA6-4E7E-905D-F7698F9607AA" />
@@ -282,8 +281,7 @@
 											</pharm:quantity>
 											<pharm:ingredient classCode="MMAT"
 												determinerCode="KIND">
-												<pharm:code code="C07AB02" codeSystem="2.16.840.1.113883.6.73"
-													codeSystemName="ATC WHO" displayName="Metoprolol" />
+												<pharm:code code="372826007" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED CT" displayName="Metoprolol"/>
 												<pharm:name>Metoprolol</pharm:name>
 											</pharm:ingredient>
 										</pharm:ingredient>
@@ -470,8 +468,7 @@
 											</pharm:quantity>
 											<pharm:ingredient classCode="MMAT"
 												determinerCode="KIND">
-												<pharm:code code="C08CA01" codeSystem="2.16.840.1.113883.6.73"
-													codeSystemName="ATC WHO" displayName="amlodipine" />
+												<pharm:code code="386864001" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED CT" displayName="Amlodipine"/>
 												<pharm:name>amlodipine</pharm:name>
 											</pharm:ingredient>
 										</pharm:ingredient>
@@ -548,7 +545,6 @@
 			</component>
            <component>
             <section>
-              <templateId root="2.16.756.5.30.1.1.10.3.73"/>
               <templateId root="2.16.756.5.30.1.1.10.3.2"/>
               <code code="48767-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Annotation comment [Interpretation] Narrative"/>
               <title>Kommentar</title>

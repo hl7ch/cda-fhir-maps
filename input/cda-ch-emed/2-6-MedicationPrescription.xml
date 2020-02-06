@@ -290,8 +290,7 @@
 											</pharm:quantity>
 											<pharm:ingredient classCode="MMAT"
 												determinerCode="KIND">
-												<pharm:code code="C08CA01" codeSystem="2.16.840.1.113883.6.73"
-													codeSystemName="ATC WHO" displayName="amlodipine" />
+												<pharm:code code="386864001" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED CT" displayName="Amlodipine"/>
 												<pharm:name>amlodipine</pharm:name>
 											</pharm:ingredient>
 										</pharm:ingredient>
@@ -377,7 +376,6 @@
 
 			<component>
             	<section>
-					<templateId root="2.16.756.5.30.1.1.10.3.73"/>
 					<templateId root="2.16.756.5.30.1.1.10.3.2"/>
 					<code code="48767-8" codeSystem="2.16.840.1.113883.6.1" 
 					codeSystemName="LOINC" displayName="Annotation comment [Interpretation] Narrative"/>

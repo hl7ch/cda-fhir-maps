@@ -57,7 +57,7 @@
 			<representedOrganization>
 				<id extension="7601000234438" root="2.51.1.3"/>
 				<name>Hausarzt</name>
-				<telecom nullFlavor="NI"/><!-- ziegm: nullFlavor mapping from CDA to FHIR? -->
+				<telecom nullFlavor="NI"/><!-- ziegm: ToDo nullFlavor mapping from CDA to FHIR? -->
 				<addr>
 					<country>CH</country>
 					<city>Zürich</city>
@@ -117,7 +117,6 @@
 			</component>
 			<component>
 				<section>
-					<templateId root="2.16.756.5.30.1.1.10.3.73"/> <!-- ziegm?: ist das hier richtig? http://e-health-wiki.ch/index.php/2.16.756.5.30.1.1.10.1.11 -->
 					<templateId root="2.16.756.5.30.1.1.10.3.2"/>
 					<code code="48767-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Annotation comment [Interpretation] Narrative"/>
 					<title>Kommentar</title>
@@ -146,7 +145,7 @@
 				<section>
 					<templateId root="2.16.756.5.30.1.1.10.3.9"/>
 					<templateId root="1.3.6.1.4.1.19376.1.9.1.2.5"/>
-					<id root="5FB3EACF-BE0D-42AA-9619-ABF008C50051"/><!-- ziegm?: in FHIR (noch) nicht abgebildet, wäre das section.id? -->
+					<id root="5FB3EACF-BE0D-42AA-9619-ABF008C50051"/><!-- ziegm?: in FHIR (noch) nicht abgebildet, -->
 					<code code="10160-0" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="History of medication use"/>
 					<title>Medikamentenliste</title>
 					<text>
@@ -261,7 +260,7 @@
 							<templateId root="1.3.6.1.4.1.19376.1.9.1.3.7"/>
 							<templateId root="2.16.840.1.113883.10.20.1.24"/>
 							<templateId root="1.3.6.1.4.1.19376.1.5.3.1.4.7"/>
-							<templateId root="1.3.6.1.4.1.19376.1.5.3.1.4.7.1"/> <!-- ziegm: TODO: Normal / Split / Tapered Dose, wäre das hier nicht ein split dosing (1.3.6.1.4.1.19376.1.5.3.1.4.9)? -->
+							<templateId root="1.3.6.1.4.1.19376.1.5.3.1.4.9"/> <!-- TODO: Normal / Split / Tapered Dose -->
 							<id root="D0F885CA-AFA6-4E7E-905D-F7698F9607AA"/>
 							<text>
 								<reference value="#mtpc.1"/>
@@ -272,15 +271,15 @@
 							</effectiveTime>
 							<routeCode code="20053000" codeSystem="0.4.0.127.0.16.1.1.2.1" displayName="Oral use"/>
 							<consumable>
-								<manufacturedProduct classCode="MANU"> <!-- ziegm?: CDA hat keinen classCode-->
+								<manufacturedProduct classCode="MANU"> <!-- ziegm TODO -> classCode generieren-->
 									<templateId root="1.3.6.1.4.1.19376.1.5.3.1.4.7.2"/>
 									<templateId root="2.16.840.1.113883.10.20.1.53"/>
 									<manufacturedMaterial classCode="MMAT" determinerCode="KIND">
 										<templateId root="2.16.756.5.30.1.1.10.4.33"/>
 										<templateId root="1.3.6.1.4.1.19376.1.9.1.3.1"/>
-										<code code="C07AB02" codeSystem="2.16.840.1.113883.6.73" codeSystemName="ATC WHO" displayName="Metoprolol">
-											<originalText> <!-- ziegm?: CDA 0..1, im FHIR nicht als Referenz abgebildet -->
-												<reference value="#mtpc.1.ingredient"/>
+										<code code="C07AB02" codeSystem="2.16.840.1.113883.6.73" codeSystemName="ATC WHO" displayName="Metoprolol"> <!-- CodeSystem GTIN 2.51.1.1 -->
+											<originalText> <!-- ziegm?: CDA 0..1, im FHIR nicht als Referenz abgebildet , in FHIR abbilden-->
+												<reference value="#mtpc.1.ingredient"/> <!-- mtpc.1.brandedmedication, macht Oliver-->
 											</originalText>
 										</code>
 										<name>BELOC ZOK Ret Tabl 50 mg</name>
@@ -295,11 +294,11 @@
 										</pharm:asContent>
 										<pharm:ingredient classCode="ACTI">
 											<pharm:quantity>
-												<numerator unit="mg" value="50" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="PQ"/> <!-- ziegm?: xmlns:xsi & xsi:type werden nicht generiert -->
-												<denominator value="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="PQ"/> <!-- ziegm?: xmlns:xsi & xsi:type werden nicht generiert -->
+												<numerator unit="mg" value="50" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="PQ"/> <!-- see issue #5 -->
+												<denominator value="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="PQ"/> <!-- see issue #5 -->
 											</pharm:quantity>
 											<pharm:ingredient classCode="MMAT" determinerCode="KIND">
-												<pharm:code code="C07AB02" codeSystem="2.16.840.1.113883.6.73" codeSystemName="ATC WHO" displayName="Metoprolol"/>
+												<pharm:code code="372826007" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED CT" displayName="Metoprolol"/>
 												<pharm:name>Metoprolol</pharm:name>
 											</pharm:ingredient>
 										</pharm:ingredient>
@@ -315,7 +314,7 @@
 									<doseQuantity>
 										<center value="1"/>
 									</doseQuantity>
-									<consumable> <!-- ziegm?: kann weggelassen werden? CDA: 0..1-->
+									<consumable> <!-- ziegm?:ToDo generieren-->
 										<manufacturedProduct>
 											<manufacturedMaterial nullFlavor="NA"/>
 										</manufacturedProduct>
@@ -331,7 +330,7 @@
 									<doseQuantity>
 										<center value="0.5"/>
 									</doseQuantity>
-									<consumable> <!-- ziegm?: kann weggelassen werden? CDA: 0..1-->
+									<consumable> <!-- ziegm?: ToDo generieren-->
 										<manufacturedProduct>
 											<manufacturedMaterial nullFlavor="NA"/>
 										</manufacturedProduct>
@@ -445,11 +444,11 @@
 										</pharm:asContent>
 										<pharm:ingredient classCode="ACTI">
 											<pharm:quantity>
-												<numerator unit="mg" value="10" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="PQ"/> <!-- ziegm: dito 1. entry -->
-												<denominator value="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="PQ"/> <!-- ziegm: dito 1. entry -->
+												<numerator unit="mg" value="10" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="PQ"/> <!-- see issue #5 -->
+												<denominator value="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="PQ"/> <!-- see issue #5 -->
 											</pharm:quantity>
 											<pharm:ingredient classCode="MMAT" determinerCode="KIND">
-												<pharm:code code="C08CA01" codeSystem="2.16.840.1.113883.6.73" codeSystemName="ATC WHO" displayName="amlodipine"/>
+												<pharm:code code="386864001" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED CT" displayName="Amlodipine"/>
 												<pharm:name>amlodipine</pharm:name>
 											</pharm:ingredient>
 										</pharm:ingredient>

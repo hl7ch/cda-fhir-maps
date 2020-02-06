@@ -132,7 +132,6 @@
       		</component>
 			<component>
             	<section>
-					<templateId root="2.16.756.5.30.1.1.10.3.73"/> <!-- ziegm: dito medication card -->
 					<templateId root="2.16.756.5.30.1.1.10.3.2"/>
 					<code code="48767-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Annotation comment [Interpretation] Narrative"/>
 					<title>Kommentar</title>
@@ -301,11 +300,11 @@
 										</pharm:asContent>
 										<pharm:ingredient classCode="ACTI">
 											<pharm:quantity>
-												<numerator unit="mg" value="10" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="PQ"/> <!-- ziegm: dito medication card-->
-												<denominator value="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="PQ"/> <!-- ziegm: dito medication card-->
+												<numerator unit="mg" value="10" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="PQ"/> <!-- see issue #5 -->
+												<denominator value="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="PQ"/> <!-- see issue #5 -->
 											</pharm:quantity>
 											<pharm:ingredient classCode="MMAT" determinerCode="KIND">
-												<pharm:code code="C08CA01" codeSystem="2.16.840.1.113883.6.73" codeSystemName="ATC WHO" displayName="amlodipine"/>
+												<pharm:code code="386864001" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED CT" displayName="Amlodipine"/>
 												<pharm:name>amlodipine</pharm:name>
 											</pharm:ingredient>
 										</pharm:ingredient>
@@ -365,7 +364,7 @@
 									<statusCode code="completed"/>
 								</act>
 							</entryRelationship>
-							<entryRelationship typeCode="COMP">
+							<entryRelationship typeCode="COMP">  <!-- falsch! Anzahl Packungen MedicationDispense.quantity-->
 								<supply classCode="SPLY" moodCode="RQO">
 									<templateId root="1.3.6.1.4.1.19376.1.9.1.3.8"/>
 									<independentInd value="false"/>
