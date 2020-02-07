@@ -103,11 +103,9 @@ group ManufacturedMaterialEntryContentModule(source bundle : Bundle, source medi
   medication.code as code then {
     code.text as text -> manufacturedMaterial.name as name, name.other = text "brandname";
   } "name";
-  medication.ingredient as ingredient then {
-    ingredient.itemCodeableConcept as itemCodeableConcept then {
-      itemCodeableConcept.coding as coding -> manufacturedMaterial.code as ce then CodingCE(coding,ce) "code";
-    } "itemCC";
-  } "ingredientCC";
+  medication.code as code then {
+      code.coding as coding -> manufacturedMaterial.code as ce then CodingCE(coding,ce) "code";
+  } "code";
   medication.form as form then {
     form.coding as coding -> manufacturedMaterial.formCode as formCode then CodingCE(coding, formCode) "formCode";
   } "form";
@@ -160,7 +158,9 @@ group PrescriptionItemEntryContentModule(source bundle : Bundle, source medicati
     dispenseRequest.numberOfRepeatsAllowed as number -> repeatNumber.value = number "repeat number";
   } "dispense request";
 
-  medicationRequest.contained as medication where ('#'+$this.id) in %medicationRequest.medicationReference.reference -> substanceAdministration.consumable as consumable, consumable.manufacturedProduct as manufacturedProduct then {
+  medicationRequest.contained as medication where ('#'+$this.id) in %medicationRequest.medicationReference.reference 
+    -> substanceAdministration.consumable as consumable, consumable.manufacturedProduct as manufacturedProduct,
+       manufacturedProduct.classCode = 'MANU' then {
     medication -> manufacturedProduct.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.5.3.1.4.7.2' "MP TemplateId";
     medication -> manufacturedProduct.templateId as templateId, templateId.root = '2.16.840.1.113883.10.20.1.53' "MP TemplateId";
     medication -> manufacturedProduct.manufacturedMaterial as manufacturedMaterial then ManufacturedMaterialEntryContentModule(bundle, medicationRequest, medication, manufacturedMaterial) "manufacturedMaterial";
@@ -174,7 +174,7 @@ group PrescriptionItemEntryContentModule(source bundle : Bundle, source medicati
 
   // dosage for split dosing (with sequences): effectiveTime (start/stop) & routeCode
   medicationRequest.dosageInstruction first as dosage where $this.conformsTo('http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured-medicationrequest') and $this.sequence.exists()
-    -> substanceAdministration.entryRelationship as entryRelationship, entryRelationship.typeCode = 'COMP'
+    -> substanceAdministration.entryRelationship as entryRelationship
        then DosageInstructionsEntryStartStopRoute(dosage, substanceAdministration, entryRelationship) "DosageSubstanceAdministration";
 
   // dosage for split dosing (with sequences): sequence number, effectiveTime (when), dose quantity, consumable
