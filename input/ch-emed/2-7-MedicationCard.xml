@@ -400,10 +400,8 @@
           <route>
             <coding>
               <system value="urn:oid:0.4.0.127.0.16.1.1.2.1"/>
-              <code value="20049000"/>
-              <display value="Nasal use"/>
-              <!--<code value="20053000"/>
-              <display value="Oral use"/>-->
+              <code value="20053000"/>
+              <display value="Oral use"/>
             </coding>
           </route>
           <doseAndRate>
@@ -425,10 +423,8 @@
           <route>
             <coding>
               <system value="urn:oid:0.4.0.127.0.16.1.1.2.1"/>
-              <code value="20058000"/>
-              <display value="Perineural use"/>
-              <!--<code value="20053000"/>
-              <display value="Oral use"/>-->
+              <code value="20053000"/>
+              <display value="Oral use"/>
             </coding>
           </route>
           <doseAndRate>

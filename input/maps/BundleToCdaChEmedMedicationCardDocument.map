@@ -166,12 +166,19 @@ group MedicationTreatmentPlanEntryContentModule(source bundle : Bundle, source m
   // TODO: AUTHOR1 Medication Treatment Plan Author
   // TODO: AUTHOR2 Community Medication Treatment Plan document author
 
+  // dosage for normal dosing, as no sequences are present there
   medicationStatement.dosage as dosage where $this.conformsTo('http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured') and $this.sequence.empty()
     then DosageInstructionsStartStopFrequency(dosage, substanceAdministration) "DosageSubstanceAdministration";
 
+  // dosage for split dosing (with sequences): effectiveTime (start/stop) & routeCode
+  medicationStatement.dosage first as dosage where $this.conformsTo('http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured') and $this.sequence.exists()
+    -> substanceAdministration.entryRelationship as entryRelationship, entryRelationship.typeCode = 'COMP'
+       then DosageInstructionsEntryStartStopRoute(dosage, substanceAdministration, entryRelationship) "DosageSubstanceAdministration"; 
+
+  // dosage for split dosing (with sequences): sequence number, effectiveTime (when), dose quantity, consumable
   medicationStatement.dosage as dosage where $this.conformsTo('http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured') and $this.sequence.exists()
     -> substanceAdministration.entryRelationship as entryRelationship, entryRelationship.typeCode = 'COMP'
-       then DosageInstructionsEntryDosageChange(dosage, substanceAdministration, entryRelationship) "DosageSubstanceAdministration";  
+       then DosageInstructionsEntryDosageChange(dosage, substanceAdministration, entryRelationship) "DosageSubstanceAdministration"; 
 
   medicationStatement.reasonCode as reasonCode 
     -> substanceAdministration.entryRelationship as entryRelationship, entryRelationship.typeCode='RSON', 
@@ -210,6 +217,7 @@ group MedicationTreatmentPlanEntryContentModule(source bundle : Bundle, source m
 
 // source: http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured
 // target: https://art-decor.org/art-decor/decor-templates--ch-pharm-?id=2.16.756.5.30.1.1.10.4.35 
+// dosage for normal dosing (without sequences)
 group DosageInstructionsStartStopFrequency(source dosage: Dosage, target substanceAdministration : SubstanceAdministration) {
   dosage as dosage -> substanceAdministration as substanceAdministration then EffectiveTimeStartEnd(dosage, substanceAdministration) "effective time start end";
   dosage as dosage -> substanceAdministration as substanceAdministration then EffectiveTimeWhen(dosage, substanceAdministration) "effective time when";
@@ -219,12 +227,16 @@ group DosageInstructionsStartStopFrequency(source dosage: Dosage, target substan
 
 // source: http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured
 // target: https://art-decor.org/art-decor/decor-templates--ch-pharm-?id=2.16.756.5.30.1.1.10.4.36
-group DosageInstructionsEntryDosageChange(source dosage: Dosage, target substanceAdministration: substanceAdministration, target entry: entryRelationship) {
-  
-  // ziegm: effectiveTime wird noch 2x (Anzahl Sequenzen) generiert  
+// dosage for split dosing: effectiveTime (start/stop) & routeCode
+group DosageInstructionsEntryStartStopRoute(source dosage: Dosage, target substanceAdministration: substanceAdministration, target entry: entryRelationship) {
   dosage as dosage -> substanceAdministration as substanceAdministration then EffectiveTimeStartEnd(dosage, substanceAdministration) "effective time start end";
-  
   dosage.route as route -> substanceAdministration.routeCode as routeCode then CodeableConceptCE(route, routeCode) "route";
+}
+
+// source: http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured
+// target: https://art-decor.org/art-decor/decor-templates--ch-pharm-?id=2.16.756.5.30.1.1.10.4.36
+// dosage for split dosing: sequence number, effectiveTime (when), dose quantity, consumable
+group DosageInstructionsEntryDosageChange(source dosage: Dosage, target substanceAdministration: substanceAdministration, target entry: entryRelationship) {
   dosage.sequence as sequence -> entry.sequenceNumber as sequenceNumber, sequenceNumber.value = sequence "sequence";
   dosage -> entry.substanceAdministration as substanceAdministration, 
     substanceAdministration.classCode = 'SBADM',
@@ -234,6 +246,7 @@ group DosageInstructionsEntryDosageChange(source dosage: Dosage, target substanc
     } "dosage";
 }
 
+// effective time low and high for dosage
 group EffectiveTimeStartEnd(source dosage: Dosage, target substanceAdministration: SubstanceAdministration) {
   dosage.timing as timing then {
     timing.repeat as repeat then {
@@ -245,6 +258,7 @@ group EffectiveTimeStartEnd(source dosage: Dosage, target substanceAdministratio
   } "timing"; 
 }
 
+// effective time when for dosage
 group EffectiveTimeWhen (source dosage: Dosage, target substanceAdministration : SubstanceAdministration) {
   dosage.timing as timing then {
     timing.repeat as repeat then {
@@ -263,6 +277,7 @@ group EffectiveTimeWhen (source dosage: Dosage, target substanceAdministration :
   } "timing"; 
 }
 
+// dose quantity for dosage
 group DoseQuantity(source dosage: Dosage, target substanceAdministration : SubstanceAdministration) {
   dosage.doseAndRate as doseAndRate -> substanceAdministration.doseQuantity as doseQuantity then {
     doseAndRate.dose : Quantity as quantity then {

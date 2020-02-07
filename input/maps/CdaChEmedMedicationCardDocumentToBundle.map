@@ -122,8 +122,11 @@ group ManufacturedMaterialEntryContentModule(source source : SubstanceAdministra
         } "ingredient";
       } "manufacturedMaterial";
     } "manufacturedProduct";
+
+    // dosage for normal dosing, as no sequences are present there
     source where $this.entryRelationship.sequenceNumber.exists()=false
       -> medicationStatement.dosage as dosage then DosageInstructionsStartStopFrequency(source, dosage) "dosage";
+    
   } "consumable";
 }
 
@@ -171,6 +174,7 @@ group MedicationTreatmentPlanEntryContentModule(source section : Section, source
 
 // source: https://art-decor.org/art-decor/decor-templates--ch-pharm-?id=2.16.756.5.30.1.1.10.4.35 
 // target: http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured
+// dosage for normal dosing, without sequences
 group DosageInstructionsStartStopFrequency(source source : SubstanceAdministration, target dosage: Dosage) {
   source as source -> dosage as dosage then EffectiveTimeStartEnd(source, dosage) "effective time start end";
   source as source -> dosage as dosage then EffectiveTimeWhen(source, dosage) "effective time when";
@@ -180,6 +184,7 @@ group DosageInstructionsStartStopFrequency(source source : SubstanceAdministrati
 
 // source https://art-decor.org/art-decor/decor-templates--ch-pharm-?id=2.16.756.5.30.1.1.10.4.36
 // target: http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured
+// dosage for split dosing, with sequences
 group DosageInstructionsEntryDosageChange(source source: substanceAdministration, source entry: entryRelationship, target dosage: Dosage) {
   entry.sequenceNumber as sequenceNumber -> dosage.sequence = sequenceNumber "sequenceNumber";
   source as source -> dosage as dosage then EffectiveTimeStartEnd(source, dosage) "effective time start end";
@@ -188,6 +193,7 @@ group DosageInstructionsEntryDosageChange(source source: substanceAdministration
   entry.substanceAdministration as source -> dosage as dosage then DoseQuantity(source, dosage) "dose quantity";
 }
 
+// effective time start & end for dosage
 group EffectiveTimeStartEnd(source source: substanceAdministration, target dosage: Dosage) {
   source.effectiveTime: IVL_TS as effectiveTime -> dosage.timing as timing share sharetiming then {
     effectiveTime -> timing.repeat as repeat then {
@@ -203,6 +209,7 @@ group EffectiveTimeStartEnd(source source: substanceAdministration, target dosag
   } "effectiveTime IVL_TS";
 }
 
+// effective time when for dosage
 group EffectiveTimeWhen(source source: substanceAdministration, target dosage: Dosage) {
   source.effectiveTime: EIVL_TS as effectiveTime -> dosage.timing as timing share sharetiming then {
     effectiveTime -> timing.repeat as repeat then {
@@ -222,6 +229,7 @@ group EffectiveTimeWhen(source source: substanceAdministration, target dosage: D
   } "effectiveTime SXPR_TS";
 }
 
+// dose quantity for dosage
 group DoseQuantity (source source: substanceAdministration, target dosage: Dosage) {
   source.doseQuantity as doseQuantity -> dosage.doseAndRate as doseAndRate then {
     doseQuantity.center as center -> doseAndRate.dose = create('Quantity') as quantity then {
