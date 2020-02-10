@@ -144,6 +144,7 @@
                 <section>
                     <templateId root="2.16.756.5.30.1.1.10.3.9"/>
                     <templateId root="1.3.6.1.4.1.19376.1.9.1.2.5"/>
+                    <id root="5FB3EACF-BE0D-42AA-9619-ABF008C50051"/>
                     <code code="10160-0" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="History of medication use"/>
                     <title>Medikamentenliste</title>
                     <text>

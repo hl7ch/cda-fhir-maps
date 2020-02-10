@@ -56,6 +56,7 @@ group ClinicalDocumentToBundle(source cda : ClinicalDocument, target patient : P
 // _________________________ Section Level Templates _________________________ 
 
 group ClinicalDocumentSection(source source : Section, source patient : Patient, target target, target bundle: Bundle) {
+  source.id as id -> target.extension as ext then ChExtEprSectionId(id, ext) "section id";
   source.title as t -> target.title = (t.dataString);
   source.code -> target.code;
   source.text as cdaText -> target.text as fhirText then {
@@ -221,6 +222,14 @@ group ClinicalDocumentLocation(source source : HealthCareFacility, target bundle
 group ChExtEprTime(source source: TSDateTime, target ext: Extension) {
   source -> ext.url = 'http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-time' "url";
   source -> ext.value = create('dateTime') as value then TSDateTime(source, value) "value";
+}
+
+
+// https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5.30.1.1.10.3.45
+// target: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefinition-ch-ext-epr-sectionid.html
+group ChExtEprSectionId(source source: II, target ext: Extension) {
+  source -> ext.url = 'http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-sectionid' "url";
+  source -> ext.value = create('Identifier') as value then II(source, value) "value";
 }
 
 // _________________________ Template Type not specified  ___________________ 

@@ -50,6 +50,10 @@ group BundleToClinicalDocument(source bundle : Bundle, target recordTarget: Reco
 // _________________________ Section Level Templates _________________________ 
 
 group SectionCdaSection(source bundle : Bundle, source section: Section, target cdasection: CdaSection) {
+  section.extension as extension where $this.url='http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-sectionid' 
+    -> cdasection.id as id then {
+      extension.valueIdentifier as valueIdentifier then IdentifierII(valueIdentifier, id) "IdentifierII";
+    } "valueIdentifier";
   section.code as code then {
     code.coding as coding where $this.system='http://loinc.org' -> cdasection.code as cdacode then CodingCE(coding, cdacode) "codingsection";
   } "code"; 

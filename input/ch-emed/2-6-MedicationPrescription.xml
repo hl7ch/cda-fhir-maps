@@ -110,6 +110,12 @@
                </entry>
             </section>
             <section>
+               <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-sectionid">
+                  <valueIdentifier>
+                     <system value="urn:ietf:rfc:3986"/>
+                     <value value="urn:uuid:d41d72ba-2100-11e6-b67b-9e71128cae77"/>
+                  </valueIdentifier>
+               </extension>
                <title value="Arzneimittelverordnung"/>
                <code>
                   <coding>

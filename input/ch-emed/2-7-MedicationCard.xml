@@ -110,6 +110,12 @@
           </entry>
         </section>
         <section>
+          <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-sectionid">
+            <valueIdentifier>
+              <system value="urn:ietf:rfc:3986"/>
+              <value value="urn:uuid:5fb3eacf-be0d-42aa-9619-abf008c50051"/>
+            </valueIdentifier>
+          </extension>
           <title value="Medikamentenliste"/>
           <code>
             <coding>
