@@ -312,7 +312,7 @@
 									<doseQuantity>
 										<center value="1"/>
 									</doseQuantity>
-									<consumable> <!-- ziegm: generieren! -->
+									<consumable>
 										<manufacturedProduct>
 											<manufacturedMaterial nullFlavor="NA"/>
 										</manufacturedProduct>
@@ -328,7 +328,7 @@
 									<doseQuantity>
 										<center value="0.5"/>
 									</doseQuantity>
-									<consumable> <!-- ziegm: generieren! -->
+									<consumable>
 										<manufacturedProduct>
 											<manufacturedMaterial nullFlavor="NA"/>
 										</manufacturedProduct>

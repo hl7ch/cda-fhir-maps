@@ -244,6 +244,9 @@ group DosageInstructionsEntryDosageChange(source dosage: Dosage, target substanc
     substanceAdministration.moodCode = 'INT' then {
       dosage as dosage -> substanceAdministration as substanceAdministration then EffectiveTimeWhen(dosage, substanceAdministration) "effective time when";
       dosage as dosage -> substanceAdministration as substanceAdministration then DoseQuantity(dosage, substanceAdministration) "dose quantity";
+      dosage as dosage -> substanceAdministration as substanceAdministration, substanceAdministration.consumable as consumable,
+        consumable.manufacturedProduct as manufacturedProduct, manufacturedProduct.manufacturedMaterial as manufacturedMaterial,
+        manufacturedMaterial.nullFlavor='NA' "consumable";
     } "dosage";
 }
 
