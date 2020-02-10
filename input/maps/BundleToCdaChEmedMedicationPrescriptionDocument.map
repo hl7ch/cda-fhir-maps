@@ -89,14 +89,29 @@ group AnnotationComment(source note: Annotation, target act: Act) {
   note -> act.statusCode as code, code.code = 'completed' "statuscode";
 }
 
-
+// ziegm: substitution ist noch falsch
 // source: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefinition-ch-emed-medicationrequest.html
 // target: Substitution permission Contains 1.3.6.1.4.1.19376.1.9.1.3.9.1 IHE Substitution Permission Content Module (DYNAMIC)
-group Substitution(source substitution: Substitution, target supply: Supply) {
-  substitution -> supply.classCode = 'SPLY' "SPLY";  
-  substitution -> supply.moodCode = 'RQO' "RQO";  
-  substitution -> supply.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.9.1.3.8' "TemplateId";
-  substitution.allowedBoolean as boolean -> supply.independentInd as ind, ind.value = boolean "boolean";
+//group Substitution(source substitution: Substitution, target supply: Supply) {
+//  substitution -> supply.classCode = 'SPLY' "SPLY";  
+//  substitution -> supply.moodCode = 'RQO' "RQO";  
+//  substitution -> supply.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.9.1.3.8' "TemplateId";
+//  substitution.allowedBoolean as boolean -> supply.independentInd as ind, ind.value = boolean "boolean";
+//}
+
+
+
+// source: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefinition-ch-emed-medicationrequest.html
+// target: https://art-decor.org/art-decor/decor-templates--cdachemed-?id=2.16.756.5.30.1.1.10.4.38
+group PrescribedQuantity(source dispenseRequest: DispenseRequest, target supply: Supply) {
+  dispenseRequest -> supply.classCode = 'SPLY' "SPLY";  
+  dispenseRequest -> supply.moodCode = 'RQO' "RQO";  
+  dispenseRequest -> supply.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.9.1.3.8' "TemplateId";
+  dispenseRequest -> supply.independentInd as independentInd, independentInd.value = 'false' "independentInd";
+  dispenseRequest.quantity as quantity -> supply.quantity as quant then {
+    quantity.value as value -> quant.value = value "value";
+    quantity.unit as unit -> quant.unit = unit "unit";
+  } "quantity";
 }
 
 
@@ -217,10 +232,17 @@ group PrescriptionItemEntryContentModule(source bundle : Bundle, source medicati
         entryRelationship.act as act 
           then AnnotationComment(note, act) "AnnotationComment";
 
-  medicationRequest.substitution as substitution 
-    -> substanceAdministration.entryRelationship as entryRelationship, entryRelationship.typeCode='COMP', 
+  // ziegm: substitution ist noch falsch
+  //medicationRequest.substitution as substitution 
+  //  -> substanceAdministration.entryRelationship as entryRelationship, entryRelationship.typeCode='COMP', 
+  //      entryRelationship.supply as supply
+  //        then Substitution(substitution, supply) "Substitution";
+
+  medicationRequest.dispenseRequest as dispenseRequest 
+    -> substanceAdministration.entryRelationship as entryRelationship, entryRelationship.typeCode='COMP',
         entryRelationship.supply as supply
-          then Substitution(substitution, supply) "Substitution";
+          then PrescribedQuantity(dispenseRequest, supply) "PrescribedQuantity";
+
 }
 
 
