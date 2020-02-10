@@ -132,7 +132,7 @@ History:
 				<!-- The author's means of communication: eMail work place.-->
 				<telecom value="mailto:ready@gruppenpraxis.ch" use="WP"/>
 				<!-- The author's means of communication: website work place.-->
-				<telecom value="http:http:www.grouppractice.ch" use="WP"/>
+				<telecom value="http:http://www.grouppractice.ch" use="WP"/>
 				<!-- The author's address - also according to eCH-0010. -->
 				<addr use="WP">
 					<streetName>doctors street</streetName>

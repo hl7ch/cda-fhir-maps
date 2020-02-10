@@ -1,10 +1,10 @@
 map "http://ahdis.ch/ig/cda-fhir-maps/StructureMap/FhirToCdaTypes" = "Transform for FHIR types to CDA types"
 
-//
+
 // Adapted from https://github.com/HL7/ccda-to-fhir/tree/master/mappings
 // CDA:  http://build.fhir.org/ig/ahdis/cda-core-2.0/branches/master/index.html
 // FHIR: http://hl7.org/fhir/r4/
-//
+
 
 conceptmap "uri2oid" {
   prefix s = "http://hl7.org/fhir"
@@ -33,8 +33,21 @@ conceptmap "oid2system" {
   s:"urn:oid:2.51.1.1" == t:"GTIN"
 }
 
+conceptmap "addressUse" { 
+  // http://hl7.org/fhir/cm-address-use-v3.html
+  prefix s = "http://hl7.org/fhir/valueset-address-use.html"
+  prefix t = "http://terminology.hl7.org/ValueSet/v3-AddressUse"
+
+  s:"home" == t:"H" // home -> home address
+  s:"work" == t:"WP" // work -> work place 
+  s:"temp" == t:"TMP" // Temporary -> temporary address
+  s:"old" == t:"OLD" // Old / Incorrect -> no longer in use, could be also t:"BAD" for bad address
+}
+
+
 uses "http://hl7.org/fhir/StructureDefinition/Identifier" as source
 uses "http://hl7.org/fhir/cda/StructureDefinition/II" as target
+
 
 group Any() {
   source.extension as ext where ext.url = 'http://hl7.org/fhir/StructureDefinition/iso21090-nullFlavor' -> target.nullFlavor as nullFlavor then {
@@ -139,23 +152,19 @@ group AddressAD(source source : Address, target target : AD) extends Any <<types
   source.state as v -> target.state as state, state.data = v;
   source.district as v -> target.county as county, county.data = v;
   source.country as v -> target.country as country, country.data = v;
-//  source.use as c -> target.use = translate(c, 'http://hl7.org/fhir/ConceptMap/cm-address-use-v3', 'code');
-  source.use as use where $this = 'home' -> target.use = 'HP';
-  source.use as use where $this = 'work' -> target.use = 'WP';
-  source.use as use where $this = 'old' -> target.use = 'OLD';  // could be also target.use = 'BAD'
-  source.use as use where $this = 'temp' -> target.use = 'TMP';  
-//  source.useablePeriod -> target.period;
+  source.use as c -> target.use = translate(c, '#addressUse', 'code') "addressUse";
+  // source.useablePeriod -> target.period;
 }
 
 group ContactPointTEL(source source : ContactPoint, target target : TEL) extends Any <<types>> {
     source.value as value -> target.value = (iif (%source.system='phone','tel:','') + iif(%source.system='fax','fax:','') + iif (%source.system='email','mailto:','') +iif (%source.system='url','http:','') +value) "value";
     source.use as use where $this = 'home' -> target.use = 'HP';
     source.use as use where $this = 'work' -> target.use = 'WP';  // not complete see below
-//  source.use where ((source.use = 'WP') or (source.use = 'DIR') or (source.use = 'PUB')) -> target.use = 'work' "usework";
+    // source.use where ((source.use = 'WP') or (source.use = 'DIR') or (source.use = 'PUB')) -> target.use = 'work' "usework";
     source.use as use where $this = 'old' -> target.use = 'BAD';  
     source.use as use where $this = 'temp' -> target.use = 'TMP';  
     source.use as use where $this = 'mobile' -> target.use = 'MC';  
-//  source.useablePeriod -> target.period; // use: for source.use as c make target.use = translate(c, 'http://hl7.org/fhir/ConceptMap/cm-telecom-use-v3', 'code')
+    // source.useablePeriod -> target.period; // use: for source.use as c make target.use = translate(c, 'http://hl7.org/fhir/ConceptMap/cm-telecom-use-v3', 'code')
 }
 
 group HumanNameEN(source source : HumanName, target target : EN) extends Any <<types>> {
@@ -163,15 +172,8 @@ group HumanNameEN(source source : HumanName, target target : EN) extends Any <<t
   source.given as v -> target.given as given, given.data = v;
   source.prefix as v -> target.prefix as prefix, prefix.data = v;
   source.suffix as v -> target.suffix as suffix, suffix.data = v;
-//  source.use as c -> target.use = translate(c, 'http://hl7.org/fhir/ConceptMap/cm-name-use-v3', 'code');
-  source.use as use where $this = 'usual' -> target.use = 'D';
-  source.use as use where $this = 'official' -> target.use = 'L';
-  source.use as use where $this = 'temp' -> target.use = 'TEMP';
-  source.use as use where $this = 'nickname' -> target.use = 'N';
-  source.use as use where $this = 'anonymous' -> target.use = 'S';
-  source.use as use where $this = 'old' -> target.use = 'BAD'; // could also be 'NOUSE'
-  source.use as use where $this = 'maiden' -> target.use = 'M';
-//  source.validTime -> target.period;
+  // source.use as c -> target.use = translate(c, 'http://hl7.org/fhir/ConceptMap/cm-name-use-v3', 'code');
+  // source.validTime -> target.period;
 }
 
 group QuantityPQ(source source : Quantity, target target : PQ) extends Any <<types>> {
@@ -183,6 +185,3 @@ group RatioRTOPQPQ(source source : Ratio, target target : RTO_PQ_PQ) extends Any
   source.numerator as numerator -> target.numerator as targetNumerator then QuantityPQ(numerator, targetNumerator) "numerator";
   source.denominator as denominator -> target.denominator as targetDenominator then QuantityPQ(denominator, targetDenominator) "denominator"; 
 }
-
-
-
