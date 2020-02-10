@@ -57,6 +57,13 @@ group CompositionClinicalDocumentChEmedMedicationCardDocument(source bundle : Bu
 group SectionMedicationCardSectionContentModule(source bundle : Bundle, source section: Section, target cdasection: CdaSection) extends SectionCdaSection{
   section -> cdasection.templateId as templateId, templateId.root='2.16.756.5.30.1.1.10.3.9' "CH-PHARM Medication Card Section Content Module";
   section -> cdasection.templateId as templateId, templateId.root='1.3.6.1.4.1.19376.1.9.1.2.5' "IHE PHARM PML";
+  
+  // create section id if there is none in the fhir bundle (mapping source)
+  section as section where $this.extension.where(url='http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-sectionid').exists()=false 
+    -> cdasection.id as id then { 
+      section -> id.root = uuid() "section id"; //TBD uuid as upercase?
+    } "extension";
+
   bundle.entry as entry then {
     entry.resource as medicationStatement where ('MedicationStatement'+'/'+$this.id) in %section.entry.reference -> cdasection.entry as entry, entry.substanceAdministration as substanceAdministration then MedicationTreatmentPlanEntryContentModule(bundle, medicationStatement, substanceAdministration) "MedicationStatement";
   } "entry";
