@@ -298,6 +298,9 @@
           <Medication>
             <id value="med"/>
             <code>
+              <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
+                <valueUrl value="#mtpc.1.brandedmedication"/>
+              </extension>
               <coding>
                 <system value="urn:oid:2.51.1.1"/>
                 <code value="7680521101306"/>
@@ -450,6 +453,9 @@
           <Medication>
             <id value="med"/>
             <code>
+              <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
+                <valueUrl value="#mtpc.2.brandedmedication"/>
+              </extension>
               <coding>
                 <system value="urn:oid:2.51.1.1"/>
                 <code value="7680500440334"/>

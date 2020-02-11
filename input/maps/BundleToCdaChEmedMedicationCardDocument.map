@@ -120,7 +120,13 @@ group ManufacturedMaterialEntryContentModule(source bundle : Bundle, source medi
     code.text as text -> manufacturedMaterial.name as name, name.other = text "brandname";
   } "name";
   medication.code as code then {
-      code.coding as coding -> manufacturedMaterial.code as ce then CodingCE(coding,ce) "code";
+    // #mtpc.no.brandedmedication
+    code.extension as extension where $this.url='http://hl7.org/fhir/StructureDefinition/narrativeLink' -> manufacturedMaterial.code as code then {
+      extension.valueUrl as valueUrl -> code.originalText as text,
+        text.reference as reference, reference.value=valueUrl "reference";
+    } "id";
+    
+    code.coding as coding -> manufacturedMaterial.code as ce then CodingCE(coding,ce) "code";
   } "code";
   medication.form as form then {
     form.coding as coding -> manufacturedMaterial.formCode as formCode then CodingCE(coding, formCode) "formCode";

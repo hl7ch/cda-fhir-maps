@@ -256,7 +256,7 @@
 										<code code="7680521101306" codeSystem="2.51.1.1"
 													codeSystemName="GTIN" displayName="BELOC ZOK Ret Tabl 50 mg 30 Stk">
 											<originalText>
-												<reference value="#mtp.1.brandedmedication" />
+												<reference value="#mtpc.1.brandedmedication" />
 											</originalText>
 										</code>
 										<name>BELOC ZOK Ret Tabl 50 mg</name>
@@ -444,7 +444,7 @@
 										<code code="7680500440334" codeSystem="2.51.1.1"
 													codeSystemName="GTIN" displayName="NORVASC Tabl 10 mg">
 											<originalText>
-												<reference value="#mtpc.1.ingredient" />
+												<reference value="#mtpc.2.brandedmedication" />
 											</originalText>
 										</code>
 										<name>NORVASC Tabl 10 mg</name>
