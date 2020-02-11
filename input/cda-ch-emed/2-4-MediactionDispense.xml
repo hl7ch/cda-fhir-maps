@@ -235,7 +235,7 @@
 										<code code="7680521101306" codeSystem="2.51.1.1"
 													codeSystemName="GTIN" displayName="BELOC ZOK Ret Tabl 50 mg 30 Stk">
 											<originalText>
-												<reference value="#dis.1.ingredient" />
+												<reference value="#dis.1.brandedmedication" />
 											</originalText>
 										</code>
 										<name>BELOC ZOK Ret Tabl 50 mg</name>

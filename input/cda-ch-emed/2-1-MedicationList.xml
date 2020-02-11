@@ -244,7 +244,7 @@
 										<code code="7680538751228" codeSystem="2.51.1.1"
 													codeSystemName="GTIN" displayName="TRIATEC Tabl 2.5 mg 100 Stk" >
 											<originalText>
-												<reference value="#mtp.1.ingredient" />
+												<reference value="#mtp.1.brandedmedication" />
 											</originalText>
 										</code>
 										<name>TRIATEC Tabl 2.5 mg</name>
