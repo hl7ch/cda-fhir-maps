@@ -78,13 +78,12 @@ group AnnotationComment(source section: Section, source act: Act, target note: A
   } "text";
 }
 
-// ziegm: substitution ist noch falsch
+
 // source: Substitution permission Contains 1.3.6.1.4.1.19376.1.9.1.3.9.1 IHE Substitution Permission Content Module (DYNAMIC)
 // target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-medicationstatement.html
-//group Substitution(source supply: Supply, target medicationStatement: MedicationStatement) {
-//  supply.independentInd as ind -> medicationStatement.extension as ext 
-//    then ExtensionSubstitution(ind, ext) "substitution";
-//}
+group Substitution(source supply: Supply, target medicationStatement: MedicationStatement) {
+  supply -> medicationStatement.extension as ext then ExtensionSubstitution(supply, ext) "substitution";
+}
 
 
 // source: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&id=2.16.756.5.30.1.1.10.4.33
@@ -166,10 +165,9 @@ group MedicationTreatmentPlanEntryContentModule(source section : Section, source
     entry.act as act -> medicationStatement.note as note then AnnotationComment(section, act, note) "annotation";
   } "entryRelationShip 2.16.756.5.30.1.1.10.4.2";  
 
-  //ziegm: substitution ist noch falsch
-  //source.entryRelationship as entry where (typeCode='COMP' and supply.templateId.where(root='1.3.6.1.4.1.19376.1.9.1.3.8').exists()) then {
-  //  entry.supply as supply -> medicationStatement as medicationStatement then Substitution(supply, medicationStatement) "substitution";
-  //} "entryRelationShip 1.3.6.1.4.1.19376.1.9.1.3.8";
+  source.entryRelationship as entry where (typeCode='COMP' and supply.templateId.where(root='1.3.6.1.4.1.19376.1.9.1.3.9').exists()) then {
+    entry.supply as supply -> medicationStatement as medicationStatement then Substitution(supply, medicationStatement) "substitution";
+  } "entryRelationShip 1.3.6.1.4.1.19376.1.9.1.3.9";
 }
 
 
@@ -307,9 +305,12 @@ group InnerExtensionId(source source, target ext: Extension) {
   source -> ext.value = create('Identifier') as id then II(source, id) "value";
 }
 
-// ziegm: substitution ist noch falsch
 // target: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefinition-ch-emed-ext-substitution.html
-//group ExtensionSubstitution(source url, target ext: Extension) {
-//  url -> ext.url = 'http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-substitution' "url";
-//  url -> ext.value = create('boolean') as bool, bool.value = url "value";
-//}
+group ExtensionSubstitution(source supply, target ext: Extension) {
+  supply -> ext.url = 'http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-substitution' "url";
+  // TBD
+  supply -> ext.value = create('CodeableConcept') as valueCC then {
+    supply -> valueCC.text = 'test' "allowedCC";
+  } "valueCC";
+  //then CECodeableConcept(supply, valueCC);
+}

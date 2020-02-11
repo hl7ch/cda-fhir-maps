@@ -502,6 +502,18 @@
         <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
           <valueUrl value="#mtpc.2"/>
         </extension>
+        
+        <!-- substitution just as test case -->
+        <extension url="http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-substitution">
+          <valueCodeableConcept>
+            <coding>
+              <system value="http://terminology.hl7.org/CodeSystem/v3-substanceAdminSubstitution"/>
+              <code value="F"/>
+              <display value="formulary"/>
+            </coding>
+          </valueCodeableConcept>
+        </extension>
+
         <extension url="http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-treatmentplan">
           <extension url="id">
             <valueIdentifier>

@@ -409,8 +409,15 @@
                   <unit value="1"/>
                </quantity>
             </dispenseRequest>
+            <!-- substitution just as test case -->
             <substitution>
-               <allowedBoolean value="false"/>
+               <allowedCodeableConcept>
+                  <coding>
+                     <system value="http://terminology.hl7.org/CodeSystem/v3-substanceAdminSubstitution"/>
+                     <code value="F"/>
+                     <display value="formulary"/>
+                  </coding>
+               </allowedCodeableConcept>
             </substitution>
          </MedicationRequest>
       </resource>

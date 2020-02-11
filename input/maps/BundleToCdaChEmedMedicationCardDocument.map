@@ -19,6 +19,7 @@ uses "http://hl7.org/fhir/cda/StructureDefinition/RecordTarget" alias RecordTarg
 uses "http://hl7.org/fhir/cda/StructureDefinition/Section" alias Section as target
 uses "http://hl7.org/fhir/cda/StructureDefinition/SubstanceAdministration" alias SubstanceAdministration as target
 uses "http://hl7.org/fhir/cda/StructureDefinition/SXPR_TS" alias SXPR_TS as target
+uses "http://hl7.org/fhir/cda/StructureDefinition/Supply" alias Supply as target
 
 uses "http://hl7.org/fhir/StructureDefinition/Bundle" alias Bundle as source
 uses "http://hl7.org/fhir/StructureDefinition/Composition" alias Composition as source
@@ -89,15 +90,23 @@ group AnnotationComment(source note: Annotation, target act: Act) {
   note -> act.statusCode as code, code.code = 'completed' "statuscode";
 }
 
-// ziegm: substitution ist noch falsch
+
 // source: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefinition-ch-emed-medicationstatement.html
-// target: Substitution permission Contains 1.3.6.1.4.1.19376.1.9.1.3.9.1 IHE Substitution Permission Content Module (DYNAMIC)
-//group Substitution(source substitution: Substitution, target supply: Supply) {
-//  substitution -> supply.classCode = 'SPLY' "SPLY";  
-//  substitution -> supply.moodCode = 'RQO' "RQO";  
-//  substitution -> supply.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.9.1.3.8' "TemplateId";
-//  substitution.valueBoolean as boolean -> supply.independentInd as ind, ind.value = boolean "boolean";
-//}
+// target: https://art-decor.org/art-decor/decor-templates--cdachemed-?id=2.16.756.5.30.1.1.10.4.39
+group Substitution(source substitution: Substitution, target supply: Supply) {
+  substitution -> supply.classCode = 'SPLY' "SPLY";  
+  substitution -> supply.moodCode = 'RQO' "RQO";  
+  substitution -> supply.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.9.1.3.9' "TemplateId";
+  substitution -> supply.independentInd as independentInd, independentInd.value = 'false' "independentInd";
+  // Error step 5: Failed to call access method: java.lang.Error: Unrecognised name subjectOf4 on supply
+  //substitution -> supply.subjectOf4 as subject then {
+  //  substitution -> subject.substitutionPermission as substitutionPermission then {
+  //    substitution -> substitutionPermission.classCode = 'SUBST' "SUBST";
+  //    substitution -> substitutionPermission.moodCode ='PERM' "PERM";
+  //    //TBD: code
+  //  } "substitutionPermission";
+  //} "subjectOf4";
+}
 
 
 // source: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefinition-ch-emed-medicationstatement.html
@@ -216,11 +225,10 @@ group MedicationTreatmentPlanEntryContentModule(source bundle : Bundle, source m
         entryRelationship.act as act 
           then AnnotationComment(note, act) "AnnotationComment";
 
-  // ziegm: substitution ist noch falsch
-  //  medicationStatement.extension as substitution where $this.url='http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-substitution' 
-  //  -> substanceAdministration.entryRelationship as entryRelationship, entryRelationship.typeCode='COMP', 
-  //      entryRelationship.supply as supply
-  //        then Substitution(substitution, supply) "Substitution";
+  medicationStatement.extension as substitution where $this.url='http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-substitution' 
+    -> substanceAdministration.entryRelationship as entryRelationship, entryRelationship.typeCode='COMP', 
+        entryRelationship.supply as supply
+          then Substitution(substitution, supply) "Substitution";
 }
 
 
