@@ -176,8 +176,6 @@ group PrescriptionItemEntryContentModule(source bundle : Bundle, source medicati
   medicationRequest -> substanceAdministration.templateId as templateId, templateId.root = '2.16.840.1.113883.10.20.1.24' "CCD";
   medicationRequest -> substanceAdministration.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.5.3.1.4.7' "PCC Medication Entry Content Module";
 
-  // TODO: Normal / Split / Tapered Dose
-
   medicationRequest.identifier as identifier -> substanceAdministration.id as id then IdentifierII(identifier, id) "id";
   medicationRequest.extension as extension where $this.url='http://hl7.org/fhir/StructureDefinition/narrativeLink' -> substanceAdministration.text as text, text.reference as reference then {
     extension.valueUrl as valueUrl -> reference.value = valueUrl "valueUrl";
@@ -251,11 +249,14 @@ group PrescriptionItemEntryContentModule(source bundle : Bundle, source medicati
           then PrescribedQuantity(dispenseRequest, supply) "PrescribedQuantity";
 }
 
+// TODO: Tapered Dose
+//medicationRequest -> substanceAdministration.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.5.3.1.4.8' "Tapered Dose";
 
 // source: http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured-medicationrequest
 // target: https://art-decor.org/art-decor/decor-templates--ch-pharm-?id=2.16.756.5.30.1.1.10.4.35
 // dosage for normal dosing (without sequences)
 group DosageInstructionsStartStopFrequency(source dosage: Dosage, target substanceAdministration : SubstanceAdministration) {
+  dosage -> substanceAdministration.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.5.3.1.4.7.1' "Normal Dose";
   dosage as dosage -> substanceAdministration as substanceAdministration then EffectiveTimeStartEnd(dosage, substanceAdministration) "effective time start end";
   dosage as dosage -> substanceAdministration as substanceAdministration then EffectiveTimeWhen(dosage, substanceAdministration) "effective time when";
   dosage.route as route -> substanceAdministration.routeCode as routeCode then CodeableConceptCE(route, routeCode) "route";
@@ -266,6 +267,7 @@ group DosageInstructionsStartStopFrequency(source dosage: Dosage, target substan
 // target: https://art-decor.org/art-decor/decor-templates--ch-pharm-?id=2.16.756.5.30.1.1.10.4.36
 // dosage for split dosing: effectiveTime (start/stop) & routeCode
 group DosageInstructionsEntryStartStopRoute(source dosage: Dosage, target substanceAdministration: substanceAdministration, target entry: entryRelationship) {
+  dosage -> substanceAdministration.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.5.3.1.4.9' "Split Dose";
   dosage as dosage -> substanceAdministration as substanceAdministration then EffectiveTimeStartEnd(dosage, substanceAdministration) "effective time start end";
   dosage.route as route -> substanceAdministration.routeCode as routeCode then CodeableConceptCE(route, routeCode) "route";
 }
