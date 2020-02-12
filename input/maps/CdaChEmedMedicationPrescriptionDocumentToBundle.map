@@ -1,11 +1,11 @@
 map "http://ahdis.ch/ig/cda-fhir-maps/StructureMap/CdaChEmedMedicationPrescriptionDocumentToBundle" = "CDA MedicationPrescriptionDocument to FHIR"
 
-//
+
 // Medication Prescription document,	2.16.756.5.30.1.1.10.1.4
 // 2020-01-22 Michaela Ziegler, copyright ahdis ag, Apache License 
 // CDA-CH-EMED:  https://art-decor.org/art-decor/decor-project--cdachemed-
 // FHIR CH-EMED: http://fhir.ch/ig/ch-emed/index.html, http://build.fhir.org/ig/hl7ch/ch-emed/index.html
-//
+
 
 uses "http://hl7.org/fhir/cda/StructureDefinition/ClinicalDocument" alias ClinicalDocument as source
 uses "http://hl7.org/fhir/cda/StructureDefinition/AssignedAuthor" alias AssignedAuthor as source
@@ -185,6 +185,7 @@ group PrescriptionItemEntryContentModule(source section : Section, source source
     -> medicationRequest.dosageInstruction as dosage 
         then DosageInstructionsNonStructuredEntryContentModule(section, entry, dosage) "entryRelationShip 2.16.756.5.30.1.1.10.4.37";  
 
+  // dosage for split dosing, as sequences are present there
   source.entryRelationship as entry where (typeCode='COMP' and sequenceNumber.value>=0) 
     -> medicationRequest.dosageInstruction as dosage 
         then DosageInstructionsEntryDosageChange(source, entry, dosage) "entryRelationShip 2.16.756.5.30.1.1.10.4.36";  
