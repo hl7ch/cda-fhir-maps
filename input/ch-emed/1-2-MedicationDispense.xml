@@ -70,27 +70,6 @@
                 <custodian>
                     <reference value="Organization/1b68e458-1154-4941-8d72-eaa72898d9c6"/>
                 </custodian>
-
-                <!-- ziegm: Kommmentar zu Testzwecken -->
-                <section>
-                    <title value="Kommentar"/>
-                    <code>
-                        <coding>
-                            <system value="http://loinc.org"/>
-                            <code value="48767-8"/>
-                            <display value="Annotation comment"/>
-                        </coding>
-                    </code>
-                    <text>
-                        <status value="generated"/>
-                        <div xmlns="http://www.w3.org/1999/xhtml">
-                            <span id="co1">
-                  Kommentar zu Medication Treatment
-                            </span>
-                        </div>
-                    </text>
-                </section>
-
                 <section>
                     <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-sectionid">
                         <valueIdentifier>
