@@ -3,10 +3,10 @@
 <Bundle xmlns="http://hl7.org/fhir">
     <identifier>
         <system value="urn:ietf:rfc:3986"/>
-        <value value="urn:uuid:d8143fea-4778-11e6-beb8-9e71128cae77"/>
+        <value value="urn:uuid:488bd23a-20c6-11e6-b67b-9e71128cae77"/>
     </identifier>
     <type value="document"/>
-    <timestamp value="2012-02-04T14:00:00+01:00"/>
+    <timestamp value="2011-11-29T11:01:00+01:00"/>
     <entry>
         <resource>
             <Composition>
@@ -14,7 +14,7 @@
                 <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-setid">
                     <valueIdentifier>
                         <system value="urn:ietf:rfc:3986"/>
-                        <value value="urn:uuid:d8143fea-4778-11e6-beb8-9e71128cae77"/>
+                        <value value="urn:uuid:488bd23a-20c6-11e6-b67b-9e71128cae77"/>
                     </valueIdentifier>
                 </extension>
                 <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-versionnumber">
@@ -22,15 +22,20 @@
                 </extension>
                 <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-informationrecipient">
                     <valueReference>
-                        <reference value="Patient/6c870b77-10a7-404f-befa-d97894990595"/>
+                        <reference value="Patient/fc2649f1-9c4d-4fd7-882a-8b53b925d8d4"/>
                     </valueReference>
                 </extension>
                 <identifier>
                     <system value="urn:ietf:rfc:3986"/>
-                    <value value="urn:uuid:d8143fea-4778-11e6-beb8-9e71128cae77"/>
+                    <value value="urn:uuid:488bd23a-20c6-11e6-b67b-9e71128cae77"/>
                 </identifier>
                 <status value="final"/>
                 <type>
+                    <!--<coding>
+                        <system value="http://snomed.info/sct"/>
+                        <code value="419891008"/>
+                        <display value="Record artifact (record artifact)"/>
+                    </coding>-->
                     <coding>
                         <system value="http://loinc.org"/>
                         <code value="60593-1"/>
@@ -38,17 +43,17 @@
                     </coding>
                 </type>
                 <subject>
-                    <reference value="Patient/c1c6fe62-2b5b-4fcd-a738-64f05f862f5b"/>
+                    <reference value="Patient/bf0e0e6c-3680-4882-a5af-613ec77fa6f8"/>
                 </subject>
-                <date value="2012-02-04T14:00:00+01:00"/>
+                <date value="2011-11-29T11:01:00+01:00"/>
                 <author>
                     <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-time">
-                        <valueDateTime value="2012-02-04T14:00:00+01:00"/>
+                        <valueDateTime value="2011-11-29T11:00:00+01:00"/>
                     </extension>
-                    <reference value="Practitioner/508a702d-d957-479a-9b62-b1059c7e2519"/>
+                    <reference value="Practitioner/417883ce-32dd-4b73-b337-da7d38aeeb1d"/>
                 </author>
                 <author>
-                    <reference value="Organization/24e04392-e4bf-4e58-8436-8c0349133005"/>
+                    <reference value="Organization/b382be36-4fec-43ba-8ed6-b5c6f0cd93ab"/>
                 </author>
                 <title value="Abgabe"/>
                 <confidentiality value="N">
@@ -63,13 +68,34 @@
                     </extension>
                 </confidentiality>
                 <custodian>
-                    <reference value="Organization/a85aa92d-dae5-451b-a816-2fdf3f5fa14d"/>
+                    <reference value="Organization/1b68e458-1154-4941-8d72-eaa72898d9c6"/>
                 </custodian>
+
+                <!-- ziegm: Kommmentar zu Testzwecken -->
+                <section>
+                    <title value="Kommentar"/>
+                    <code>
+                        <coding>
+                            <system value="http://loinc.org"/>
+                            <code value="48767-8"/>
+                            <display value="Annotation comment"/>
+                        </coding>
+                    </code>
+                    <text>
+                        <status value="generated"/>
+                        <div xmlns="http://www.w3.org/1999/xhtml">
+                            <span id="co1">
+                  Kommentar zu Medication Treatment
+                            </span>
+                        </div>
+                    </text>
+                </section>
+
                 <section>
                     <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-sectionid">
                         <valueIdentifier>
                             <system value="urn:ietf:rfc:3986"/>
-                            <value value="urn:uuid:d8143fea-4778-11e6-beb8-9e71128cae77"/>
+                            <value value="urn:uuid:488bd23a-20c6-11e6-b67b-9e71128cae77"/>
                         </valueIdentifier>
                     </extension>
                     <title value="Abgabe eines Medikaments"/>
@@ -106,16 +132,17 @@
                                 </thead>
                                 <tbody>
                                     <tr id="dis.1">
-                                        <td id="dis.1.brandedmedication">Beloc Zok</td>
-                                        <td id="dis.1.ingredient">Metoprolol</td>
-                                        <td id="dis.1.packageform">Ret Tbl</td>
-                                        <td id="dis.1.dosequantity">50 mg</td>
+                                        <td id="dis.1.brandedmedication">Triatec</td>
+                                        <td id="dis.1.ingredient">Ramipril</td>
+                                        <td id="dis.1.dosequantity">2.5 mg</td>
+                                        <td id="dis.1.packageform">Tbl</td>
                                         <td id="dis.1.nopackages">1</td>
-                                        <td id="dis.1.packagesize">30 Stk</td>
-                                        <td id="dis.1.dosageintakemode">Morgens 1 und abends 1/2 Tablette nehmen</td>
-                                        <td id="dis.1.dosagemorning">1</td>
+                                        <td id="dis.1.packagesize">20</td>
+                                        <td id="dis.1.dosageintakemode">Morgens 1/2 Tablette nehmen</td>
+                                        <td id="dis.1.dosagemorning">0.5</td>
                                         <td id="dis.1.dosagelunch">0</td>
-                                        <td id="dis.1.dosageevening">0.5</td>
+                                        <td id="dis.1.dosageevening">0</td>
+                                        <td id="dis.1.dosagenight">0</td>
                                         <td id="dis.1.routecode">oral</td>
                                         <td id="dis.1.note"/>
                                         <td id="dis.1.datefromto"/>
@@ -128,7 +155,7 @@
                         </div>
                     </text>
                     <entry>
-                        <reference value="MedicationDispense/9197a36d-be62-4726-ae49-b1ca2a84da66"/>
+                        <reference value="MedicationDispense/b979232e-b60b-498e-b231-9e0aa7e9241e"/>
                     </entry>
                 </section>
             </Composition>
@@ -137,20 +164,20 @@
     <entry>
         <resource>
             <Patient>
-                <id value="c1c6fe62-2b5b-4fcd-a738-64f05f862f5b"/>
+                <id value="bf0e0e6c-3680-4882-a5af-613ec77fa6f8"/>
                 <identifier>
                     <system value="urn:oid:2.999"/>
                     <value value="11111111"/>
                 </identifier>
                 <name>
-                    <family value="Wegm&#xFC;ller"/>
+                    <family value="Wegmüller"/>
                     <given value="Monika"/>
                 </name>
                 <gender value="female"/>
                 <birthDate value="1943-05-15"/>
                 <address>
                     <line value="Wiesenstr. 12"/>
-                    <city value="Z&#xFC;rich"/>
+                    <city value="Zürich"/>
                     <postalCode value="8003"/>
                     <country value="CH"/>
                 </address>
@@ -160,7 +187,7 @@
     <entry>
         <resource>
             <Practitioner>
-                <id value="508a702d-d957-479a-9b62-b1059c7e2519"/>
+                <id value="417883ce-32dd-4b73-b337-da7d38aeeb1d"/>
                 <identifier>
                     <system value="urn:oid:2.51.1.3"/>
                     <value value="7601000234438"/>
@@ -175,7 +202,7 @@
     <entry>
         <resource>
             <Organization>
-                <id value="24e04392-e4bf-4e58-8436-8c0349133005"/>
+                <id value="b382be36-4fec-43ba-8ed6-b5c6f0cd93ab"/>
                 <identifier>
                     <system value="urn:oid:2.51.1.3"/>
                     <value value="7601000234438"/>
@@ -188,7 +215,7 @@
                 </telecom>
                 <address>
                     <line value="Krankenstrasse 2"/>
-                    <city value="Z&#xFC;rich"/>
+                    <city value="Zürich"/>
                     <postalCode value="8005"/>
                     <country value="CH"/>
                 </address>
@@ -198,7 +225,7 @@
     <entry>
         <resource>
             <Organization>
-                <id value="a85aa92d-dae5-451b-a816-2fdf3f5fa14d"/>
+                <id value="1b68e458-1154-4941-8d72-eaa72898d9c6"/>
                 <identifier>
                     <system value="urn:oid:2.51.1.3"/>
                     <value value="7601000234438"/>
@@ -210,14 +237,14 @@
     <entry>
         <resource>
             <Patient>
-                <id value="6c870b77-10a7-404f-befa-d97894990595"/>
+                <id value="fc2649f1-9c4d-4fd7-882a-8b53b925d8d4"/>
                 <name>
-                    <family value="Wegm&#xFC;ller"/>
+                    <family value="Wegmüller"/>
                     <given value="Monika"/>
                 </name>
                 <address>
                     <line value="Wiesenstr. 12"/>
-                    <city value="Z&#xFC;rich"/>
+                    <city value="Zürich"/>
                     <postalCode value="8003"/>
                     <country value="CH"/>
                 </address>
@@ -227,7 +254,7 @@
     <entry>
         <resource>
             <MedicationDispense>
-                <id value="9197a36d-be62-4726-ae49-b1ca2a84da66"/>
+                <id value="b979232e-b60b-498e-b231-9e0aa7e9241e"/>
                 <contained>
                     <Medication>
                         <id value="med"/>
@@ -237,10 +264,10 @@
                             </extension>
                             <coding>
                                 <system value="urn:oid:2.51.1.1"/>
-                                <code value="7680521101306"/>
-                                <display value="BELOC ZOK Ret Tabl 50 mg 30 Stk"/>
+                                <code value="7680538751228"/>
+                                <display value="TRIATEC Tabl 2.5 mg 100 Stk"/>
                             </coding>
-                            <text value="BELOC ZOK Ret Tabl 50 mg"/>
+                            <text value="TRIATEC Tabl 2.5 mg"/>
                         </code>
                         <form>
                             <coding>
@@ -251,7 +278,7 @@
                         </form>
                         <amount>
                             <numerator>
-                                <value value="30"/>
+                                <value value="20"/>
                                 <unit value="tablets"/>
                                 <system value="http://unitsofmeasure.org"/>
                                 <code value="1"/>
@@ -267,18 +294,19 @@
                             <itemCodeableConcept>
                                 <coding>
                                     <system value="http://snomed.info/sct"/>
-                                    <code value="372826007"/>
-                                    <display value="Metoprolol (substance)"/>
+                                    <code value="386872004"/>
+                                    <display value="Ramipril (substance)"/>
                                 </coding>
-                                <text value="Metoprolol"/>
+                                <text value="Ramipril"/>
                             </itemCodeableConcept>
                             <strength>
                                 <numerator>
-                                    <value value="50"/>
+                                    <value value="2.5"/>
                                     <code value="mg"/>
                                 </numerator>
                                 <denominator>
                                     <value value="1"/>
+                                    <code value="1"/>
                                 </denominator>
                             </strength>
                         </ingredient>
@@ -291,37 +319,63 @@
                     <extension url="id">
                         <valueIdentifier>
                             <system value="urn:ietf:rfc:3986"/>
-                            <value value="urn:uuid:17931678-20b4-11e6-b67b-9e71128cca77"/>
+                            <value value="urn:uuid:c9f758a1-296c-4710-84d4-e181db8c7478"/>
                         </valueIdentifier>
                     </extension>
                     <extension url="externalDocumentId">
                         <valueIdentifier>
                             <system value="urn:ietf:rfc:3986"/>
-                            <value value="urn:uuid:17931678-20b4-11e6-b67b-9e71128cca77"/>
+                            <value value="urn:uuid:c9f758a1-296c-4710-84d4-e181db8c7478"/>
                         </valueIdentifier>
                     </extension>
                 </extension>
                 <identifier>
                     <system value="urn:ietf:rfc:3986"/>
-                    <value value="urn:uuid:d8143fea-4778-11e6-beb8-9e71128cae77"/>
+                    <value value="urn:uuid:488bd23a-20c6-11e6-b67b-9e71128cae77"/>
                 </identifier>
                 <status value="completed"/>
                 <medicationReference>
                     <reference value="#med"/>
                 </medicationReference>
                 <subject>
-                    <reference value="Patient/c1c6fe62-2b5b-4fcd-a738-64f05f862f5b"/>
+                    <reference value="Patient/bf0e0e6c-3680-4882-a5af-613ec77fa6f8"/>
                 </subject>
+                <quantity>
+                    <value value="1"/>
+                    <unit value="1"/>
+                </quantity>
                 <note>
                     <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
                         <valueUrl value="#dis.1.note"/>
                     </extension>
                 </note>
                 <dosageInstruction>
+                    <timing>
+                        <repeat>
+                            <boundsPeriod>
+                                <start value="2011-11-29"/>
+                            </boundsPeriod>
+                            <when value="ACM"/>
+                        </repeat>
+                    </timing>
+                    <route>
+                        <coding>
+                            <system value="urn:oid:0.4.0.127.0.16.1.1.2.1"/>
+                            <code value="20053000"/>
+                            <display value="Oral use"/>
+                        </coding>
+                    </route>
+                    <doseAndRate>
+                        <doseQuantity>
+                            <value value="0.5"/>
+                        </doseQuantity>
+                    </doseAndRate>
+                </dosageInstruction>
+                <dosageInstruction>
                     <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
                         <valueUrl value="#dis.1.dosageintakemode"/>
                     </extension>
-                    <text value="Morgens 1 und abends 1/2 Tablette nehmen"/>
+                    <text value="Morgens 1/2 Tablette nehmen"/>
                 </dosageInstruction>
             </MedicationDispense>
         </resource>

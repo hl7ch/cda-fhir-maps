@@ -136,21 +136,6 @@
                         <reference value="MedicationDispense/b3b758b8-1598-4541-a549-23ecfb920d15"/>
                     </entry>
                 </section>
-                <section>
-                    <title value="Kommentar"/>
-                    <code>
-                        <coding>
-                            <system value="http://loinc.org"/>
-                            <code value="48767-8"/>
-                            <display value="Annotation comment"/>
-                        </coding>
-                    </code>
-                    <!-- TBD: Text mit Tooling -->
-                    <text>
-                        <status value="additional"/>
-                        <div xmlns="http://www.w3.org/1999/xhtml"> Allgemeine Bemerkungen </div>
-                    </text>
-                </section>
             </Composition>
         </resource>
     </entry>
@@ -332,16 +317,23 @@
                 <subject>
                     <reference value="Patient/b687730a-c609-4234-96b2-ff02d7f33ce9"/>
                 </subject>
+                <quantity>
+                    <value value="1"/>
+                    <unit value="1"/>
+                </quantity>
                 <note>
                     <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
                         <valueUrl value="#dis.1.note"/>
                     </extension>
                 </note>
-                <quantity>
-                    <value value="1"/>
-                    <unit value="1"/>
-                </quantity>
                 <dosageInstruction>
+                    <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
+                        <valueUrl value="#dis.1.dosageintakemode"/>
+                    </extension>
+                    <text value="Morgens 1 und abends 1/2 Tablette nehmen"/>
+                </dosageInstruction>
+                <dosageInstruction>
+                    <sequence value="1"/>
                     <timing>
                         <repeat>
                             <boundsPeriod>
@@ -360,11 +352,11 @@
                     <doseAndRate>
                         <doseQuantity>
                             <value value="1"/>
-                            <unit value="Tablette"/>
                         </doseQuantity>
                     </doseAndRate>
                 </dosageInstruction>
                 <dosageInstruction>
+                    <sequence value="2"/>
                     <timing>
                         <repeat>
                             <boundsPeriod>
@@ -383,15 +375,8 @@
                     <doseAndRate>
                         <doseQuantity>
                             <value value="0.5"/>
-                            <unit value="Tablette"/>
                         </doseQuantity>
                     </doseAndRate>
-                </dosageInstruction>
-                <dosageInstruction>
-                    <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
-                        <valueUrl value="#dis.1.dosageintakemode"/>
-                    </extension>
-                    <text value="Morgens 1 und abends 1/2 Tablette nehmen"/>
                 </dosageInstruction>
             </MedicationDispense>
         </resource>

@@ -91,6 +91,13 @@ group Substitution(source supply: Supply, target medicationDispense: MedicationD
 // target: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefinition-ch-emed-medicationdispense.html
 group ManufacturedMaterialEntryContentModule(source source : Supply, target medicationDispense : MedicationDispense, target medication : Medication) {
   source -> medication.id = 'med', medicationDispense.medication = create('Reference') as vt, vt.reference = '#med' "medication";
+  
+  // quantity value
+  source.quantity as quantity -> medicationDispense.quantity as medDispQuantity then {
+    quantity.unit as unit -> medDispQuantity.unit = unit "unit";
+    quantity.value as value -> medDispQuantity.value = value "value";
+  } "quantity";
+  
   source.product as product then {
     product.manufacturedProduct as manufacturedProduct then {
       manufacturedProduct.manufacturedMaterial as manufacturedMaterial then {
@@ -134,8 +141,12 @@ group ManufacturedMaterialEntryContentModule(source source : Supply, target medi
     } "manufacturedProduct";
 
     // dosage for normal dosing, as no sequences are present there
-//    source where $this.entryRelationship.sequenceNumber.exists()=false
-//      -> medicationDispense.dosageInstruction as dosage then DosageInstructionsStartStopFrequency(source, dosage) "dosage";
+    source.entryRelationship as entry then {
+      entry.substanceAdministration as substanceAdministration then {
+        substanceAdministration where $this.entryRelationship.sequenceNumber.exists()=false
+          -> medicationDispense.dosageInstruction as dosage then DosageInstructionsStartStopFrequency(substanceAdministration, dosage) "dosage";
+      } "substanceAdministration";
+    } "entry";
     
   } "product";
 }
@@ -159,11 +170,17 @@ group DispenseItemEntryContentModule(source section : Section, source source : S
     -> medicationDispense.dosageInstruction as dosage 
         then DosageInstructionsNonStructuredEntryContentModule(section, entry, dosage) "entryRelationShip 2.16.756.5.30.1.1.10.4.37";  
 
-  // dosage for split dosing, as sequences are present there
-//  source.entryRelationship as entry where (typeCode='COMP' and sequenceNumber.value>=0) 
-//    -> medicationDispense.dosageInstruction as dosage 
-//        then DosageInstructionsEntryDosageChange(source, entry, dosage) "entryRelationShip 2.16.756.5.30.1.1.10.4.36";  
-  
+  source.entryRelationship as entryRelationship then {
+    entryRelationship.substanceAdministration as substanceAdministration then {
+
+      // dosage for split dosing, as sequences are present there
+      substanceAdministration.entryRelationship as entryRelationship where (typeCode='COMP' and sequenceNumber.value>=0) 
+        -> medicationDispense.dosageInstruction as dosage 
+          then DosageInstructionsEntryDosageChange(substanceAdministration, entryRelationship, dosage) "entryRelationShip 2.16.756.5.30.1.1.10.4.36"; 
+
+    } "substanceAdministration";
+  } "entryRelationship";
+
   source.entryRelationship as entry where (typeCode='REFR' and substanceAdministration.templateId.where(root='1.3.6.1.4.1.19376.1.9.1.3.10').exists()) 
     -> medicationDispense.extension as ext then MTPReferenceEntryContentModule(entry, ext) "MTPReferenceEntry";   
 
@@ -171,6 +188,7 @@ group DispenseItemEntryContentModule(source section : Section, source source : S
     entry.act as act -> medicationDispense.note as note then AnnotationComment(section, act, note) "annotation";
   } "entryRelationShip 2.16.756.5.30.1.1.10.4.2";  
 
+// TBD: Substitution 
 //  source.entryRelationship as entry where (typeCode='COMP' and supply.templateId.where(root='1.3.6.1.4.1.19376.1.9.1.3.9').exists()) then {
 //    entry.supply as supply -> medicationDispense as medicationDispense then Substitution(supply, medicationDispense) "substitution";
 //  } "entryRelationShip 1.3.6.1.4.1.19376.1.9.1.3.9";
@@ -190,13 +208,13 @@ group DosageInstructionsStartStopFrequency(source source : SubstanceAdministrati
 // source https://art-decor.org/art-decor/decor-templates--ch-pharm-?id=2.16.756.5.30.1.1.10.4.36
 // target: http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured
 // dosage for split dosing, with sequences
-//group DosageInstructionsEntryDosageChange(source source: substanceAdministration, source entry: entryRelationship, target dosage: Dosage) {
-  //entry.sequenceNumber as sequenceNumber -> dosage.sequence = sequenceNumber "sequenceNumber";
-  //source as source -> dosage as dosage then EffectiveTimeStartEnd(source, dosage) "effective time start end";
-  //entry.substanceAdministration as source -> dosage as dosage then EffectiveTimeWhen(source, dosage) "effective time when";
-  //source.routeCode as routeCode -> dosage.route as route then CECodeableConcept(routeCode, route) "routeCode";
-  //entry.substanceAdministration as source -> dosage as dosage then DoseQuantity(source, dosage) "dose quantity";
-//}
+group DosageInstructionsEntryDosageChange(source source: substanceAdministration, source entry: entryRelationship, target dosage: Dosage) {
+  entry.sequenceNumber as sequenceNumber -> dosage.sequence = sequenceNumber "sequenceNumber";
+  source as source -> dosage as dosage then EffectiveTimeStartEnd(source, dosage) "effective time start end";
+  entry.substanceAdministration as source -> dosage as dosage then EffectiveTimeWhen(source, dosage) "effective time when";
+  source.routeCode as routeCode -> dosage.route as route then CECodeableConcept(routeCode, route) "routeCode";
+  entry.substanceAdministration as source -> dosage as dosage then DoseQuantity(source, dosage) "dose quantity";
+}
 
 // effective time start & end for dosage
 group EffectiveTimeStartEnd(source source: substanceAdministration, target dosage: Dosage) {
