@@ -505,18 +505,6 @@
 									<statusCode code="completed"/>
 								</act>
 							</entryRelationship>
-							<!-- substitution just as test case -->
-							<entryRelationship typeCode="COMP">
-								<supply classCode="SPLY" moodCode="RQO">
-									<templateId root="1.3.6.1.4.1.19376.1.9.1.3.9"/>
-									<independentInd value="false"/>
-									<pharm:subjectOf4> <!-- TBD -->
-										<pharm:substitutionPermission classCode="SUBST" moodCode="PERM">
-											<pharm:code code="F" codeSystem="2.16.840.1.113883.5.1070" codeSystemName="HL7 Substance Admin Substitution" displayName="formulary"/>
-										</pharm:substitutionPermission>										
-									</pharm:subjectOf4>
-								</supply>
-							</entryRelationship>
 						</substanceAdministration>
 					</entry>
 				</section>
