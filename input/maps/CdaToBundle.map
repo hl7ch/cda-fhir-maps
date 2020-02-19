@@ -73,6 +73,7 @@ group ClinicalDocumentSection(source source : Section, source patient : Patient,
 
 
 group ClinicalDocumentComposition(source source : ClinicalDocument, target target : Composition, target patientResource: Patient, target bundle : Bundle) {
+  source -> target.id = uuid() "id";
   source.languageCode -> target.language;
   source.setId -> target.identifier "setID";
   source -> target.status = 'final' "status";

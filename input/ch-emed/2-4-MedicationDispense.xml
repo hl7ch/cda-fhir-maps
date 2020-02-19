@@ -11,6 +11,7 @@
     <entry>
         <resource>
             <Composition>
+                <id value="a5556c28-f5cf-465a-b124-848adada066c"/>
                 <language value="de-CH"/>
                 <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-setid">
                     <valueIdentifier>
