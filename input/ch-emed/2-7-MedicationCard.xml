@@ -2,6 +2,7 @@
 
 <Bundle xmlns="http://hl7.org/fhir" 
   xmlns:v3="urn:hl7-org:v3">
+  <id value="b37f8796-c849-4328-b851-54eb4c3ee49a"/>
   <identifier>
     <system value="urn:ietf:rfc:3986"/>
     <value value="urn:uuid:6b6ed376-a7da-44cb-92d1-e75ce1ae73b0"/>

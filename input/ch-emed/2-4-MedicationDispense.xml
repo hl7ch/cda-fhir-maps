@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <Bundle xmlns="http://hl7.org/fhir">
+    <id value="86f45380-41ae-46eb-bcbe-5b203419815d"/>
     <identifier>
         <system value="urn:ietf:rfc:3986"/>
         <value value="urn:uuid:d8143fea-4778-11e6-beb8-9e71128cae77"/>
