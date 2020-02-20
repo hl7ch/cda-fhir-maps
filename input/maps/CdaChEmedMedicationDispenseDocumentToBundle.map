@@ -197,8 +197,15 @@ group DispenseItemEntryContentModule(source section : Section, source source : S
 
 // source: https://art-decor.org/art-decor/decor-templates--ch-pharm-?id=2.16.756.5.30.1.1.10.4.35 
 // target: http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured
-// dosage for normal dosing, without sequences
+// dosage for normal dosing, without sequences ("1.3.6.1.4.1.19376.1.5.3.1.4.7.1")
 group DosageInstructionsStartStopFrequency(source source : SubstanceAdministration, target dosage: Dosage) {
+  source.templateId as templateId where $this.root='1.3.6.1.4.1.19376.1.5.3.1.4.7.1' -> dosage.extension as ext then {
+    source -> ext.url = 'http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-dosagetype' "url";
+    source -> ext.value = create('Identifier') as valueIdentifier then {
+      source.templateId as id -> valueIdentifier.value = id "normal dosing";
+    } "valueIdentifier";
+  } "extension";
+
   source as source -> dosage as dosage then EffectiveTimeStartEnd(source, dosage) "effective time start end";
   source as source -> dosage as dosage then EffectiveTimeWhen(source, dosage) "effective time when";
   source.routeCode as routeCode -> dosage.route as route then CECodeableConcept(routeCode, route) "routeCode";
@@ -209,6 +216,14 @@ group DosageInstructionsStartStopFrequency(source source : SubstanceAdministrati
 // target: http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured
 // dosage for split dosing, with sequences
 group DosageInstructionsEntryDosageChange(source source: substanceAdministration, source entry: entryRelationship, target dosage: Dosage) {
+  source.templateId as templateId where (($this.root='1.3.6.1.4.1.19376.1.5.3.1.4.9') or ($this.root='1.3.6.1.4.1.19376.1.5.3.1.4.8'))
+     -> dosage.extension as ext then {
+        source -> ext.url = 'http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-dosagetype' "url";
+        source -> ext.value = create('Identifier') as valueIdentifier then {
+          source.templateId as id -> valueIdentifier.value = id  "dosing type";
+        } "valueIdentifier";
+  } "extension";
+
   entry.sequenceNumber as sequenceNumber -> dosage.sequence = sequenceNumber "sequenceNumber";
   source as source -> dosage as dosage then EffectiveTimeStartEnd(source, dosage) "effective time start end";
   entry.substanceAdministration as source -> dosage as dosage then EffectiveTimeWhen(source, dosage) "effective time when";
