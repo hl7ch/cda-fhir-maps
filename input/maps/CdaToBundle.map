@@ -158,7 +158,17 @@ group ClinicalDocumentOrganization(source source : CustodianOrganization, target
 }
 
 group ClinicalDocumentPatientRole(source source : PatientRole, target target : Patient, target bundle : Bundle) {
-  source.id -> target.identifier;
+  //source.id -> target.identifier;
+  // Patient.identifier.type for EPR context, because there is only the identifier "LocalPid" allowed, LocalPid requires an type -> http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefinition-ch-core-composition-patient-epr.html
+  source -> target.identifier as identifier then {
+    source.id as id -> identifier.type as type, type.coding as coding, coding.system as system, coding.code as code then {
+      source -> system.value = 'http://terminology.hl7.org/CodeSystem/v2-0203' "system";
+      source -> code.value = 'MR' "code";
+      id.extension as extension -> identifier.value as value, value.value = extension "extension";
+      id.root as root -> identifier.system as system, system.value = append('urn:oid:', root) "root";
+    } "id";
+  } "identifier";
+  
   source.addr -> target.address;
   source.telecom -> target.telecom;
   source.patient as patient then {

@@ -146,6 +146,12 @@
             <Patient>
                 <id value="b687730a-c609-4234-96b2-ff02d7f33ce9"/>
                 <identifier>
+                    <type>
+                        <coding>
+                            <system value="http://terminology.hl7.org/CodeSystem/v2-0203"/>
+                            <code value="MR"/>
+                        </coding>
+                    </type>
                     <system value="urn:oid:2.999"/>
                     <value value="11111111"/>
                 </identifier>
@@ -337,6 +343,11 @@
                     <text value="Morgens 1 und abends 1/2 Tablette nehmen"/>
                 </dosageInstruction>
                 <dosageInstruction>
+                    <extension url="http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-dosagetype">
+                        <valueIdentifier>
+                            <value value="1.3.6.1.4.1.19376.1.5.3.1.4.9"/>
+                        </valueIdentifier>
+                    </extension>
                     <sequence value="1"/>
                     <timing>
                         <repeat>
@@ -360,6 +371,11 @@
                     </doseAndRate>
                 </dosageInstruction>
                 <dosageInstruction>
+                    <extension url="http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-dosagetype">
+                        <valueIdentifier>
+                            <value value="1.3.6.1.4.1.19376.1.5.3.1.4.9"/>
+                        </valueIdentifier>
+                    </extension>
                     <sequence value="2"/>
                     <timing>
                         <repeat>
