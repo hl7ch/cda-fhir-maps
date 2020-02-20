@@ -52,8 +52,8 @@ uses "http://hl7.org/fhir/cda/StructureDefinition/II" as target
 group Any() {
   source.extension as extension where $this.url = 'http://hl7.org/fhir/StructureDefinition/iso21090-nullFlavor'
     -> target.nullFlavor as nullFlavor then {
-      extension.valueString as valueString then {
-        valueString.value as v -> nullFlavor.value = cast(v, 'string') "value";
+      extension.valueCode as valueCode then {
+        valueCode.value as v -> nullFlavor.value = cast(v, 'string') "value";
       } "nullFlavor";
     } "extension";
 }

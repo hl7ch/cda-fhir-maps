@@ -51,7 +51,9 @@ uses "http://hl7.org/fhir/StructureDefinition/Period" as target
 group Any() {
   source.nullFlavor as nullFlavor -> target.extension as ext then {
     nullFlavor -> ext.url = 'http://hl7.org/fhir/StructureDefinition/iso21090-nullFlavor' "url";
-    nullFlavor.value as v -> ext.value = cast(v, 'string');
+    nullFlavor -> ext.value = create('code') as valueCode then {
+      nullFlavor.value as v -> valueCode.value = v "value";
+    } "valueCode";
   };
 }
 

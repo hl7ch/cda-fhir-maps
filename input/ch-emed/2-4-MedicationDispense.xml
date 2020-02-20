@@ -190,7 +190,7 @@
                 <name value="Hausarzt"/>
                 <telecom>
                     <extension url="http://hl7.org/fhir/StructureDefinition/iso21090-nullFlavor">
-                        <valueString value="NI"/>
+                        <valueCode value="NI"/>
                     </extension>
                 </telecom>
                 <address>
@@ -327,7 +327,8 @@
                     <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
                         <valueUrl value="#dis.1.note"/>
                     </extension>
-                    <text value="-"/> <!-- TBD: see issue #9 -->
+                    <text value="-"/>
+                    <!-- TBD: see issue #9 -->
                 </note>
                 <dosageInstruction>
                     <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
