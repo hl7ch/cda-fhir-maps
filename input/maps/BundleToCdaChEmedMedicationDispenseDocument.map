@@ -287,8 +287,20 @@ group DosageInstructionsEntryStartStopRoute(source dosage: Dosage, target entryR
   dosage -> substanceAdministration.classCode = 'SBADM' "SBADM";
   dosage -> substanceAdministration.moodCode = 'INT' "INT";
   dosage -> substanceAdministration.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.9.1.3.6' "Template Id";
-  dosage -> substanceAdministration.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.5.3.1.4.9' "Split Dose";
   
+  // if the FHIR document has a dosage templateId -> take over the templateId  
+  dosage.extension as extension where $this.url='http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-dosagetype' then {
+    extension.valueIdentifier as valueIdentifier then {
+      valueIdentifier.value as value -> substanceAdministration.templateId as templateId, templateId.root = value "template id";
+    } "valueIdentifier";
+  } "extension";
+
+  // if the FHIR doucment has no dosage templateId -> create templateId for split dose
+  dosage as dosage where $this.extension.where(url='http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-dosagetype').exists()=false then {
+    dosage -> substanceAdministration.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.5.3.1.4.9' "Split Dose";
+  } "no extension";
+
+
   dosage -> substanceAdministration as substanceAdministration then EffectiveTimeStartEnd(dosage, substanceAdministration) "effective time start end";
   dosage.route as route -> substanceAdministration.routeCode as routeCode then CodeableConceptCE(route, routeCode) "route";
   dosage -> substanceAdministration.consumable as consumable, consumable.manufacturedProduct as manufacturedProduct, 

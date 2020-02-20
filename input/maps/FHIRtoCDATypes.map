@@ -181,7 +181,8 @@ group HumanNameEN(source source : HumanName, target target : EN) extends Any <<t
 }
 
 group QuantityPQ(source source : Quantity, target target : PQ) extends Any <<types>> {
-  source.code as code -> target.unit = code;
+  // source.code as code -> target.unit = code;
+  source.unit as unit -> target.unit = unit;
   source.value as value -> target.value = value;
 }
 

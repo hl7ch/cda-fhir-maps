@@ -273,7 +273,18 @@ group DosageInstructionsStartStopFrequency(source dosage: Dosage, target substan
 // target: https://art-decor.org/art-decor/decor-templates--ch-pharm-?id=2.16.756.5.30.1.1.10.4.36
 // dosage for split dosing: effectiveTime (start/stop) & routeCode
 group DosageInstructionsEntryStartStopRoute(source dosage: Dosage, target substanceAdministration: substanceAdministration, target entry: entryRelationship) {
-  dosage -> substanceAdministration.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.5.3.1.4.9' "Split Dose";
+  // if the FHIR document has a dosage templateId -> take over the templateId  
+  dosage.extension as extension where $this.url='http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-dosagetype' then {
+    extension.valueIdentifier as valueIdentifier then {
+      valueIdentifier.value as value -> substanceAdministration.templateId as templateId, templateId.root = value "template id";
+    } "valueIdentifier";
+  } "extension";
+
+  // if the FHIR doucment has no dosage templateId -> create templateId for split dose
+  dosage as dosage where $this.extension.where(url='http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-dosagetype').exists()=false then {
+    dosage -> substanceAdministration.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.5.3.1.4.9' "Split Dose";
+  } "no extension";
+
   dosage as dosage -> substanceAdministration as substanceAdministration then EffectiveTimeStartEnd(dosage, substanceAdministration) "effective time start end";
   dosage.route as route -> substanceAdministration.routeCode as routeCode then CodeableConceptCE(route, routeCode) "route";
 }

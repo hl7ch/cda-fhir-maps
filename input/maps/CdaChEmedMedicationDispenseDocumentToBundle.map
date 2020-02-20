@@ -202,7 +202,7 @@ group DosageInstructionsStartStopFrequency(source source : SubstanceAdministrati
   source.templateId as templateId where $this.root='1.3.6.1.4.1.19376.1.5.3.1.4.7.1' -> dosage.extension as ext then {
     source -> ext.url = 'http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-dosagetype' "url";
     source -> ext.value = create('Identifier') as valueIdentifier then {
-      source.templateId as id -> valueIdentifier.value = id "normal dosing";
+      templateId.root as id -> valueIdentifier.value = id "normal dosing";
     } "valueIdentifier";
   } "extension";
 
@@ -220,7 +220,7 @@ group DosageInstructionsEntryDosageChange(source source: substanceAdministration
      -> dosage.extension as ext then {
         source -> ext.url = 'http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-dosagetype' "url";
         source -> ext.value = create('Identifier') as valueIdentifier then {
-          source.templateId as id -> valueIdentifier.value = id  "dosing type";
+          templateId.root as id -> valueIdentifier.value = id "dosing type";
         } "valueIdentifier";
   } "extension";
 
