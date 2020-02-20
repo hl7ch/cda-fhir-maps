@@ -282,7 +282,7 @@
                             <strength>
                                 <numerator>
                                     <value value="50"/>
-                                    <code value="mg"/>
+                                    <unit value="mg"/>
                                 </numerator>
                                 <denominator>
                                     <value value="1"/>

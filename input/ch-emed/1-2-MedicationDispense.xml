@@ -283,11 +283,11 @@
                             <strength>
                                 <numerator>
                                     <value value="2.5"/>
-                                    <code value="mg"/>
+                                    <unit value="mg"/>
                                 </numerator>
                                 <denominator>
                                     <value value="1"/>
-                                    <code value="1"/>
+                                    <unit value="1"/>
                                 </denominator>
                             </strength>
                         </ingredient>

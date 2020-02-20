@@ -180,7 +180,8 @@ group TELContactPoint(source source : TEL, target target : ContactPoint) extends
 }
 
 group PQQuantity(source source : PQ, target target : Quantity) extends Any <<types>> {
-  source.unit as unit -> target.code = unit;
+  //source.unit as unit -> target.code = unit;
+  source.unit as unit -> target.unit = unit;
   source.value as value -> target.value = value;
 }
 

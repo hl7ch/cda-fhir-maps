@@ -330,7 +330,7 @@
                      <strength>
                         <numerator>
                            <value value="10"/>
-                           <code value="mg"/>
+                           <unit value="mg"/>
                         </numerator>
                         <denominator>
                            <value value="1"/>
