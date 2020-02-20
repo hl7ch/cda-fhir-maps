@@ -419,8 +419,8 @@
                <allowedCodeableConcept>
                   <coding>
                      <system value="http://terminology.hl7.org/CodeSystem/v3-substanceAdminSubstitution"/>
-                     <code value="F"/>
-                     <display value="formulary"/>
+                     <code value="E"/>
+                     <display value="equivalent"/>
                   </coding>
                </allowedCodeableConcept>
             </substitution>

@@ -299,6 +299,10 @@
 									<statusCode code="completed"/>
 								</act>
 							</entryRelationship>
+							<!-- substitution just as test case -->
+							<entryRelationship typeCode="COMP">
+								<!-- TBD -->
+							</entryRelationship>
 						</supply>
 					</entry>
 				</section>
