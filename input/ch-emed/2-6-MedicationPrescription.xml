@@ -377,6 +377,7 @@
                <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
                   <valueUrl value="#pre.1.note"/>
                </extension>
+               <text value="-"/> <!-- TBD: see issue #9 -->
             </note>
             <dosageInstruction>
                <timing>

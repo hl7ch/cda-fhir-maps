@@ -545,6 +545,7 @@
           <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
             <valueUrl value="#mtpc.2.note"/>
           </extension>
+          <text value="-"/> <!-- TBD: see issue #9 -->
         </note>
         <dosage>
           <timing>
