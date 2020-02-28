@@ -42,6 +42,7 @@ Accept: application/fhir+xml;fhirVersion=4.0
 Content-Type: application/fhir+xml;fhirVersion=4.0
 
 < ./input/cda-ch-emed/1-2-MedicationDispense.xml
+//< ./input/compare-files/1-2-CDA-original.xml
 
 
 ### 5b. Transform CDAMedicationDispenseDocument from CDA to FHIR
@@ -50,3 +51,4 @@ Accept: application/fhir+xml;fhirVersion=4.0
 Content-Type: application/fhir+xml;fhirVersion=4.0
 
 < ./input/cda-ch-emed/2-4-MedicationDispense.xml
+//< ./input/compare-files/2-4-CDA-original.xml

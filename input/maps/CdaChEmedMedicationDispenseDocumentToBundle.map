@@ -82,8 +82,19 @@ group AnnotationComment(source section: Section, source act: Act, target note: A
 
 // source: Substitution permission Contains 1.3.6.1.4.1.19376.1.9.1.3.9.1 IHE Substitution Permission Content Module (DYNAMIC)
 // target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-medicationdispense.html
-group Substitution(source supply: Supply, target medicationDispense: MedicationDispense) {
-  supply -> medicationDispense.extension as ext then ExtensionSubstitution(supply, ext) "substitution";
+group Substitution(source act: Act, target medicationDispense: MedicationDispense) {
+  act -> medicationDispense.substitution as substitution then {
+    act -> substitution.wasSubstituted as wasSubstituted, wasSubstituted.value = 'true' "wasSubstituted";
+
+    //act.code as code -> substitution.type as type then CECodeableConcept(code, type) "type";
+    // workaround, because the line above generates no uri for the oid
+    act.code as actCode -> substitution.type as type, type.coding as coding then {
+      actCode -> coding.system as systemCC, systemCC.value = 'http://terminology.hl7.org/CodeSystem/v3-substanceAdminSubstitution' "system";
+      actCode.code as code -> coding.code as codeCC, codeCC.value = code "code";
+      actCode.displayName as display -> coding.display as displayCC, displayCC.value = display "display";
+    } "allowedCC";
+
+  } "substitution";
 }
 
 
@@ -188,10 +199,9 @@ group DispenseItemEntryContentModule(source section : Section, source source : S
     entry.act as act -> medicationDispense.note as note then AnnotationComment(section, act, note) "annotation";
   } "entryRelationShip 2.16.756.5.30.1.1.10.4.2";  
 
-// TBD: Substitution 
-//  source.entryRelationship as entry where (typeCode='COMP' and supply.templateId.where(root='1.3.6.1.4.1.19376.1.9.1.3.9').exists()) then {
-//    entry.supply as supply -> medicationDispense as medicationDispense then Substitution(supply, medicationDispense) "substitution";
-//  } "entryRelationShip 1.3.6.1.4.1.19376.1.9.1.3.9";
+  source.entryRelationship as entry where (typeCode='COMP' and act.templateId.where(root='1.3.6.1.4.1.19376.1.9.1.3.9.2').exists()) then {
+    entry.act as act -> medicationDispense as medicationDispense then Substitution(act, medicationDispense) "substitution";
+  } "entryRelationShip 1.3.6.1.4.1.19376.1.9.1.3.9.2";
 }
 
 

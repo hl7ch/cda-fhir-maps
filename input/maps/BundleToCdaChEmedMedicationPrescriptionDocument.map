@@ -93,19 +93,12 @@ group AnnotationComment(source note: Annotation, target act: Act) {
 
 // source: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefinition-ch-emed-medicationrequest.html
 // target: https://art-decor.org/art-decor/decor-templates--cdachemed-?id=2.16.756.5.30.1.1.10.4.39
-group Substitution(source substitution: Substitution, target supply: Supply) {
-  substitution -> supply.classCode = 'SPLY' "SPLY";  
-  substitution -> supply.moodCode = 'RQO' "RQO";  
-  substitution -> supply.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.9.1.3.9' "TemplateId";
-  substitution -> supply.independentInd as independentInd, independentInd.value = 'false' "independentInd";
-  // Error step 5: Failed to call access method: java.lang.Error: Unrecognised name subjectOf4 on supply
-  //substitution -> supply.subjectOf4 as subject then {
-  //  substitution -> subject.substitutionPermission as substitutionPermission then {
-  //    substitution -> substitutionPermission.classCode = 'SUBST' "SUBST";
-  //    substitution -> substitutionPermission.moodCode ='PERM' "PERM";
-  //    //TBD: code
-  //  } "substitutionPermission";
-  //} "subjectOf4";
+group Substitution(source substitution: Substitution, target act: Act) {
+  substitution -> act.classCode = 'ACT' "ACT";  
+  substitution -> act.moodCode = 'DEF' "DEF";  
+  substitution -> act.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.9.1.3.9.1' "TemplateId";
+  substitution.allowedCodeableConcept as allowedCC -> act.code as code then CodeableConceptCE(allowedCC, code) "substitution";
+  substitution -> act.statusCode as statusCode, statusCode.code = 'completed' "status code";
 }
 
 
@@ -244,10 +237,10 @@ group PrescriptionItemEntryContentModule(source bundle : Bundle, source medicati
         entryRelationship.act as act 
           then AnnotationComment(note, act) "AnnotationComment";
 
-  medicationRequest.substitution as substitution 
+  medicationRequest.substitution as substitution
     -> substanceAdministration.entryRelationship as entryRelationship, entryRelationship.typeCode='COMP', 
-        entryRelationship.supply as supply
-          then Substitution(substitution, supply) "Substitution";
+        entryRelationship.act as act
+          then Substitution(substitution, act) "Substitution";
 
   medicationRequest.dispenseRequest as dispenseRequest 
     -> substanceAdministration.entryRelationship as entryRelationship, entryRelationship.typeCode='COMP',
@@ -255,8 +248,6 @@ group PrescriptionItemEntryContentModule(source bundle : Bundle, source medicati
           then PrescribedQuantity(dispenseRequest, supply) "PrescribedQuantity";
 }
 
-// TODO: Tapered Dose
-//medicationRequest -> substanceAdministration.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.5.3.1.4.8' "Tapered Dose";
 
 // source: http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured-medicationrequest
 // target: https://art-decor.org/art-decor/decor-templates--ch-pharm-?id=2.16.756.5.30.1.1.10.4.35
