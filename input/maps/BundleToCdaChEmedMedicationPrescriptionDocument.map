@@ -62,7 +62,7 @@ group SectionPrescriptionSectionContentModule(source bundle : Bundle, source sec
   // create section id if there is none in the fhir bundle (mapping source)
   section as section where $this.extension.where(url='http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-sectionid').exists()=false 
     -> cdasection.id as id then { 
-      section -> id.root = uuid() "section id"; // generated in lower case instead of upper case (see issue #7)
+      section -> uuid() as uuid, id.root=(%uuid.upper()) "upper";
     } "extension";
     
   bundle.entry as entry then {
