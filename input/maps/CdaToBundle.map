@@ -34,9 +34,17 @@ imports "http://ahdis.ch/ig/cda-fhir-maps/StructureMap/CdaToFhirTypes"
 // _________________________ Document Level Template  _________________________ 
 
 group CdaToBundle(source cda : ClinicalDocument, target bundle : Bundle) {
-  cda ->  bundle.entry as e first,  e.resource = create('Composition') as composition share composition, 
-             bundle.entry as e2, e2.resource = create('Patient') as patient share patient
-             then ClinicalDocumentToBundle(cda, patient, composition, bundle) "ClinicalDocumentToBody";
+  cda ->  bundle.entry as e share e, 
+             e.resource = create('Composition') as composition share composition, 
+             composition.id = uuid() as uuid,
+             e.fullUrl = append('urn:uuid:',uuid),
+             bundle.entry as e2, 
+             e2.resource = create('Patient') as patient share patient,
+             patient.id = uuid() as uuid2,
+             e2.fullUrl = append('urn:uuid:',uuid2)
+             then {
+               cda then ClinicalDocumentToBundle(cda, patient, composition, bundle) "cdatobundle";
+             } "ClinicalDocumentToBody";
 }
 
 group ClinicalDocumentToBundle(source cda : ClinicalDocument, target patient : Patient, target composition : Composition, target bundle : Bundle) {
@@ -73,7 +81,6 @@ group ClinicalDocumentSection(source source : Section, source patient : Patient,
 
 
 group ClinicalDocumentComposition(source source : ClinicalDocument, target target : Composition, target patientResource: Patient, target bundle : Bundle) {
-  source -> target.id = uuid() "id";
   source.languageCode -> target.language;
   source.setId -> target.identifier "setID";
   source -> target.status = 'final' "status";
@@ -82,11 +89,18 @@ group ClinicalDocumentComposition(source source : ClinicalDocument, target targe
   source.recordTarget as recordTarget then {
     recordTarget.patientRole as patient -> target.subject = create('Reference') as reference, reference.reference = reference(patientResource) then ClinicalDocumentPatientRole(patient, patientResource, bundle) "subject";
   };
-  source.componentOf as comp ->  bundle.entry as e,  e.resource = create('Encounter') as encounter then {
-    comp.encompassingEncounter as srcEnc -> target.encounter = create('Reference') as reference, reference.reference = reference(encounter) then ClinicalDocumentEncounter(srcEnc, bundle, encounter) "srcEncounter";
-  } "encompassingEncounter";
+  source.componentOf as comp ->  bundle.entry as e,  
+    e.resource = create('Encounter') as encounter,
+    encounter.id = uuid() as uuid,
+    e.fullUrl = append('urn:uuid:',uuid) then {
+      comp.encompassingEncounter as srcEnc -> target.encounter = create('Reference') as reference, reference.reference = reference(encounter) then ClinicalDocumentEncounter(srcEnc, bundle, encounter) "srcEncounter";
+    } "encompassingEncounter";
   source.effectiveTime -> target.date;
-  source.author as srcAuthor ->  bundle.entry as e,  e.resource = create('Practitioner') as practitioner, target.author = create('Reference') as reference, reference.reference = reference(practitioner) then {
+  source.author as srcAuthor ->  bundle.entry as e,  
+    e.resource = create('Practitioner') as practitioner, 
+    practitioner.id = uuid() as uuid2,
+    e.fullUrl = append('urn:uuid:',uuid2),
+    target.author = create('Reference') as reference, reference.reference = reference(practitioner) then {
     srcAuthor.time as time -> reference.extension as exttime then ChExtEprTime(time, exttime) "time";
     srcAuthor.assignedAuthor as assignedAuthor then {
       assignedAuthor.id -> practitioner.identifier;
@@ -95,18 +109,28 @@ group ClinicalDocumentComposition(source source : ClinicalDocument, target targe
       assignedAuthor.assignedPerson as person then {
         person.name -> practitioner.name;
       };
-      assignedAuthor.representedOrganization as srcOrg ->  bundle.entry as e2,  e2.resource = create('Organization') as organization, target.author = create('Reference') as reference2, reference2.reference = reference(organization) then ClinicalDocumentOrganization(srcOrg, organization);
+      assignedAuthor.representedOrganization as srcOrg ->  
+        bundle.entry as e2,  
+        e2.resource = create('Organization') as organization,
+        organization.id = uuid() as uuid3,
+        e2.fullUrl = append('urn:uuid:',uuid3), 
+        target.author = create('Reference') as reference2, reference2.reference = reference(organization) then ClinicalDocumentOrganization(srcOrg, organization);
     } "author";
   };
   source.confidentialityCode -> target.confidentiality share confidentialityCode;
-  source.legalAuthenticator as legalAuth ->  bundle.entry as e,  e.resource = create('Practitioner') as practitioner then {
+  source.legalAuthenticator as legalAuth ->  bundle.entry as e,  
+    e.resource = create('Practitioner') as practitioner, 
+    practitioner.id = uuid() as uuid2,
+    e.fullUrl = append('urn:uuid:',uuid2) then {
     legalAuth -> target.attester as attester then {
       legalAuth -> attester.mode = 'legal' "mode";
       legalAuth.time -> attester.time;
       legalAuth.assignedEntity as entity -> attester.party = create('Reference') as reference, reference.reference = reference(practitioner) then ClinicalDocumentEntityPractitioner(entity, practitioner) "entity";
     } "attester";
   };
-  source.authenticator as auth ->  bundle.entry as e,  e.resource = create('Practitioner') as practitioner then {
+  source.authenticator as auth ->  bundle.entry as e,  e.resource = create('Practitioner') as practitioner, 
+    practitioner.id = uuid() as uuid2,
+    e.fullUrl = append('urn:uuid:',uuid2) then {
     auth -> target.attester as attester then {
       auth -> attester.mode = 'official' "mode";
       auth.time -> attester.time;
@@ -114,7 +138,10 @@ group ClinicalDocumentComposition(source source : ClinicalDocument, target targe
     } "attester";
   };
   source.custodian as custodian -> bundle.entry as e then {
-    custodian.assignedCustodian as assignedCustodian -> e.resource = create('Organization') as organization then {
+    custodian.assignedCustodian as assignedCustodian -> 
+      e.resource = create('Organization') as organization,  
+      organization.id = uuid() as uuid3,
+      e.fullUrl = append('urn:uuid:',uuid3) then {
       assignedCustodian.representedCustodianOrganization as srcOrg -> target.custodian = create('Reference') as reference, reference.reference = reference(organization) then ClinicalDocumentOrganization(srcOrg, organization) "assignedCustodian";
     } "custodian";
   };
@@ -184,7 +211,10 @@ group ClinicalDocumentPatientRole(source source : PatientRole, target target : P
       language.languageCode -> communication.language "communication"; // preference: for language.preferenceInd make communication.preferred
     } "language";
   };
-  source.providerOrganization as org ->  bundle.entry as e,  e.resource = create('Organization') as organization then {
+  source.providerOrganization as org ->  bundle.entry as e,  
+    e.resource = create('Organization') as organization,  
+    organization.id = uuid() as uuid3,
+    e.fullUrl = append('urn:uuid:',uuid3) then {
     org -> target.managingOrganization = create('Reference') as reference, reference.reference = reference(organization) "reference";
     org.id -> organization.identifier;
     org.name as v -> organization.name = (v.other);
@@ -204,12 +234,16 @@ group ClinicalDocumentEncounter(source source : EncompassingEncounter, target bu
   source.encounterParticipant as srcPart -> target.participant as tgtPart then {
     srcPart.typeCode as code -> tgtPart.type = cc('http://terminology.hl7.org/CodeSystem/v3-ParticipationType', code);
     srcPart.time -> tgtPart.period;
-    srcPart.assignedEntity as entity ->  bundle.entry as e,  e.resource = create('Practitioner') as practitioner then {
+    srcPart.assignedEntity as entity ->  bundle.entry as e,  e.resource = create('Practitioner') as practitioner,
+      practitioner.id = uuid() as uuid2,
+      e.fullUrl = append('urn:uuid:',uuid2) then {
       entity -> tgtPart.individual = create('Reference') as reference, reference.reference = reference(practitioner) then ClinicalDocumentEntityPractitioner(entity, practitioner) "entry";
     } "entity";
   } "participant";
   source.location as srcLocation then {
-    srcLocation.healthCareFacility as facility ->  bundle.entry as e,  e.resource = create('Location') as location then {
+    srcLocation.healthCareFacility as facility ->  bundle.entry as e,  e.resource = create('Location') as location,
+       location.id = uuid() as uuid2,
+       e.fullUrl = append('urn:uuid:',uuid2) then {
       facility ->  target.location as tgtLocation,  tgtLocation.location = create('Reference') as reference, reference.reference = reference(location) then ClinicalDocumentLocation(facility, bundle, location) "facLocation";
     } "facility";
   };
@@ -221,7 +255,9 @@ group ClinicalDocumentLocation(source source : HealthCareFacility, target bundle
   source.location as location then {
  // place names are usually stored with no parts    location.name as srcName -> target.name = cast(srcName, 'string');
     location.addr -> target.address;
-    location.serviceProviderOrganization as srcOrg ->  bundle.entry as e,  e.resource = create('Organization') as organization then {
+    location.serviceProviderOrganization as srcOrg ->  bundle.entry as e,  e.resource = create('Organization') as organization,
+      organization.id = uuid() as uuid3,
+      e.fullUrl = append('urn:uuid:',uuid3) then {
       srcOrg -> target.managingOrganization = create('Reference') as reference, reference.reference = reference(organization) then ClinicalDocumentOrganization(srcOrg, organization) "organization";
     } "org";
   }; // place names are usually stored with no parts
@@ -246,3 +282,7 @@ group ChExtEprSectionId(source source: II, target ext: Extension) {
 
 // _________________________ Template Type not specified  ___________________ 
 
+group NarrativeLink(source url, target ext: Extension) {
+  url -> ext.url = 'http://hl7.org/fhir/StructureDefinition/narrativeLink' "url";
+  url -> ext.value = create('url') as value, value.value=url "value";
+}

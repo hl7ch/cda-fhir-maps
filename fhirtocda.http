@@ -43,3 +43,15 @@ Accept: application/fhir+xml;fhirVersion=4.0
 Content-Type: application/fhir+xml;fhirVersion=4.0
 
 < ./input/ch-core/CdaContainingOriginalRepresentationAsPdfA.xml
+
+
+
+
+
+
+### 5.b CdaContainingOriginalRepresentationAsPdfA.xml from FHIR to CDA
+POST {{host}}/$validate?profile=http://hl7.org/fhir/cda/StructureDefinition/ClinicalDocument
+Accept: application/fhir+xml;fhirVersion=4.0
+Content-Type: application/fhir+xml;fhirVersion=4.0
+
+< ./input/compare-files/1-2-CDA-generiert.xml

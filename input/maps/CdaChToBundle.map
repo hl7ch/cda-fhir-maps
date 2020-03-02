@@ -27,8 +27,14 @@ imports "http://ahdis.ch/ig/cda-fhir-maps/StructureMap/CdaToBundle"
 // source: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5.30.1.1.10.1.14
 // target: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefinition-ch-core-document.html
 group CdaChToBundle(source cda : ClinicalDocument, target bundle : Bundle) {
-  cda ->  bundle.entry as e first,  e.resource = create('Composition') as composition share composition, 
-             bundle.entry as e2, e2.resource = create('Patient') as patient share patient
+  cda ->  bundle.entry as e share e, 
+             e.resource = create('Composition') as composition share composition, 
+             composition.id = uuid() as uuid,
+             e.fullUrl = append('urn:uuid:',uuid),
+             bundle.entry as e2, 
+             e2.resource = create('Patient') as patient share patient,
+             patient.id = uuid() as uuid2,
+             e2.fullUrl = append('urn:uuid:',uuid2)
              then ClinicalDocumentChToBundle(cda, patient, composition, bundle) "ClinicalDocumentToBody";
 }
 
@@ -53,8 +59,16 @@ group ClinicalDocumentChToBundle(source cda : ClinicalDocument, target patient :
 // target: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefinition-ch-core-composition-definitions.html#Composition.section
 // TODO: not excplicitly modeled in CH-Core
 group SectionOriginalRepresentation(source source : Section, source patient : Patient, target target, target bundle: Bundle) extends ClinicalDocumentSection {
-  source.entry as cdaEntry ->  bundle.entry as e,  e.resource = create('Binary') as binary, binary.id = (cdaEntry.observationMedia.ID), target.entry = create('Reference') as reference, reference.reference = reference(binary) then {
-    cdaEntry.observationMedia as observationMedia then ObservationMedia(observationMedia, binary);
+  source.entry as cdaEntry ->  bundle.entry as e,  
+    e.resource = create('Binary') as binary,
+    binary.id = uuid() as uuid,
+    e.fullUrl = append('urn:uuid:',uuid), 
+    target.entry = create('Reference') as reference share reference,
+    reference.reference = reference(binary) then {
+      cdaEntry.observationMedia as observationMedia then {
+        observationMedia then ObservationMedia(observationMedia, binary) "observationMedia";
+        observationMedia.ID as value -> reference.extension as ext then NarrativeLink(value, ext) "narrativeLink";
+      } "observationMedia";
   };
 }
 
@@ -140,12 +154,22 @@ group ClinicalDocumentCompositionCh(source source : ClinicalDocument, target tar
   source.versionNumber as versionNumber -> target.extension as ext2 then ChExtEprVersionNumber(versionNumber, ext2) "versionNumber";
   source.informationRecipient as informationRecipient -> bundle.entry as e then {
     informationRecipient.intendedRecipient as intendedRecipient where $this.receivedOrganization.exists()=false 
-       -> e.resource = create('Patient') as recipient, target.extension as ext then ChExtEprInformationRecipient(intendedRecipient, recipient, ext) "informationRecipient";
+       -> e.resource = create('Patient') as recipient,
+          recipient.id = uuid() as uuid,
+          e.fullUrl = append('urn:uuid:',uuid),
+          target.extension as ext then ChExtEprInformationRecipient(intendedRecipient, recipient, ext) "informationRecipient";
     informationRecipient.intendedRecipient as intendedRecipient then {
-      intendedRecipient.receivedOrganization -> e.resource = create('Organization') as recipient, target.extension as ext 
+      intendedRecipient.receivedOrganization -> e.resource = create('Organization') as recipient, 
+           recipient.id = uuid() as uuid2,
+           e.fullUrl = append('urn:uuid:',uuid2),          
+           target.extension as ext 
            then ChExtEprInformationRecipientOrganization(intendedRecipient, recipient, ext) "informationRecipient Organization";
-    } "intendedRecipient as orgnaization";
+    } "intendedRecipient as organization";
   } "entry";
-  source.dataEnterer as dataEnterer -> bundle.entry as e, e.resource = create('Person') as person, target.extension as ext then ChExtEprDataEnterer(dataEnterer, person, ext) "dateEnterer";
+  source.dataEnterer as dataEnterer -> bundle.entry as e, 
+      e.resource = create('Person') as person, 
+      person.id = uuid() as uuid,
+      e.fullUrl = append('urn:uuid:',uuid),
+      target.extension as ext then ChExtEprDataEnterer(dataEnterer, person, ext) "dateEnterer";
 }
 
