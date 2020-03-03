@@ -1,0 +1,40 @@
+###
+
+@host = http://localhost:8080/r4
+
+
+### Provide CDA and CH-core implementation guide
+POST {{host}} HTTP/1.1
+Content-Type: application/fhir+json
+Accept: application/fhir+json
+
+{
+  "resourceType": "Bundle",
+  "id": "bundle-transaction",
+  "meta": {
+    "lastUpdated": "2014-08-18T01:43:30Z"
+  },
+  "type": "transaction",
+  "entry": [
+    {
+      "resource": {
+        "resourceType" : "ImplementationGuide",
+        "version" : "dev",
+        "packageId": "hl7.fhir.cda"
+      },
+      "request": {
+        "method": "POST"
+      }
+    },
+    {
+      "resource": {
+        "resourceType" : "ImplementationGuide",
+        "version" : "current",
+        "packageId": "ch.fhir.ig.ch-emed"
+      },
+      "request": {
+        "method": "POST"
+      }
+    }
+  ]
+}

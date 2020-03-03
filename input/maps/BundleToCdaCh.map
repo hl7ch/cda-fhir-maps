@@ -77,7 +77,11 @@ group SectionCdaOriginalRepresentation(source bundle : Bundle, source section: S
     entry.resource as binary where ('Binary'+'/'+$this.id) in %section.entry.reference -> cdasection.entry as entry then {
       binary -> entry.typeCode = 'DRIV' "driv";
       binary -> entry.observationMedia as observationMedia, observationMedia.classCode = 'OBS', observationMedia.moodCode='EVN' then {
-        binary.id as id -> observationMedia.ID = id "id";
+      section.entry as entry then {
+          entry.extension as extension where $this.url='http://hl7.org/fhir/StructureDefinition/narrativeLink' then {
+          extension.valueUrl as valueUrl -> observationMedia.ID=valueUrl "reference";
+          } "narrativeLink";
+        } "section.entry";
         binary -> observationMedia.templateId as templateId, templateId.root='2.16.756.5.30.1.1.10.4.83' "templateId";
         binary -> observationMedia.value as value, value.mediaType='2.16.756.5.30.1.1.10.4.83', value.representation='B64' then {
           binary.contentType as contentType -> value.mediaType = contentType "contentType";
