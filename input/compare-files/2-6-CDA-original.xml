@@ -285,12 +285,8 @@
 										</pharm:asContent>
 										<pharm:ingredient classCode="ACTI">
 											<pharm:quantity>
-												<numerator unit="mg" value="10" 
-													xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="PQ"/>
-												<!-- see issue #5 -->
-												<denominator value="1" 
-													xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="PQ"/>
-												<!-- see issue #5 -->
+												<numerator xsi:type="PQ" unit="mg" value="10"/>
+												<denominator xsi:type="PQ" value="1"/>
 											</pharm:quantity>
 											<pharm:ingredient classCode="MMAT" determinerCode="KIND">
 												<pharm:code code="386864001" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED CT" displayName="Amlodipine (substance)"/>
