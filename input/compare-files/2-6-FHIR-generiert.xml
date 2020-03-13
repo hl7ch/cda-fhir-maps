@@ -433,7 +433,6 @@
                     <numberOfRepeatsAllowed value="2"/>
                     <quantity>
                         <value value="1"/>
-                        <unit value="1"/>
                     </quantity>
                 </dispenseRequest>
             </MedicationRequest>
