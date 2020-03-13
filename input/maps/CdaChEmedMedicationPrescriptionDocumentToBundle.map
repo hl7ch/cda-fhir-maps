@@ -108,8 +108,15 @@ group Substitution(source act: Act, target medicationRequest: MedicationRequest)
 // target: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefinition-ch-emed-medicationrequest.html
 group PrescribedQuantity(source supply: Supply, target medicationRequest: MedicationRequest) {
   supply.quantity as quantity -> medicationRequest.dispenseRequest as dispenseRequest, dispenseRequest.quantity as quant then {
-    quantity.unit as unit -> quant.unit = unit "unit";
+    // IHE-PRE: If the product-element contains package information, the unit attribute is not be present
     quantity.value as value -> quant.value = value "value";
+
+    // IHE-PRE: If the product-element does not contain package information, the unit attribut is present and the value SHALL be out of the UCUM code system
+    quantity.unit as unit then {
+      unit -> quant.unit = unit "unit";
+      unit -> quant.system = 'http://unitsofmeasure.org' "ucum";
+      unit -> quant.code = unit "code";
+    } "unit";
   } "quantity";
 }
 

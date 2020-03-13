@@ -330,7 +330,6 @@
                 </subject>
                 <quantity>
                     <value value="1"/>
-                    <unit value="1"/>
                 </quantity>
                 <note>
                     <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">

@@ -331,8 +331,14 @@
                 </subject>
                 <quantity>
                     <value value="1"/>
-                    <unit value="1"/>
                 </quantity>
+                <!--test-case for quantity with unit -->
+                <!--<quantity>
+                    <value value="20"/>
+                    <unit value="mg"/>
+                    <system value="http://unitsofmeasure.org"/>
+                    <code value="mg"/>
+                </quantity>-->
                 <note>
                     <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
                         <valueUrl value="#dis.1.note"/>

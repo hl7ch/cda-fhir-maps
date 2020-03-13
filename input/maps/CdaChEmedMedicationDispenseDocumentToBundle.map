@@ -112,10 +112,17 @@ group Substitution(source act: Act, target medicationDispense: MedicationDispens
 group ManufacturedMaterialEntryContentModule(source source : Supply, target medicationDispense : MedicationDispense, target medication : Medication) {
   source -> medication.id = 'med', medicationDispense.medication = create('Reference') as vt, vt.reference = '#med' "medication";
   
-  // quantity value
+  // quantity value (number of packages)
   source.quantity as quantity -> medicationDispense.quantity as medDispQuantity then {
-    quantity.unit as unit -> medDispQuantity.unit = unit "unit";
+    // IHE-DIS: If the product-element contains package information, the unit attribute is not be present
     quantity.value as value -> medDispQuantity.value = value "value";
+
+    // IHE-DIS: If the product-element does not contain package information, the unit attribut is present and the value SHALL be out of the UCUM code system
+    quantity.unit as unit then {
+      unit -> medDispQuantity.unit = unit "unit";
+      unit -> medDispQuantity.system = 'http://unitsofmeasure.org' "ucum";
+      unit -> medDispQuantity.code = unit "code";
+    } "unit";
   } "quantity";
   
   source.product as product then {

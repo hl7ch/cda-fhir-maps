@@ -226,9 +226,12 @@ group MedicationTreatmentPlanEntryContentModule(source bundle : Bundle, source m
   // TODO: Contains 2.16.756.5.30.1.1.10.4.37 Dosage Intake Mode Entry Content Module (DYNAMIC)
   //       see group DosageInstructionsNonStructuredEntryContentModule
 
+  // IHE-DIS: Case 1: If the product-element contains package information, the unit attribute is not be present
+  // IHE-DIS: Case 2: If the product-element does not contain package information, the unit attribut is present and the value SHALL be out of the UCUM code system
+  // FHIR: Because the package information (Medication.amount) of the MedicationDispense is required, only case 1 (IHE-DIS) occurs
   medicationDispense.quantity as quantity -> supply.quantity as supplyQuantity then {
-    quantity.unit as unit -> supplyQuantity.unit = unit "unit";
     quantity.value as value -> supplyQuantity.value = value "value";
+    // quantity.unit as unit -> supplyQuantity.unit = unit "unit";
   } "quantity";
   
   medicationDispense.note as note 
