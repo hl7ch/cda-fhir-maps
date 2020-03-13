@@ -255,6 +255,8 @@
 										<pharm:formCode code="10219000" codeSystem="0.4.0.127.0.16.1.1.2.1"
 											displayName="Tablet" />
 												<pharm:capacityQuantity value="20" />
+												<!-- test case for non-countable capacityQuantity -->
+												<!--<pharm:capacityQuantity value="100" unit="mg"/>-->
 											</pharm:containerPackagedMedicine>
 										</pharm:asContent>
 										<pharm:ingredient classCode="ACTI">

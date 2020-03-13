@@ -323,10 +323,20 @@
                 <display value="Tablet"/>
               </coding>
             </form>
+            
             <amount>
               <numerator>
                 <value value="30"/>
-                <unit value="tablets"/>
+              </numerator>
+              <denominator>
+                <value value="1"/>
+              </denominator>
+            </amount>
+            <!-- test case 1 -->
+            <!--<amount>
+              <numerator>
+                <value value="30"/>
+                <unit value="tablet"/>
                 <system value="http://unitsofmeasure.org"/>
                 <code value="1"/>
               </numerator>
@@ -336,7 +346,23 @@
                 <system value="http://unitsofmeasure.org"/>
                 <code value="1"/>
               </denominator>
-            </amount>
+            </amount>-->
+            <!-- test case 2 -->
+            <!--<amount>
+              <numerator>
+                <value value="100"/>
+                <unit value="mg"/>
+                <system value="http://unitsofmeasure.org"/>
+                <code value="mg"/>
+              </numerator>
+              <denominator>
+                <value value="1"/>
+                <unit value="Package"/>
+                <system value="http://unitsofmeasure.org"/>
+                <code value="1"/>
+              </denominator>
+            </amount>-->
+
             <ingredient>
               <itemCodeableConcept>
                 <coding>
@@ -491,7 +517,16 @@
             <amount>
               <numerator>
                 <value value="30"/>
-                <unit value="tablets"/>
+              </numerator>
+              <denominator>
+                <value value="1"/>
+              </denominator>
+            </amount>
+            <!-- test case 1 -->
+            <!--<amount>
+              <numerator>
+                <value value="30"/>
+                <unit value="tablet"/>
                 <system value="http://unitsofmeasure.org"/>
                 <code value="1"/>
               </numerator>
@@ -501,7 +536,23 @@
                 <system value="http://unitsofmeasure.org"/>
                 <code value="1"/>
               </denominator>
-            </amount>
+            </amount>-->
+            <!-- test case 2 -->
+            <!--<amount>
+              <numerator>
+                <value value="100"/>
+                <unit value="mg"/>
+                <system value="http://unitsofmeasure.org"/>
+                <code value="mg"/>
+              </numerator>
+              <denominator>
+                <value value="1"/>
+                <unit value="Package"/>
+                <system value="http://unitsofmeasure.org"/>
+                <code value="1"/>
+              </denominator>
+            </amount>-->
+
             <ingredient>
               <itemCodeableConcept>
                 <coding>

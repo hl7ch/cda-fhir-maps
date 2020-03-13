@@ -141,12 +141,32 @@ group ManufacturedMaterialEntryContentModule(source bundle : Bundle, source medi
     code.text as text -> containerPackagedMedicine.name as name, name.other = text "pharm:name";
     medication.form as form then {
       form.coding as coding -> containerPackagedMedicine.formCode as formCode then CodingCE(coding, formCode) "pharm:formCode";
-    } "form";   
+    } "form"; 
+
     medication.amount as amount then {
       amount.numerator as numerator then {
-        numerator.value as value -> containerPackagedMedicine.capacityQuantity as capacityQuantity, capacityQuantity.value = value "value";	    
+
+        // if the value of numerator.code is "1", then it is not a UCUM code, so generate case 1
+        // IHE: Case 1: If the capacityQuantity is given in countable units, the unit attribute SHALL NOT be present
+        numerator.code as code where $this = '1' -> containerPackagedMedicine.capacityQuantity as capacityQuantity then {
+          numerator.value as value -> capacityQuantity.value = value "value";	
+        } "no UCUM";
+
+        // if the value of numerator.code is not "1", then it is a UCUM code, so generate case 2
+        // IHE: Case 2: If the capacityQuantity is given in non-countable units, the unit attribute SHALL be present and the value SHALL be out of the UCUM code system.
+        numerator.code as code where $this != '1' -> containerPackagedMedicine.capacityQuantity as capacityQuantity then {
+          numerator.value as value -> capacityQuantity.value = value "value";
+          numerator.unit as unit -> capacityQuantity.unit = unit "unit";	
+        } "UCUM";
+
+        // if there ist no numerator.code, case 1 is generated, because no unit exists
+        numerator as numerator where $this.code.exists()=false -> containerPackagedMedicine.capacityQuantity as capacityQuantity then {
+          numerator.value as value -> capacityQuantity.value = value "value";	
+        } "no UCUM";
+	    
       } "numerator";
     } "amount";
+
   } "code";
 
   medication.ingredient as ingredient -> manufacturedMaterial.ingredient as ingredient, ingredient.classCode = 'ACTI' then {
