@@ -110,6 +110,7 @@ group ManufacturedMaterialEntryContentModule(source source : SubstanceAdministra
             containerPackagedMedicine.code as code -> medication.code as fhircode, fhircode.text = (%manufacturedMaterial.name.other) then CECodeableConcept(code, fhircode) "medication.code";
             containerPackagedMedicine.formCode as formCode -> medication.form as form then CECodeableConcept(formCode, form)  "medication.formCode";
             
+            // Package size
             containerPackagedMedicine.capacityQuantity as capacityQuantity where (%containerPackagedMedicine.formCode.code='10219000') -> medication.amount = create('Ratio') as ratio then {
               // IHE: Case 1: If the capacityQuantity is given in countable units, the unit attribute SHALL NOT be present
               capacityQuantity where $this.unit.exists()=false then {
@@ -269,7 +270,7 @@ group EffectiveTimeWhen(source source: substanceAdministration, target dosage: D
   } "effectiveTime SXPR_TS";
 }
 
-// dose quantity for dosage
+// dose quantity for dosage (application schema)
 group DoseQuantity (source source: substanceAdministration, target dosage: Dosage) {
   source.doseQuantity as doseQuantity -> dosage.doseAndRate as doseAndRate then {
     doseQuantity.center as center -> doseAndRate.dose = create('Quantity') as quantity then {

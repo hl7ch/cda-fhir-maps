@@ -143,6 +143,7 @@ group ManufacturedMaterialEntryContentModule(source bundle : Bundle, source medi
       form.coding as coding -> containerPackagedMedicine.formCode as formCode then CodingCE(coding, formCode) "pharm:formCode";
     } "form"; 
 
+    // package size
     medication.amount as amount then {
       amount.numerator as numerator then {
 
@@ -246,6 +247,7 @@ group MedicationTreatmentPlanEntryContentModule(source bundle : Bundle, source m
   // TODO: Contains 2.16.756.5.30.1.1.10.4.37 Dosage Intake Mode Entry Content Module (DYNAMIC)
   //       see group DosageInstructionsNonStructuredEntryContentModule
 
+  // Number of packages
   // IHE-DIS: Case 1: If the product-element contains package information, the unit attribute is not be present
   // IHE-DIS: Case 2: If the product-element does not contain package information, the unit attribut is present and the value SHALL be out of the UCUM code system
   // FHIR: Because the package information (Medication.amount) of the MedicationDispense is required, only case 1 (IHE-DIS) occurs
@@ -384,7 +386,7 @@ group EffectiveTimeWhenSplit(source dosage: Dosage, target substanceAdministrati
   } "timing"; 
 }
 
-// dose quantity for dosage
+// dose quantity for dosage (application schema)
 group DoseQuantity(source dosage: Dosage, target substanceAdministration : SubstanceAdministration) {
   dosage.doseAndRate as doseAndRate -> substanceAdministration.doseQuantity as doseQuantity then {
     doseAndRate.dose : Quantity as quantity then {

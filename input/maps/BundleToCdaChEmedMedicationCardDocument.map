@@ -122,6 +122,7 @@ group ManufacturedMaterialEntryContentModule(source bundle : Bundle, source medi
       form.coding as coding -> containerPackagedMedicine.formCode as formCode then CodingCE(coding, formCode) "pharm:formCode";
     } "form";   
 
+    // Package size
     medication.amount as amount then {
       amount.numerator as numerator then {
 
@@ -311,7 +312,7 @@ group EffectiveTimeWhen (source dosage: Dosage, target substanceAdministration :
   } "timing"; 
 }
 
-// dose quantity for dosage
+// dose quantity for dosage (application schema)
 group DoseQuantity(source dosage: Dosage, target substanceAdministration : SubstanceAdministration) {
   dosage.doseAndRate as doseAndRate -> substanceAdministration.doseQuantity as doseQuantity then {
     doseAndRate.dose : Quantity as quantity then {

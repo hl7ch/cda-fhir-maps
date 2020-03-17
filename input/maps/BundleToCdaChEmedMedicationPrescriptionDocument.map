@@ -109,6 +109,8 @@ group PrescribedQuantity(source dispenseRequest: DispenseRequest, target supply:
   dispenseRequest -> supply.moodCode = 'RQO' "RQO";  
   dispenseRequest -> supply.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.9.1.3.8' "TemplateId";
   dispenseRequest -> supply.independentInd as independentInd, independentInd.value = 'false' "independentInd";
+  
+  // Number of packages
   dispenseRequest.quantity as quantity -> supply.quantity as quant then {
     quantity.value as value -> quant.value = value "value";
   } "quantity";
@@ -121,6 +123,8 @@ group PrescribedQuantityUnit(source dispenseRequest: DispenseRequest, target sup
   dispenseRequest -> supply.moodCode = 'RQO' "RQO";  
   dispenseRequest -> supply.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.9.1.3.8' "TemplateId";
   dispenseRequest -> supply.independentInd as independentInd, independentInd.value = 'false' "independentInd";
+  
+  // Number of packages
   dispenseRequest.quantity as quantity -> supply.quantity as quant then {
     quantity.value as value -> quant.value = value "value";
     quantity.unit as unit -> quant.unit = unit "unit";
@@ -159,6 +163,7 @@ group ManufacturedMaterialEntryContentModule(source bundle : Bundle, source medi
       form.coding as coding -> containerPackagedMedicine.formCode as formCode then CodingCE(coding, formCode) "pharm:formCode";
     } "form"; 
 
+    // Package size
     medication.amount as amount then {
       amount.numerator as numerator then {
 
@@ -289,10 +294,6 @@ group PrescriptionItemEntryContentModule(source bundle : Bundle, source medicati
         entryRelationship.act as act
           then Substitution(substitution, act) "Substitution";
 
-  //medicationRequest.dispenseRequest as dispenseRequest 
-  //  -> substanceAdministration.entryRelationship as entryRelationship, entryRelationship.typeCode='COMP',
-  //      entryRelationship.supply as supply
-  //        then PrescribedQuantity(dispenseRequest, supply) "PrescribedQuantity";
 }
 
 
@@ -374,7 +375,7 @@ group EffectiveTimeWhen (source dosage: Dosage, target substanceAdministration :
   } "timing"; 
 }
 
-// dose quantity for dosage
+// dose quantity for dosage (application schema)
 group DoseQuantity(source dosage: Dosage, target substanceAdministration : SubstanceAdministration) { 
   dosage.doseAndRate as doseAndRate -> substanceAdministration.doseQuantity as doseQuantity then {
     doseAndRate.dose : Quantity as quantity then {
