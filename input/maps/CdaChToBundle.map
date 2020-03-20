@@ -109,7 +109,7 @@ group ChExtEprSetId(source source: II, target ext: Extension) {
 // target: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefinition-ch-ext-epr-versionnumber.html
 group ChExtEprVersionNumber(source source: INT, target ext: Extension) {
   source -> ext.url = 'http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-versionnumber' "url";
-  source -> ext.value = create('integer') as value then INT(source, value) "value";
+  source -> ext.value = create('unsignedInt') as value then INT(source, value) "value";
 }
 
 // source: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5.30.1.1.10.9.36
