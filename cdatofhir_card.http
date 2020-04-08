@@ -42,4 +42,3 @@ Accept: application/fhir+xml;fhirVersion=4.0
 Content-Type: application/fhir+xml;fhirVersion=4.0
 
 < ./input/cda-ch-emed/2-7-MedicationCard.xml
-//< ./input/compare-files/2-7-CDA-original.xml
