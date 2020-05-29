@@ -10,7 +10,7 @@ Clone this project https://github.com/ahdis/cda-fhir-maps/.
 
 Open it with VSCode (RESTClient extension needs to be installed).
 
-Download matchbox-x.jar from https://github.com/ahdis/matchbox/releases/ (Assets) into the main directory of the project cda-fhir-maps.
+Download matchbox-0.4.0-SNAPSHOT.jar from https://github.com/ahdis/matchbox/releases/tag/0.4.0 into the main directory of the project cda-fhir-maps.
 
 You need to download and install the package to your package cache the first time.
 
@@ -36,7 +36,8 @@ java -jar matchbox-0.4.0-SNAPSHOT.jar
 ```
 
 ## Transform documents between CDA and FHIR and back
-Open **cdatofhir.http** and **fhirtocda.http** from the main directory with VSCode.   
+Open **cdatofhir.http** and **fhirtocda.http** from the main directory with VSCode. 
+* Choose @host = http://localhost:8080/r4  
 * Add the maps to matchbox (Step 1 to 3).
 * Transform your document (Examples shown in Step 5).
 
