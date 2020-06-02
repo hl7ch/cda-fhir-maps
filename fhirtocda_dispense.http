@@ -1,7 +1,8 @@
-### Create and Update FHIR maps for converting to CDA with RESTClient and running matchbox locally
+### Create and Update FHIR maps for converting to CDA with RESTClient and running matchbox (locally)
 ### Note: POST the maps in the following order, if you update one map you need to repost also the maps below
 
-@host = http://localhost:8080/r4
+@host = https://test.ahdis.ch/r4
+### @host = http://localhost:8080/r4
 
 
 ### 1. POST FhirtoCdaTypes.map
@@ -28,7 +29,7 @@ Content-Type: text/fhir-mapping
 < ./input/maps/BundleToCdaCh.map
 
 
-### 4. POST BundleToCdaChEmedMedicationDispenseDocument
+### 4. POST BundleToCdaChEmedMedicationDispenseDocument.map
 POST {{host}}/StructureMap HTTP/1.1
 Accept: application/fhir+xml;fhirVersion=4.0
 Content-Type: text/fhir-mapping
@@ -36,7 +37,7 @@ Content-Type: text/fhir-mapping
 < ./input/maps/BundleToCdaChEmedMedicationDispenseDocument.map
 
 
-### 5.a Transform 1-2-MedicationDispense.xml from FHIR to CDA
+### 5a. Transform Medication Dispense document (1-2-MedicationDispense.xml) from FHIR to CDA
 POST {{host}}/StructureMap/$transform?source=http://ahdis.ch/ig/cda-fhir-maps/StructureMap/BundleToCdaChEmedMedicationDispenseDocument
 Accept: application/fhir+xml;fhirVersion=4.0
 Content-Type: application/fhir+xml;fhirVersion=4.0
@@ -44,7 +45,7 @@ Content-Type: application/fhir+xml;fhirVersion=4.0
 < ./input/ch-emed/1-2-MedicationDispense.xml
 
 
-### 5.b Transform 2-4-MedicationDispense.xml from FHIR to CDA
+### 5b. Transform Medication Dispense document (2-4-MedicationDispense.xml) from FHIR to CDA
 POST {{host}}/StructureMap/$transform?source=http://ahdis.ch/ig/cda-fhir-maps/StructureMap/BundleToCdaChEmedMedicationDispenseDocument
 Accept: application/fhir+xml;fhirVersion=4.0
 Content-Type: application/fhir+xml;fhirVersion=4.0

@@ -1,6 +1,7 @@
 ###
 
-@host = http://localhost:8080/r4
+@host = https://test.ahdis.ch/r4
+### @host = http://localhost:8080/r4
 
 
 ### Provide CDA and CH-core implementation guide

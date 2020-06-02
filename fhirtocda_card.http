@@ -1,7 +1,8 @@
-### Create and Update FHIR maps for converting to CDA with RESTClient and running matchbox locally
+### Create and Update FHIR maps for converting to CDA with RESTClient and running matchbox (locally)
 ### Note: POST the maps in the following order, if you update one map you need to repost also the maps below
 
-@host = http://localhost:8080/r4
+@host = https://test.ahdis.ch/r4
+### @host = http://localhost:8080/r4
 
 
 ### 1. POST FhirtoCdaTypes.map
@@ -28,7 +29,7 @@ Content-Type: text/fhir-mapping
 < ./input/maps/BundleToCdaCh.map
 
 
-### 4. POST BundleToCdaChEmedMedicationCardDocument
+### 4. POST BundleToCdaChEmedMedicationCardDocument.map
 POST {{host}}/StructureMap HTTP/1.1
 Accept: application/fhir+xml;fhirVersion=4.0
 Content-Type: text/fhir-mapping
@@ -36,7 +37,7 @@ Content-Type: text/fhir-mapping
 < ./input/maps/BundleToCdaChEmedMedicationCardDocument.map
 
 
-### 5.a Transform 2-7-MedicationCard.xml from FHIR to CDA
+### 5a. Transform Medication Card document (2-7-MedicationCard.xml) from FHIR to CDA
 POST {{host}}/StructureMap/$transform?source=http://ahdis.ch/ig/cda-fhir-maps/StructureMap/BundleToCdaChEmedMedicationCardDocument
 Accept: application/fhir+xml;fhirVersion=4.0
 Content-Type: application/fhir+xml;fhirVersion=4.0
