@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <Bundle xmlns="http://hl7.org/fhir">
-    <id value="591a3fe5-af78-41dd-a02a-bf1ebc9ba679"/>
+    <id value="1-2-MedicationDispense"/>
+    <meta>
+        <lastUpdated value="2020-02-20T12:31:59.738+00:00"/>
+        <profile value="http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-document-medicationdispense"/>
+    </meta>
     <identifier>
         <system value="urn:ietf:rfc:3986"/>
         <value value="urn:uuid:488bd23a-20c6-11e6-b67b-9e71128cae77"/>
@@ -9,9 +13,10 @@
     <type value="document"/>
     <timestamp value="2011-11-29T11:01:00+01:00"/>
     <entry>
+        <fullUrl value="http://test.fhir.ch/r4/Composition/1-2-MedicationDispense"/>
         <resource>
             <Composition>
-                <id value="ef8aeee5-0d04-429c-8654-181302b6a0cd"/>
+                <id value="1-2-MedicationDispense"/>
                 <language value="de-CH"/>
                 <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-setid">
                     <valueIdentifier>
@@ -24,7 +29,7 @@
                 </extension>
                 <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-informationrecipient">
                     <valueReference>
-                        <reference value="Patient/fc2649f1-9c4d-4fd7-882a-8b53b925d8d4"/>
+                        <reference value="Patient/MonikaWegmuellerRecipient"/>
                     </valueReference>
                 </extension>
                 <identifier>
@@ -33,11 +38,12 @@
                 </identifier>
                 <status value="final"/>
                 <type>
-                    <!--<coding>
+                    <!-- TBD -->
+                    <coding>
                         <system value="http://snomed.info/sct"/>
                         <code value="419891008"/>
                         <display value="Record artifact (record artifact)"/>
-                    </coding>-->
+                    </coding>
                     <coding>
                         <system value="http://loinc.org"/>
                         <code value="60593-1"/>
@@ -45,17 +51,17 @@
                     </coding>
                 </type>
                 <subject>
-                    <reference value="Patient/bf0e0e6c-3680-4882-a5af-613ec77fa6f8"/>
+                    <reference value="Patient/MonikaWegmueller"/>
                 </subject>
                 <date value="2011-11-29T11:01:00+01:00"/>
                 <author>
                     <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-time">
                         <valueDateTime value="2011-11-29T11:00:00+01:00"/>
                     </extension>
-                    <reference value="Practitioner/417883ce-32dd-4b73-b337-da7d38aeeb1d"/>
+                    <reference value="Practitioner/FamilienHausarzt"/>
                 </author>
                 <author>
-                    <reference value="Organization/b382be36-4fec-43ba-8ed6-b5c6f0cd93ab"/>
+                    <reference value="Organization/Hausarzt"/>
                 </author>
                 <title value="Abgabe"/>
                 <confidentiality value="N">
@@ -70,7 +76,7 @@
                     </extension>
                 </confidentiality>
                 <custodian>
-                    <reference value="Organization/1b68e458-1154-4941-8d72-eaa72898d9c6"/>
+                    <reference value="Organization/Custodian"/>
                 </custodian>
                 <section>
                     <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-sectionid">
@@ -136,16 +142,17 @@
                         </div>
                     </text>
                     <entry>
-                        <reference value="MedicationDispense/b979232e-b60b-498e-b231-9e0aa7e9241e"/>
+                        <reference value="MedicationDispense/1-2-MedDispTriatec"/>
                     </entry>
                 </section>
             </Composition>
         </resource>
     </entry>
     <entry>
+        <fullUrl value="http://test.fhir.ch/r4/Patient/MonikaWegmueller"/>
         <resource>
             <Patient>
-                <id value="bf0e0e6c-3680-4882-a5af-613ec77fa6f8"/>
+                <id value="MonikaWegmueller"/>
                 <identifier>
                     <type>
                         <coding>
@@ -172,9 +179,10 @@
         </resource>
     </entry>
     <entry>
+        <fullUrl value="http://test.fhir.ch/r4/Practitioner/FamilienHausarzt"/>
         <resource>
             <Practitioner>
-                <id value="417883ce-32dd-4b73-b337-da7d38aeeb1d"/>
+                <id value="FamilienHausarzt"/>
                 <identifier>
                     <system value="urn:oid:2.51.1.3"/>
                     <value value="7601000234438"/>
@@ -187,9 +195,10 @@
         </resource>
     </entry>
     <entry>
+        <fullUrl value="http://test.fhir.ch/r4/Organization/Hausarzt"/>
         <resource>
             <Organization>
-                <id value="b382be36-4fec-43ba-8ed6-b5c6f0cd93ab"/>
+                <id value="Hausarzt"/>
                 <identifier>
                     <system value="urn:oid:2.51.1.3"/>
                     <value value="7601000234438"/>
@@ -210,9 +219,10 @@
         </resource>
     </entry>
     <entry>
+        <fullUrl value="http://test.fhir.ch/r4/Organization/Custodian"/>
         <resource>
             <Organization>
-                <id value="1b68e458-1154-4941-8d72-eaa72898d9c6"/>
+                <id value="Custodian"/>
                 <identifier>
                     <system value="urn:oid:2.51.1.3"/>
                     <value value="7601000234438"/>
@@ -222,9 +232,10 @@
         </resource>
     </entry>
     <entry>
+        <fullUrl value="http://test.fhir.ch/r4/Patient/MonikaWegmuellerRecipient"/>
         <resource>
             <Patient>
-                <id value="fc2649f1-9c4d-4fd7-882a-8b53b925d8d4"/>
+                <id value="MonikaWegmuellerRecipient"/>
                 <name>
                     <family value="Wegmüller"/>
                     <given value="Monika"/>
@@ -239,9 +250,10 @@
         </resource>
     </entry>
     <entry>
+        <fullUrl value="http://test.fhir.ch/r4/MedicationDispense/1-2-MedDispTriatec"/>
         <resource>
             <MedicationDispense>
-                <id value="b979232e-b60b-498e-b231-9e0aa7e9241e"/>
+                <id value="1-2-MedDispTriatec"/>
                 <contained>
                     <Medication>
                         <id value="med"/>
@@ -252,7 +264,7 @@
                             <coding>
                                 <system value="urn:oid:2.51.1.1"/>
                                 <code value="7680538751228"/>
-                                <display value="TRIATEC Tabl 2.5 mg 100 Stk"/>
+                                <display value="TRIATEC Tabl 2.5 mg 20 Stk"/>
                             </coding>
                             <text value="TRIATEC Tabl 2.5 mg"/>
                         </code>
@@ -319,7 +331,7 @@
                     <reference value="#med"/>
                 </medicationReference>
                 <subject>
-                    <reference value="Patient/bf0e0e6c-3680-4882-a5af-613ec77fa6f8"/>
+                    <reference value="Patient/MonikaWegmueller"/>
                 </subject>
                 <quantity>
                     <value value="1"/>
@@ -329,14 +341,13 @@
                         <valueUrl value="#dis.1.note"/>
                     </extension>
                     <text value="-"/>
-                    <!-- TBD: see issue #9 -->
                 </note>
                 <dosageInstruction>
-                    <!--<extension url="http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-dosagetype">
+                    <extension url="http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-dosagetype">
                         <valueIdentifier>
                             <value value="1.3.6.1.4.1.19376.1.5.3.1.4.7.1"/>
                         </valueIdentifier>
-                    </extension>-->
+                    </extension>
                     <timing>
                         <repeat>
                             <boundsPeriod>

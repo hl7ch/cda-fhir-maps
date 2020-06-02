@@ -236,7 +236,7 @@
 										<!-- Medicine Entry Module -->
 										<templateId root="1.3.6.1.4.1.19376.1.9.1.3.1" />
 										<code code="7680538751228" codeSystem="2.51.1.1"
-													codeSystemName="GTIN" displayName="TRIATEC Tabl 2.5 mg 100 Stk" >
+													codeSystemName="GTIN" displayName="TRIATEC Tabl 2.5 mg 20 Stk" >
 											<originalText>
 												<reference value="#dis.1.brandedmedication" />
 											</originalText>
@@ -249,7 +249,7 @@
 												classCode="CONT" determinerCode="INSTANCE">
 												<!-- National medicinal product code (package-level) -->
 												<pharm:code code="7680538751228" codeSystem="2.51.1.1"
-													codeSystemName="GTIN" displayName="TRIATEC Tabl 2.5 mg 100 Stk" />
+													codeSystemName="GTIN" displayName="TRIATEC Tabl 2.5 mg 20 Stk" />
 												<!-- Brand name (package) -->
 												<pharm:name>TRIATEC Tabl 2.5 mg</pharm:name>
 										<pharm:formCode code="10219000" codeSystem="0.4.0.127.0.16.1.1.2.1"

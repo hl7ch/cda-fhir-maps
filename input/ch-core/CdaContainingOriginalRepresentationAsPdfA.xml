@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Bundle 
-  xmlns="http://hl7.org/fhir">
-  <id value="a0aa5f59-7bf0-41a4-9619-643ef035ccd9"/>
+
+<Bundle xmlns="http://hl7.org/fhir">
+  <id value="CdaContainingOriginalRepresentationAsPdfA"/>
   <identifier>
     <system value="urn:ietf:rfc:3986"/>
     <value value="urn:uuid:11778932-3d19-486b-afe6-e32a1165c978"/>
@@ -9,10 +9,10 @@
   <type value="document"/>
   <timestamp value="2018-02-06T16:57:00+01:00"/>
   <entry>
-    <fullUrl value="urn:uuid:3b4232fb-9d6c-4f31-95c8-59d81f0e428b"/>
+    <fullUrl value="http://test.fhir.ch/r4/Composition/ContainingOriginalRepresentation"/>
     <resource>
       <Composition>
-        <id value="3b4232fb-9d6c-4f31-95c8-59d81f0e428b"/>
+        <id value="ContainingOriginalRepresentation"/>
         <language value="en-US"/>
         <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-setid">
           <valueIdentifier>
@@ -25,13 +25,13 @@
         </extension>
         <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-informationrecipient">
           <valueReference>
-            <reference value="Organization/72dbca23-a7b8-4647-9fb6-51762aacee35"/>
+            <reference value="Organization/2a921b75-b64c-4b0c-a118-f83dbd969076"/>
           </valueReference>
         </extension>
         <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-dataenterer">
           <extension url="enterer">
             <valueReference>
-              <reference value="Person/45b78e57-1c02-4535-ad80-becb0caf38bd"/>
+              <reference value="Person/2730d83f-62db-4967-9536-fbdc4877fe0e"/>
             </valueReference>
           </extension>
           <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-time">
@@ -56,17 +56,17 @@
           </coding>
         </type>
         <subject>
-          <reference value="Patient/a38e161f-4e0a-4e46-813b-0c780a06f0a8"/>
+          <reference value="Patient/14352087-86af-4bd3-a388-33eeea1d2b9a"/>
         </subject>
         <date value="2018-02-06T16:57:00+01:00"/>
         <author>
           <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-time">
             <valueDateTime value="2017-10-03T16:09:00+01:00"/>
           </extension>
-          <reference value="Practitioner/7a9ddfbe-f800-4267-9134-7d9a4d0c5d05"/>
+          <reference value="Practitioner/2beb1afb-40e4-4b7a-8f6b-e1a0e0a121bc"/>
         </author>
         <author>
-          <reference value="Organization/82585b0e-c53c-452c-9c57-b8da111e7cc1"/>
+          <reference value="Organization/76046060-15fd-4e3a-ba7d-6e16e9a299f2"/>
         </author>
         <title value="Transfer note for radiological diagnostics"/>
         <confidentiality value="N">
@@ -84,85 +84,52 @@
           <mode value="legal"/>
           <time value="2017-10-03"/>
           <party>
-            <reference value="Practitioner/d2dda471-2a5a-4ebc-944e-5605eba2cdfa"/>
+            <reference value="Practitioner/10eb6744-c625-474b-93eb-8aec62c7bd42"/>
           </party>
         </attester>
         <custodian>
-          <reference value="Organization/dd04e5a7-adc4-4abf-91dd-c208f4911aa6"/>
+          <reference value="Organization/52b8eed2-8196-472e-be76-de8373a15dd9"/>
         </custodian>
         <section>
           <title value="Ordered diagnostics"/>
           <text>
-            <status value="generated"/>
-            <div 
-              xmlns="http://www.w3.org/1999/xhtml">
-              <span>
-							The patient is awaiting your invitation.
-                <br/>
-              </span>
-              <span style="font-style: italic">
-							Specification of the desired examination
-                <br/>
-              </span>
-            </div>
+            <status value="generated"/><div xmlns="http://www.w3.org/1999/xhtml"><span>
+							The patient is awaiting your invitation.<br/></span><span style="font-style: italic">
+							Specification of the desired examination<br/></span></div>
           </text>
         </section>
         <section>
           <title value="Urgency / preferred date"/>
           <text>
-            <status value="generated"/>
-            <div 
-              xmlns="http://www.w3.org/1999/xhtml">
-              <span style="font-style: italic">
+            <status value="generated"/><div xmlns="http://www.w3.org/1999/xhtml"><span style="font-style: italic">
 							Information on the preferred date
-						</span>
-            </div>
+						</span></div>
           </text>
         </section>
         <section>
           <title value="Question"/>
           <text>
-            <status value="generated"/>
-            <div 
-              xmlns="http://www.w3.org/1999/xhtml">
-              <span style="font-style: italic">
+            <status value="generated"/><div xmlns="http://www.w3.org/1999/xhtml"><span style="font-style: italic">
 							Reason for the examination and information on the current conditions
-						</span>
-            </div>
+						</span></div>
           </text>
         </section>
         <section>
           <title value="Information about the patient"/>
           <text>
-            <status value="generated"/>
-            <div 
-              xmlns="http://www.w3.org/1999/xhtml">
-              <span style="font-style: italic">
-							Successful preliminary examinations
-                <br/>
-							Diagnostic copy - receiver
-                <br/>
-              </span>
-            </div>
+            <status value="generated"/><div xmlns="http://www.w3.org/1999/xhtml"><span style="font-style: italic">
+							Successful preliminary examinations<br/>
+							Diagnostic copy - receiver<br/></span></div>
           </text>
         </section>
         <section>
           <title value="Clinical information"/>
           <text>
-            <status value="generated"/>
-            <div 
-              xmlns="http://www.w3.org/1999/xhtml">
-              <span style="font-style: italic">
-							Description of the current conditions
-                <br/>
-							Pregnancy (yes / no)
-                <br/>
-							Laboratory results (Quick / Tc, creatinine)
-                <br/>
-							Known allergies
-                <br/>
-              </span>
-            </div>
+            <status value="generated"/><div xmlns="http://www.w3.org/1999/xhtml"><span style="font-style: italic">
+							Description of the current conditions<br/>
+							Pregnancy (yes / no)<br/>
+							Laboratory results (Quick / Tc, creatinine)<br/>
+							Known allergies<br/></span></div>
           </text>
         </section>
         <section>
@@ -175,13 +142,9 @@
             </coding>
           </code>
           <text>
-            <status value="generated"/>
-            <div 
-              xmlns="http://www.w3.org/1999/xhtml">
+            <status value="generated"/><div xmlns="http://www.w3.org/1999/xhtml">
 						Representation of the original view which has been signed by the legal authenticator:
-						
-              <img src="pdf1"/>
-            </div>
+						<img src="pdf1"/></div>
           </text>
           <entry>
             <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
@@ -194,10 +157,10 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:a38e161f-4e0a-4e46-813b-0c780a06f0a8"/>
+    <fullUrl value="http://test.fhir.ch/r4/Patient/14352087-86af-4bd3-a388-33eeea1d2b9a"/>
     <resource>
       <Patient>
-        <id value="a38e161f-4e0a-4e46-813b-0c780a06f0a8"/>
+        <id value="14352087-86af-4bd3-a388-33eeea1d2b9a"/>
         <identifier>
           <type>
             <coding>
@@ -209,6 +172,7 @@
           <value value="8733"/>
         </identifier>
         <name>
+          <use value="official"/>
           <family value="DOE"/>
           <given value="John"/>
         </name>
@@ -238,16 +202,16 @@
           <country value="CH"/>
         </address>
         <managingOrganization>
-          <reference value="Organization/389dae01-d869-435b-ae38-eb1b0cff3379"/>
+          <reference value="Organization/9f59806f-9b70-42ee-9a42-c7c1874ec1da"/>
         </managingOrganization>
       </Patient>
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:389dae01-d869-435b-ae38-eb1b0cff3379"/>
+    <fullUrl value="http://test.fhir.ch/r4/Organization/9f59806f-9b70-42ee-9a42-c7c1874ec1da"/>
     <resource>
       <Organization>
-        <id value="389dae01-d869-435b-ae38-eb1b0cff3379"/>
+        <id value="9f59806f-9b70-42ee-9a42-c7c1874ec1da"/>
         <identifier>
           <system value="urn:oid:2.51.1.3"/>
           <value value="7608888888888"/>
@@ -257,15 +221,16 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:7a9ddfbe-f800-4267-9134-7d9a4d0c5d05"/>
+    <fullUrl value="http://test.fhir.ch/r4/Practitioner/2beb1afb-40e4-4b7a-8f6b-e1a0e0a121bc"/>
     <resource>
       <Practitioner>
-        <id value="7a9ddfbe-f800-4267-9134-7d9a4d0c5d05"/>
+        <id value="2beb1afb-40e4-4b7a-8f6b-e1a0e0a121bc"/>
         <identifier>
           <system value="urn:oid:2.51.1.3"/>
           <value value="7608888888888"/>
         </identifier>
         <name>
+          <use value="official"/>
           <family value="Ready"/>
           <given value="Always"/>
           <prefix value="Dr. med."/>
@@ -275,10 +240,10 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:82585b0e-c53c-452c-9c57-b8da111e7cc1"/>
+    <fullUrl value="http://test.fhir.ch/r4/Organization/76046060-15fd-4e3a-ba7d-6e16e9a299f2"/>
     <resource>
       <Organization>
-        <id value="82585b0e-c53c-452c-9c57-b8da111e7cc1"/>
+        <id value="76046060-15fd-4e3a-ba7d-6e16e9a299f2"/>
         <identifier>
           <system value="urn:oid:2.51.1.3"/>
           <value value="7609999999999"/>
@@ -301,7 +266,7 @@
         </telecom>
         <telecom>
           <system value="url"/>
-          <value value="http://www.grouppractice.ch"/>
+          <value value="http:www.grouppractice.ch"/>
           <use value="work"/>
         </telecom>
         <address>
@@ -316,15 +281,16 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:d2dda471-2a5a-4ebc-944e-5605eba2cdfa"/>
+    <fullUrl value="http://test.fhir.ch/r4/Practitioner/10eb6744-c625-474b-93eb-8aec62c7bd42"/>
     <resource>
       <Practitioner>
-        <id value="d2dda471-2a5a-4ebc-944e-5605eba2cdfa"/>
+        <id value="10eb6744-c625-474b-93eb-8aec62c7bd42"/>
         <identifier>
           <system value="urn:oid:2.51.1.3"/>
           <value value="7607777777777"/>
         </identifier>
         <name>
+          <use value="official"/>
           <family value="Ready"/>
           <given value="Always"/>
           <prefix value="Dr. med."/>
@@ -334,10 +300,10 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:dd04e5a7-adc4-4abf-91dd-c208f4911aa6"/>
+    <fullUrl value="http://test.fhir.ch/r4/Organization/52b8eed2-8196-472e-be76-de8373a15dd9"/>
     <resource>
       <Organization>
-        <id value="dd04e5a7-adc4-4abf-91dd-c208f4911aa6"/>
+        <id value="52b8eed2-8196-472e-be76-de8373a15dd9"/>
         <identifier>
           <system value="urn:oid:2.51.1.3"/>
           <value value="7608888888888"/>
@@ -355,10 +321,14 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:72dbca23-a7b8-4647-9fb6-51762aacee35"/>
+    <fullUrl value="http://test.fhir.ch/r4/Organization/2a921b75-b64c-4b0c-a118-f83dbd969076"/>
     <resource>
       <Organization>
-        <id value="72dbca23-a7b8-4647-9fb6-51762aacee35"/>
+        <id value="2a921b75-b64c-4b0c-a118-f83dbd969076"/>
+        <identifier> <!-- im CDA ist kein identifier vorhanden -->
+          <system value="urn:oid:2.51.1.3"/>
+          <value value="7603333333333"/>
+        </identifier>
         <name value="RoDiag Radiology Institute"/>
         <address>
           <use value="work"/>
@@ -372,15 +342,16 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:45b78e57-1c02-4535-ad80-becb0caf38bd"/>
+    <fullUrl value="http://test.fhir.ch/r4/Person/2730d83f-62db-4967-9536-fbdc4877fe0e"/>
     <resource>
       <Person>
-        <id value="45b78e57-1c02-4535-ad80-becb0caf38bd"/>
+        <id value="2730d83f-62db-4967-9536-fbdc4877fe0e"/>
         <identifier>
           <system value="urn:oid:2.999"/>
           <value value="0812763"/>
         </identifier>
         <name>
+          <use value="official"/>
           <family value="Kristin"/>
           <given value="Stabilo"/>
         </name>
@@ -388,7 +359,7 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:a82d680c-7fb6-4ced-8279-e8297e0fe72f"/>
+    <fullUrl value="http://test.fhir.ch/r4/Binary/a82d680c-7fb6-4ced-8279-e8297e0fe72f"/>
     <resource>
       <Binary>
         <id value="a82d680c-7fb6-4ced-8279-e8297e0fe72f"/>

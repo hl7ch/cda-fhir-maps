@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 ********************************************************
-CDA-CH V2.0 Sample
+CDA-CH V2.1 Sample
 
 History:
 2018.02.03: Tony Schaller, medshare GmbH: Update from CDA-CH v1.2 (2009) to CDA-CH v2.0 (2017)
@@ -28,35 +28,35 @@ History:
 	<!-- HL7 CDA R2 (2005). -->
 	<templateId root="2.16.840.1.113883.10.12.1"/>
 
-	<!-- Document id according to CDA-CH v2.0 and case study "hip joint replacement". -->
+	<!-- Document id according to CDA-CH v2.1 and case study "hip joint replacement". -->
 	<id root="31397B31-BE60-47E1-BEC6-F37816D42B0C"/>
 
-	<!-- Document code according to CDA-CH v2.0 and case study "hip joint replacement". -->
+	<!-- Document code according to CDA-CH v2.1 and case study "hip joint replacement". -->
 	<code code="28616-1" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Physician Transfer note">
 		<!-- Document code mapping to the Swiss EPR XDS.b metadata (DocumentEntry.typeCode	, 2.16.756.5.30.1.127.3.10.1.27). -->
 		<translation code="371535009" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED CT" displayName="Transfer summary report"/>
 	</code>
 
-	<!-- Document title according to CDA-CH v2.0 and case study "hip joint replacement". -->
+	<!-- Document title according to CDA-CH v2.1 and case study "hip joint replacement". -->
 	<title>Zuweisung zur Radiologischen Diagnostik</title>
 
-	<!-- Document creation timestamp according to CDA-CH v2.0 and case study "hip joint replacement". -->
+	<!-- Document creation timestamp according to CDA-CH v2.1 and case study "hip joint replacement". -->
 	<effectiveTime value="201710031733+0100"/>
 
 	<!-- Confidentiality code according to the Swiss EPR XDS.b metadata. -->
 	<confidentialityCode code="17621005" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED CT" displayName="Normally accessible"/>
 
-	<!-- Document code according to CDA-CH v2.0. -->
+	<!-- Document code according to CDA-CH v2.1. -->
 	<languageCode code="de-CH"/>
 
 	<!--
-	Document setId and versionNumber according to CDA-CH v2.0 and case study "hip joint replacement".
+	Document setId and versionNumber according to CDA-CH v2.1 and case study "hip joint replacement".
 	This document is a new version of the one created in 2009 for CDA-CH v1.2
 	-->
 	<setId root="807563C2-5146-11D5-A672-00B0D022E945"/>
 	<versionNumber value="2"/>
 
-	<!-- Human patient according to CDA-CH v2.0 and case study "hip joint replacement". -->
+	<!-- Human patient according to CDA-CH v2.1 and case study "hip joint replacement". -->
 	<recordTarget>
 		<templateId root="2.16.756.5.30.1.1.10.2.1"/>
 		<patientRole>
@@ -98,7 +98,7 @@ History:
 		</patientRole>
 	</recordTarget>
 
-	<!-- Information about the author of a CDA document according to CDA-CH v2.0 and case study "hip joint replacement". -->
+	<!-- Information about the author of a CDA document according to CDA-CH v2.1 and case study "hip joint replacement". -->
 	<author>
 		<templateId root="2.16.756.5.30.1.1.10.9.23"/>
 		<!-- Timestamp of the authorship. -->
@@ -129,7 +129,7 @@ History:
 				<!-- The author's means of communication: eMail work place.-->
 				<telecom value="mailto:bereit@gruppenpraxis.ch" use="WP"/>
 				<!-- The author's means of communication: website work place.-->
-				<telecom value="http:http://www.gruppenpraxis.ch" use="WP"/>
+				<telecom value="http://www.gruppenpraxis.ch" use="WP"/>
 				<!-- The author's address - also according to eCH-0010. -->
 				<addr use="WP">
 					<streetName>Doktorgasse</streetName>
@@ -142,9 +142,9 @@ History:
 		</assignedAuthor>
 	</author>
 
-	<!-- Information about the person that entered information in this CDA document according to CDA-CH v2.0 and case study "hip joint replacement". -->
+	<!-- Information about the person that entered information in this CDA document according to CDA-CH v2.1 and case study "hip joint replacement". -->
 	<dataEnterer>
-<!-- Template id according to CDA-CH v2.0 -->
+<!-- Template id according to CDA-CH v2.1 -->
 		<templateId root="2.16.756.5.30.1.1.10.2.7"/>
 		<!-- Timestamp of the data input. -->
 		<time value="201710031315+0100"/>
@@ -161,7 +161,7 @@ History:
 		</assignedEntity>
 	</dataEnterer>
 
-	<!-- The organization in whose name this CDA document has been created (corresponds to the sender of a letter) according to CDA-CH v2.0 and case study "hip joint replacement". -->
+	<!-- The organization in whose name this CDA document has been created (corresponds to the sender of a letter) according to CDA-CH v2.1 and case study "hip joint replacement". -->
 	<custodian>
 		<templateId root="2.16.756.5.30.1.1.10.2.3"/>
 		<assignedCustodian>
@@ -182,7 +182,7 @@ History:
 		</assignedCustodian>
 	</custodian>
 
-	<!-- The main recipient of the document according to CDA-CH v2.0 and case study "hip joint replacement". -->
+	<!-- The main recipient of the document according to CDA-CH v2.1 and case study "hip joint replacement". -->
 	<informationRecipient typeCode="PRCP">
 		<templateId root="2.16.756.5.30.1.1.10.2.4"/>
 		<intendedRecipient>
@@ -201,7 +201,7 @@ History:
 		</intendedRecipient>
 	</informationRecipient>
 
-	<!-- The legal authenticator of the document according to CDA-CH v2.0 and case study "hip joint replacement". -->
+	<!-- The legal authenticator of the document according to CDA-CH v2.1 and case study "hip joint replacement". -->
 	<legalAuthenticator>
 		<templateId root="2.16.756.5.30.1.1.10.2.5"/>
 		<!-- Timestamp of the signature. -->
