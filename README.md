@@ -1,14 +1,80 @@
 # Implementation Guide CDA FHIR Maps
 
-This Implementation Guide provides maps to transform between CDA and FHIR and back.
+This Implementation Guide provides maps to transform documents between CDA and FHIR and back. This manual describes for which exchange formats the transformation can be used and how it is executed.   
 
-The source of the maps are located in ./input/maps
+This description focuses on how to execute the transformation in the local development environment. You can also add your own maps in this context. 
+
+The transformation as a micro service is described [here](https://github.com/ahdis/test.ahdis.ch/blob/master/Transformation_FHIR-CDA.md).
+
+
+## Supported document types
+
+The maps are intended for the transformation of documents, especially **eMedication documents**, in the context of the **Swiss EPR**.   
+*Note: The scope is based on the eMedication case study; there is as yet no final mapping of data types, templates and documents.*
+
+The following document types are supported and examples of these are shown in these directories:
+
+Document type | CDA examples | FHIR examples | Map CDA to FHIR | Map FHIR to CDA
+-------- | -------- | -------- | -------- | --------
+**Swiss EPR document** | input\cda-ch | input\ch-core | input\maps\CdaChToBundle.map | input\maps\BundleToCdaCh.map
+**Medication Card document** | input\cda-ch-emed | input\ch-emed | input\maps\CdaChEmed MedicationCardDocumentToBundle.map | input\maps\BundleToCdaChEmed MedicationCardDocument.map
+**Medication Prescription document** | input\cda-ch-emed | input\ch-emed | input\maps\CdaChEmed MedicationPrescriptionDocumentToBundle.map | input\maps\BundleToCdaChEmed MedicationPrescriptionDocument.map
+**Medication Dispense document** | input\cda-ch-emed | input\ch-emed | input\maps\CdaChEmed MedicationDispenseDocumentToBundle.map | input\maps\BundleToCdaCh EmedMedicationDispenseDocument.map
+
+***Table 1**: Document types with examples and maps*
+
+### Specification
+
+The example documents are structured according to the CDA/FHIR specifications for the exchange formats. The specification of the eMedication depends on the specification of the Swiss EPR exchange format.
+
+Documents in the context of the Swiss EPR:
+
+* Art-Decor [CDA-CH](https://art-decor.org/art-decor/decor-project--hl7chcda-)
+   * [EPR Document (CDA)](https://art-decor.org/art-decor/decor-templates--hl7chcda-?section=templates&amp;id=2.16.756.5.30.1.1.10.1.9&amp;effectiveDate=2019-10-17T15:22:41&amp;language=en-US)
+   
+* FHIR Implementation Guide [CH Core](http://fhir.ch/ig/ch-core/index.html)
+   * [EPR Document (FHIR)](https://build.fhir.org/ig/hl7ch/ch-core//StructureDefinition-ch-core-document-epr.html)
+
+eMedication Documents:
+
+* Art-Decor [CDA-CH-EMED eMedication](https://art-decor.org/art-decor/decor-project--cdachemed-)
+   * [Medication Card document (CDA)](https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.1.3&amp;effectiveDate=2016-05-13T00:00:00&amp;language=en-US)
+   * [Medication Prescription document (CDA)](https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.1.4&amp;effectiveDate=2016-05-21T00:00:00&amp;language=en-US)
+   * [Medication Dispense document (CDA)](https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.1.5&amp;effectiveDate=2016-05-21T00:00:00&amp;language=en-US)   
+   
+* FHIR Implementation Guide [CH EMED](http://fhir.ch/ig/ch-emed/index.html)
+   * [Medication Card document (FHIR)](http://fhir.ch/ig/ch-emed/StructureDefinition-ch-emed-document-medicationcard.html)
+   * [Medication Prescription document (FHIR)](http://fhir.ch/ig/ch-emed/StructureDefinition-ch-emed-document-medicationprescription.html)
+   * [Medication Dispense document (FHIR)](http://fhir.ch/ig/ch-emed/StructureDefinition-ch-emed-document-medicationdispense.html)
+
+
+## Setup
+
+To transform the documents from CDA to FHIR and back and maybe add your own maps, you should prepare the following setup:
+
+### Editor
+
+* Download [Visual Studio Code](https://code.visualstudio.com/docs/setup/setup-overview)
+* Install a REST Client for Visual Studio Code:   
+    Open VSC, press **Ctrl + Shift + X**, search for **rest-client**, then install it (humao.rest-client) 
+
+### Java
+
+* Download [Java](https://www.java.com/de/download/help/download_options.xml)
+
+### GitHub Desktop (optional)
+
+* Download [GitHub Desktop](https://desktop.github.com/)
+
 
 ## Development
 
-Clone this project https://github.com/ahdis/cda-fhir-maps/.
+Clone this project https://github.com/ahdis/cda-fhir-maps/
+   * Option 1: GitHub Desktop
+   * Option 2: VSC Terminal:   
+    `git clone https://github.com/ahdis/cda-fhir-maps.git`
 
-Open it with VSCode (RESTClient extension needs to be installed).
+Open it with Visual Studio Code (REST Client extension is needed).
 
 Download matchbox-0.4.0-SNAPSHOT.jar from https://github.com/ahdis/matchbox/releases/tag/0.4.0 into the main directory of the project cda-fhir-maps.
 
@@ -36,16 +102,16 @@ java -jar matchbox-0.4.0-SNAPSHOT.jar
 ```
 
 ## Transform documents between CDA and FHIR and back
-Open **cdatofhir.http** and **fhirtocda.http** from the main directory with VSCode. 
+* Open **cdatofhir.http** or **fhirtocda.http** from the main directory with Visual Studio Code. 
 * Choose @host = http://localhost:8080/r4  
 * Add the maps to matchbox (Step 1 to 3).
 * Transform your document (Examples shown in Step 5).
 
-
 ## Transform eMedication documents between CDA and FHIR and back
-For eMedication documents you need an additional map, which is added to the matchbox in Step 4 (do Step 1-4).
-For the transformation of the required document type open following (Examples shown in Step 5):
-
-* Medication Card document: cdatofhir_card.http, fhirtocda_card.http
-* Medication Dispense document: cdatofhir_dispense.http, fhirtocda_dispense.http
-* Medication Prescription document: cdatofhir_prescription.http, fhirtocda_prescription.http
+* Open following files, depending on the requiered exchange format, from the main directory with Visual Studio Code:
+   * Medication Card document: cdatofhir_card.http, fhirtocda_card.http
+   * Medication Dispense document: cdatofhir_dispense.http, fhirtocda_dispense.http
+   * Medication Prescription document: cdatofhir_prescription.http, fhirtocda_prescription.http
+* Choose @host = http://localhost:8080/r4  
+* Add the maps to matchbox. For **eMedication documents** you need an additional map, which is added to the matchbox in Step 4 (do Step 1-4).
+* Transform your document of the choosen exchange format (Examples shown in Step 5).
