@@ -2,14 +2,13 @@
 
 <ImplementationGuide xmlns="http://hl7.org/fhir">
   <id value="ch.fhir.ig.cda-fhir-maps"/>
-  <url value="http://fhir.ch/ig/cda-fhir-maps/ImplementationGuide/ch.fhir.ig.cda-fhir-maps"/>
   <text>
     <status value="additional"/>
     <div xmlns="http://www.w3.org/1999/xhtml">
       Implementation Guide for CDA-FHIR-Maps
     </div>
   </text>
-  <url value="http://ahdis.ch/ig/cda-fhir-maps/ImplementationGuide/ch.fhir.ig.cda-fhir-maps"/>
+  <url value="http://fhir.ch/ig/cda-fhir-maps/ImplementationGuide/ch.fhir.ig.cda-fhir-maps"/>
   <version value="0.1."/>
   <name value="CDA_FHIR_MAPS"/>
   <title value="CDA-FHIR-Maps (R4)"/>

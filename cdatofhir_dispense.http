@@ -38,7 +38,7 @@ Content-Type: text/fhir-mapping
 
 
 ### 5a. Transform Medication Dispense document (1-2-MedicationDispense.xml) from CDA to FHIR
-POST {{host}}/StructureMap/$transform?source=http://ahdis.ch/ig/cda-fhir-maps/StructureMap/CdaChEmedMedicationDispenseDocumentToBundle
+POST {{host}}/StructureMap/$transform?source=http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaChEmedMedicationDispenseDocumentToBundle
 Accept: application/fhir+xml;fhirVersion=4.0
 Content-Type: application/fhir+xml;fhirVersion=4.0
 
@@ -46,7 +46,7 @@ Content-Type: application/fhir+xml;fhirVersion=4.0
 
 
 ### 5b. Transform Medication Dispense document (2-4-MedicationDispense.xml) from CDA to FHIR
-POST {{host}}/StructureMap/$transform?source=http://ahdis.ch/ig/cda-fhir-maps/StructureMap/CdaChEmedMedicationDispenseDocumentToBundle
+POST {{host}}/StructureMap/$transform?source=http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaChEmedMedicationDispenseDocumentToBundle
 Accept: application/fhir+xml;fhirVersion=4.0
 Content-Type: application/fhir+xml;fhirVersion=4.0
 

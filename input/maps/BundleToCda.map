@@ -1,4 +1,4 @@
-map "http://ahdis.ch/ig/cda-fhir-maps/StructureMap/BundleToCda" = "FHIR Bundle to CDA"
+map "http://fhir.ch/ig/cda-fhir-maps/StructureMap/BundleToCda" = "FHIR Bundle to CDA"
 
 //
 // CDA document
@@ -23,7 +23,7 @@ uses "http://hl7.org/fhir/StructureDefinition/Patient" alias Patient as source
 uses "http://hl7.org/fhir/StructureDefinition/Organization" alias Organization as source
 uses "http://hl7.org/fhir/StructureDefinition/Section" alias Section as source
 
-imports "http://ahdis.ch/ig/cda-fhir-maps/StructureMap/FhirToCdaTypes"
+imports "http://fhir.ch/ig/cda-fhir-maps/StructureMap/FhirToCdaTypes"
 
 
 // _________________________ Document Level Template  _________________________ 

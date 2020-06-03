@@ -1,4 +1,4 @@
-map "http://ahdis.ch/ig/cda-fhir-maps/StructureMap/FhirToCdaTypes" = "Transform for FHIR types to CDA types"
+map "http://fhir.ch/ig/cda-fhir-maps/StructureMap/FhirToCdaTypes" = "Transform for FHIR types to CDA types"
 
 
 // Adapted from https://github.com/HL7/ccda-to-fhir/tree/master/mappings

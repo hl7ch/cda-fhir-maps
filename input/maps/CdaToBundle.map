@@ -1,4 +1,4 @@
-map "http://ahdis.ch/ig/cda-fhir-maps/StructureMap/CdaToBundle" = "CDA Document to FHIR"
+map "http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaToBundle" = "CDA Document to FHIR"
 
 //
 // CDA document
@@ -28,7 +28,7 @@ uses "http://hl7.org/fhir/StructureDefinition/Person" alias Patient as produced
 uses "http://hl7.org/fhir/StructureDefinition/Practitioner" alias Practitioner as produced
 uses "http://hl7.org/fhir/StructureDefinition/Organization" alias Organization as produced
 
-imports "http://ahdis.ch/ig/cda-fhir-maps/StructureMap/CdaToFhirTypes"
+imports "http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaToFhirTypes"
 
 
 // _________________________ Document Level Template  _________________________ 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <StructureDefinition xmlns="http://hl7.org/fhir">
     <id value="cda-fhir-maps-patient"/>
-    <url value="http://ahdis.ch/ig/cda-fhir-maps/StructureDefinition/cda-fhir-maps-patient"/>
+    <url value="http://fhir.ch/ig/cda-fhir-maps/StructureDefinition/cda-fhir-maps-patient"/>
     <version value="0.1.0"/>
     <name value="PatientExample"/>
     <title value="Patient Example Profile"/>

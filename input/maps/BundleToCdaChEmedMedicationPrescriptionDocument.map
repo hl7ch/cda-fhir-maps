@@ -1,4 +1,4 @@
-map "http://ahdis.ch/ig/cda-fhir-maps/StructureMap/BundleToCdaChEmedMedicationPrescriptionDocument" = "FHIR Bundle to CDA-CH-EMED Medication Prescription document"
+map "http://fhir.ch/ig/cda-fhir-maps/StructureMap/BundleToCdaChEmedMedicationPrescriptionDocument" = "FHIR Bundle to CDA-CH-EMED Medication Prescription document"
 
 
 // Medication Prescription document, 2.16.756.5.30.1.1.10.1.4
@@ -30,9 +30,9 @@ uses "http://hl7.org/fhir/StructureDefinition/MedicationRequest" alias Medicatio
 uses "http://hl7.org/fhir/StructureDefinition/Dosage" alias Dosage as source
 
 
-imports "http://ahdis.ch/ig/cda-fhir-maps/StructureMap/FhirToCdaTypes"
-imports "http://ahdis.ch/ig/cda-fhir-maps/StructureMap/BundleToCda"
-imports "http://ahdis.ch/ig/cda-fhir-maps/StructureMap/BundleToCdaCh"
+imports "http://fhir.ch/ig/cda-fhir-maps/StructureMap/FhirToCdaTypes"
+imports "http://fhir.ch/ig/cda-fhir-maps/StructureMap/BundleToCda"
+imports "http://fhir.ch/ig/cda-fhir-maps/StructureMap/BundleToCdaCh"
 
 // _________________________ Document Level Template  _________________________ 
 

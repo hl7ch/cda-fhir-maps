@@ -1,4 +1,4 @@
-map "http://ahdis.ch/ig/cda-fhir-maps/StructureMap/BundleToCdaCh" = "FHIR Bundle to CDA-CH"
+map "http://fhir.ch/ig/cda-fhir-maps/StructureMap/BundleToCdaCh" = "FHIR Bundle to CDA-CH"
 
 //
 // CDA-CH document, 2.16.756.5.30.1.1.10.1.14
@@ -17,8 +17,8 @@ uses "http://hl7.org/fhir/StructureDefinition/Bundle" alias Bundle as source
 uses "http://hl7.org/fhir/StructureDefinition/Composition" alias Composition as source
 uses "http://hl7.org/fhir/StructureDefinition/Person" alias Person as source
 
-imports "http://ahdis.ch/ig/cda-fhir-maps/StructureMap/FhirToCdaTypes"
-imports "http://ahdis.ch/ig/cda-fhir-maps/StructureMap/BundleToCda"
+imports "http://fhir.ch/ig/cda-fhir-maps/StructureMap/FhirToCdaTypes"
+imports "http://fhir.ch/ig/cda-fhir-maps/StructureMap/BundleToCda"
 
 
 // _________________________ Document Level Template  _________________________ 
