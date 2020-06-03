@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <ImplementationGuide xmlns="http://hl7.org/fhir">
-  <id value="ch.ahdis.ig.cda-fhir-maps"/>
+  <id value="ch.fhir.ig.cda-fhir-maps"/>
+  <url value="http://fhir.ch/ig/cda-fhir-maps/ImplementationGuide/ch.fhir.ig.cda-fhir-maps"/>
   <text>
     <status value="additional"/>
     <div xmlns="http://www.w3.org/1999/xhtml">
-      ImplementationGuide for CDA-FHIR-Maps
+      Implementation Guide for CDA-FHIR-Maps
     </div>
   </text>
-  <url value="http://ahdis.ch/ig/cda-fhir-maps/ImplementationGuide/ch.ahdis.ig.cda-fhir-maps"/>
-  <version value="0.0.1"/>
+  <url value="http://ahdis.ch/ig/cda-fhir-maps/ImplementationGuide/ch.fhir.ig.cda-fhir-maps"/>
+  <version value="0.1."/>
   <name value="CDA_FHIR_MAPS"/>
-  <title value="CDA-FHIR-MAPS"/>
+  <title value="CDA-FHIR-Maps (R4)"/>
   <status value="active"/>
   <experimental value="false"/>
   <date value="2020-01-16"/>
@@ -24,7 +25,7 @@
     </telecom>
   </contact>
   <copyright value="CC-BY-SA-4.0"/>
-  <packageId value="ch.ahdis.ig.cda-fhir-maps"/>
+  <packageId value="ch.fhir.ig.cda-fhir-maps"/>
   <license value="CC-BY-SA-4.0"/>
   <fhirVersion value="4.0.1"/>
   <definition>
@@ -36,7 +37,7 @@
       <exampleBoolean value="false"/>
     </resource>
 
-    <!-- pages, parameters -->
+    <!-- pages -->
     <page>
       <nameUrl value="toc.html"/>
       <title value="Table of Contents"/>
@@ -47,9 +48,12 @@
         <generation value="markdown"/>
       </page>
     </page>
+
+    <!-- parameters -->
     <parameter>
       <code value="releaselabel"/>
       <value value="CI build"/>
+      <!--<value value="Draft Standard for Trial Use"/>-->
     </parameter>
     <parameter>
       <code value="path-pages" />
