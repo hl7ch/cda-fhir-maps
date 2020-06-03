@@ -47,6 +47,11 @@
         <title value="Home"/>
         <generation value="markdown"/>
       </page>
+      <page>
+        <nameUrl value="maps.html"/>
+        <title value="Maps"/>
+        <generation value="markdown"/>
+      </page>
     </page>
 
     <!-- parameters -->
