@@ -1,0 +1,2661 @@
+<StructureMap xmlns="http://hl7.org/fhir">
+   <id value="CdaToBundle"></id>
+   <url value="http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaToBundle"></url>
+   <name value="CdaDocumentToFhirBundle"></name>
+   <structure>
+      <url value="http://hl7.org/fhir/cda/StructureDefinition/ClinicalDocument"></url>
+      <mode value="source"></mode>
+      <alias value="ClinicalDocument"></alias>
+   </structure>
+   <structure>
+      <url value="http://hl7.org/fhir/cda/StructureDefinition/AssignedAuthor"></url>
+      <mode value="queried"></mode>
+      <alias value="AssignedAuthor"></alias>
+   </structure>
+   <structure>
+      <url value="http://hl7.org/fhir/cda/StructureDefinition/AssignedEntity"></url>
+      <mode value="queried"></mode>
+      <alias value="AssignedEntity"></alias>
+   </structure>
+   <structure>
+      <url value="http://hl7.org/fhir/cda/StructureDefinition/CustodianOrganization"></url>
+      <mode value="queried"></mode>
+      <alias value="CustodianOrganization"></alias>
+   </structure>
+   <structure>
+      <url value="http://hl7.org/fhir/cda/StructureDefinition/Section"></url>
+      <mode value="queried"></mode>
+      <alias value="Section"></alias>
+   </structure>
+   <structure>
+      <url value="http://hl7.org/fhir/cda/StructureDefinition/PatientRole"></url>
+      <mode value="queried"></mode>
+      <alias value="PatientRole"></alias>
+   </structure>
+   <structure>
+      <url value="http://hl7.org/fhir/StructureDefinition/Bundle"></url>
+      <mode value="target"></mode>
+      <alias value="Bundle"></alias>
+   </structure>
+   <structure>
+      <url value="http://hl7.org/fhir/StructureDefinition/Composition"></url>
+      <mode value="produced"></mode>
+      <alias value="Composition"></alias>
+   </structure>
+   <structure>
+      <url value="http://hl7.org/fhir/StructureDefinition/Patient"></url>
+      <mode value="produced"></mode>
+      <alias value="Patient"></alias>
+   </structure>
+   <structure>
+      <url value="http://hl7.org/fhir/StructureDefinition/Person"></url>
+      <mode value="produced"></mode>
+      <alias value="Patient"></alias>
+   </structure>
+   <structure>
+      <url value="http://hl7.org/fhir/StructureDefinition/Practitioner"></url>
+      <mode value="produced"></mode>
+      <alias value="Practitioner"></alias>
+   </structure>
+   <structure>
+      <url value="http://hl7.org/fhir/StructureDefinition/Organization"></url>
+      <mode value="produced"></mode>
+      <alias value="Organization"></alias>
+   </structure>
+   <import value="http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaToFhirTypes"></import>
+   <group>
+      <name value="CdaToBundle"></name>
+      <typeMode value="none"></typeMode>
+      <input>
+         <name value="cda"></name>
+         <type value="ClinicalDocument"></type>
+         <mode value="source"></mode>
+      </input>
+      <input>
+         <name value="bundle"></name>
+         <type value="Bundle"></type>
+         <mode value="target"></mode>
+      </input>
+      <rule>
+         <name value="ClinicalDocumentToBody"></name>
+         <source>
+            <context value="cda"></context>
+         </source>
+         <target>
+            <context value="bundle"></context>
+            <contextType value="variable"></contextType>
+            <element value="entry"></element>
+            <variable value="e"></variable>
+            <listMode value="share"></listMode>
+            <listRuleId value="e"></listRuleId>
+         </target>
+         <target>
+            <context value="e"></context>
+            <contextType value="variable"></contextType>
+            <element value="resource"></element>
+            <variable value="composition"></variable>
+            <listMode value="share"></listMode>
+            <listRuleId value="composition"></listRuleId>
+            <transform value="create"></transform>
+            <parameter>
+               <valueString value="Composition"></valueString>
+            </parameter>
+         </target>
+         <target>
+            <context value="composition"></context>
+            <contextType value="variable"></contextType>
+            <element value="id"></element>
+            <variable value="uuid"></variable>
+            <transform value="uuid"></transform>
+         </target>
+         <target>
+            <context value="e"></context>
+            <contextType value="variable"></contextType>
+            <element value="fullUrl"></element>
+            <transform value="append"></transform>
+            <parameter>
+               <valueString value="urn:uuid:"></valueString>
+            </parameter>
+            <parameter>
+               <valueId value="uuid"></valueId>
+            </parameter>
+         </target>
+         <target>
+            <context value="bundle"></context>
+            <contextType value="variable"></contextType>
+            <element value="entry"></element>
+            <variable value="e2"></variable>
+         </target>
+         <target>
+            <context value="e2"></context>
+            <contextType value="variable"></contextType>
+            <element value="resource"></element>
+            <variable value="patient"></variable>
+            <listMode value="share"></listMode>
+            <listRuleId value="patient"></listRuleId>
+            <transform value="create"></transform>
+            <parameter>
+               <valueString value="Patient"></valueString>
+            </parameter>
+         </target>
+         <target>
+            <context value="patient"></context>
+            <contextType value="variable"></contextType>
+            <element value="id"></element>
+            <variable value="uuid2"></variable>
+            <transform value="uuid"></transform>
+         </target>
+         <target>
+            <context value="e2"></context>
+            <contextType value="variable"></contextType>
+            <element value="fullUrl"></element>
+            <transform value="append"></transform>
+            <parameter>
+               <valueString value="urn:uuid:"></valueString>
+            </parameter>
+            <parameter>
+               <valueId value="uuid2"></valueId>
+            </parameter>
+         </target>
+         <rule>
+            <name value="cdatobundle"></name>
+            <source>
+               <context value="cda"></context>
+            </source>
+            <dependent>
+               <name value="ClinicalDocumentToBundle"></name>
+               <variable value="cda"></variable>
+               <variable value="patient"></variable>
+               <variable value="composition"></variable>
+               <variable value="bundle"></variable>
+            </dependent>
+         </rule>
+      </rule>
+   </group>
+   <group>
+      <name value="ClinicalDocumentToBundle"></name>
+      <typeMode value="none"></typeMode>
+      <input>
+         <name value="cda"></name>
+         <type value="ClinicalDocument"></type>
+         <mode value="source"></mode>
+      </input>
+      <input>
+         <name value="patient"></name>
+         <type value="Patient"></type>
+         <mode value="target"></mode>
+      </input>
+      <input>
+         <name value="composition"></name>
+         <type value="Composition"></type>
+         <mode value="target"></mode>
+      </input>
+      <input>
+         <name value="bundle"></name>
+         <type value="Bundle"></type>
+         <mode value="target"></mode>
+      </input>
+      <rule>
+         <name value="id"></name>
+         <source>
+            <context value="cda"></context>
+         </source>
+         <target>
+            <context value="bundle"></context>
+            <contextType value="variable"></contextType>
+            <element value="id"></element>
+            <transform value="uuid"></transform>
+         </target>
+      </rule>
+      <rule>
+         <name value="id"></name>
+         <source>
+            <context value="cda"></context>
+            <element value="id"></element>
+            <variable value="vvv"></variable>
+         </source>
+         <target>
+            <context value="bundle"></context>
+            <contextType value="variable"></contextType>
+            <element value="identifier"></element>
+            <variable value="vvv"></variable>
+            <transform value="create"></transform>
+         </target>
+      </rule>
+      <rule>
+         <name value="type"></name>
+         <source>
+            <context value="cda"></context>
+         </source>
+         <target>
+            <context value="bundle"></context>
+            <contextType value="variable"></contextType>
+            <element value="type"></element>
+            <transform value="copy"></transform>
+            <parameter>
+               <valueString value="document"></valueString>
+            </parameter>
+         </target>
+      </rule>
+      <rule>
+         <name value="effectiveTime"></name>
+         <source>
+            <context value="cda"></context>
+            <element value="effectiveTime"></element>
+            <variable value="vvv"></variable>
+         </source>
+         <target>
+            <context value="bundle"></context>
+            <contextType value="variable"></contextType>
+            <element value="timestamp"></element>
+            <variable value="vvv"></variable>
+            <transform value="create"></transform>
+         </target>
+      </rule>
+      <rule>
+         <name value="composition"></name>
+         <source>
+            <context value="cda"></context>
+         </source>
+         <dependent>
+            <name value="ClinicalDocumentComposition"></name>
+            <variable value="cda"></variable>
+            <variable value="composition"></variable>
+            <variable value="patient"></variable>
+            <variable value="bundle"></variable>
+         </dependent>
+      </rule>
+      <rule>
+         <name value="component"></name>
+         <source>
+            <context value="cda"></context>
+            <element value="component"></element>
+            <variable value="component"></variable>
+         </source>
+         <rule>
+            <name value="body"></name>
+            <source>
+               <context value="component"></context>
+               <element value="structuredBody"></element>
+               <variable value="body"></variable>
+            </source>
+            <rule>
+               <name value="component"></name>
+               <source>
+                  <context value="body"></context>
+                  <element value="component"></element>
+                  <variable value="component"></variable>
+                  <logMessage value="'component'"></logMessage>
+               </source>
+               <rule>
+                  <name value="section"></name>
+                  <source>
+                     <context value="component"></context>
+                     <element value="section"></element>
+                     <variable value="srcSection"></variable>
+                     <condition value="$this.code.empty()"></condition>
+                  </source>
+                  <target>
+                     <context value="composition"></context>
+                     <contextType value="variable"></contextType>
+                     <element value="section"></element>
+                     <variable value="tgtSection"></variable>
+                  </target>
+                  <dependent>
+                     <name value="ClinicalDocumentSection"></name>
+                     <variable value="srcSection"></variable>
+                     <variable value="patient"></variable>
+                     <variable value="tgtSection"></variable>
+                     <variable value="bundle"></variable>
+                  </dependent>
+               </rule>
+            </rule>
+         </rule>
+      </rule>
+   </group>
+   <group>
+      <name value="ClinicalDocumentSection"></name>
+      <typeMode value="none"></typeMode>
+      <input>
+         <name value="source"></name>
+         <type value="Section"></type>
+         <mode value="source"></mode>
+      </input>
+      <input>
+         <name value="patient"></name>
+         <type value="Patient"></type>
+         <mode value="source"></mode>
+      </input>
+      <input>
+         <name value="target"></name>
+         <mode value="target"></mode>
+      </input>
+      <input>
+         <name value="bundle"></name>
+         <type value="Bundle"></type>
+         <mode value="target"></mode>
+      </input>
+      <rule>
+         <name value="section id"></name>
+         <source>
+            <context value="source"></context>
+            <element value="id"></element>
+            <variable value="id"></variable>
+         </source>
+         <target>
+            <context value="target"></context>
+            <contextType value="variable"></contextType>
+            <element value="extension"></element>
+            <variable value="ext"></variable>
+         </target>
+         <dependent>
+            <name value="ChExtEprSectionId"></name>
+            <variable value="id"></variable>
+            <variable value="ext"></variable>
+         </dependent>
+      </rule>
+      <rule>
+         <name value="title"></name>
+         <source>
+            <context value="source"></context>
+            <element value="title"></element>
+            <variable value="t"></variable>
+         </source>
+         <target>
+            <context value="target"></context>
+            <contextType value="variable"></contextType>
+            <element value="title"></element>
+            <transform value="evaluate"></transform>
+            <parameter>
+               <valueString value="t.dataString"></valueString>
+            </parameter>
+         </target>
+      </rule>
+      <rule>
+         <name value="code"></name>
+         <source>
+            <context value="source"></context>
+            <element value="code"></element>
+            <variable value="vvv"></variable>
+         </source>
+         <target>
+            <context value="target"></context>
+            <contextType value="variable"></contextType>
+            <element value="code"></element>
+            <variable value="vvv"></variable>
+            <transform value="create"></transform>
+         </target>
+      </rule>
+      <rule>
+         <name value="text"></name>
+         <source>
+            <context value="source"></context>
+            <element value="text"></element>
+            <variable value="cdaText"></variable>
+         </source>
+         <target>
+            <context value="target"></context>
+            <contextType value="variable"></contextType>
+            <element value="text"></element>
+            <variable value="fhirText"></variable>
+         </target>
+         <rule>
+            <name value="narrativestatus"></name>
+            <source>
+               <context value="cdaText"></context>
+            </source>
+            <target>
+               <context value="fhirText"></context>
+               <contextType value="variable"></contextType>
+               <element value="status"></element>
+               <transform value="copy"></transform>
+               <parameter>
+                  <valueString value="generated"></valueString>
+               </parameter>
+            </target>
+         </rule>
+         <rule>
+            <name value="narrativeText"></name>
+            <source>
+               <context value="cdaText"></context>
+               <variable value="t"></variable>
+            </source>
+            <target>
+               <context value="fhirText"></context>
+               <contextType value="variable"></contextType>
+               <element value="div"></element>
+               <transform value="copy"></transform>
+               <parameter>
+                  <valueId value="t"></valueId>
+               </parameter>
+            </target>
+         </rule>
+      </rule>
+      <rule>
+         <name value="section"></name>
+         <source>
+            <context value="source"></context>
+            <element value="section"></element>
+            <variable value="srcSection"></variable>
+         </source>
+         <target>
+            <context value="target"></context>
+            <contextType value="variable"></contextType>
+            <element value="section"></element>
+            <variable value="tgtSection"></variable>
+         </target>
+         <dependent>
+            <name value="ClinicalDocumentSection"></name>
+            <variable value="srcSection"></variable>
+            <variable value="patient"></variable>
+            <variable value="tgtSection"></variable>
+            <variable value="bundle"></variable>
+         </dependent>
+      </rule>
+   </group>
+   <group>
+      <name value="ClinicalDocumentComposition"></name>
+      <typeMode value="none"></typeMode>
+      <input>
+         <name value="source"></name>
+         <type value="ClinicalDocument"></type>
+         <mode value="source"></mode>
+      </input>
+      <input>
+         <name value="target"></name>
+         <type value="Composition"></type>
+         <mode value="target"></mode>
+      </input>
+      <input>
+         <name value="patientResource"></name>
+         <type value="Patient"></type>
+         <mode value="target"></mode>
+      </input>
+      <input>
+         <name value="bundle"></name>
+         <type value="Bundle"></type>
+         <mode value="target"></mode>
+      </input>
+      <rule>
+         <name value="languageCode"></name>
+         <source>
+            <context value="source"></context>
+            <element value="languageCode"></element>
+            <variable value="vvv"></variable>
+         </source>
+         <target>
+            <context value="target"></context>
+            <contextType value="variable"></contextType>
+            <element value="language"></element>
+            <variable value="vvv"></variable>
+            <transform value="create"></transform>
+         </target>
+      </rule>
+      <rule>
+         <name value="setID"></name>
+         <source>
+            <context value="source"></context>
+            <element value="setId"></element>
+            <variable value="vvv"></variable>
+         </source>
+         <target>
+            <context value="target"></context>
+            <contextType value="variable"></contextType>
+            <element value="identifier"></element>
+            <variable value="vvv"></variable>
+            <transform value="create"></transform>
+         </target>
+      </rule>
+      <rule>
+         <name value="status"></name>
+         <source>
+            <context value="source"></context>
+         </source>
+         <target>
+            <context value="target"></context>
+            <contextType value="variable"></contextType>
+            <element value="status"></element>
+            <transform value="copy"></transform>
+            <parameter>
+               <valueString value="final"></valueString>
+            </parameter>
+         </target>
+      </rule>
+      <rule>
+         <name value="code"></name>
+         <source>
+            <context value="source"></context>
+            <element value="code"></element>
+            <variable value="vvv"></variable>
+         </source>
+         <target>
+            <context value="target"></context>
+            <contextType value="variable"></contextType>
+            <element value="type"></element>
+            <variable value="vvv"></variable>
+            <transform value="create"></transform>
+         </target>
+      </rule>
+      <rule>
+         <name value="title"></name>
+         <source>
+            <context value="source"></context>
+            <element value="title"></element>
+            <variable value="t"></variable>
+         </source>
+         <target>
+            <context value="target"></context>
+            <contextType value="variable"></contextType>
+            <element value="title"></element>
+            <transform value="evaluate"></transform>
+            <parameter>
+               <valueString value="t.dataString"></valueString>
+            </parameter>
+         </target>
+      </rule>
+      <rule>
+         <name value="recordTarget"></name>
+         <source>
+            <context value="source"></context>
+            <element value="recordTarget"></element>
+            <variable value="recordTarget"></variable>
+         </source>
+         <rule>
+            <name value="subject"></name>
+            <source>
+               <context value="recordTarget"></context>
+               <element value="patientRole"></element>
+               <variable value="patient"></variable>
+            </source>
+            <target>
+               <context value="target"></context>
+               <contextType value="variable"></contextType>
+               <element value="subject"></element>
+               <variable value="reference"></variable>
+               <transform value="create"></transform>
+               <parameter>
+                  <valueString value="Reference"></valueString>
+               </parameter>
+            </target>
+            <target>
+               <context value="reference"></context>
+               <contextType value="variable"></contextType>
+               <element value="reference"></element>
+               <transform value="reference"></transform>
+               <parameter>
+                  <valueId value="patientResource"></valueId>
+               </parameter>
+            </target>
+            <dependent>
+               <name value="ClinicalDocumentPatientRole"></name>
+               <variable value="patient"></variable>
+               <variable value="patientResource"></variable>
+               <variable value="bundle"></variable>
+            </dependent>
+         </rule>
+      </rule>
+      <rule>
+         <name value="encompassingEncounter"></name>
+         <source>
+            <context value="source"></context>
+            <element value="componentOf"></element>
+            <variable value="comp"></variable>
+         </source>
+         <target>
+            <context value="bundle"></context>
+            <contextType value="variable"></contextType>
+            <element value="entry"></element>
+            <variable value="e"></variable>
+         </target>
+         <target>
+            <context value="e"></context>
+            <contextType value="variable"></contextType>
+            <element value="resource"></element>
+            <variable value="encounter"></variable>
+            <transform value="create"></transform>
+            <parameter>
+               <valueString value="Encounter"></valueString>
+            </parameter>
+         </target>
+         <target>
+            <context value="encounter"></context>
+            <contextType value="variable"></contextType>
+            <element value="id"></element>
+            <variable value="uuid"></variable>
+            <transform value="uuid"></transform>
+         </target>
+         <target>
+            <context value="e"></context>
+            <contextType value="variable"></contextType>
+            <element value="fullUrl"></element>
+            <transform value="append"></transform>
+            <parameter>
+               <valueString value="urn:uuid:"></valueString>
+            </parameter>
+            <parameter>
+               <valueId value="uuid"></valueId>
+            </parameter>
+         </target>
+         <rule>
+            <name value="srcEncounter"></name>
+            <source>
+               <context value="comp"></context>
+               <element value="encompassingEncounter"></element>
+               <variable value="srcEnc"></variable>
+            </source>
+            <target>
+               <context value="target"></context>
+               <contextType value="variable"></contextType>
+               <element value="encounter"></element>
+               <variable value="reference"></variable>
+               <transform value="create"></transform>
+               <parameter>
+                  <valueString value="Reference"></valueString>
+               </parameter>
+            </target>
+            <target>
+               <context value="reference"></context>
+               <contextType value="variable"></contextType>
+               <element value="reference"></element>
+               <transform value="reference"></transform>
+               <parameter>
+                  <valueId value="encounter"></valueId>
+               </parameter>
+            </target>
+            <dependent>
+               <name value="ClinicalDocumentEncounter"></name>
+               <variable value="srcEnc"></variable>
+               <variable value="bundle"></variable>
+               <variable value="encounter"></variable>
+            </dependent>
+         </rule>
+      </rule>
+      <rule>
+         <name value="effectiveTime"></name>
+         <source>
+            <context value="source"></context>
+            <element value="effectiveTime"></element>
+            <variable value="vvv"></variable>
+         </source>
+         <target>
+            <context value="target"></context>
+            <contextType value="variable"></contextType>
+            <element value="date"></element>
+            <variable value="vvv"></variable>
+            <transform value="create"></transform>
+         </target>
+      </rule>
+      <rule>
+         <name value="author"></name>
+         <source>
+            <context value="source"></context>
+            <element value="author"></element>
+            <variable value="srcAuthor"></variable>
+         </source>
+         <target>
+            <context value="bundle"></context>
+            <contextType value="variable"></contextType>
+            <element value="entry"></element>
+            <variable value="e"></variable>
+         </target>
+         <target>
+            <context value="e"></context>
+            <contextType value="variable"></contextType>
+            <element value="resource"></element>
+            <variable value="practitioner"></variable>
+            <transform value="create"></transform>
+            <parameter>
+               <valueString value="Practitioner"></valueString>
+            </parameter>
+         </target>
+         <target>
+            <context value="practitioner"></context>
+            <contextType value="variable"></contextType>
+            <element value="id"></element>
+            <variable value="uuid2"></variable>
+            <transform value="uuid"></transform>
+         </target>
+         <target>
+            <context value="e"></context>
+            <contextType value="variable"></contextType>
+            <element value="fullUrl"></element>
+            <transform value="append"></transform>
+            <parameter>
+               <valueString value="urn:uuid:"></valueString>
+            </parameter>
+            <parameter>
+               <valueId value="uuid2"></valueId>
+            </parameter>
+         </target>
+         <target>
+            <context value="target"></context>
+            <contextType value="variable"></contextType>
+            <element value="author"></element>
+            <variable value="reference"></variable>
+            <transform value="create"></transform>
+            <parameter>
+               <valueString value="Reference"></valueString>
+            </parameter>
+         </target>
+         <target>
+            <context value="reference"></context>
+            <contextType value="variable"></contextType>
+            <element value="reference"></element>
+            <transform value="reference"></transform>
+            <parameter>
+               <valueId value="practitioner"></valueId>
+            </parameter>
+         </target>
+         <rule>
+            <name value="time"></name>
+            <source>
+               <context value="srcAuthor"></context>
+               <element value="time"></element>
+               <variable value="time"></variable>
+            </source>
+            <target>
+               <context value="reference"></context>
+               <contextType value="variable"></contextType>
+               <element value="extension"></element>
+               <variable value="exttime"></variable>
+            </target>
+            <dependent>
+               <name value="ChExtEprTime"></name>
+               <variable value="time"></variable>
+               <variable value="exttime"></variable>
+            </dependent>
+         </rule>
+         <rule>
+            <name value="author"></name>
+            <source>
+               <context value="srcAuthor"></context>
+               <element value="assignedAuthor"></element>
+               <variable value="assignedAuthor"></variable>
+            </source>
+            <rule>
+               <name value="id"></name>
+               <source>
+                  <context value="assignedAuthor"></context>
+                  <element value="id"></element>
+                  <variable value="vvv"></variable>
+               </source>
+               <target>
+                  <context value="practitioner"></context>
+                  <contextType value="variable"></contextType>
+                  <element value="identifier"></element>
+                  <variable value="vvv"></variable>
+                  <transform value="create"></transform>
+               </target>
+            </rule>
+            <rule>
+               <name value="addr"></name>
+               <source>
+                  <context value="assignedAuthor"></context>
+                  <element value="addr"></element>
+                  <variable value="vvv"></variable>
+               </source>
+               <target>
+                  <context value="practitioner"></context>
+                  <contextType value="variable"></contextType>
+                  <element value="address"></element>
+                  <variable value="vvv"></variable>
+                  <transform value="create"></transform>
+               </target>
+            </rule>
+            <rule>
+               <name value="telecom"></name>
+               <source>
+                  <context value="assignedAuthor"></context>
+                  <element value="telecom"></element>
+                  <variable value="vvv"></variable>
+               </source>
+               <target>
+                  <context value="practitioner"></context>
+                  <contextType value="variable"></contextType>
+                  <element value="telecom"></element>
+                  <variable value="vvv"></variable>
+                  <transform value="create"></transform>
+               </target>
+            </rule>
+            <rule>
+               <name value="assignedPerson"></name>
+               <source>
+                  <context value="assignedAuthor"></context>
+                  <element value="assignedPerson"></element>
+                  <variable value="person"></variable>
+               </source>
+               <rule>
+                  <name value="name"></name>
+                  <source>
+                     <context value="person"></context>
+                     <element value="name"></element>
+                     <variable value="vvv"></variable>
+                  </source>
+                  <target>
+                     <context value="practitioner"></context>
+                     <contextType value="variable"></contextType>
+                     <element value="name"></element>
+                     <variable value="vvv"></variable>
+                     <transform value="create"></transform>
+                  </target>
+               </rule>
+            </rule>
+            <rule>
+               <name value="representedOrganization"></name>
+               <source>
+                  <context value="assignedAuthor"></context>
+                  <element value="representedOrganization"></element>
+                  <variable value="srcOrg"></variable>
+               </source>
+               <target>
+                  <context value="bundle"></context>
+                  <contextType value="variable"></contextType>
+                  <element value="entry"></element>
+                  <variable value="e2"></variable>
+               </target>
+               <target>
+                  <context value="e2"></context>
+                  <contextType value="variable"></contextType>
+                  <element value="resource"></element>
+                  <variable value="organization"></variable>
+                  <transform value="create"></transform>
+                  <parameter>
+                     <valueString value="Organization"></valueString>
+                  </parameter>
+               </target>
+               <target>
+                  <context value="organization"></context>
+                  <contextType value="variable"></contextType>
+                  <element value="id"></element>
+                  <variable value="uuid3"></variable>
+                  <transform value="uuid"></transform>
+               </target>
+               <target>
+                  <context value="e2"></context>
+                  <contextType value="variable"></contextType>
+                  <element value="fullUrl"></element>
+                  <transform value="append"></transform>
+                  <parameter>
+                     <valueString value="urn:uuid:"></valueString>
+                  </parameter>
+                  <parameter>
+                     <valueId value="uuid3"></valueId>
+                  </parameter>
+               </target>
+               <target>
+                  <context value="target"></context>
+                  <contextType value="variable"></contextType>
+                  <element value="author"></element>
+                  <variable value="reference2"></variable>
+                  <transform value="create"></transform>
+                  <parameter>
+                     <valueString value="Reference"></valueString>
+                  </parameter>
+               </target>
+               <target>
+                  <context value="reference2"></context>
+                  <contextType value="variable"></contextType>
+                  <element value="reference"></element>
+                  <transform value="reference"></transform>
+                  <parameter>
+                     <valueId value="organization"></valueId>
+                  </parameter>
+               </target>
+               <dependent>
+                  <name value="ClinicalDocumentOrganization"></name>
+                  <variable value="srcOrg"></variable>
+                  <variable value="organization"></variable>
+               </dependent>
+            </rule>
+         </rule>
+      </rule>
+      <rule>
+         <name value="confidentialityCode"></name>
+         <source>
+            <context value="source"></context>
+            <element value="confidentialityCode"></element>
+            <variable value="vvv"></variable>
+         </source>
+         <target>
+            <context value="target"></context>
+            <contextType value="variable"></contextType>
+            <element value="confidentiality"></element>
+            <variable value="vvv"></variable>
+            <listMode value="share"></listMode>
+            <listRuleId value="confidentialityCode"></listRuleId>
+            <transform value="create"></transform>
+         </target>
+      </rule>
+      <rule>
+         <name value="legalAuthenticator"></name>
+         <source>
+            <context value="source"></context>
+            <element value="legalAuthenticator"></element>
+            <variable value="legalAuth"></variable>
+         </source>
+         <target>
+            <context value="bundle"></context>
+            <contextType value="variable"></contextType>
+            <element value="entry"></element>
+            <variable value="e"></variable>
+         </target>
+         <target>
+            <context value="e"></context>
+            <contextType value="variable"></contextType>
+            <element value="resource"></element>
+            <variable value="practitioner"></variable>
+            <transform value="create"></transform>
+            <parameter>
+               <valueString value="Practitioner"></valueString>
+            </parameter>
+         </target>
+         <target>
+            <context value="practitioner"></context>
+            <contextType value="variable"></contextType>
+            <element value="id"></element>
+            <variable value="uuid2"></variable>
+            <transform value="uuid"></transform>
+         </target>
+         <target>
+            <context value="e"></context>
+            <contextType value="variable"></contextType>
+            <element value="fullUrl"></element>
+            <transform value="append"></transform>
+            <parameter>
+               <valueString value="urn:uuid:"></valueString>
+            </parameter>
+            <parameter>
+               <valueId value="uuid2"></valueId>
+            </parameter>
+         </target>
+         <rule>
+            <name value="attester"></name>
+            <source>
+               <context value="legalAuth"></context>
+            </source>
+            <target>
+               <context value="target"></context>
+               <contextType value="variable"></contextType>
+               <element value="attester"></element>
+               <variable value="attester"></variable>
+            </target>
+            <rule>
+               <name value="mode"></name>
+               <source>
+                  <context value="legalAuth"></context>
+               </source>
+               <target>
+                  <context value="attester"></context>
+                  <contextType value="variable"></contextType>
+                  <element value="mode"></element>
+                  <transform value="copy"></transform>
+                  <parameter>
+                     <valueString value="legal"></valueString>
+                  </parameter>
+               </target>
+            </rule>
+            <rule>
+               <name value="time"></name>
+               <source>
+                  <context value="legalAuth"></context>
+                  <element value="time"></element>
+                  <variable value="vvv"></variable>
+               </source>
+               <target>
+                  <context value="attester"></context>
+                  <contextType value="variable"></contextType>
+                  <element value="time"></element>
+                  <variable value="vvv"></variable>
+                  <transform value="create"></transform>
+               </target>
+            </rule>
+            <rule>
+               <name value="entity"></name>
+               <source>
+                  <context value="legalAuth"></context>
+                  <element value="assignedEntity"></element>
+                  <variable value="entity"></variable>
+               </source>
+               <target>
+                  <context value="attester"></context>
+                  <contextType value="variable"></contextType>
+                  <element value="party"></element>
+                  <variable value="reference"></variable>
+                  <transform value="create"></transform>
+                  <parameter>
+                     <valueString value="Reference"></valueString>
+                  </parameter>
+               </target>
+               <target>
+                  <context value="reference"></context>
+                  <contextType value="variable"></contextType>
+                  <element value="reference"></element>
+                  <transform value="reference"></transform>
+                  <parameter>
+                     <valueId value="practitioner"></valueId>
+                  </parameter>
+               </target>
+               <dependent>
+                  <name value="ClinicalDocumentEntityPractitioner"></name>
+                  <variable value="entity"></variable>
+                  <variable value="practitioner"></variable>
+               </dependent>
+            </rule>
+         </rule>
+      </rule>
+      <rule>
+         <name value="authenticator"></name>
+         <source>
+            <context value="source"></context>
+            <element value="authenticator"></element>
+            <variable value="auth"></variable>
+         </source>
+         <target>
+            <context value="bundle"></context>
+            <contextType value="variable"></contextType>
+            <element value="entry"></element>
+            <variable value="e"></variable>
+         </target>
+         <target>
+            <context value="e"></context>
+            <contextType value="variable"></contextType>
+            <element value="resource"></element>
+            <variable value="practitioner"></variable>
+            <transform value="create"></transform>
+            <parameter>
+               <valueString value="Practitioner"></valueString>
+            </parameter>
+         </target>
+         <target>
+            <context value="practitioner"></context>
+            <contextType value="variable"></contextType>
+            <element value="id"></element>
+            <variable value="uuid2"></variable>
+            <transform value="uuid"></transform>
+         </target>
+         <target>
+            <context value="e"></context>
+            <contextType value="variable"></contextType>
+            <element value="fullUrl"></element>
+            <transform value="append"></transform>
+            <parameter>
+               <valueString value="urn:uuid:"></valueString>
+            </parameter>
+            <parameter>
+               <valueId value="uuid2"></valueId>
+            </parameter>
+         </target>
+         <rule>
+            <name value="attester"></name>
+            <source>
+               <context value="auth"></context>
+            </source>
+            <target>
+               <context value="target"></context>
+               <contextType value="variable"></contextType>
+               <element value="attester"></element>
+               <variable value="attester"></variable>
+            </target>
+            <rule>
+               <name value="mode"></name>
+               <source>
+                  <context value="auth"></context>
+               </source>
+               <target>
+                  <context value="attester"></context>
+                  <contextType value="variable"></contextType>
+                  <element value="mode"></element>
+                  <transform value="copy"></transform>
+                  <parameter>
+                     <valueString value="official"></valueString>
+                  </parameter>
+               </target>
+            </rule>
+            <rule>
+               <name value="time"></name>
+               <source>
+                  <context value="auth"></context>
+                  <element value="time"></element>
+                  <variable value="vvv"></variable>
+               </source>
+               <target>
+                  <context value="attester"></context>
+                  <contextType value="variable"></contextType>
+                  <element value="time"></element>
+                  <variable value="vvv"></variable>
+                  <transform value="create"></transform>
+               </target>
+            </rule>
+            <rule>
+               <name value="entity"></name>
+               <source>
+                  <context value="auth"></context>
+                  <element value="assignedEntity"></element>
+                  <variable value="entity"></variable>
+               </source>
+               <target>
+                  <context value="attester"></context>
+                  <contextType value="variable"></contextType>
+                  <element value="party"></element>
+                  <variable value="reference"></variable>
+                  <transform value="create"></transform>
+                  <parameter>
+                     <valueString value="Reference"></valueString>
+                  </parameter>
+               </target>
+               <target>
+                  <context value="reference"></context>
+                  <contextType value="variable"></contextType>
+                  <element value="reference"></element>
+                  <transform value="reference"></transform>
+                  <parameter>
+                     <valueId value="practitioner"></valueId>
+                  </parameter>
+               </target>
+               <dependent>
+                  <name value="ClinicalDocumentEntityPractitioner"></name>
+                  <variable value="entity"></variable>
+                  <variable value="practitioner"></variable>
+               </dependent>
+            </rule>
+         </rule>
+      </rule>
+      <rule>
+         <name value="custodian"></name>
+         <source>
+            <context value="source"></context>
+            <element value="custodian"></element>
+            <variable value="custodian"></variable>
+         </source>
+         <target>
+            <context value="bundle"></context>
+            <contextType value="variable"></contextType>
+            <element value="entry"></element>
+            <variable value="e"></variable>
+         </target>
+         <rule>
+            <name value="custodian"></name>
+            <source>
+               <context value="custodian"></context>
+               <element value="assignedCustodian"></element>
+               <variable value="assignedCustodian"></variable>
+            </source>
+            <target>
+               <context value="e"></context>
+               <contextType value="variable"></contextType>
+               <element value="resource"></element>
+               <variable value="organization"></variable>
+               <transform value="create"></transform>
+               <parameter>
+                  <valueString value="Organization"></valueString>
+               </parameter>
+            </target>
+            <target>
+               <context value="organization"></context>
+               <contextType value="variable"></contextType>
+               <element value="id"></element>
+               <variable value="uuid3"></variable>
+               <transform value="uuid"></transform>
+            </target>
+            <target>
+               <context value="e"></context>
+               <contextType value="variable"></contextType>
+               <element value="fullUrl"></element>
+               <transform value="append"></transform>
+               <parameter>
+                  <valueString value="urn:uuid:"></valueString>
+               </parameter>
+               <parameter>
+                  <valueId value="uuid3"></valueId>
+               </parameter>
+            </target>
+            <rule>
+               <name value="assignedCustodian"></name>
+               <source>
+                  <context value="assignedCustodian"></context>
+                  <element value="representedCustodianOrganization"></element>
+                  <variable value="srcOrg"></variable>
+               </source>
+               <target>
+                  <context value="target"></context>
+                  <contextType value="variable"></contextType>
+                  <element value="custodian"></element>
+                  <variable value="reference"></variable>
+                  <transform value="create"></transform>
+                  <parameter>
+                     <valueString value="Reference"></valueString>
+                  </parameter>
+               </target>
+               <target>
+                  <context value="reference"></context>
+                  <contextType value="variable"></contextType>
+                  <element value="reference"></element>
+                  <transform value="reference"></transform>
+                  <parameter>
+                     <valueId value="organization"></valueId>
+                  </parameter>
+               </target>
+               <dependent>
+                  <name value="ClinicalDocumentOrganization"></name>
+                  <variable value="srcOrg"></variable>
+                  <variable value="organization"></variable>
+               </dependent>
+            </rule>
+         </rule>
+      </rule>
+      <rule>
+         <name value="documentationOf"></name>
+         <source>
+            <context value="source"></context>
+            <element value="documentationOf"></element>
+            <variable value="docOf"></variable>
+         </source>
+         <rule>
+            <name value="serviceEvent"></name>
+            <source>
+               <context value="docOf"></context>
+               <element value="serviceEvent"></element>
+               <variable value="serviceEvent"></variable>
+            </source>
+            <target>
+               <context value="target"></context>
+               <contextType value="variable"></contextType>
+               <element value="event"></element>
+               <variable value="event"></variable>
+            </target>
+            <rule>
+               <name value="eventCode"></name>
+               <source>
+                  <context value="serviceEvent"></context>
+                  <element value="code"></element>
+                  <variable value="vvv"></variable>
+               </source>
+               <target>
+                  <context value="event"></context>
+                  <contextType value="variable"></contextType>
+                  <element value="code"></element>
+                  <variable value="vvv"></variable>
+                  <transform value="create"></transform>
+               </target>
+            </rule>
+            <rule>
+               <name value="eventTime"></name>
+               <source>
+                  <context value="serviceEvent"></context>
+                  <element value="effectiveTime"></element>
+                  <variable value="vvv"></variable>
+               </source>
+               <target>
+                  <context value="event"></context>
+                  <contextType value="variable"></contextType>
+                  <element value="period"></element>
+                  <variable value="vvv"></variable>
+                  <transform value="create"></transform>
+               </target>
+            </rule>
+         </rule>
+      </rule>
+      <rule>
+         <name value="relatedDocument"></name>
+         <source>
+            <context value="source"></context>
+            <element value="relatedDocument"></element>
+            <variable value="relatedDoc"></variable>
+         </source>
+         <target>
+            <context value="target"></context>
+            <contextType value="variable"></contextType>
+            <element value="relatesTo"></element>
+            <variable value="relates"></variable>
+         </target>
+         <rule>
+            <name value="typeCode"></name>
+            <source>
+               <context value="relatedDoc"></context>
+               <element value="typeCode"></element>
+               <variable value="vvv"></variable>
+            </source>
+            <target>
+               <context value="relates"></context>
+               <contextType value="variable"></contextType>
+               <element value="code"></element>
+               <variable value="vvv"></variable>
+               <transform value="create"></transform>
+            </target>
+         </rule>
+         <rule>
+            <name value="parentDoc"></name>
+            <source>
+               <context value="relatedDoc"></context>
+               <element value="parentDocument"></element>
+               <variable value="parentDoc"></variable>
+            </source>
+            <rule>
+               <name value="setId"></name>
+               <source>
+                  <context value="parentDoc"></context>
+                  <element value="setId"></element>
+                  <variable value="vvv"></variable>
+               </source>
+               <target>
+                  <context value="relates"></context>
+                  <contextType value="variable"></contextType>
+                  <element value="targetIdentifier"></element>
+                  <variable value="vvv"></variable>
+                  <transform value="create"></transform>
+               </target>
+            </rule>
+         </rule>
+      </rule>
+   </group>
+   <group>
+      <name value="ClinicalDocumentEntityPerson"></name>
+      <typeMode value="none"></typeMode>
+      <input>
+         <name value="source"></name>
+         <type value="AssignedEntity"></type>
+         <mode value="source"></mode>
+      </input>
+      <input>
+         <name value="target"></name>
+         <type value="Person"></type>
+         <mode value="target"></mode>
+      </input>
+      <rule>
+         <name value="id"></name>
+         <source>
+            <context value="source"></context>
+            <element value="id"></element>
+            <variable value="vvv"></variable>
+         </source>
+         <target>
+            <context value="target"></context>
+            <contextType value="variable"></contextType>
+            <element value="identifier"></element>
+            <variable value="vvv"></variable>
+            <transform value="create"></transform>
+         </target>
+      </rule>
+      <rule>
+         <name value="addr"></name>
+         <source>
+            <context value="source"></context>
+            <element value="addr"></element>
+            <variable value="vvv"></variable>
+         </source>
+         <target>
+            <context value="target"></context>
+            <contextType value="variable"></contextType>
+            <element value="address"></element>
+            <variable value="vvv"></variable>
+            <transform value="create"></transform>
+         </target>
+      </rule>
+      <rule>
+         <name value="telecom"></name>
+         <source>
+            <context value="source"></context>
+            <element value="telecom"></element>
+            <variable value="vvv"></variable>
+         </source>
+         <target>
+            <context value="target"></context>
+            <contextType value="variable"></contextType>
+            <element value="telecom"></element>
+            <variable value="vvv"></variable>
+            <transform value="create"></transform>
+         </target>
+      </rule>
+      <rule>
+         <name value="assignedPerson"></name>
+         <source>
+            <context value="source"></context>
+            <element value="assignedPerson"></element>
+            <variable value="person"></variable>
+         </source>
+         <rule>
+            <name value="name"></name>
+            <source>
+               <context value="person"></context>
+               <element value="name"></element>
+               <variable value="vvv"></variable>
+            </source>
+            <target>
+               <context value="target"></context>
+               <contextType value="variable"></contextType>
+               <element value="name"></element>
+               <variable value="vvv"></variable>
+               <transform value="create"></transform>
+            </target>
+         </rule>
+      </rule>
+   </group>
+   <group>
+      <name value="ClinicalDocumentEntityPractitioner"></name>
+      <typeMode value="none"></typeMode>
+      <input>
+         <name value="source"></name>
+         <type value="AssignedEntity"></type>
+         <mode value="source"></mode>
+      </input>
+      <input>
+         <name value="target"></name>
+         <type value="Practitioner"></type>
+         <mode value="target"></mode>
+      </input>
+      <rule>
+         <name value="id"></name>
+         <source>
+            <context value="source"></context>
+            <element value="id"></element>
+            <variable value="vvv"></variable>
+         </source>
+         <target>
+            <context value="target"></context>
+            <contextType value="variable"></contextType>
+            <element value="identifier"></element>
+            <variable value="vvv"></variable>
+            <transform value="create"></transform>
+         </target>
+      </rule>
+      <rule>
+         <name value="addr"></name>
+         <source>
+            <context value="source"></context>
+            <element value="addr"></element>
+            <variable value="vvv"></variable>
+         </source>
+         <target>
+            <context value="target"></context>
+            <contextType value="variable"></contextType>
+            <element value="address"></element>
+            <variable value="vvv"></variable>
+            <transform value="create"></transform>
+         </target>
+      </rule>
+      <rule>
+         <name value="telecom"></name>
+         <source>
+            <context value="source"></context>
+            <element value="telecom"></element>
+            <variable value="vvv"></variable>
+         </source>
+         <target>
+            <context value="target"></context>
+            <contextType value="variable"></contextType>
+            <element value="telecom"></element>
+            <variable value="vvv"></variable>
+            <transform value="create"></transform>
+         </target>
+      </rule>
+      <rule>
+         <name value="assignedPerson"></name>
+         <source>
+            <context value="source"></context>
+            <element value="assignedPerson"></element>
+            <variable value="person"></variable>
+         </source>
+         <rule>
+            <name value="name"></name>
+            <source>
+               <context value="person"></context>
+               <element value="name"></element>
+               <variable value="vvv"></variable>
+            </source>
+            <target>
+               <context value="target"></context>
+               <contextType value="variable"></contextType>
+               <element value="name"></element>
+               <variable value="vvv"></variable>
+               <transform value="create"></transform>
+            </target>
+         </rule>
+      </rule>
+   </group>
+   <group>
+      <name value="ClinicalDocumentOrganization"></name>
+      <typeMode value="none"></typeMode>
+      <input>
+         <name value="source"></name>
+         <type value="CustodianOrganization"></type>
+         <mode value="source"></mode>
+      </input>
+      <input>
+         <name value="target"></name>
+         <type value="Organization"></type>
+         <mode value="target"></mode>
+      </input>
+      <rule>
+         <name value="id"></name>
+         <source>
+            <context value="source"></context>
+            <element value="id"></element>
+            <variable value="vvv"></variable>
+         </source>
+         <target>
+            <context value="target"></context>
+            <contextType value="variable"></contextType>
+            <element value="identifier"></element>
+            <variable value="vvv"></variable>
+            <transform value="create"></transform>
+         </target>
+      </rule>
+      <rule>
+         <name value="name"></name>
+         <source>
+            <context value="source"></context>
+            <element value="name"></element>
+            <variable value="v"></variable>
+         </source>
+         <target>
+            <context value="target"></context>
+            <contextType value="variable"></contextType>
+            <element value="name"></element>
+            <transform value="evaluate"></transform>
+            <parameter>
+               <valueString value="v.other"></valueString>
+            </parameter>
+         </target>
+      </rule>
+      <rule>
+         <name value="telecom"></name>
+         <source>
+            <context value="source"></context>
+            <element value="telecom"></element>
+            <variable value="vvv"></variable>
+         </source>
+         <target>
+            <context value="target"></context>
+            <contextType value="variable"></contextType>
+            <element value="telecom"></element>
+            <variable value="vvv"></variable>
+            <transform value="create"></transform>
+         </target>
+      </rule>
+      <rule>
+         <name value="addr"></name>
+         <source>
+            <context value="source"></context>
+            <element value="addr"></element>
+            <variable value="vvv"></variable>
+         </source>
+         <target>
+            <context value="target"></context>
+            <contextType value="variable"></contextType>
+            <element value="address"></element>
+            <variable value="vvv"></variable>
+            <transform value="create"></transform>
+         </target>
+      </rule>
+   </group>
+   <group>
+      <name value="ClinicalDocumentPatientRole"></name>
+      <typeMode value="none"></typeMode>
+      <input>
+         <name value="source"></name>
+         <type value="PatientRole"></type>
+         <mode value="source"></mode>
+      </input>
+      <input>
+         <name value="target"></name>
+         <type value="Patient"></type>
+         <mode value="target"></mode>
+      </input>
+      <input>
+         <name value="bundle"></name>
+         <type value="Bundle"></type>
+         <mode value="target"></mode>
+      </input>
+      <rule>
+         <name value="identifier"></name>
+         <source>
+            <context value="source"></context>
+         </source>
+         <target>
+            <context value="target"></context>
+            <contextType value="variable"></contextType>
+            <element value="identifier"></element>
+            <variable value="identifier"></variable>
+         </target>
+         <rule>
+            <name value="id"></name>
+            <source>
+               <context value="source"></context>
+               <element value="id"></element>
+               <variable value="id"></variable>
+            </source>
+            <target>
+               <context value="identifier"></context>
+               <contextType value="variable"></contextType>
+               <element value="type"></element>
+               <variable value="type"></variable>
+            </target>
+            <target>
+               <context value="type"></context>
+               <contextType value="variable"></contextType>
+               <element value="coding"></element>
+               <variable value="coding"></variable>
+            </target>
+            <target>
+               <context value="coding"></context>
+               <contextType value="variable"></contextType>
+               <element value="system"></element>
+               <variable value="system"></variable>
+            </target>
+            <target>
+               <context value="coding"></context>
+               <contextType value="variable"></contextType>
+               <element value="code"></element>
+               <variable value="code"></variable>
+            </target>
+            <rule>
+               <name value="system"></name>
+               <source>
+                  <context value="source"></context>
+               </source>
+               <target>
+                  <context value="system"></context>
+                  <contextType value="variable"></contextType>
+                  <element value="value"></element>
+                  <transform value="copy"></transform>
+                  <parameter>
+                     <valueString value="http://terminology.hl7.org/CodeSystem/v2-0203"></valueString>
+                  </parameter>
+               </target>
+            </rule>
+            <rule>
+               <name value="code"></name>
+               <source>
+                  <context value="source"></context>
+               </source>
+               <target>
+                  <context value="code"></context>
+                  <contextType value="variable"></contextType>
+                  <element value="value"></element>
+                  <transform value="copy"></transform>
+                  <parameter>
+                     <valueString value="MR"></valueString>
+                  </parameter>
+               </target>
+            </rule>
+            <rule>
+               <name value="extension"></name>
+               <source>
+                  <context value="id"></context>
+                  <element value="extension"></element>
+                  <variable value="extension"></variable>
+               </source>
+               <target>
+                  <context value="identifier"></context>
+                  <contextType value="variable"></contextType>
+                  <element value="value"></element>
+                  <variable value="value"></variable>
+               </target>
+               <target>
+                  <context value="value"></context>
+                  <contextType value="variable"></contextType>
+                  <element value="value"></element>
+                  <transform value="copy"></transform>
+                  <parameter>
+                     <valueId value="extension"></valueId>
+                  </parameter>
+               </target>
+            </rule>
+            <rule>
+               <name value="root"></name>
+               <source>
+                  <context value="id"></context>
+                  <element value="root"></element>
+                  <variable value="root"></variable>
+               </source>
+               <target>
+                  <context value="identifier"></context>
+                  <contextType value="variable"></contextType>
+                  <element value="system"></element>
+                  <variable value="system"></variable>
+               </target>
+               <target>
+                  <context value="system"></context>
+                  <contextType value="variable"></contextType>
+                  <element value="value"></element>
+                  <transform value="append"></transform>
+                  <parameter>
+                     <valueString value="urn:oid:"></valueString>
+                  </parameter>
+                  <parameter>
+                     <valueId value="root"></valueId>
+                  </parameter>
+               </target>
+            </rule>
+         </rule>
+      </rule>
+      <rule>
+         <name value="addr"></name>
+         <source>
+            <context value="source"></context>
+            <element value="addr"></element>
+            <variable value="vvv"></variable>
+         </source>
+         <target>
+            <context value="target"></context>
+            <contextType value="variable"></contextType>
+            <element value="address"></element>
+            <variable value="vvv"></variable>
+            <transform value="create"></transform>
+         </target>
+      </rule>
+      <rule>
+         <name value="telecom"></name>
+         <source>
+            <context value="source"></context>
+            <element value="telecom"></element>
+            <variable value="vvv"></variable>
+         </source>
+         <target>
+            <context value="target"></context>
+            <contextType value="variable"></contextType>
+            <element value="telecom"></element>
+            <variable value="vvv"></variable>
+            <transform value="create"></transform>
+         </target>
+      </rule>
+      <rule>
+         <name value="patient"></name>
+         <source>
+            <context value="source"></context>
+            <element value="patient"></element>
+            <variable value="patient"></variable>
+         </source>
+         <rule>
+            <name value="name"></name>
+            <source>
+               <context value="patient"></context>
+               <element value="name"></element>
+               <variable value="vvv"></variable>
+            </source>
+            <target>
+               <context value="target"></context>
+               <contextType value="variable"></contextType>
+               <element value="name"></element>
+               <variable value="vvv"></variable>
+               <transform value="create"></transform>
+            </target>
+         </rule>
+         <rule>
+            <name value="gender"></name>
+            <source>
+               <context value="patient"></context>
+               <element value="administrativeGenderCode"></element>
+               <variable value="gender"></variable>
+            </source>
+            <rule>
+               <name value="gender"></name>
+               <source>
+                  <context value="gender"></context>
+                  <element value="code"></element>
+                  <variable value="v"></variable>
+               </source>
+               <target>
+                  <context value="target"></context>
+                  <contextType value="variable"></contextType>
+                  <element value="gender"></element>
+                  <transform value="translate"></transform>
+                  <parameter>
+                     <valueId value="v"></valueId>
+                  </parameter>
+                  <parameter>
+                     <valueString value="#cm-v3-administrative-gender"></valueString>
+                  </parameter>
+                  <parameter>
+                     <valueString value="code"></valueString>
+                  </parameter>
+               </target>
+            </rule>
+         </rule>
+         <rule>
+            <name value="birthDate"></name>
+            <source>
+               <context value="patient"></context>
+               <element value="birthTime"></element>
+               <variable value="vvv"></variable>
+            </source>
+            <target>
+               <context value="target"></context>
+               <contextType value="variable"></contextType>
+               <element value="birthDate"></element>
+               <variable value="vvv"></variable>
+               <transform value="create"></transform>
+            </target>
+         </rule>
+         <rule>
+            <name value="deceasedBL"></name>
+            <source>
+               <context value="patient"></context>
+               <element value="deceasedInd"></element>
+               <variable value="indicator"></variable>
+               <condition value="patient.deceasedTime.empty()"></condition>
+            </source>
+            <target>
+               <context value="target"></context>
+               <contextType value="variable"></contextType>
+               <element value="deceased"></element>
+               <variable value="bool"></variable>
+               <transform value="create"></transform>
+               <parameter>
+                  <valueString value="boolean"></valueString>
+               </parameter>
+            </target>
+            <dependent>
+               <name value="boolean"></name>
+               <variable value="indicator"></variable>
+               <variable value="bool"></variable>
+            </dependent>
+         </rule>
+         <rule>
+            <name value="deceasedTime"></name>
+            <source>
+               <context value="patient"></context>
+               <element value="deceasedTime"></element>
+               <variable value="vvv"></variable>
+            </source>
+            <target>
+               <context value="target"></context>
+               <contextType value="variable"></contextType>
+               <element value="deceased"></element>
+               <variable value="vvv"></variable>
+               <transform value="create"></transform>
+            </target>
+         </rule>
+         <rule>
+            <name value="maritalStatus"></name>
+            <source>
+               <context value="patient"></context>
+               <element value="maritalStatusCode"></element>
+               <variable value="vvv"></variable>
+            </source>
+            <target>
+               <context value="target"></context>
+               <contextType value="variable"></contextType>
+               <element value="maritalStatus"></element>
+               <variable value="vvv"></variable>
+               <transform value="create"></transform>
+            </target>
+         </rule>
+         <rule>
+            <name value="language"></name>
+            <source>
+               <context value="patient"></context>
+               <element value="languageCommunication"></element>
+               <variable value="language"></variable>
+            </source>
+            <target>
+               <context value="target"></context>
+               <contextType value="variable"></contextType>
+               <element value="communication"></element>
+               <variable value="communication"></variable>
+            </target>
+            <rule>
+               <name value="communication"></name>
+               <source>
+                  <context value="language"></context>
+                  <element value="languageCode"></element>
+                  <variable value="vvv"></variable>
+               </source>
+               <target>
+                  <context value="communication"></context>
+                  <contextType value="variable"></contextType>
+                  <element value="language"></element>
+                  <variable value="vvv"></variable>
+                  <transform value="create"></transform>
+               </target>
+            </rule>
+         </rule>
+      </rule>
+      <rule>
+         <name value="organization"></name>
+         <source>
+            <context value="source"></context>
+            <element value="providerOrganization"></element>
+            <variable value="org"></variable>
+         </source>
+         <target>
+            <context value="bundle"></context>
+            <contextType value="variable"></contextType>
+            <element value="entry"></element>
+            <variable value="e"></variable>
+         </target>
+         <target>
+            <context value="e"></context>
+            <contextType value="variable"></contextType>
+            <element value="resource"></element>
+            <variable value="organization"></variable>
+            <transform value="create"></transform>
+            <parameter>
+               <valueString value="Organization"></valueString>
+            </parameter>
+         </target>
+         <target>
+            <context value="organization"></context>
+            <contextType value="variable"></contextType>
+            <element value="id"></element>
+            <variable value="uuid3"></variable>
+            <transform value="uuid"></transform>
+         </target>
+         <target>
+            <context value="e"></context>
+            <contextType value="variable"></contextType>
+            <element value="fullUrl"></element>
+            <transform value="append"></transform>
+            <parameter>
+               <valueString value="urn:uuid:"></valueString>
+            </parameter>
+            <parameter>
+               <valueId value="uuid3"></valueId>
+            </parameter>
+         </target>
+         <rule>
+            <name value="reference"></name>
+            <source>
+               <context value="org"></context>
+            </source>
+            <target>
+               <context value="target"></context>
+               <contextType value="variable"></contextType>
+               <element value="managingOrganization"></element>
+               <variable value="reference"></variable>
+               <transform value="create"></transform>
+               <parameter>
+                  <valueString value="Reference"></valueString>
+               </parameter>
+            </target>
+            <target>
+               <context value="reference"></context>
+               <contextType value="variable"></contextType>
+               <element value="reference"></element>
+               <transform value="reference"></transform>
+               <parameter>
+                  <valueId value="organization"></valueId>
+               </parameter>
+            </target>
+         </rule>
+         <rule>
+            <name value="id"></name>
+            <source>
+               <context value="org"></context>
+               <element value="id"></element>
+               <variable value="vvv"></variable>
+            </source>
+            <target>
+               <context value="organization"></context>
+               <contextType value="variable"></contextType>
+               <element value="identifier"></element>
+               <variable value="vvv"></variable>
+               <transform value="create"></transform>
+            </target>
+         </rule>
+         <rule>
+            <name value="name"></name>
+            <source>
+               <context value="org"></context>
+               <element value="name"></element>
+               <variable value="v"></variable>
+            </source>
+            <target>
+               <context value="organization"></context>
+               <contextType value="variable"></contextType>
+               <element value="name"></element>
+               <transform value="evaluate"></transform>
+               <parameter>
+                  <valueString value="v.other"></valueString>
+               </parameter>
+            </target>
+         </rule>
+         <rule>
+            <name value="telecom"></name>
+            <source>
+               <context value="org"></context>
+               <element value="telecom"></element>
+               <variable value="vvv"></variable>
+            </source>
+            <target>
+               <context value="organization"></context>
+               <contextType value="variable"></contextType>
+               <element value="telecom"></element>
+               <variable value="vvv"></variable>
+               <transform value="create"></transform>
+            </target>
+         </rule>
+         <rule>
+            <name value="addr"></name>
+            <source>
+               <context value="org"></context>
+               <element value="addr"></element>
+               <variable value="vvv"></variable>
+            </source>
+            <target>
+               <context value="organization"></context>
+               <contextType value="variable"></contextType>
+               <element value="address"></element>
+               <variable value="vvv"></variable>
+               <transform value="create"></transform>
+            </target>
+         </rule>
+      </rule>
+   </group>
+   <group>
+      <name value="ClinicalDocumentEncounter"></name>
+      <typeMode value="none"></typeMode>
+      <input>
+         <name value="source"></name>
+         <type value="EncompassingEncounter"></type>
+         <mode value="source"></mode>
+      </input>
+      <input>
+         <name value="bundle"></name>
+         <type value="Bundle"></type>
+         <mode value="target"></mode>
+      </input>
+      <input>
+         <name value="target"></name>
+         <type value="Encounter"></type>
+         <mode value="target"></mode>
+      </input>
+      <rule>
+         <name value="id"></name>
+         <source>
+            <context value="source"></context>
+            <element value="id"></element>
+            <variable value="vvv"></variable>
+         </source>
+         <target>
+            <context value="target"></context>
+            <contextType value="variable"></contextType>
+            <element value="identifier"></element>
+            <variable value="vvv"></variable>
+            <transform value="create"></transform>
+         </target>
+      </rule>
+      <rule>
+         <name value="code"></name>
+         <source>
+            <context value="source"></context>
+            <element value="code"></element>
+            <variable value="vvv"></variable>
+         </source>
+         <target>
+            <context value="target"></context>
+            <contextType value="variable"></contextType>
+            <element value="type"></element>
+            <variable value="vvv"></variable>
+            <transform value="create"></transform>
+         </target>
+      </rule>
+      <rule>
+         <name value="effectiveTime"></name>
+         <source>
+            <context value="source"></context>
+            <element value="effectiveTime"></element>
+            <variable value="vvv"></variable>
+         </source>
+         <target>
+            <context value="target"></context>
+            <contextType value="variable"></contextType>
+            <element value="period"></element>
+            <variable value="vvv"></variable>
+            <transform value="create"></transform>
+         </target>
+      </rule>
+      <rule>
+         <name value="hospitalization"></name>
+         <source>
+            <context value="source"></context>
+            <condition value="admissionReferralSourceCode.exists() or dischargeDispositionCode.exists()"></condition>
+         </source>
+         <target>
+            <context value="target"></context>
+            <contextType value="variable"></contextType>
+            <element value="hospitalization"></element>
+            <variable value="hosp"></variable>
+         </target>
+         <rule>
+            <name value="adminReferral"></name>
+            <source>
+               <context value="source"></context>
+               <element value="admissionReferralSourceCode"></element>
+               <variable value="vvv"></variable>
+            </source>
+            <target>
+               <context value="hosp"></context>
+               <contextType value="variable"></contextType>
+               <element value="admitSource"></element>
+               <variable value="vvv"></variable>
+               <transform value="create"></transform>
+            </target>
+         </rule>
+         <rule>
+            <name value="discDisposition"></name>
+            <source>
+               <context value="source"></context>
+               <element value="dischargeDispositionCode"></element>
+               <variable value="vvv"></variable>
+            </source>
+            <target>
+               <context value="hosp"></context>
+               <contextType value="variable"></contextType>
+               <element value="dischargeDisposition"></element>
+               <variable value="vvv"></variable>
+               <transform value="create"></transform>
+            </target>
+         </rule>
+      </rule>
+      <rule>
+         <name value="participant"></name>
+         <source>
+            <context value="source"></context>
+            <element value="encounterParticipant"></element>
+            <variable value="srcPart"></variable>
+         </source>
+         <target>
+            <context value="target"></context>
+            <contextType value="variable"></contextType>
+            <element value="participant"></element>
+            <variable value="tgtPart"></variable>
+         </target>
+         <rule>
+            <name value="typeCode"></name>
+            <source>
+               <context value="srcPart"></context>
+               <element value="typeCode"></element>
+               <variable value="code"></variable>
+            </source>
+            <target>
+               <context value="tgtPart"></context>
+               <contextType value="variable"></contextType>
+               <element value="type"></element>
+               <transform value="cc"></transform>
+               <parameter>
+                  <valueString value="http://terminology.hl7.org/CodeSystem/v3-ParticipationType"></valueString>
+               </parameter>
+               <parameter>
+                  <valueId value="code"></valueId>
+               </parameter>
+            </target>
+         </rule>
+         <rule>
+            <name value="time"></name>
+            <source>
+               <context value="srcPart"></context>
+               <element value="time"></element>
+               <variable value="vvv"></variable>
+            </source>
+            <target>
+               <context value="tgtPart"></context>
+               <contextType value="variable"></contextType>
+               <element value="period"></element>
+               <variable value="vvv"></variable>
+               <transform value="create"></transform>
+            </target>
+         </rule>
+         <rule>
+            <name value="entity"></name>
+            <source>
+               <context value="srcPart"></context>
+               <element value="assignedEntity"></element>
+               <variable value="entity"></variable>
+            </source>
+            <target>
+               <context value="bundle"></context>
+               <contextType value="variable"></contextType>
+               <element value="entry"></element>
+               <variable value="e"></variable>
+            </target>
+            <target>
+               <context value="e"></context>
+               <contextType value="variable"></contextType>
+               <element value="resource"></element>
+               <variable value="practitioner"></variable>
+               <transform value="create"></transform>
+               <parameter>
+                  <valueString value="Practitioner"></valueString>
+               </parameter>
+            </target>
+            <target>
+               <context value="practitioner"></context>
+               <contextType value="variable"></contextType>
+               <element value="id"></element>
+               <variable value="uuid2"></variable>
+               <transform value="uuid"></transform>
+            </target>
+            <target>
+               <context value="e"></context>
+               <contextType value="variable"></contextType>
+               <element value="fullUrl"></element>
+               <transform value="append"></transform>
+               <parameter>
+                  <valueString value="urn:uuid:"></valueString>
+               </parameter>
+               <parameter>
+                  <valueId value="uuid2"></valueId>
+               </parameter>
+            </target>
+            <rule>
+               <name value="entry"></name>
+               <source>
+                  <context value="entity"></context>
+               </source>
+               <target>
+                  <context value="tgtPart"></context>
+                  <contextType value="variable"></contextType>
+                  <element value="individual"></element>
+                  <variable value="reference"></variable>
+                  <transform value="create"></transform>
+                  <parameter>
+                     <valueString value="Reference"></valueString>
+                  </parameter>
+               </target>
+               <target>
+                  <context value="reference"></context>
+                  <contextType value="variable"></contextType>
+                  <element value="reference"></element>
+                  <transform value="reference"></transform>
+                  <parameter>
+                     <valueId value="practitioner"></valueId>
+                  </parameter>
+               </target>
+               <dependent>
+                  <name value="ClinicalDocumentEntityPractitioner"></name>
+                  <variable value="entity"></variable>
+                  <variable value="practitioner"></variable>
+               </dependent>
+            </rule>
+         </rule>
+      </rule>
+      <rule>
+         <name value="location"></name>
+         <source>
+            <context value="source"></context>
+            <element value="location"></element>
+            <variable value="srcLocation"></variable>
+         </source>
+         <rule>
+            <name value="facility"></name>
+            <source>
+               <context value="srcLocation"></context>
+               <element value="healthCareFacility"></element>
+               <variable value="facility"></variable>
+            </source>
+            <target>
+               <context value="bundle"></context>
+               <contextType value="variable"></contextType>
+               <element value="entry"></element>
+               <variable value="e"></variable>
+            </target>
+            <target>
+               <context value="e"></context>
+               <contextType value="variable"></contextType>
+               <element value="resource"></element>
+               <variable value="location"></variable>
+               <transform value="create"></transform>
+               <parameter>
+                  <valueString value="Location"></valueString>
+               </parameter>
+            </target>
+            <target>
+               <context value="location"></context>
+               <contextType value="variable"></contextType>
+               <element value="id"></element>
+               <variable value="uuid2"></variable>
+               <transform value="uuid"></transform>
+            </target>
+            <target>
+               <context value="e"></context>
+               <contextType value="variable"></contextType>
+               <element value="fullUrl"></element>
+               <transform value="append"></transform>
+               <parameter>
+                  <valueString value="urn:uuid:"></valueString>
+               </parameter>
+               <parameter>
+                  <valueId value="uuid2"></valueId>
+               </parameter>
+            </target>
+            <rule>
+               <name value="facLocation"></name>
+               <source>
+                  <context value="facility"></context>
+               </source>
+               <target>
+                  <context value="target"></context>
+                  <contextType value="variable"></contextType>
+                  <element value="location"></element>
+                  <variable value="tgtLocation"></variable>
+               </target>
+               <target>
+                  <context value="tgtLocation"></context>
+                  <contextType value="variable"></contextType>
+                  <element value="location"></element>
+                  <variable value="reference"></variable>
+                  <transform value="create"></transform>
+                  <parameter>
+                     <valueString value="Reference"></valueString>
+                  </parameter>
+               </target>
+               <target>
+                  <context value="reference"></context>
+                  <contextType value="variable"></contextType>
+                  <element value="reference"></element>
+                  <transform value="reference"></transform>
+                  <parameter>
+                     <valueId value="location"></valueId>
+                  </parameter>
+               </target>
+               <dependent>
+                  <name value="ClinicalDocumentLocation"></name>
+                  <variable value="facility"></variable>
+                  <variable value="bundle"></variable>
+                  <variable value="location"></variable>
+               </dependent>
+            </rule>
+         </rule>
+      </rule>
+   </group>
+   <group>
+      <name value="ClinicalDocumentLocation"></name>
+      <typeMode value="none"></typeMode>
+      <input>
+         <name value="source"></name>
+         <type value="HealthCareFacility"></type>
+         <mode value="source"></mode>
+      </input>
+      <input>
+         <name value="bundle"></name>
+         <type value="Bundle"></type>
+         <mode value="target"></mode>
+      </input>
+      <input>
+         <name value="target"></name>
+         <type value="Location"></type>
+         <mode value="target"></mode>
+      </input>
+      <rule>
+         <name value="id"></name>
+         <source>
+            <context value="source"></context>
+            <element value="id"></element>
+            <variable value="vvv"></variable>
+         </source>
+         <target>
+            <context value="target"></context>
+            <contextType value="variable"></contextType>
+            <element value="identifier"></element>
+            <variable value="vvv"></variable>
+            <transform value="create"></transform>
+         </target>
+      </rule>
+      <rule>
+         <name value="code"></name>
+         <source>
+            <context value="source"></context>
+            <element value="code"></element>
+            <variable value="vvv"></variable>
+         </source>
+         <target>
+            <context value="target"></context>
+            <contextType value="variable"></contextType>
+            <element value="type"></element>
+            <variable value="vvv"></variable>
+            <transform value="create"></transform>
+         </target>
+      </rule>
+      <rule>
+         <name value="location"></name>
+         <source>
+            <context value="source"></context>
+            <element value="location"></element>
+            <variable value="location"></variable>
+         </source>
+         <rule>
+            <name value="addr"></name>
+            <source>
+               <context value="location"></context>
+               <element value="addr"></element>
+               <variable value="vvv"></variable>
+            </source>
+            <target>
+               <context value="target"></context>
+               <contextType value="variable"></contextType>
+               <element value="address"></element>
+               <variable value="vvv"></variable>
+               <transform value="create"></transform>
+            </target>
+         </rule>
+         <rule>
+            <name value="org"></name>
+            <source>
+               <context value="location"></context>
+               <element value="serviceProviderOrganization"></element>
+               <variable value="srcOrg"></variable>
+            </source>
+            <target>
+               <context value="bundle"></context>
+               <contextType value="variable"></contextType>
+               <element value="entry"></element>
+               <variable value="e"></variable>
+            </target>
+            <target>
+               <context value="e"></context>
+               <contextType value="variable"></contextType>
+               <element value="resource"></element>
+               <variable value="organization"></variable>
+               <transform value="create"></transform>
+               <parameter>
+                  <valueString value="Organization"></valueString>
+               </parameter>
+            </target>
+            <target>
+               <context value="organization"></context>
+               <contextType value="variable"></contextType>
+               <element value="id"></element>
+               <variable value="uuid3"></variable>
+               <transform value="uuid"></transform>
+            </target>
+            <target>
+               <context value="e"></context>
+               <contextType value="variable"></contextType>
+               <element value="fullUrl"></element>
+               <transform value="append"></transform>
+               <parameter>
+                  <valueString value="urn:uuid:"></valueString>
+               </parameter>
+               <parameter>
+                  <valueId value="uuid3"></valueId>
+               </parameter>
+            </target>
+            <rule>
+               <name value="organization"></name>
+               <source>
+                  <context value="srcOrg"></context>
+               </source>
+               <target>
+                  <context value="target"></context>
+                  <contextType value="variable"></contextType>
+                  <element value="managingOrganization"></element>
+                  <variable value="reference"></variable>
+                  <transform value="create"></transform>
+                  <parameter>
+                     <valueString value="Reference"></valueString>
+                  </parameter>
+               </target>
+               <target>
+                  <context value="reference"></context>
+                  <contextType value="variable"></contextType>
+                  <element value="reference"></element>
+                  <transform value="reference"></transform>
+                  <parameter>
+                     <valueId value="organization"></valueId>
+                  </parameter>
+               </target>
+               <dependent>
+                  <name value="ClinicalDocumentOrganization"></name>
+                  <variable value="srcOrg"></variable>
+                  <variable value="organization"></variable>
+               </dependent>
+            </rule>
+         </rule>
+         <documentation value="place names are usually stored with no parts    location.name as srcName -&gt; target.name = cast(srcName, 'string');"></documentation>
+      </rule>
+   </group>
+   <group>
+      <name value="ChExtEprTime"></name>
+      <typeMode value="none"></typeMode>
+      <input>
+         <name value="source"></name>
+         <type value="TSDateTime"></type>
+         <mode value="source"></mode>
+      </input>
+      <input>
+         <name value="ext"></name>
+         <type value="Extension"></type>
+         <mode value="target"></mode>
+      </input>
+      <rule>
+         <name value="url"></name>
+         <source>
+            <context value="source"></context>
+         </source>
+         <target>
+            <context value="ext"></context>
+            <contextType value="variable"></contextType>
+            <element value="url"></element>
+            <transform value="copy"></transform>
+            <parameter>
+               <valueString value="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-time"></valueString>
+            </parameter>
+         </target>
+      </rule>
+      <rule>
+         <name value="value"></name>
+         <source>
+            <context value="source"></context>
+         </source>
+         <target>
+            <context value="ext"></context>
+            <contextType value="variable"></contextType>
+            <element value="value"></element>
+            <variable value="value"></variable>
+            <transform value="create"></transform>
+            <parameter>
+               <valueString value="dateTime"></valueString>
+            </parameter>
+         </target>
+         <dependent>
+            <name value="TSDateTime"></name>
+            <variable value="source"></variable>
+            <variable value="value"></variable>
+         </dependent>
+      </rule>
+   </group>
+   <group>
+      <name value="ChExtEprSectionId"></name>
+      <typeMode value="none"></typeMode>
+      <input>
+         <name value="source"></name>
+         <type value="II"></type>
+         <mode value="source"></mode>
+      </input>
+      <input>
+         <name value="ext"></name>
+         <type value="Extension"></type>
+         <mode value="target"></mode>
+      </input>
+      <rule>
+         <name value="url"></name>
+         <source>
+            <context value="source"></context>
+         </source>
+         <target>
+            <context value="ext"></context>
+            <contextType value="variable"></contextType>
+            <element value="url"></element>
+            <transform value="copy"></transform>
+            <parameter>
+               <valueString value="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-sectionid"></valueString>
+            </parameter>
+         </target>
+      </rule>
+      <rule>
+         <name value="value"></name>
+         <source>
+            <context value="source"></context>
+         </source>
+         <target>
+            <context value="ext"></context>
+            <contextType value="variable"></contextType>
+            <element value="value"></element>
+            <variable value="value"></variable>
+            <transform value="create"></transform>
+            <parameter>
+               <valueString value="Identifier"></valueString>
+            </parameter>
+         </target>
+         <dependent>
+            <name value="II"></name>
+            <variable value="source"></variable>
+            <variable value="value"></variable>
+         </dependent>
+      </rule>
+   </group>
+   <group>
+      <name value="NarrativeLink"></name>
+      <typeMode value="none"></typeMode>
+      <input>
+         <name value="url"></name>
+         <mode value="source"></mode>
+      </input>
+      <input>
+         <name value="ext"></name>
+         <type value="Extension"></type>
+         <mode value="target"></mode>
+      </input>
+      <rule>
+         <name value="url"></name>
+         <source>
+            <context value="url"></context>
+         </source>
+         <target>
+            <context value="ext"></context>
+            <contextType value="variable"></contextType>
+            <element value="url"></element>
+            <transform value="copy"></transform>
+            <parameter>
+               <valueString value="http://hl7.org/fhir/StructureDefinition/narrativeLink"></valueString>
+            </parameter>
+         </target>
+      </rule>
+      <rule>
+         <name value="value"></name>
+         <source>
+            <context value="url"></context>
+         </source>
+         <target>
+            <context value="ext"></context>
+            <contextType value="variable"></contextType>
+            <element value="value"></element>
+            <variable value="value"></variable>
+            <transform value="create"></transform>
+            <parameter>
+               <valueString value="url"></valueString>
+            </parameter>
+         </target>
+         <target>
+            <context value="value"></context>
+            <contextType value="variable"></contextType>
+            <element value="value"></element>
+            <transform value="copy"></transform>
+            <parameter>
+               <valueId value="url"></valueId>
+            </parameter>
+         </target>
+      </rule>
+   </group>
+</StructureMap>
