@@ -138,7 +138,7 @@
       <page>
         <nameUrl value="maps.html"/>
         <title value="Maps"/>
-        <generation value="markdown"/>
+        <generation value="html"/>
       </page>
     </page>
 
