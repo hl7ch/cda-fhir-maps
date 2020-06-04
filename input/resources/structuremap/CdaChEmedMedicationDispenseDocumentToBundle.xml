@@ -308,7 +308,7 @@
          <mode value="target"></mode>
       </input>
       <rule>
-         <name value="entry"></name>
+         <name value="cdaEntry"></name>
          <source>
             <context value="source"></context>
             <element value="entry"></element>
@@ -875,7 +875,7 @@
                            </parameter>
                         </target>
                         <rule>
-                           <name value="no unit"></name>
+                           <name value="noUnit"></name>
                            <source>
                               <context value="capacityQuantity"></context>
                               <condition value="$this.unit.exists() = false"></condition>
@@ -1090,7 +1090,7 @@
                         <variable value="medingredient"></variable>
                      </source>
                      <rule>
-                        <name value="ingredientcode"></name>
+                        <name value="ingredientCode"></name>
                         <source>
                            <context value="medingredient"></context>
                            <element value="code"></element>
@@ -1298,7 +1298,7 @@
          </dependent>
       </rule>
       <rule>
-         <name value="entryRelationShip 2.16.756.5.30.1.1.10.4.37"></name>
+         <name value="entryRelationShip-2.16.756.5.30.1.1.10.4.37"></name>
          <source>
             <context value="source"></context>
             <element value="entryRelationship"></element>
@@ -1333,7 +1333,7 @@
                <variable value="substanceAdministration"></variable>
             </source>
             <rule>
-               <name value="entryRelationShip 2.16.756.5.30.1.1.10.4.36"></name>
+               <name value="entryRelationShip-2.16.756.5.30.1.1.10.4.36"></name>
                <source>
                   <context value="substanceAdministration"></context>
                   <element value="entryRelationship"></element>
@@ -1377,7 +1377,7 @@
          </dependent>
       </rule>
       <rule>
-         <name value="entryRelationShip 2.16.756.5.30.1.1.10.4.2"></name>
+         <name value="entryRelationShip-2.16.756.5.30.1.1.10.4.2"></name>
          <source>
             <context value="source"></context>
             <element value="entryRelationship"></element>
@@ -1406,7 +1406,7 @@
          </rule>
       </rule>
       <rule>
-         <name value="entryRelationShip 1.3.6.1.4.1.19376.1.9.1.3.9.2"></name>
+         <name value="entryRelationShip-1.3.6.1.4.1.19376.1.9.1.3.9.2"></name>
          <source>
             <context value="source"></context>
             <element value="entryRelationship"></element>
@@ -1493,7 +1493,7 @@
                </parameter>
             </target>
             <rule>
-               <name value="normal dosing"></name>
+               <name value="normalDosing"></name>
                <source>
                   <context value="templateId"></context>
                   <element value="root"></element>
@@ -1512,7 +1512,7 @@
          </rule>
       </rule>
       <rule>
-         <name value="effective time start end"></name>
+         <name value="effectiveTimeStartEnd"></name>
          <source>
             <context value="source"></context>
             <variable value="source"></variable>
@@ -1531,7 +1531,7 @@
          </dependent>
       </rule>
       <rule>
-         <name value="effective time when"></name>
+         <name value="effectiveTimeWhen"></name>
          <source>
             <context value="source"></context>
             <variable value="source"></variable>
@@ -1569,7 +1569,7 @@
          </dependent>
       </rule>
       <rule>
-         <name value="dose quantity"></name>
+         <name value="doseQuantity"></name>
          <source>
             <context value="source"></context>
             <variable value="source"></variable>
@@ -1651,7 +1651,7 @@
                </parameter>
             </target>
             <rule>
-               <name value="dosing type"></name>
+               <name value="dosingType"></name>
                <source>
                   <context value="templateId"></context>
                   <element value="root"></element>
@@ -1687,7 +1687,7 @@
          </target>
       </rule>
       <rule>
-         <name value="effective time start end"></name>
+         <name value="effectiveTimeStartEnd"></name>
          <source>
             <context value="source"></context>
             <variable value="source"></variable>
@@ -1706,7 +1706,7 @@
          </dependent>
       </rule>
       <rule>
-         <name value="effective time when"></name>
+         <name value="effectiveTimeWhen"></name>
          <source>
             <context value="entry"></context>
             <element value="substanceAdministration"></element>
@@ -1745,7 +1745,7 @@
          </dependent>
       </rule>
       <rule>
-         <name value="dose quantity"></name>
+         <name value="doseQuantity"></name>
          <source>
             <context value="entry"></context>
             <element value="substanceAdministration"></element>
@@ -1779,7 +1779,7 @@
          <mode value="target"></mode>
       </input>
       <rule>
-         <name value="effectiveTime IVL_TS"></name>
+         <name value="effectiveTime-IVL-TS"></name>
          <source>
             <context value="source"></context>
             <type value="IVL_TS"></type>
@@ -1888,7 +1888,7 @@
          <mode value="target"></mode>
       </input>
       <rule>
-         <name value="effectiveTime EIVL_TS"></name>
+         <name value="effectiveTime-EIVL-TS"></name>
          <source>
             <context value="source"></context>
             <type value="EIVL_TS"></type>
@@ -1942,7 +1942,7 @@
          </rule>
       </rule>
       <rule>
-         <name value="effectiveTime SXPR_TS"></name>
+         <name value="effectiveTime-SXPR-TS"></name>
          <source>
             <context value="source"></context>
             <type value="SXPR_TS"></type>
@@ -2102,7 +2102,7 @@
             <variable value="substanceAdministration"></variable>
          </source>
          <rule>
-            <name value="InnerExtensionId"></name>
+            <name value="innerExtensionId"></name>
             <source>
                <context value="substanceAdministration"></context>
                <element value="id"></element>
@@ -2135,7 +2135,7 @@
                   <variable value="externalDocument"></variable>
                </source>
                <rule>
-                  <name value="InnerExtensionExternalDocumentId"></name>
+                  <name value="innerExtensionExternalDocumentId"></name>
                   <source>
                      <context value="externalDocument"></context>
                      <element value="id"></element>

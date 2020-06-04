@@ -54,7 +54,7 @@ group Any() {
     nullFlavor -> ext.value = create('code') as valueCode then {
       nullFlavor.value as v -> valueCode.value = v "value";
     } "valueCode";
-  };
+  } "extension";
 }
 
 group II(source source : II, target target : Identifier) extends Any <<types>> {
@@ -70,7 +70,7 @@ group II(source source : II, target target : Identifier) extends Any <<types>> {
   source.displayable as displayable -> target.extension as ext then {
     displayable -> ext.url = 'http://hl7.org/fhir/cdaStructureDefinition/extension-displayable' "url";
     displayable.value as v -> ext.value = cast(v, 'string');
-  };
+  } "extension";
 }
 
 group INT(source source : INT, target target : integer) extends Any <<types>> {
@@ -81,7 +81,7 @@ group TemplateID(source template : II, target target) {
   template -> target.extension as ext then {
     template -> ext.url = 'http://hl7.org/fhir/cda/StructureDefinition/templateID' "url";
     template -> ext.value = create('Identifier') as value then II(template, value) "value";
-  } "templateID";
+  } "templateId";
 }
 
 group Negation(source negation : BL, target target) {
@@ -141,7 +141,7 @@ group CECodeableConcept(source source : CE, target target : CodeableConcept) ext
     translation.code as code -> coding.code = cast(code, 'string');
     translation.codeSystem as system -> coding.system = translate(system, 'http://hl7.org/fhir/ConceptMap/special-oid2uri', 'uri');
     translation.displayName as display -> coding.display = cast(display, 'string');
-  };
+  } "translation";
 }
 
 group CSCodeableConcept(source source : CS, target target : CodeableConcept) extends CECodeableConcept <<types>> {

@@ -62,8 +62,8 @@ group Any() {
 
 
 group IdentifierII(source source : Identifier, target target : II) extends Any <<types>> {
-  source.value as value where source.system.empty() and source.value.startsWith('urn:uuid:') -> target.root = (value.substring(9).upper()) "id as uuid";
-  source.value as value where source.system = 'urn:ietf:rfc:3986' -> target.root = (value.substring(9).upper()) "id as uuid";
+  source.value as value where source.system.empty() and source.value.startsWith('urn:uuid:') -> target.root = (value.substring(9).upper()) "idAsUuid";
+  source.value as value where source.system = 'urn:ietf:rfc:3986' -> target.root = (value.substring(9).upper()) "idAsUuid";
   source.value as value where source.system.startsWith('urn:oid:') then {
     source.system as system -> target.root = (system.substring(8)), target.extension = value "oidident"; 
   } "system";
@@ -76,10 +76,10 @@ group IntegerINT(source source : integer, target target : INT) extends Any <<typ
 // group Identifier(source source : Identifier, target target : II) extends Any <<types>> {
 //   source.system as system then {
 //     source.value as value then {
-//       value.value as v where system.value = 'urn:ietf:rfc:3986' -> target.root = cast(v, 'string') "noextension";
+//       value.value as v where system.value = 'urn:ietf:rfc:3986' -> target.root = cast(v, 'string') "noExtension";
 //       system.value as v where system.value != 'urn:ietf:rfc:3986' -> target.root = v then {
 //         value.value as val -> target.extension = cast(val, 'string') "extension";
-//       } "withextension";
+//       } "withExtension";
 //     } "rootValue";
 //   } "root";
 //  source.value as value -> target.root = '123' "test";
@@ -87,8 +87,8 @@ group IntegerINT(source source : integer, target target : INT) extends Any <<typ
 //   source.assigner as a then {
 //     a.display as display then {
 //      display.value as val -> target.assigningAuthorityName = cast(val, 'string');
-//     };
-//   };
+//     } "display";
+//   } "assigner";
 //   source.extension as ext where ext.url = 'http://hl7.org/fhir/cdaStructureDefinition/extension-displayable' -> target.displayable as displayable then {
 //     ext.value as v -> displayable.value = cast(v, 'string');
 //   } "displayable";
@@ -142,7 +142,7 @@ group CodeableConceptCE(source source : CodeableConcept, target target : CE) ext
 //    translation.code as code -> coding.code = cast(code, 'string');
 //    translation.codeSystem as system -> coding.system = translate(system, 'http://hl7.org/fhir/ConceptMap/special-oid2uri', 'uri');
 //    translation.displayName as display -> coding.display = cast(display, 'string');
-//  };
+//  } "translation";
 //}
 
 //group CSCodeableConcept(source source : CS, target target : CodeableConcept) extends CECodeableConcept <<types>> {

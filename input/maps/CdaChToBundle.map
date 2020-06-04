@@ -72,7 +72,7 @@ group SectionOriginalRepresentation(source source : Section, source patient : Pa
         observationMedia then ObservationMedia(observationMedia, binary) "observationMedia";
         observationMedia.ID as value -> reference.extension as ext then NarrativeLink(value, ext) "narrativeLink";
       } "observationMedia";
-  };
+  } "cdaEntry";
 }
 
 
@@ -151,7 +151,7 @@ group ClinicalDocumentCompositionCh(source source : ClinicalDocument, target tar
   source.confidentialityCode as confidentialityCode then {
     confidentialityCode.code as v -> 
       target.confidentiality = translate(v, 'http://fhir.ch/ig/ch-core/ConceptMap/documententry-confidentialitycode-to-fhir', 'code') as fhirconf share confidentialityCode,
-            fhirconf.extension as ext then ChExtEprConfidentialityCode(confidentialityCode, ext) "confcode";
+            fhirconf.extension as ext then ChExtEprConfidentialityCode(confidentialityCode, ext) "confCode";
   } "confidentialityCode";
   source.setId as setId -> target.extension as ext then ChExtEprSetId(setId, ext) "setId";
   source.versionNumber as versionNumber -> target.extension as ext2 then ChExtEprVersionNumber(versionNumber, ext2) "versionNumber";
@@ -166,13 +166,13 @@ group ClinicalDocumentCompositionCh(source source : ClinicalDocument, target tar
            recipient.id = uuid() as uuid2,
            e.fullUrl = append('urn:uuid:',uuid2),          
            target.extension as ext 
-           then ChExtEprInformationRecipientOrganization(intendedRecipient, recipient, ext) "informationRecipient Organization";
-    } "intendedRecipient as organization";
+           then ChExtEprInformationRecipientOrganization(intendedRecipient, recipient, ext) "informationRecipientOrganization";
+    } "intendedRecipientAsOrganization";
   } "entry";
   source.dataEnterer as dataEnterer -> bundle.entry as e, 
       e.resource = create('Person') as person, 
       person.id = uuid() as uuid,
       e.fullUrl = append('urn:uuid:',uuid),
-      target.extension as ext then ChExtEprDataEnterer(dataEnterer, person, ext) "dateEnterer";
+      target.extension as ext then ChExtEprDataEnterer(dataEnterer, person, ext) "dataEnterer";
 }
 

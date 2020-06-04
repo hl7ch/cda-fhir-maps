@@ -287,7 +287,7 @@
          <mode value="target"></mode>
       </input>
       <rule>
-         <name value="entry"></name>
+         <name value="cdaEntry"></name>
          <source>
             <context value="source"></context>
             <element value="entry"></element>
@@ -925,7 +925,7 @@
             <variable value="confidentialityCode"></variable>
          </source>
          <rule>
-            <name value="confcode"></name>
+            <name value="confCode"></name>
             <source>
                <context value="confidentialityCode"></context>
                <element value="code"></element>
@@ -1064,14 +1064,14 @@
             </dependent>
          </rule>
          <rule>
-            <name value="intendedRecipient as organization"></name>
+            <name value="intendedRecipientAsOrganization"></name>
             <source>
                <context value="informationRecipient"></context>
                <element value="intendedRecipient"></element>
                <variable value="intendedRecipient"></variable>
             </source>
             <rule>
-               <name value="informationRecipient Organization"></name>
+               <name value="informationRecipientOrganization"></name>
                <source>
                   <context value="intendedRecipient"></context>
                   <element value="receivedOrganization"></element>
@@ -1121,7 +1121,7 @@
          </rule>
       </rule>
       <rule>
-         <name value="dateEnterer"></name>
+         <name value="dataEnterer"></name>
          <source>
             <context value="source"></context>
             <element value="dataEnterer"></element>

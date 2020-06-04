@@ -40,13 +40,13 @@ group BundleToClinicalDocumentCh(source bundle : Bundle, target recordTarget: Re
   } "realmCode";
   bundle -> cda.templateId as templateId then {
     bundle -> templateId.root = '2.16.840.1.113883.10.12.2' "root";
-  } "HL7 CDA R2 (2005); contains ClinicalDocument.component as structuredBody.";
+  } "HL7CdaR2-2005-containsClinicalDocument.componentAsStructuredBody";
   bundle -> cda.templateId as templateId then {
     bundle -> templateId.root = '2.16.756.5.30.1.1.10.1.9' "root";
-  } "CDA-CH v2.0 structuredBody";
+  } "CDA-CHv2.0-structuredBody";
   bundle.entry as entry then {
     entry.resource as resource where $this.ofType(FHIR.Composition) then CompositionClinicalDocumentCH(bundle, resource, cda);
-  };
+  } "entry";
 }
 
 // _________________________ Section Level Templates _________________________ 
@@ -62,7 +62,7 @@ group SectionCdaRemarksCoded(source bundle : Bundle, source section: Section, ta
     section -> act.code as code, code.code='48767-8', code.codeSystem='2.16.840.1.113883.6.1', code.codeSystemName='LOINC', code.displayName='Annotation comment' "code";    
     // <span id="co1">
     section.text as text then {
-      text.div as div -> act.text as text, text.reference as reference, reference.value= ('#' + %div.substring(%div.indexOf('id')+%div.substring(%div.indexOf('id')).indexOf('"')+1,%div.substring(%div.indexOf('id')+%div.substring(%div.indexOf('id')).indexOf('"')+1).indexOf('"'))) "id=";  
+      text.div as div -> act.text as text, text.reference as reference, reference.value= ('#' + %div.substring(%div.indexOf('id')+%div.substring(%div.indexOf('id')).indexOf('"')+1,%div.substring(%div.indexOf('id')+%div.substring(%div.indexOf('id')).indexOf('"')+1).indexOf('"'))) "id";  
     } "section.text";     
     section -> act.statusCode as statusCode, statusCode.code='completed' "completed";
   } "entry";
@@ -87,7 +87,7 @@ group SectionCdaOriginalRepresentation(source bundle : Bundle, source section: S
           binary.contentType as contentType -> value.mediaType = contentType "contentType";
           binary.data as data -> value.data = data "data";
           binary.language as lang -> observationMedia.languageCode as languageCode, languageCode.code = lang "lang";
-          binary where $this.language.exists()=false -> observationMedia.languageCode as languageCode, languageCode.nullFlavor = 'UNK' "lang unknown";
+          binary where $this.language.exists()=false -> observationMedia.languageCode as languageCode, languageCode.nullFlavor = 'UNK' "langUnknown";
         } "value";
       } "observationMedia";
     } "entry";

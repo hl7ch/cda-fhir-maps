@@ -336,7 +336,7 @@
          <mode value="target"></mode>
       </input>
       <rule>
-         <name value="section id"></name>
+         <name value="sectionId"></name>
          <source>
             <context value="source"></context>
             <element value="id"></element>
@@ -387,7 +387,7 @@
          </target>
       </rule>
       <rule>
-         <name value="text"></name>
+         <name value="cdaText"></name>
          <source>
             <context value="source"></context>
             <element value="text"></element>
@@ -400,7 +400,7 @@
             <variable value="fhirText"></variable>
          </target>
          <rule>
-            <name value="narrativestatus"></name>
+            <name value="narrativeStatus"></name>
             <source>
                <context value="cdaText"></context>
             </source>
@@ -492,7 +492,7 @@
          </target>
       </rule>
       <rule>
-         <name value="setID"></name>
+         <name value="setId"></name>
          <source>
             <context value="source"></context>
             <element value="setId"></element>
@@ -554,7 +554,7 @@
          </target>
       </rule>
       <rule>
-         <name value="recordTarget"></name>
+         <name value="patientRole"></name>
          <source>
             <context value="source"></context>
             <element value="recordTarget"></element>
@@ -686,7 +686,7 @@
          </target>
       </rule>
       <rule>
-         <name value="author"></name>
+         <name value="srcAuthor"></name>
          <source>
             <context value="source"></context>
             <element value="author"></element>
@@ -818,7 +818,7 @@
                </target>
             </rule>
             <rule>
-               <name value="assignedPerson"></name>
+               <name value="name"></name>
                <source>
                   <context value="assignedAuthor"></context>
                   <element value="assignedPerson"></element>
@@ -927,7 +927,7 @@
          </target>
       </rule>
       <rule>
-         <name value="legalAuthenticator"></name>
+         <name value="legalAuth"></name>
          <source>
             <context value="source"></context>
             <element value="legalAuthenticator"></element>
@@ -1044,7 +1044,7 @@
          </rule>
       </rule>
       <rule>
-         <name value="authenticator"></name>
+         <name value="auth"></name>
          <source>
             <context value="source"></context>
             <element value="authenticator"></element>
@@ -1161,7 +1161,7 @@
          </rule>
       </rule>
       <rule>
-         <name value="custodian"></name>
+         <name value="cust"></name>
          <source>
             <context value="source"></context>
             <element value="custodian"></element>
@@ -1251,7 +1251,7 @@
             <variable value="docOf"></variable>
          </source>
          <rule>
-            <name value="serviceEvent"></name>
+            <name value="docOf"></name>
             <source>
                <context value="docOf"></context>
                <element value="serviceEvent"></element>
@@ -1296,7 +1296,7 @@
          </rule>
       </rule>
       <rule>
-         <name value="relatedDocument"></name>
+         <name value="relatedDoc"></name>
          <source>
             <context value="source"></context>
             <element value="relatedDocument"></element>
@@ -1407,7 +1407,7 @@
          </target>
       </rule>
       <rule>
-         <name value="assignedPerson"></name>
+         <name value="name"></name>
          <source>
             <context value="source"></context>
             <element value="assignedPerson"></element>
@@ -1489,7 +1489,7 @@
          </target>
       </rule>
       <rule>
-         <name value="assignedPerson"></name>
+         <name value="name"></name>
          <source>
             <context value="source"></context>
             <element value="assignedPerson"></element>

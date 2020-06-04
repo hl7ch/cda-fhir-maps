@@ -243,7 +243,7 @@
          <mode value="target"></mode>
       </input>
       <rule>
-         <name value="CH-PHARM Dispense Section Content Module"></name>
+         <name value="CH-PHARM-DispenseSectionContentModule"></name>
          <source>
             <context value="section"></context>
          </source>
@@ -264,7 +264,7 @@
          </target>
       </rule>
       <rule>
-         <name value="IHE Dispense Section Content Module"></name>
+         <name value="IHE-DispenseSectionContentModule"></name>
          <source>
             <context value="section"></context>
          </source>
@@ -397,7 +397,7 @@
          </target>
       </rule>
       <rule>
-         <name value="TemplateId"></name>
+         <name value="templateId"></name>
          <source>
             <context value="note"></context>
          </source>
@@ -418,7 +418,7 @@
          </target>
       </rule>
       <rule>
-         <name value="TemplateId"></name>
+         <name value="templateId"></name>
          <source>
             <context value="note"></context>
          </source>
@@ -439,7 +439,7 @@
          </target>
       </rule>
       <rule>
-         <name value="TemplateId"></name>
+         <name value="templateId"></name>
          <source>
             <context value="note"></context>
          </source>
@@ -546,7 +546,7 @@
          </rule>
       </rule>
       <rule>
-         <name value="statuscode"></name>
+         <name value="statusCode"></name>
          <source>
             <context value="note"></context>
          </source>
@@ -611,7 +611,7 @@
          </target>
       </rule>
       <rule>
-         <name value="TemplateId"></name>
+         <name value="templateId"></name>
          <source>
             <context value="substitution"></context>
          </source>
@@ -651,7 +651,7 @@
          </dependent>
       </rule>
       <rule>
-         <name value="status code"></name>
+         <name value="statusCode"></name>
          <source>
             <context value="substitution"></context>
          </source>
@@ -726,7 +726,7 @@
          </target>
       </rule>
       <rule>
-         <name value="CH-PHARM Manufactured Material Content Modul"></name>
+         <name value="CH-PHARM-ManufacturedMaterialContentModule"></name>
          <source>
             <context value="medication"></context>
          </source>
@@ -747,7 +747,7 @@
          </target>
       </rule>
       <rule>
-         <name value="TemplateId"></name>
+         <name value="templateId"></name>
          <source>
             <context value="medication"></context>
          </source>
@@ -956,7 +956,7 @@
             </target>
          </rule>
          <rule>
-            <name value="pharm:code"></name>
+            <name value="pharm-code"></name>
             <source>
                <context value="code"></context>
                <element value="coding"></element>
@@ -975,7 +975,7 @@
             </dependent>
          </rule>
          <rule>
-            <name value="pharm:name"></name>
+            <name value="pharm-name"></name>
             <source>
                <context value="code"></context>
                <element value="text"></element>
@@ -1005,7 +1005,7 @@
                <variable value="form"></variable>
             </source>
             <rule>
-               <name value="pharm:formCode"></name>
+               <name value="pharm-formCode"></name>
                <source>
                   <context value="form"></context>
                   <element value="coding"></element>
@@ -1039,7 +1039,7 @@
                   <variable value="numerator"></variable>
                </source>
                <rule>
-                  <name value="no UCUM"></name>
+                  <name value="noUcum"></name>
                   <source>
                      <context value="numerator"></context>
                      <element value="code"></element>
@@ -1071,7 +1071,7 @@
                   </rule>
                </rule>
                <rule>
-                  <name value="UCUM"></name>
+                  <name value="ucum"></name>
                   <source>
                      <context value="numerator"></context>
                      <element value="code"></element>
@@ -1120,7 +1120,7 @@
                   </rule>
                </rule>
                <rule>
-                  <name value="no UCUM"></name>
+                  <name value="noUcum"></name>
                   <source>
                      <context value="numerator"></context>
                      <variable value="numerator"></variable>
@@ -1338,7 +1338,7 @@
          </target>
       </rule>
       <rule>
-         <name value="CH-PHARM Dispense Item Entry Content Module"></name>
+         <name value="CH-PHARM-DispenseItemEntryContentModule"></name>
          <source>
             <context value="medicationDispense"></context>
          </source>
@@ -1359,7 +1359,7 @@
          </target>
       </rule>
       <rule>
-         <name value="IHE PHARM DIS"></name>
+         <name value="IHE-PHARM-DIS"></name>
          <source>
             <context value="medicationDispense"></context>
          </source>
@@ -1380,7 +1380,7 @@
          </target>
       </rule>
       <rule>
-         <name value="Supply Entry"></name>
+         <name value="supplyEntry"></name>
          <source>
             <context value="medicationDispense"></context>
          </source>
@@ -1508,7 +1508,7 @@
             </parameter>
          </target>
          <rule>
-            <name value="MP TemplateId"></name>
+            <name value="MP-TemplateId"></name>
             <source>
                <context value="medication"></context>
             </source>
@@ -1529,7 +1529,7 @@
             </target>
          </rule>
          <rule>
-            <name value="MP TemplateId"></name>
+            <name value="MP-TemplateId"></name>
             <source>
                <context value="medication"></context>
             </source>
@@ -1660,7 +1660,7 @@
          </rule>
       </rule>
       <rule>
-         <name value="MTP Reference"></name>
+         <name value="MTP-Reference"></name>
          <source>
             <context value="medicationDispense"></context>
             <element value="extension"></element>
@@ -1910,7 +1910,7 @@
                </target>
             </rule>
             <rule>
-               <name value="Template Id"></name>
+               <name value="templateId"></name>
                <source>
                   <context value="dosage"></context>
                </source>
@@ -1931,7 +1931,7 @@
                </target>
             </rule>
             <rule>
-               <name value="Normal Dose"></name>
+               <name value="normalDose"></name>
                <source>
                   <context value="dosage"></context>
                </source>
@@ -1952,7 +1952,7 @@
                </target>
             </rule>
             <rule>
-               <name value="effective time start end"></name>
+               <name value="effectiveTimeStartEnd"></name>
                <source>
                   <context value="dosage"></context>
                </source>
@@ -1970,7 +1970,7 @@
                </dependent>
             </rule>
             <rule>
-               <name value="effective time when"></name>
+               <name value="effectiveTimeWhen"></name>
                <source>
                   <context value="dosage"></context>
                </source>
@@ -2007,7 +2007,7 @@
                </dependent>
             </rule>
             <rule>
-               <name value="dose quantity"></name>
+               <name value="doseQuantity"></name>
                <source>
                   <context value="dosage"></context>
                </source>
@@ -2131,7 +2131,7 @@
          </target>
       </rule>
       <rule>
-         <name value="Template Id"></name>
+         <name value="templateId"></name>
          <source>
             <context value="dosage"></context>
          </source>
@@ -2167,7 +2167,7 @@
                <variable value="valueIdentifier"></variable>
             </source>
             <rule>
-               <name value="template id"></name>
+               <name value="templateId"></name>
                <source>
                   <context value="valueIdentifier"></context>
                   <element value="value"></element>
@@ -2192,14 +2192,14 @@
          </rule>
       </rule>
       <rule>
-         <name value="no extension"></name>
+         <name value="noExtension"></name>
          <source>
             <context value="dosage"></context>
             <variable value="dosage"></variable>
             <condition value="$this.extension.where(url = 'http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-dosagetype').exists() = false"></condition>
          </source>
          <rule>
-            <name value="Split Dose"></name>
+            <name value="splitDose"></name>
             <source>
                <context value="dosage"></context>
             </source>
@@ -2221,7 +2221,7 @@
          </rule>
       </rule>
       <rule>
-         <name value="effective time start end"></name>
+         <name value="effectiveTimeStartEnd"></name>
          <source>
             <context value="dosage"></context>
          </source>
@@ -2357,7 +2357,7 @@
             </parameter>
          </target>
          <rule>
-            <name value="effective time when"></name>
+            <name value="effectiveTimeWhen"></name>
             <source>
                <context value="dosage"></context>
                <variable value="dosage"></variable>
@@ -2375,7 +2375,7 @@
             </dependent>
          </rule>
          <rule>
-            <name value="dose quantity"></name>
+            <name value="doseQuantity"></name>
             <source>
                <context value="dosage"></context>
                <variable value="dosage"></variable>
@@ -2998,7 +2998,7 @@
          </target>
       </rule>
       <rule>
-         <name value="Reference to Medication Treatment Plan Item General Specification Template ID"></name>
+         <name value="ReferenceTo-MTP-ItemGeneralSpecificationTemplateId"></name>
          <source>
             <context value="ext"></context>
          </source>
@@ -3019,7 +3019,7 @@
          </target>
       </rule>
       <rule>
-         <name value="CH-PHARM template ID	"></name>
+         <name value="CH-PHARM-templateId"></name>
          <source>
             <context value="ext"></context>
          </source>
@@ -3242,7 +3242,7 @@
          </target>
       </rule>
       <rule>
-         <name value="template ID	"></name>
+         <name value="templateId"></name>
          <source>
             <context value="dosage"></context>
          </source>
@@ -3359,7 +3359,7 @@
          <mode value="target"></mode>
       </input>
       <rule>
-         <name value="Exchange format according to the Swiss EPR"></name>
+         <name value="ExchangeFormatAccordingToTheSwissEPR"></name>
          <source>
             <context value="bundle"></context>
          </source>
@@ -3380,7 +3380,7 @@
          </target>
       </rule>
       <rule>
-         <name value="IHE PCC"></name>
+         <name value="IHE-PCC"></name>
          <source>
             <context value="bundle"></context>
          </source>
@@ -3401,7 +3401,7 @@
          </target>
       </rule>
       <rule>
-         <name value="IHE Pharmacy Dispense Document Content Module"></name>
+         <name value="IHE-PharmacyDispenseDocumentContentModule"></name>
          <source>
             <context value="bundle"></context>
          </source>
@@ -3422,7 +3422,7 @@
          </target>
       </rule>
       <rule>
-         <name value="CDA-CH-EMED Medication Dispense document"></name>
+         <name value="CDA-CH-EMED-MedicationDispenseDocument"></name>
          <source>
             <context value="bundle"></context>
          </source>

@@ -39,12 +39,12 @@ group BundleToClinicalDocument(source bundle : Bundle, target recordTarget: Reco
   } "typeId";
   bundle -> cda.templateId as templateId then {
     bundle -> templateId.root = '2.16.840.1.113883.10.12.1' "root";
-  } "HL7 CDA R2 (2005).";
+  } "HL7CdaR2-2005";
   bundle.identifier as identifier -> cda.id as id then IdentifierII(identifier, id) "id";
   bundle.timestamp as timestamp -> cda.effectiveTime as effectiveTime then InstantTS(timestamp, effectiveTime) "effectiveTime";
   bundle.entry as entry then {
     entry.resource as resource where $this.ofType(FHIR.Composition) then CompositionClinicalDocument(bundle, resource, recordTarget, author, cda);
-  };
+  } "entry";
 }
 
 // _________________________ Section Level Templates _________________________ 
@@ -73,7 +73,7 @@ group CompositionClinicalDocument(source bundle : Bundle, source composition : C
     type.coding as coding where $this.system='http://loinc.org' -> cda.code as code share docCode then CodingCE(coding,code) "code";
   } "type";  
   composition.title as title -> cda.title as t then {
-    title -> t.data = title "title inner";
+    title -> t.data = title "titleInner";
   } "title";
   composition.confidentiality as conf -> cda.confidentialityCode as cdaconf then {
     conf -> cdaconf.code = conf "conf";
@@ -90,7 +90,7 @@ group CompositionClinicalDocument(source bundle : Bundle, source composition : C
   //  source.date -> target.effectiveTime "effectiveTime";
 //  source.event as srcEvent ->  target.documentationOf as doc,  doc.serviceEvent as event then {
 //    srcEvent.period -> event.effectiveTime;
-//  };
+//  } "event";
 
     composition.section as section where $this.code.exists()=false -> cda.component as component then {
       section -> component.contextConductionInd = true "contextConductionInd";
@@ -128,7 +128,7 @@ group PatientRecordTarget(source source : Patient, source bundle: Bundle, target
 //    patient.languageCommunication as language -> target.communication as communication then {
 //     language.languageCode -> communication.language "communication"; // preference: for language.preferenceInd make communication.preferred
 //    } "language";
-//  };
+//  } "patient";
 }
 
 group PractitionerAuthor(source bundle : Bundle, source composition : Composition, source source : Practitioner, target target : Author) {
@@ -136,7 +136,7 @@ group PractitionerAuthor(source bundle : Bundle, source composition : Compositio
     srcauthor.extension as extensionTime where $this.url='http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-time' then {
         extensionTime.valueDateTime as valueDateTime -> target.time as time then DateTimeTS(valueDateTime,time) "DateTime";
     } "extensionTime";
-  };  
+  } "srcAuthor";  
   source -> target.assignedAuthor as assignedAuthor then {
       source.identifier as identifier -> assignedAuthor.id as id then IdentifierII(identifier, id) "id";
       source.name as name -> assignedAuthor.assignedPerson as assignedPerson, assignedPerson.name as en then HumanNameEN(name, en) "name";

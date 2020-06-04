@@ -91,7 +91,7 @@
       <name value="Any"></name>
       <typeMode value="none"></typeMode>
       <rule>
-         <name value="nullFlavor"></name>
+         <name value="extension"></name>
          <source>
             <context value="source"></context>
             <element value="nullFlavor"></element>
@@ -289,7 +289,7 @@
          </target>
       </rule>
       <rule>
-         <name value="displayable"></name>
+         <name value="extension"></name>
          <source>
             <context value="source"></context>
             <element value="displayable"></element>
@@ -383,7 +383,7 @@
          <mode value="target"></mode>
       </input>
       <rule>
-         <name value="templateID"></name>
+         <name value="templateId"></name>
          <source>
             <context value="template"></context>
          </source>

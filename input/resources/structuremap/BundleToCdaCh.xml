@@ -204,7 +204,7 @@
          </rule>
       </rule>
       <rule>
-         <name value="HL7 CDA R2 (2005); contains ClinicalDocument.component as structuredBody."></name>
+         <name value="HL7CdaR2-2005-containsClinicalDocument.componentAsStructuredBody"></name>
          <source>
             <context value="bundle"></context>
          </source>
@@ -231,7 +231,7 @@
          </rule>
       </rule>
       <rule>
-         <name value="CDA-CH v2.0 structuredBody"></name>
+         <name value="CDA-CHv2.0-structuredBody"></name>
          <source>
             <context value="bundle"></context>
          </source>
@@ -475,7 +475,7 @@
                <variable value="text"></variable>
             </source>
             <rule>
-               <name value="id="></name>
+               <name value="id"></name>
                <source>
                   <context value="text"></context>
                   <element value="div"></element>
@@ -774,7 +774,7 @@
                      </target>
                   </rule>
                   <rule>
-                     <name value="lang unknown"></name>
+                     <name value="langUnknown"></name>
                      <source>
                         <context value="binary"></context>
                         <condition value="$this.language.exists() = false"></condition>

@@ -65,13 +65,13 @@ group ClinicalDocumentToBundle(source cda : ClinicalDocument, target patient : P
 // _________________________ Section Level Templates _________________________ 
 
 group ClinicalDocumentSection(source source : Section, source patient : Patient, target target, target bundle: Bundle) {
-  source.id as id -> target.extension as ext then ChExtEprSectionId(id, ext) "section id";
+  source.id as id -> target.extension as ext then ChExtEprSectionId(id, ext) "sectionId";
   source.title as t -> target.title = (t.dataString);
   source.code -> target.code;
   source.text as cdaText -> target.text as fhirText then {
-    cdaText -> fhirText.status = 'generated' "narrativestatus";
+    cdaText -> fhirText.status = 'generated' "narrativeStatus";
     cdaText as t -> fhirText.div = t "narrativeText";
-  };
+  } "cdaText";
   source.section as srcSection -> target.section as tgtSection then ClinicalDocumentSection(srcSection, patient, tgtSection, bundle);
 }
 
@@ -82,13 +82,13 @@ group ClinicalDocumentSection(source source : Section, source patient : Patient,
 
 group ClinicalDocumentComposition(source source : ClinicalDocument, target target : Composition, target patientResource: Patient, target bundle : Bundle) {
   source.languageCode -> target.language;
-  source.setId -> target.identifier "setID";
+  source.setId -> target.identifier "setId";
   source -> target.status = 'final' "status";
   source.code -> target.type;
   source.title as t -> target.title = (t.dataString);
   source.recordTarget as recordTarget then {
     recordTarget.patientRole as patient -> target.subject = create('Reference') as reference, reference.reference = reference(patientResource) then ClinicalDocumentPatientRole(patient, patientResource, bundle) "subject";
-  };
+  } "patientRole";
   source.componentOf as comp ->  bundle.entry as e,  
     e.resource = create('Encounter') as encounter,
     encounter.id = uuid() as uuid,
@@ -108,7 +108,7 @@ group ClinicalDocumentComposition(source source : ClinicalDocument, target targe
       assignedAuthor.telecom -> practitioner.telecom;
       assignedAuthor.assignedPerson as person then {
         person.name -> practitioner.name;
-      };
+      } "name";
       assignedAuthor.representedOrganization as srcOrg ->  
         bundle.entry as e2,  
         e2.resource = create('Organization') as organization,
@@ -116,7 +116,7 @@ group ClinicalDocumentComposition(source source : ClinicalDocument, target targe
         e2.fullUrl = append('urn:uuid:',uuid3), 
         target.author = create('Reference') as reference2, reference2.reference = reference(organization) then ClinicalDocumentOrganization(srcOrg, organization);
     } "author";
-  };
+  } "srcAuthor";
   source.confidentialityCode -> target.confidentiality share confidentialityCode;
   source.legalAuthenticator as legalAuth ->  bundle.entry as e,  
     e.resource = create('Practitioner') as practitioner, 
@@ -127,7 +127,7 @@ group ClinicalDocumentComposition(source source : ClinicalDocument, target targe
       legalAuth.time -> attester.time;
       legalAuth.assignedEntity as entity -> attester.party = create('Reference') as reference, reference.reference = reference(practitioner) then ClinicalDocumentEntityPractitioner(entity, practitioner) "entity";
     } "attester";
-  };
+  } "legalAuth";
   source.authenticator as auth ->  bundle.entry as e,  e.resource = create('Practitioner') as practitioner, 
     practitioner.id = uuid() as uuid2,
     e.fullUrl = append('urn:uuid:',uuid2) then {
@@ -136,7 +136,7 @@ group ClinicalDocumentComposition(source source : ClinicalDocument, target targe
       auth.time -> attester.time;
       auth.assignedEntity as entity -> attester.party = create('Reference') as reference, reference.reference = reference(practitioner) then ClinicalDocumentEntityPractitioner(entity, practitioner) "entity";
     } "attester";
-  };
+  } "auth";
   source.custodian as custodian -> bundle.entry as e then {
     custodian.assignedCustodian as assignedCustodian -> 
       e.resource = create('Organization') as organization,  
@@ -144,19 +144,19 @@ group ClinicalDocumentComposition(source source : ClinicalDocument, target targe
       e.fullUrl = append('urn:uuid:',uuid3) then {
       assignedCustodian.representedCustodianOrganization as srcOrg -> target.custodian = create('Reference') as reference, reference.reference = reference(organization) then ClinicalDocumentOrganization(srcOrg, organization) "assignedCustodian";
     } "custodian";
-  };
+  } "cust";
   source.documentationOf as docOf then {
     docOf.serviceEvent as serviceEvent -> target.event as event then {
       serviceEvent.code -> event.code "eventCode";
       serviceEvent.effectiveTime -> event.period "eventTime"; // performerType: for source.performer.typeCode ...
-    };
-  };
+    } "docOf";
+  } "documentationOf";
   source.relatedDocument as relatedDoc -> target.relatesTo as relates then {
     relatedDoc.typeCode -> relates.code;
     relatedDoc.parentDocument as parentDoc then {
       parentDoc.setId -> relates.targetIdentifier;
     } "parentDoc";
-  };
+  } "relatedDoc";
 }
 
 group ClinicalDocumentEntityPerson(source source : AssignedEntity, target target : Person) {
@@ -165,7 +165,7 @@ group ClinicalDocumentEntityPerson(source source : AssignedEntity, target target
   source.telecom -> target.telecom;
   source.assignedPerson as person then {
     person.name -> target.name;
-  };
+  } "name";
 }
 
 group ClinicalDocumentEntityPractitioner(source source : AssignedEntity, target target : Practitioner) {
@@ -174,7 +174,7 @@ group ClinicalDocumentEntityPractitioner(source source : AssignedEntity, target 
   source.telecom -> target.telecom;
   source.assignedPerson as person then {
     person.name -> target.name;
-  };
+  } "name";
 }
 
 group ClinicalDocumentOrganization(source source : CustodianOrganization, target target : Organization) {
@@ -210,7 +210,7 @@ group ClinicalDocumentPatientRole(source source : PatientRole, target target : P
     patient.languageCommunication as language -> target.communication as communication then {
       language.languageCode -> communication.language "communication"; // preference: for language.preferenceInd make communication.preferred
     } "language";
-  };
+  } "patient";
   source.providerOrganization as org ->  bundle.entry as e,  
     e.resource = create('Organization') as organization,  
     organization.id = uuid() as uuid3,
@@ -246,7 +246,7 @@ group ClinicalDocumentEncounter(source source : EncompassingEncounter, target bu
        e.fullUrl = append('urn:uuid:',uuid2) then {
       facility ->  target.location as tgtLocation,  tgtLocation.location = create('Reference') as reference, reference.reference = reference(location) then ClinicalDocumentLocation(facility, bundle, location) "facLocation";
     } "facility";
-  };
+  } "location";
 }
 
 group ClinicalDocumentLocation(source source : HealthCareFacility, target bundle : Bundle, target target : Location) {
@@ -260,7 +260,7 @@ group ClinicalDocumentLocation(source source : HealthCareFacility, target bundle
       e.fullUrl = append('urn:uuid:',uuid3) then {
       srcOrg -> target.managingOrganization = create('Reference') as reference, reference.reference = reference(organization) then ClinicalDocumentOrganization(srcOrg, organization) "organization";
     } "org";
-  }; // place names are usually stored with no parts
+  } "location"; // place names are usually stored with no parts
 }
 
 

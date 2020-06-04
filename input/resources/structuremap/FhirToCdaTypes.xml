@@ -72,7 +72,7 @@
          <mode value="target"></mode>
       </input>
       <rule>
-         <name value="id as uuid"></name>
+         <name value="idAsUuid"></name>
          <source>
             <context value="source"></context>
             <element value="value"></element>
@@ -90,7 +90,7 @@
          </target>
       </rule>
       <rule>
-         <name value="id as uuid"></name>
+         <name value="idAsUuid"></name>
          <source>
             <context value="source"></context>
             <element value="value"></element>

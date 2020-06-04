@@ -173,7 +173,7 @@
          </rule>
       </rule>
       <rule>
-         <name value="HL7 CDA R2 (2005)."></name>
+         <name value="HL7CdaR2-2005"></name>
          <source>
             <context value="bundle"></context>
          </source>
@@ -458,7 +458,7 @@
             <variable value="t"></variable>
          </target>
          <rule>
-            <name value="title inner"></name>
+            <name value="titleInner"></name>
             <source>
                <context value="title"></context>
             </source>
@@ -997,7 +997,7 @@
          <mode value="target"></mode>
       </input>
       <rule>
-         <name value="author"></name>
+         <name value="srcAuthor"></name>
          <source>
             <context value="composition"></context>
             <element value="author"></element>
