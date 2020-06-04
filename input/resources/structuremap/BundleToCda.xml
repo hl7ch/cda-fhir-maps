@@ -63,9 +63,9 @@
       <alias value="Organization"></alias>
    </structure>
    <structure>
-      <url value="http://hl7.org/fhir/StructureDefinition/Section"></url>
+      <url value="http://hl7.org/fhir/StructureDefinition/BackboneElement"></url>
       <mode value="source"></mode>
-      <alias value="Section"></alias>
+      <alias value="BackboneElement"></alias>
    </structure>
    <import value="http://fhir.ch/ig/cda-fhir-maps/StructureMap/FhirToCdaTypes"></import>
    <group>
@@ -273,7 +273,7 @@
       </input>
       <input>
          <name value="section"></name>
-         <type value="Section"></type>
+         <type value="BackboneElement"></type>
          <mode value="source"></mode>
       </input>
       <input>
