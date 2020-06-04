@@ -51,7 +51,7 @@ uses "http://hl7.org/fhir/StructureDefinition/Identifier" as source
 uses "http://hl7.org/fhir/cda/StructureDefinition/II" as target
 
 
-group Any() {
+group Any(source source, target target) {
   source.extension as extension where $this.url = 'http://hl7.org/fhir/StructureDefinition/iso21090-nullFlavor'
     -> target.nullFlavor as nullFlavor then {
       extension.valueCode as valueCode then {

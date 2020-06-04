@@ -13,6 +13,14 @@
    <group>
       <name value="Any"></name>
       <typeMode value="none"></typeMode>
+      <input>
+         <name value="source"></name>
+         <mode value="source"></mode>
+      </input>
+      <input>
+         <name value="target"></name>
+         <mode value="target"></mode>
+      </input>
       <rule>
          <name value="extension"></name>
          <source>
