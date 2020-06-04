@@ -5,12 +5,12 @@
 ### @host = http://localhost:8080/r4
 
 
-### 1. POST FhirtoCdaTypes.map
+### 1. POST FhirToCdaTypes.map
 POST {{host}}/StructureMap HTTP/1.1
 Accept: application/fhir+xml;fhirVersion=4.0
 Content-Type: text/fhir-mapping
 
-< ./input/maps/FhirtoCdaTypes.map
+< ./input/maps/FhirToCdaTypes.map
 
 
 ### 2. POST BundleToCda.map
