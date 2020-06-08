@@ -1,4 +1,4 @@
-map "http://ahdis.ch/ig/cda-fhir-maps/StructureMap/CdaChEmedMedicationPrescriptionDocumentToBundle" = "CDA MedicationPrescriptionDocument to FHIR"
+map "http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaChEmedMedicationPrescriptionDocumentToBundle" = "CdaChEmedMedicationPrescriptionDocumentToFhirBundle"
 
 
 // Medication Prescription document,	2.16.756.5.30.1.1.10.1.4
@@ -29,9 +29,9 @@ uses "http://hl7.org/fhir/StructureDefinition/Organization" alias Organization a
 uses "http://hl7.org/fhir/StructureDefinition/MedicationRequest" alias MedicationRequest as produced
 uses "http://hl7.org/fhir/StructureDefinition/Dosage" alias Dosage as produced
 
-imports "http://ahdis.ch/ig/cda-fhir-maps/StructureMap/CdaToFhirTypes"
-imports "http://ahdis.ch/ig/cda-fhir-maps/StructureMap/CdaToBundle"
-imports "http://ahdis.ch/ig/cda-fhir-maps/StructureMap/CdaChToBundle"
+imports "http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaToFhirTypes"
+imports "http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaToBundle"
+imports "http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaChToBundle"
 
 // _________________________ Document Level Template  _________________________ 
 
@@ -65,13 +65,13 @@ group ClinicalDocumentChEmedMedicationPrescriptionDocumentToBundle(source cda : 
 
 // source: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&id=2.16.756.5.30.1.1.10.3.10
 // target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-composition-medicationprescription.html
-group SectionPrescriptionSectionContentModule(source source : Section, source patient : Patient, target target, target bundle: Bundle) extends ClinicalDocumentSection {
-  source.entry as cdaEntry ->  bundle.entry as e,  e.resource = create('MedicationRequest') as medicationrequest,  
+group SectionPrescriptionSectionContentModule(source src : Section, source patient : Patient, target tgt, target bundle: Bundle) extends ClinicalDocumentSection {
+  src.entry as cdaEntry ->  bundle.entry as e,  e.resource = create('MedicationRequest') as medicationrequest,  
     medicationrequest.id = uuid() as uuid,
     e.fullUrl = append('urn:uuid:',uuid), 
-    target.entry = create('Reference') as reference, reference.reference = reference(medicationrequest) then {
-    cdaEntry.substanceAdministration as substanceAdministration then PrescriptionItemEntryContentModule(source, substanceAdministration, patient, medicationrequest);
-  };
+    tgt.entry = create('Reference') as reference, reference.reference = reference(medicationrequest) then {
+    cdaEntry.substanceAdministration as substanceAdministration then PrescriptionItemEntryContentModule(src, substanceAdministration, patient, medicationrequest);
+  } "cdaEntry";
 }
 
 // _________________________ Entry Level Templates   _________________________ 
@@ -125,9 +125,9 @@ group PrescribedQuantity(source supply: Supply, target medicationRequest: Medica
 
 // source: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&id=2.16.756.5.30.1.1.10.4.33
 // target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-medicationrequest.html
-group ManufacturedMaterialEntryContentModule(source source : SubstanceAdministration, target medicationRequest : MedicationRequest, target medication : Medication) {
-  source -> medication.id = 'med', medicationRequest.medication = create('Reference') as vt, vt.reference = '#med' "medication";
-  source.consumable as consumable then {
+group ManufacturedMaterialEntryContentModule(source src : SubstanceAdministration, target medicationRequest : MedicationRequest, target medication : Medication) {
+  src -> medication.id = 'med', medicationRequest.medication = create('Reference') as vt, vt.reference = '#med' "medication";
+  src.consumable as consumable then {
     consumable.manufacturedProduct as manufacturedProduct then {
       manufacturedProduct.manufacturedMaterial as manufacturedMaterial then {
 
@@ -155,7 +155,7 @@ group ManufacturedMaterialEntryContentModule(source source : SubstanceAdministra
                       , 
                       denominator.value = '1'
                       "capacityQuantity"; 
-              } "no unit";
+              } "noUnit";
 
               // IHE: Case 2: If the capacityQuantity is given in non-countable units, the unit attribute SHALL be present and the value SHALL be out of the UCUM code system.
               capacityQuantity where $this.unit.exists() then {
@@ -181,15 +181,15 @@ group ManufacturedMaterialEntryContentModule(source source : SubstanceAdministra
         manufacturedMaterial.ingredient as ingredient -> medication.ingredient as ing then {
           ingredient.quantity as quantity -> ing.strength = create('Ratio') as strength then RTOPQPQRatio(quantity, strength) "strength";
           ingredient.ingredient as medingredient then {
-              medingredient.code as code -> ing.item = create('CodeableConcept') as ingcode, ingcode.text = (%medingredient.name.other) then CECodeableConcept(code, ingcode) "ingredientcode";
+              medingredient.code as code -> ing.item = create('CodeableConcept') as ingcode, ingcode.text = (%medingredient.name.other) then CECodeableConcept(code, ingcode) "ingredientCode";
           } "ingredient.ingredient";
         } "ingredient";
       } "manufacturedMaterial";
     } "manufacturedProduct";
 
     // dosage for normal dosing, as no sequences are present there
-    source where $this.entryRelationship.sequenceNumber.exists()=false
-      -> medicationRequest.dosageInstruction as dosage then DosageInstructionsStartStopFrequency(source, dosage) "dosage";
+    src where $this.entryRelationship.sequenceNumber.exists()=false
+      -> medicationRequest.dosageInstruction as dosage then DosageInstructionsStartStopFrequency(src, dosage) "dosage";
 
   } "consumable";
 }
@@ -197,94 +197,94 @@ group ManufacturedMaterialEntryContentModule(source source : SubstanceAdministra
 
 // source: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&id=2.16.756.5.30.1.1.10.4.43
 // target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-medicationrequest.html
-group PrescriptionItemEntryContentModule(source section : Section, source source : SubstanceAdministration, source patient : Patient, target medicationRequest : MedicationRequest) {
+group PrescriptionItemEntryContentModule(source section : Section, source src : SubstanceAdministration, source patient : Patient, target medicationRequest : MedicationRequest) {
   
-  source.id -> medicationRequest.identifier;
+  src.id -> medicationRequest.identifier;
   patient -> medicationRequest.subject = create('Reference') as reference, reference.reference = reference(patient) "patient";
-  source -> medicationRequest.status = 'completed' "completed";
-  source -> medicationRequest.intent = 'order' "order";
-  source.text as text then {
+  src -> medicationRequest.status = 'completed' "completed";
+  src -> medicationRequest.intent = 'order' "order";
+  src.text as text then {
     text.reference as reference then {
       reference.value as value -> medicationRequest.extension as ext then NarrativeLink(value, ext) "narrativeLink";
     } "reference";
   } "text";
-  source -> medicationRequest.contained = create('Medication') as medication then ManufacturedMaterialEntryContentModule(source, medicationRequest, medication) "medication";
+  src -> medicationRequest.contained = create('Medication') as medication then ManufacturedMaterialEntryContentModule(src, medicationRequest, medication) "medication";
 
-  source.entryRelationship as entry where typeCode = 'RSON' then {
+  src.entryRelationship as entry where typeCode = 'RSON' then {
     entry.observation as observation 
       -> medicationRequest.reasonCode as reasonCode 
           then TreatmentReasonEntryContentModule(section, observation, reasonCode) "reasonCode";
-  } "entryRelationShip 2.16.756.5.30.1.1.10.4.41";
+  } "entryRelationShip-2.16.756.5.30.1.1.10.4.41";
 
-  source.entryRelationship as entry where (typeCode='COMP' and substanceAdministration.templateId.root='2.16.756.5.30.1.1.10.4.37') 
+  src.entryRelationship as entry where (typeCode='COMP' and substanceAdministration.templateId.root='2.16.756.5.30.1.1.10.4.37') 
     -> medicationRequest.dosageInstruction as dosage 
-        then DosageInstructionsNonStructuredEntryContentModule(section, entry, dosage) "entryRelationShip 2.16.756.5.30.1.1.10.4.37";  
+        then DosageInstructionsNonStructuredEntryContentModule(section, entry, dosage) "entryRelationShip-2.16.756.5.30.1.1.10.4.37";  
 
   // dosage for split dosing, as sequences are present there
-  source.entryRelationship as entry where (typeCode='COMP' and sequenceNumber.value>=0) 
+  src.entryRelationship as entry where (typeCode='COMP' and sequenceNumber.value>=0) 
     -> medicationRequest.dosageInstruction as dosage 
-        then DosageInstructionsEntryDosageChange(source, entry, dosage) "entryRelationShip 2.16.756.5.30.1.1.10.4.36";  
+        then DosageInstructionsEntryDosageChange(src, entry, dosage) "entryRelationShip-2.16.756.5.30.1.1.10.4.36";  
   
-  source.entryRelationship as entry where (typeCode='REFR' and substanceAdministration.templateId.where(root='1.3.6.1.4.1.19376.1.9.1.3.10').exists()) 
+  src.entryRelationship as entry where (typeCode='REFR' and substanceAdministration.templateId.where(root='1.3.6.1.4.1.19376.1.9.1.3.10').exists()) 
     -> medicationRequest.extension as ext then MTPReferenceEntryContentModule(entry, ext) "MTPReferenceEntry";   
 
-  source.entryRelationship as entry where (typeCode='COMP' and act.templateId.where(root='2.16.756.5.30.1.1.10.4.2').exists()) then {
+  src.entryRelationship as entry where (typeCode='COMP' and act.templateId.where(root='2.16.756.5.30.1.1.10.4.2').exists()) then {
     entry.act as act -> medicationRequest.note as note then AnnotationComment(section, act, note) "annotation";
-  } "entryRelationShip 2.16.756.5.30.1.1.10.4.2";  
+  } "entryRelationShip-2.16.756.5.30.1.1.10.4.2";  
 
-  source.repeatNumber as repeatNumber -> medicationRequest.dispenseRequest as dispenseRequest then {
+  src.repeatNumber as repeatNumber -> medicationRequest.dispenseRequest as dispenseRequest then {
     repeatNumber -> dispenseRequest.numberOfRepeatsAllowed = repeatNumber "repeatNumber";
   } "repeats";
 
-  source.entryRelationship as entry where (typeCode='COMP' and supply.templateId.where(root='1.3.6.1.4.1.19376.1.9.1.3.8').exists()) then {
+  src.entryRelationship as entry where (typeCode='COMP' and supply.templateId.where(root='1.3.6.1.4.1.19376.1.9.1.3.8').exists()) then {
     entry.supply as supply -> medicationRequest as medicationRequest then PrescribedQuantity(supply, medicationRequest) "quantity";
-  } "entryRelationShip 1.3.6.1.4.1.19376.1.9.1.3.8";
+  } "entryRelationShip-1.3.6.1.4.1.19376.1.9.1.3.8";
 
-  source.entryRelationship as entry where (typeCode='COMP' and act.templateId.where(root='1.3.6.1.4.1.19376.1.9.1.3.9.1').exists()) then {
+  src.entryRelationship as entry where (typeCode='COMP' and act.templateId.where(root='1.3.6.1.4.1.19376.1.9.1.3.9.1').exists()) then {
     entry.act as act -> medicationRequest as medicationRequest then Substitution(act, medicationRequest) "substitution";
-  } "entryRelationShip 1.3.6.1.4.1.19376.1.9.1.3.9.1";
+  } "entryRelationShip-1.3.6.1.4.1.19376.1.9.1.3.9.1";
 }
 
 
 // source: https://art-decor.org/art-decor/decor-templates--ch-pharm-?id=2.16.756.5.30.1.1.10.4.35 
 // target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition/ch-emed-dosage-structured
 // dosage for normal dosing, without sequences
-group DosageInstructionsStartStopFrequency(source source : SubstanceAdministration, target dosage: Dosage) {
-  source.templateId as templateId where $this.root='1.3.6.1.4.1.19376.1.5.3.1.4.7.1' -> dosage.extension as ext then {
-    source -> ext.url = 'http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-dosagetype' "url";
-    source -> ext.value = create('Identifier') as valueIdentifier then {
-      templateId.root as id -> valueIdentifier.value = id "normal dosing";
+group DosageInstructionsStartStopFrequency(source src : SubstanceAdministration, target dosage: Dosage) {
+  src.templateId as templateId where $this.root='1.3.6.1.4.1.19376.1.5.3.1.4.7.1' -> dosage.extension as ext then {
+    src -> ext.url = 'http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-dosagetype' "url";
+    src -> ext.value = create('Identifier') as valueIdentifier then {
+      templateId.root as id -> valueIdentifier.value = id "normalDosing";
     } "valueIdentifier";
   } "extension";
   
-  source as source -> dosage as dosage then EffectiveTimeStartEnd(source, dosage) "effective time start end";
-  source as source -> dosage as dosage then EffectiveTimeWhen(source, dosage) "effective time when";
-  source.routeCode as routeCode -> dosage.route as route then CECodeableConcept(routeCode, route) "routeCode";
-  source as source -> dosage as dosage then DoseQuantity(source, dosage) "dose quantity";
+  src as src -> dosage as dosage then EffectiveTimeStartEnd(src, dosage) "effectiveTimeStartEnd";
+  src as src -> dosage as dosage then EffectiveTimeWhen(src, dosage) "effectiveTimeWhen";
+  src.routeCode as routeCode -> dosage.route as route then CECodeableConcept(routeCode, route) "routeCode";
+  src as src -> dosage as dosage then DoseQuantity(src, dosage) "doseQuantity";
 }
 
 // source https://art-decor.org/art-decor/decor-templates--ch-pharm-?id=2.16.756.5.30.1.1.10.4.36
 // target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition/ch-emed-dosage-structured
 // dosage for split dosing, with sequences
-group DosageInstructionsEntryDosageChange(source source: substanceAdministration, source entry: entryRelationship, target dosage: Dosage) {
-  source.templateId as templateId where (($this.root='1.3.6.1.4.1.19376.1.5.3.1.4.9') or ($this.root='1.3.6.1.4.1.19376.1.5.3.1.4.8'))
+group DosageInstructionsEntryDosageChange(source src: substanceAdministration, source entry: entryRelationship, target dosage: Dosage) {
+  src.templateId as templateId where (($this.root='1.3.6.1.4.1.19376.1.5.3.1.4.9') or ($this.root='1.3.6.1.4.1.19376.1.5.3.1.4.8'))
      -> dosage.extension as ext then {
-        source -> ext.url = 'http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-dosagetype' "url";
-        source -> ext.value = create('Identifier') as valueIdentifier then {
-          templateId.root as id -> valueIdentifier.value = id "dosing type";
+        src -> ext.url = 'http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-dosagetype' "url";
+        soursrcce -> ext.value = create('Identifier') as valueIdentifier then {
+          templateId.root as id -> valueIdentifier.value = id "dosingType";
         } "valueIdentifier";
   } "extension";
   
   entry.sequenceNumber as sequenceNumber -> dosage.sequence = sequenceNumber "sequenceNumber";
-  source as source -> dosage as dosage then EffectiveTimeStartEnd(source, dosage) "effective time start end";
-  entry.substanceAdministration as source -> dosage as dosage then EffectiveTimeWhen(source, dosage) "effective time when";
-  source.routeCode as routeCode -> dosage.route as route then CECodeableConcept(routeCode, route) "routeCode";
-  entry.substanceAdministration as source -> dosage as dosage then DoseQuantity(source, dosage) "dose quantity";  
+  src as src -> dosage as dosage then EffectiveTimeStartEnd(src, dosage) "effectiveTimeStartEnd";
+  entry.substanceAdministration as src -> dosage as dosage then EffectiveTimeWhen(src, dosage) "effectiveTimeWhen";
+  src.routeCode as routeCode -> dosage.route as route then CECodeableConcept(routeCode, route) "routeCode";
+  entry.substanceAdministration as src -> dosage as dosage then DoseQuantity(src, dosage) "doseQuantity";  
 }
 
 // effective time start & end for dosage
-group EffectiveTimeStartEnd(source source: substanceAdministration, target dosage: Dosage) {
-  source.effectiveTime: IVL_TS as effectiveTime -> dosage.timing as timing share sharetiming then {
+group EffectiveTimeStartEnd(source src: substanceAdministration, target dosage: Dosage) {
+  src.effectiveTime: IVL_TS as effectiveTime -> dosage.timing as timing share sharetiming then {
     effectiveTime -> timing.repeat as repeat then {
       effectiveTime -> repeat.bounds = create('Period') as period then {
         effectiveTime.low as low then {
@@ -295,19 +295,19 @@ group EffectiveTimeStartEnd(source source: substanceAdministration, target dosag
         } "high";
       } "period";
     } "repeat";
-  } "effectiveTime IVL_TS";
+  } "effectiveTime-IVL-TS";
 }
 
 // effective time when for dosage
-group EffectiveTimeWhen(source source: substanceAdministration, target dosage: Dosage) {
-  source.effectiveTime: EIVL_TS as effectiveTime -> dosage.timing as timing share sharetiming then {
+group EffectiveTimeWhen(source src: substanceAdministration, target dosage: Dosage) {
+  src.effectiveTime: EIVL_TS as effectiveTime -> dosage.timing as timing share sharetiming then {
     effectiveTime -> timing.repeat as repeat then {
       effectiveTime.event as event then {
         event.code as code -> repeat.when = code "code";
       } "event";
     } "repeat";
-  } "effectiveTime EIVL_TS";
-  source.effectiveTime: SXPR_TS as effectiveTime -> dosage.timing as timing share sharetiming then {
+  } "effectiveTime-EIVL-TS";
+  src.effectiveTime: SXPR_TS as effectiveTime -> dosage.timing as timing share sharetiming then {
     effectiveTime -> timing.repeat as repeat then {
       effectiveTime.comp as comp then {
         comp.event as event then {
@@ -315,12 +315,12 @@ group EffectiveTimeWhen(source source: substanceAdministration, target dosage: D
         } "event";
       } "comp";
     } "repeat";
-  } "effectiveTime SXPR_TS";
+  } "effectiveTime-SXPR-TS";
 }
 
 // dose quantity for dosage (application schema)
-group DoseQuantity (source source: substanceAdministration, target dosage: Dosage) {
-  source.doseQuantity as doseQuantity -> dosage.doseAndRate as doseAndRate then {
+group DoseQuantity (source src: substanceAdministration, target dosage: Dosage) {
+  src.doseQuantity as doseQuantity -> dosage.doseAndRate as doseAndRate then {
     doseQuantity.center as center -> doseAndRate.dose = create('Quantity') as quantity then {
       center.value as value -> quantity.value = value "value";
     } "quantity";
@@ -351,10 +351,10 @@ group TreatmentReasonEntryContentModule(source section : Section, source observa
 group MTPReferenceEntryContentModule(source entryrelationship, target ext: Extension) {
   entryrelationship -> ext.url = 'http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-treatmentplan' "url";
   entryrelationship.substanceAdministration as substanceAdministration then {
-    substanceAdministration.id as id -> ext.extension as ext then InnerExtensionId(id, ext) "InnerExtensionId";
+    substanceAdministration.id as id -> ext.extension as ext then InnerExtensionId(id, ext) "innerExtensionId";
     substanceAdministration.reference as reference then {
       reference.externalDocument as externalDocument then {
-        externalDocument.id as id -> ext.extension as ext then InnerExtensionExternalDocumentId(id, ext) "InnerExtensionExternalDocumentId";
+        externalDocument.id as id -> ext.extension as ext then InnerExtensionExternalDocumentId(id, ext) "innerExtensionExternalDocumentId";
       } "externalDocument";
     } "substanceAdministration";
   } "id";
@@ -379,13 +379,13 @@ group DosageInstructionsNonStructuredEntryContentModule(source section : Section
 // _________________________ Template Type not specified   _________________________ 
 
 // target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-ext-treatmentplan.html
-group InnerExtensionExternalDocumentId(source source, target ext: Extension) {
-  source -> ext.url = 'externalDocumentId' "url";
-  source -> ext.value = create('Identifier') as id then II(source, id) "value";
+group InnerExtensionExternalDocumentId(source src, target ext: Extension) {
+  src -> ext.url = 'externalDocumentId' "url";
+  src -> ext.value = create('Identifier') as id then II(src, id) "value";
 }
 
 // target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-ext-treatmentplan.html
-group InnerExtensionId(source source, target ext: Extension) {
-  source -> ext.url = 'id' "url";
-  source -> ext.value = create('Identifier') as id then II(source, id) "value";
+group InnerExtensionId(source src, target ext: Extension) {
+  src -> ext.url = 'id' "url";
+  src -> ext.value = create('Identifier') as id then II(src, id) "value";
 }

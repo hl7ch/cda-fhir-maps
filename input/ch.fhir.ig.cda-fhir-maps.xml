@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ImplementationGuide xmlns="http://hl7.org/fhir">
+  <id value="ch.fhir.ig.cda-fhir-maps"/>
+  <text>
+    <status value="additional"/>
+    <div xmlns="http://www.w3.org/1999/xhtml">
+      Implementation Guide for CDA-FHIR-Maps
+    </div>
+  </text>
+  <url value="http://fhir.ch/ig/cda-fhir-maps/ImplementationGuide/ch.fhir.ig.cda-fhir-maps"/>
+  <version value="0.1."/>
+  <name value="CDA_FHIR_MAPS"/>
+  <title value="CDA-FHIR-Maps (R4)"/>
+  <status value="active"/>
+  <experimental value="false"/>
+  <date value="2020-01-16"/>
+  <publisher value="ahdis"/>
+  <contact>
+    <name value="ahdis"/>
+    <telecom>
+      <system value="url"/>
+      <value value="http://www.ahdis.ch/"/>
+    </telecom>
+  </contact>
+  <copyright value="CC-BY-SA-4.0"/>
+  <packageId value="ch.fhir.ig.cda-fhir-maps"/>
+  <license value="CC-BY-SA-4.0"/>
+  <fhirVersion value="4.0.1"/>
+  <dependsOn id="cdacore">
+      <uri value="http://hl7.org/fhir/cda/ImplementationGuide/hl7.fhir.cda"/>
+      <packageId value="hl7.fhir.cda"/>
+      <version value="dev"/>
+   </dependsOn>
+   <dependsOn id="chemed">
+      <uri value="http://fhir.ch/ig/ch-emed/ImplementationGuide/ch.fhir.ig.ch-emed"/>
+      <packageId value="ch.fhir.ig.ch-emed"/>
+      <version value="current"/>
+   </dependsOn>
+  <definition>
+    <!-- References to structure maps -->
+    <resource>
+      <reference>
+        <reference value="StructureMap/FhirToCdaTypes"/>
+      </reference>
+      <name value="FHIR to CDA types"/>
+      <description value="Transform for FHIR types to CDA types"/>
+    </resource>
+    <resource>
+      <reference>
+        <reference value="StructureMap/BundleToCda"/>
+      </reference>
+      <name value="Bundle to CDA"/>
+      <description value="FHIR Bundle to CDA Document"/>
+    </resource>
+    <resource>
+      <reference>
+        <reference value="StructureMap/BundleToCdaCh"/>
+      </reference>
+      <name value="Bundle to CDA-CH"/>
+      <description value="FHIR Bundle to CDA-CH Document"/>
+    </resource>
+    
+    <resource>
+      <reference>
+        <reference value="StructureMap/BundleToCdaChEmedMedicationCardDocument"/>
+      </reference>
+      <name value="Bundle to CDA-CH-EMED Medication Card document"/>
+      <description value="FHIR Bundle to CDA-CH-EMED Medication Card document"/>
+    </resource>
+    <resource>
+      <reference>
+        <reference value="StructureMap/BundleToCdaChEmedMedicationDispenseDocument"/>
+      </reference>
+      <name value="Bundle to CDA-CH-EMED Medication Dispense document"/>
+      <description value="FHIR Bundle to CDA-CH-EMED Medication Dispense document"/>
+    </resource>
+    <resource>
+      <reference>
+        <reference value="StructureMap/BundleToCdaChEmedMedicationPrescriptionDocument"/>
+      </reference>
+      <name value="Bundle to CDA-CH-EMED Medication Prescription document"/>
+      <description value="FHIR Bundle to CDA-CH-EMED Medication Prescription document"/>
+    </resource>
+    <resource>
+      <reference>
+        <reference value="StructureMap/CdaToFhirTypes"/>
+      </reference>
+      <name value="CDA to FHIR types"/>
+      <description value="Transform for CDA types to FHIR types"/>
+    </resource>
+    <resource>
+      <reference>
+        <reference value="StructureMap/CdaToBundle"/>
+      </reference>
+      <name value="CDA to Bundle"/>
+      <description value="CDA Document to FHIR Bundle"/>
+    </resource>
+    <resource>
+      <reference>
+        <reference value="StructureMap/CdaChToBundle"/>
+      </reference>
+      <name value="CDA-CH to Bundle"/>
+      <description value="CDA-CH Document to FHIR Bundle"/>
+    </resource>
+    <resource>
+      <reference>
+        <reference value="StructureMap/CdaChEmedMedicationCardDocumentToBundle"/>
+      </reference>
+      <name value="CDA-CH-EMED Medication Card document to Bundle"/>
+      <description value="CDA-CH-EMED Medication Card document to FHIR Bundle"/>
+    </resource>
+    <resource>
+      <reference>
+        <reference value="StructureMap/CdaChEmedMedicationDispenseDocumentToBundle"/>
+      </reference>
+      <name value="CDA-CH-EMED Medication Dispense document to Bundle"/>
+      <description value="CDA-CH-EMED Medication Dispense document to FHIR Bundle"/>
+    </resource>
+    <resource>
+      <reference>
+        <reference value="StructureMap/CdaChEmedMedicationPrescriptionDocumentToBundle"/>
+      </reference>
+      <name value="CDA-CH-EMED Medication Prescription document to Bundle"/>
+      <description value="CDA-CH-EMED Medication Prescription document to FHIR Bundle"/>
+    </resource>
+
+    <!-- pages -->
+    <page>
+      <nameUrl value="toc.html"/>
+      <title value="Table of Contents"/>
+      <generation value="html"/>
+      <page>
+        <nameUrl value="index.html"/>
+        <title value="Home"/>
+        <generation value="markdown"/>
+      </page>
+      <page>
+        <nameUrl value="maps.html"/>
+        <title value="Maps"/>
+        <generation value="html"/>
+      </page>
+    </page>
+
+    <!-- parameters -->
+    <parameter>
+      <code value="releaselabel"/>
+      <value value="CI build"/>
+      <!--<value value="Draft Standard for Trial Use"/>-->
+    </parameter>
+    <parameter>
+      <code value="path-pages" />
+      <value value="input/pages"/>
+    </parameter>
+    <parameter>
+      <code value="copyrightyear"/>
+      <value value="2020+"/>
+    </parameter>
+  </definition>
+</ImplementationGuide>

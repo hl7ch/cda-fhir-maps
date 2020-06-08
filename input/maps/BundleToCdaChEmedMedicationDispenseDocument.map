@@ -1,4 +1,4 @@
-map "http://ahdis.ch/ig/cda-fhir-maps/StructureMap/BundleToCdaChEmedMedicationDispenseDocument" = "FHIR Bundle to CDA-CH-EMED Medication Dispense document"
+map "http://fhir.ch/ig/cda-fhir-maps/StructureMap/BundleToCdaChEmedMedicationDispenseDocument" = "FhirBundleToCdaChEmedMedicationDispenseDocument"
 
 
 // Medication Dispense document, 2.16.756.5.30.1.1.10.1.5
@@ -30,9 +30,9 @@ uses "http://hl7.org/fhir/StructureDefinition/MedicationDispense" alias Medicati
 uses "http://hl7.org/fhir/StructureDefinition/Dosage" alias Dosage as source
 
 
-imports "http://ahdis.ch/ig/cda-fhir-maps/StructureMap/FhirToCdaTypes"
-imports "http://ahdis.ch/ig/cda-fhir-maps/StructureMap/BundleToCda"
-imports "http://ahdis.ch/ig/cda-fhir-maps/StructureMap/BundleToCdaCh"
+imports "http://fhir.ch/ig/cda-fhir-maps/StructureMap/FhirToCdaTypes"
+imports "http://fhir.ch/ig/cda-fhir-maps/StructureMap/BundleToCda"
+imports "http://fhir.ch/ig/cda-fhir-maps/StructureMap/BundleToCdaCh"
 
 
 // _________________________ Document Level Template  _________________________ 
@@ -61,8 +61,8 @@ group CompositionClinicalDocumentChEmedMedicationDispenseDocument(source bundle 
 // source: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-composition-medicationdispense.html
 // target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&id=2.16.756.5.30.1.1.10.3.11
 group SectionDispenseSectionContentModule(source bundle : Bundle, source section: Section, target cdasection: CdaSection) extends SectionCdaSection{
-  section -> cdasection.templateId as templateId, templateId.root='2.16.756.5.30.1.1.10.3.11' "CH-PHARM Dispense Section Content Module";
-  section -> cdasection.templateId as templateId, templateId.root='1.3.6.1.4.1.19376.1.9.1.2.3' "IHE Dispense Section Content Module";
+  section -> cdasection.templateId as templateId, templateId.root='2.16.756.5.30.1.1.10.3.11' "CH-PHARM-DispenseSectionContentModule";
+  section -> cdasection.templateId as templateId, templateId.root='1.3.6.1.4.1.19376.1.9.1.2.3' "IHE-DispenseSectionContentModule";
   
   // create section id if there is none in the fhir bundle (mapping source)
   section as section where $this.extension.where(url='http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-sectionid').exists()=false 
@@ -85,15 +85,15 @@ group SectionDispenseSectionContentModule(source bundle : Bundle, source section
 group AnnotationComment(source note: Annotation, target act: Act) {
   note -> act.classCode = 'ACT' "ACT";  
   note -> act.moodCode = 'EVN' "EVN";  
-  note -> act.templateId as templateId, templateId.root = '2.16.756.5.30.1.1.10.4.2' "TemplateId";
-  note -> act.templateId as templateId, templateId.root = '2.16.840.1.113883.10.20.1.40' "TemplateId";
-  note -> act.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.5.3.1.4.2' "TemplateId";
+  note -> act.templateId as templateId, templateId.root = '2.16.756.5.30.1.1.10.4.2' "templateId";
+  note -> act.templateId as templateId, templateId.root = '2.16.840.1.113883.10.20.1.40' "templateId";
+  note -> act.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.5.3.1.4.2' "templateId";
   note -> act.code as code, code.code = '48767-8', code.codeSystem = '2.16.840.1.113883.6.1', code.displayName='Annotation comment', code.codeSystemName='LOINC' "code";
   note.extension as extension where $this.url='http://hl7.org/fhir/StructureDefinition/narrativeLink' then {
     extension.valueUrl as valueUrl -> act.text as text,
       text.reference as reference, reference.value=valueUrl "reference";
   } "id";
-  note -> act.statusCode as code, code.code = 'completed' "statuscode";
+  note -> act.statusCode as code, code.code = 'completed' "statusCode";
 }
 
 
@@ -102,9 +102,9 @@ group AnnotationComment(source note: Annotation, target act: Act) {
 group Substitution(source substitution: Substitution, target act: Act) {
   substitution -> act.classCode = 'ACT' "ACT";  
   substitution -> act.moodCode = 'EVN' "EVN";  
-  substitution -> act.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.9.1.3.9.2' "TemplateId";
+  substitution -> act.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.9.1.3.9.2' "templateId";
   substitution.type as type -> act.code as code then CodeableConceptCE(type, code) "substitution";
-  substitution -> act.statusCode as statusCode, statusCode.code = 'completed' "status code";
+  substitution -> act.statusCode as statusCode, statusCode.code = 'completed' "statusCode";
 }
 
 
@@ -113,8 +113,8 @@ group Substitution(source substitution: Substitution, target act: Act) {
 group ManufacturedMaterialEntryContentModule(source bundle : Bundle, source medicationDispense: MedicationDispense, source medication: Medication, target manufacturedMaterial: ManufacturedMaterial) {
   medication -> manufacturedMaterial.classCode = 'MMAT' "MMAT";  
   medication -> manufacturedMaterial.determinerCode = 'KIND' "KIND";  
-  medication -> manufacturedMaterial.templateId as templateId, templateId.root = '2.16.756.5.30.1.1.10.4.33' "CH-PHARM Manufactured Material Content Modul";
-  medication -> manufacturedMaterial.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.9.1.3.1' "TemplateId";
+  medication -> manufacturedMaterial.templateId as templateId, templateId.root = '2.16.756.5.30.1.1.10.4.33' "CH-PHARM-ManufacturedMaterialContentModule";
+  medication -> manufacturedMaterial.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.9.1.3.1' "templateId";
   
   medication.code as code then {
     code.text as text -> manufacturedMaterial.name as name, name.other = text "brandname";
@@ -137,10 +137,10 @@ group ManufacturedMaterialEntryContentModule(source bundle : Bundle, source medi
   medication.code as code -> manufacturedMaterial.asContent as asContent, asContent.classCode='CONT', asContent.containerPackagedMedicine as containerPackagedMedicine then {
     code -> containerPackagedMedicine.classCode = 'CONT' "CONT";  
     code -> containerPackagedMedicine.determinerCode = 'INSTANCE' "INSTANCE";  
-    code.coding as coding -> containerPackagedMedicine.code as ce then CodingCE(coding,ce) "pharm:code";
-    code.text as text -> containerPackagedMedicine.name as name, name.other = text "pharm:name";
+    code.coding as coding -> containerPackagedMedicine.code as ce then CodingCE(coding,ce) "pharm-code";
+    code.text as text -> containerPackagedMedicine.name as name, name.other = text "pharm-name";
     medication.form as form then {
-      form.coding as coding -> containerPackagedMedicine.formCode as formCode then CodingCE(coding, formCode) "pharm:formCode";
+      form.coding as coding -> containerPackagedMedicine.formCode as formCode then CodingCE(coding, formCode) "pharm-formCode";
     } "form"; 
 
     // package size
@@ -151,19 +151,19 @@ group ManufacturedMaterialEntryContentModule(source bundle : Bundle, source medi
         // IHE: Case 1: If the capacityQuantity is given in countable units, the unit attribute SHALL NOT be present
         numerator.code as code where $this = '1' -> containerPackagedMedicine.capacityQuantity as capacityQuantity then {
           numerator.value as value -> capacityQuantity.value = value "value";	
-        } "no UCUM";
+        } "noUcum";
 
         // if the value of numerator.code is not "1", then it is a UCUM code, so generate case 2
         // IHE: Case 2: If the capacityQuantity is given in non-countable units, the unit attribute SHALL be present and the value SHALL be out of the UCUM code system.
         numerator.code as code where $this != '1' -> containerPackagedMedicine.capacityQuantity as capacityQuantity then {
           numerator.value as value -> capacityQuantity.value = value "value";
           numerator.unit as unit -> capacityQuantity.unit = unit "unit";	
-        } "UCUM";
+        } "ucum";
 
         // if there ist no numerator.code, case 1 is generated, because no unit exists
         numerator as numerator where $this.code.exists()=false -> containerPackagedMedicine.capacityQuantity as capacityQuantity then {
           numerator.value as value -> capacityQuantity.value = value "value";	
-        } "no UCUM";
+        } "noUcum";
 	    
       } "numerator";
     } "amount";
@@ -189,9 +189,9 @@ group ManufacturedMaterialEntryContentModule(source bundle : Bundle, source medi
 group MedicationTreatmentPlanEntryContentModule(source bundle : Bundle, source medicationDispense: MedicationDispense, target supply: Supply) {
   medicationDispense -> supply.classCode = 'SPLY' "SPLY";  
   medicationDispense -> supply.moodCode = 'EVN' "EVN";  
-  medicationDispense -> supply.templateId as templateId, templateId.root = '2.16.756.5.30.1.1.10.4.42' "CH-PHARM Dispense Item Entry Content Module";
-  medicationDispense -> supply.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.9.1.3.4' "IHE PHARM DIS";
-  medicationDispense -> supply.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.5.3.1.4.7.3' "Supply Entry";
+  medicationDispense -> supply.templateId as templateId, templateId.root = '2.16.756.5.30.1.1.10.4.42' "CH-PHARM-DispenseItemEntryContentModule";
+  medicationDispense -> supply.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.9.1.3.4' "IHE-PHARM-DIS";
+  medicationDispense -> supply.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.5.3.1.4.7.3' "supplyEntry";
   medicationDispense -> supply.templateId as templateId, templateId.root = '2.16.840.1.113883.10.20.1.34' "CCD";
 
   medicationDispense.identifier as identifier -> supply.id as id then IdentifierII(identifier, id) "id";
@@ -202,8 +202,8 @@ group MedicationTreatmentPlanEntryContentModule(source bundle : Bundle, source m
   medicationDispense.contained as medication where ('#'+$this.id) in %medicationDispense.medicationReference.reference 
     -> supply.product as product, product.manufacturedProduct as manufacturedProduct,
         manufacturedProduct.classCode = 'MANU' then {
-    medication -> manufacturedProduct.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.5.3.1.4.7.2' "MP TemplateId";
-    medication -> manufacturedProduct.templateId as templateId, templateId.root = '2.16.840.1.113883.10.20.1.53' "MP TemplateId";
+    medication -> manufacturedProduct.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.5.3.1.4.7.2' "MP-TemplateId";
+    medication -> manufacturedProduct.templateId as templateId, templateId.root = '2.16.840.1.113883.10.20.1.53' "MP-TemplateId";
     medication -> manufacturedProduct.manufacturedMaterial as manufacturedMaterial then ManufacturedMaterialEntryContentModule(bundle, medicationDispense, medication, manufacturedMaterial) "manufacturedMaterial";
   } "contained";     
   // TODO: AUTHOR1 Medication Treatment Plan Author
@@ -232,7 +232,7 @@ group MedicationTreatmentPlanEntryContentModule(source bundle : Bundle, source m
   medicationDispense.extension as extension where url='http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-treatmentplan' 
     -> supply.entryRelationship as entryRelationship, entryRelationship.typeCode='REFR', 
         entryRelationship.substanceAdministration as substanceAdministration 
-          then MTPReferenceEntryContentModule(extension, substanceAdministration) "MTP Reference";
+          then MTPReferenceEntryContentModule(extension, substanceAdministration) "MTP-Reference";
 
   // TODO: Patient Medication Instructions Contains 1.3.6.1.4.1.19376.1.5.3.1.4.3 IHE Patient Medication Instructions (DYNAMIC)
   // TODO: Amount of units of the consumable to dispense
@@ -277,12 +277,12 @@ group DosageInstructionsStartStopFrequency(source dosage: Dosage, target supply 
     dosage -> entryRelationship.substanceAdministration as substanceAdministration then {
       dosage -> substanceAdministration.classCode = 'SBADM' "SBADM";
       dosage -> substanceAdministration.moodCode = 'INT' "INT";
-      dosage -> substanceAdministration.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.9.1.3.6' "Template Id";
-      dosage -> substanceAdministration.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.5.3.1.4.7.1' "Normal Dose";
-      dosage -> substanceAdministration as substanceAdministration then EffectiveTimeStartEnd(dosage, substanceAdministration) "effective time start end";
-      dosage -> substanceAdministration as substanceAdministration then EffectiveTimeWhenNormal(dosage, substanceAdministration) "effective time when";
+      dosage -> substanceAdministration.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.9.1.3.6' "templateId";
+      dosage -> substanceAdministration.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.5.3.1.4.7.1' "normalDose";
+      dosage -> substanceAdministration as substanceAdministration then EffectiveTimeStartEnd(dosage, substanceAdministration) "effectiveTimeStartEnd";
+      dosage -> substanceAdministration as substanceAdministration then EffectiveTimeWhenNormal(dosage, substanceAdministration) "effectiveTimeWhen";
       dosage.route as route -> substanceAdministration.routeCode as routeCode then CodeableConceptCE(route, routeCode) "route";
-      dosage -> substanceAdministration as substanceAdministration then DoseQuantity(dosage, substanceAdministration) "dose quantity";
+      dosage -> substanceAdministration as substanceAdministration then DoseQuantity(dosage, substanceAdministration) "doseQuantity";
       dosage -> substanceAdministration as substanceAdministration, substanceAdministration.consumable as consumable,
         consumable.manufacturedProduct as manufacturedProduct, manufacturedProduct.manufacturedMaterial as manufacturedMaterial,
         manufacturedMaterial.nullFlavor='NA' "consumable";
@@ -298,22 +298,22 @@ group DosageInstructionsEntryStartStopRoute(source dosage: Dosage, target entryR
   dosage -> entryRelationship.typeCode = 'COMP' "COMP";
   dosage -> substanceAdministration.classCode = 'SBADM' "SBADM";
   dosage -> substanceAdministration.moodCode = 'INT' "INT";
-  dosage -> substanceAdministration.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.9.1.3.6' "Template Id";
+  dosage -> substanceAdministration.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.9.1.3.6' "templateId";
   
   // if the FHIR document has a dosage templateId -> take over the templateId  
   dosage.extension as extension where $this.url='http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-dosagetype' then {
     extension.valueIdentifier as valueIdentifier then {
-      valueIdentifier.value as value -> substanceAdministration.templateId as templateId, templateId.root = value "template id";
+      valueIdentifier.value as value -> substanceAdministration.templateId as templateId, templateId.root = value "templateId";
     } "valueIdentifier";
   } "extension";
 
   // if the FHIR doucment has no dosage templateId -> create templateId for split dose
   dosage as dosage where $this.extension.where(url='http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-dosagetype').exists()=false then {
-    dosage -> substanceAdministration.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.5.3.1.4.9' "Split Dose";
-  } "no extension";
+    dosage -> substanceAdministration.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.5.3.1.4.9' "splitDose";
+  } "noExtension";
 
 
-  dosage -> substanceAdministration as substanceAdministration then EffectiveTimeStartEnd(dosage, substanceAdministration) "effective time start end";
+  dosage -> substanceAdministration as substanceAdministration then EffectiveTimeStartEnd(dosage, substanceAdministration) "effectiveTimeStartEnd";
   dosage.route as route -> substanceAdministration.routeCode as routeCode then CodeableConceptCE(route, routeCode) "route";
   dosage -> substanceAdministration.consumable as consumable, consumable.manufacturedProduct as manufacturedProduct, 
     manufacturedProduct.manufacturedMaterial as manufacturedMaterial, manufacturedMaterial.nullFlavor='NA' "consumable";
@@ -328,8 +328,8 @@ group DosageInstructionsEntryDosageChange(source dosage: Dosage, target entryRel
   dosage -> entryRelationship.substanceAdministration as substanceAdministration, 
     substanceAdministration.classCode = 'SBADM',
     substanceAdministration.moodCode = 'INT' then {
-      dosage as dosage -> substanceAdministration then EffectiveTimeWhenSplit(dosage, substanceAdministration) "effective time when";
-      dosage as dosage -> substanceAdministration then DoseQuantity(dosage, substanceAdministration) "dose quantity";
+      dosage as dosage -> substanceAdministration then EffectiveTimeWhenSplit(dosage, substanceAdministration) "effectiveTimeWhen";
+      dosage as dosage -> substanceAdministration then DoseQuantity(dosage, substanceAdministration) "doseQuantity";
       dosage as dosage -> substanceAdministration.consumable as consumable, consumable.manufacturedProduct as manufacturedProduct, 
           manufacturedProduct.manufacturedMaterial as manufacturedMaterial, manufacturedMaterial.nullFlavor='NA' "consumable";
     } "dosage";
@@ -401,8 +401,8 @@ group DoseQuantity(source dosage: Dosage, target substanceAdministration : Subst
 group MTPReferenceEntryContentModule(source ext: Extension, target substanceAdministration : SubstanceAdministration) {
   ext -> substanceAdministration.classCode = 'SBADM' "SBADM";  
   ext -> substanceAdministration.moodCode = 'INT' "INT";  
-  ext -> substanceAdministration.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.9.1.3.10' "Reference to Medication Treatment Plan Item General Specification Template ID";
-  ext -> substanceAdministration.templateId as templateId, templateId.root = '2.16.756.5.30.1.1.10.4.45' "CH-PHARM template ID	";
+  ext -> substanceAdministration.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.9.1.3.10' "ReferenceTo-MTP-ItemGeneralSpecificationTemplateId";
+  ext -> substanceAdministration.templateId as templateId, templateId.root = '2.16.756.5.30.1.1.10.4.45' "CH-PHARM-templateId";
   ext.extension as extension where $this.url='id' then {
     extension.valueIdentifier as valueIdentifier -> substanceAdministration.id as id then IdentifierII(valueIdentifier, id) "id";
   } "id";
@@ -429,7 +429,7 @@ group MTPReferenceEntryContentModule(source ext: Extension, target substanceAdmi
 group DosageInstructionsNonStructuredEntryContentModule(source dosage : Dosage, target substanceAdministration : SubstanceAdministration) {
   dosage -> substanceAdministration.classCode = 'SBADM' "SBADM";  
   dosage -> substanceAdministration.moodCode = 'INT' "INT";  
-  dosage -> substanceAdministration.templateId as templateId, templateId.root = '2.16.756.5.30.1.1.10.4.37' "template ID	";
+  dosage -> substanceAdministration.templateId as templateId, templateId.root = '2.16.756.5.30.1.1.10.4.37' "templateId";
   dosage.extension as extension where $this.url='http://hl7.org/fhir/StructureDefinition/narrativeLink' then {
     extension.valueUrl as valueUrl -> substanceAdministration.text as text,
       text.reference as reference, reference.value=valueUrl "reference";
@@ -447,13 +447,13 @@ group DosageInstructionsNonStructuredEntryContentModule(source dosage : Dosage, 
 // source: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-composition-medicationdispense.html
 // target: 2.16.756.5.30.1.1.10.9.42
 group BundleToClinicalDocumentEmedMedicationDispenseDocument(source bundle : Bundle, target recordTarget: RecordTarget, target author: Author, target cda : ClinicalDocument) extends BundleToClinicalDocumentCh {
-  bundle -> cda.templateId as templateId, templateId.root = '2.16.756.5.30.1.127.1.4' "Exchange format according to the Swiss EPR";
-  bundle -> cda.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.5.3.1.1.1' "IHE PCC";
-  bundle -> cda.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.9.1.1.3' "IHE Pharmacy Dispense Document Content Module";
-  bundle -> cda.templateId as templateId, templateId.root = '2.16.756.5.30.1.1.10.1.5' "CDA-CH-EMED Medication Dispense document";
+  bundle -> cda.templateId as templateId, templateId.root = '2.16.756.5.30.1.127.1.4' "ExchangeFormatAccordingToTheSwissEPR";
+  bundle -> cda.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.5.3.1.1.1' "IHE-PCC";
+  bundle -> cda.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.9.1.1.3' "IHE-PharmacyDispenseDocumentContentModule";
+  bundle -> cda.templateId as templateId, templateId.root = '2.16.756.5.30.1.1.10.1.5' "CDA-CH-EMED-MedicationDispenseDocument";
   bundle.entry as entry then {
     entry.resource as resource where $this.ofType(FHIR.Composition) then CompositionClinicalDocumentChEmedMedicationDispenseDocument(bundle, resource, cda);
-  };
+  } "entry";
 }
 
 

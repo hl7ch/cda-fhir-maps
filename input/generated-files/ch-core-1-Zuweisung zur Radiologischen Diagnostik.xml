@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Bundle xmlns="http://hl7.org/fhir">
+  <id value="651da965-28df-4c56-b4a4-88587cc626bb"/>
+  <identifier>
+    <system value="urn:ietf:rfc:3986"/>
+    <value value="urn:uuid:31397b31-be60-47e1-bec6-f37816d42b0c"/>
+  </identifier>
+  <type value="document"/>
+  <timestamp value="2017-10-03T17:33:00+01:00"/>
+  <entry>
+    <fullUrl value="urn:uuid:d865854a-1c06-4c88-b03e-93b24f9b4977"/>
+    <resource>
+      <Composition>
+        <id value="d865854a-1c06-4c88-b03e-93b24f9b4977"/>
+        <language value="de-CH"/>
+        <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-setid">
+          <valueIdentifier>
+            <system value="urn:ietf:rfc:3986"/>
+            <value value="urn:uuid:807563c2-5146-11d5-a672-00b0d022e945"/>
+          </valueIdentifier>
+        </extension>
+        <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-versionnumber">
+          <valueUnsignedInt value="2"/>
+        </extension>
+        <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-informationrecipient">
+          <valueReference>
+            <reference value="Organization/4faa0ef8-c454-4117-aebe-898598411b73"/>
+          </valueReference>
+        </extension>
+        <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-dataenterer">
+          <extension url="enterer">
+            <valueReference>
+              <reference value="Person/a9cd5693-72d1-47db-aa17-0b9136cbe88c"/>
+            </valueReference>
+          </extension>
+          <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-time">
+            <valueDateTime value="2017-10-03T13:15:00+01:00"/>
+          </extension>
+        </extension>
+        <identifier>
+          <system value="urn:ietf:rfc:3986"/>
+          <value value="urn:uuid:807563c2-5146-11d5-a672-00b0d022e945"/>
+        </identifier>
+        <status value="final"/>
+        <type>
+          <coding>
+            <system value="http://loinc.org"/>
+            <code value="28616-1"/>
+            <display value="Physician Transfer note"/>
+          </coding>
+          <coding>
+            <system value="http://snomed.info/sct"/>
+            <code value="371535009"/>
+            <display value="Transfer summary report"/>
+          </coding>
+        </type>
+        <subject>
+          <reference value="Patient/7f6cd3b1-db07-4892-906a-f56f971705bf"/>
+        </subject>
+        <date value="2017-10-03T17:33:00+01:00"/>
+        <author>
+          <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-time">
+            <valueDateTime value="2017-10-03T16:09:00+01:00"/>
+          </extension>
+          <reference value="Practitioner/06033e58-d92b-4663-b85d-59068c13b914"/>
+        </author>
+        <author>
+          <reference value="Organization/07a18943-0193-4679-8a0e-48d152be84d5"/>
+        </author>
+        <title value="Zuweisung zur Radiologischen Diagnostik"/>
+        <confidentiality value="N">
+          <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-confidentialitycode">
+            <valueCodeableConcept>
+              <coding>
+                <system value="http://snomed.info/sct"/>
+                <code value="17621005"/>
+                <display value="Normally accessible"/>
+              </coding>
+            </valueCodeableConcept>
+          </extension>
+        </confidentiality>
+        <attester>
+          <mode value="legal"/>
+          <time value="2017-10-03"/>
+          <party>
+            <reference value="Practitioner/7a8461a8-d6a0-4d27-8457-b03d4f8c57c7"/>
+          </party>
+        </attester>
+        <custodian>
+          <reference value="Organization/c9ed9cd7-fc2e-4d0d-934b-11a72e7f3622"/>
+        </custodian>
+        <section>
+          <title value="Gew&#xFC;nschte Untersuchung"/>
+          <text>
+            <status value="generated"/><div xmlns="http://www.w3.org/1999/xhtml"><span>
+							Der Patient erwartet Ihr Aufgebot zur Untersuchung.<br/></span><span style="font-style: italic">
+							Spezifizierung der gewünschten Untersuchung<br/></span></div>
+          </text>
+        </section>
+        <section>
+          <title value="Dringlichkeit / Wunschtermin"/>
+          <text>
+            <status value="generated"/><div xmlns="http://www.w3.org/1999/xhtml"><span style="font-style: italic">
+							Angaben zum gewünschten Termin
+						</span></div>
+          </text>
+        </section>
+        <section>
+          <title value="Fragestellung"/>
+          <text>
+            <status value="generated"/><div xmlns="http://www.w3.org/1999/xhtml"><span style="font-style: italic">
+							Grund für die Durchführung der Untersuchung und Angaben zum aktuellen Leiden resp. zum Grund der Untersuchung
+						</span></div>
+          </text>
+        </section>
+        <section>
+          <title value="Angaben zum Patienten"/>
+          <text>
+            <status value="generated"/><div xmlns="http://www.w3.org/1999/xhtml"><span style="font-style: italic">
+							Erfolgte Voruntersuchungen<br/>
+							Befundkopie – Empfänger<br/></span></div>
+          </text>
+        </section>
+        <section>
+          <title value="Klinische Angaben"/>
+          <text>
+            <status value="generated"/><div xmlns="http://www.w3.org/1999/xhtml"><span style="font-style: italic">
+							Beschreibung des aktuellen Leidens<br/>
+							Schwangerschaft ja / nein<br/>
+							Laborwerte (Quick / Tc, Kreatinin)<br/>
+							Bekannte Allergien<br/></span></div>
+          </text>
+        </section>
+      </Composition>
+    </resource>
+  </entry>
+  <entry>
+    <fullUrl value="urn:uuid:7f6cd3b1-db07-4892-906a-f56f971705bf"/>
+    <resource>
+      <Patient>
+        <id value="7f6cd3b1-db07-4892-906a-f56f971705bf"/>
+        <identifier>
+          <type>
+            <coding>
+              <system value="http://terminology.hl7.org/CodeSystem/v2-0203"/>
+              <code value="MR"/>
+            </coding>
+          </type>
+          <system value="urn:oid:2.16.756.888888.3.1"/>
+          <value value="8733"/>
+        </identifier>
+        <name>
+          <family value="MUSTER"/>
+          <given value="Max"/>
+        </name>
+        <telecom>
+          <system value="phone"/>
+          <value value="+41.32.685.12.34"/>
+          <use value="home"/>
+        </telecom>
+        <telecom>
+          <system value="phone"/>
+          <value value="+41.32.123.77.88"/>
+          <use value="work"/>
+        </telecom>
+        <telecom>
+          <system value="email"/>
+          <value value="max.muster@sampledomain.ch"/>
+          <use value="work"/>
+        </telecom>
+        <gender value="male"/>
+        <birthDate value="1938-12-12"/>
+        <address>
+          <use value="home"/>
+          <line value="Leidensweg"/>
+          <line value="10"/>
+          <city value="Specimendorf"/>
+          <postalCode value="9999"/>
+          <country value="CH"/>
+        </address>
+        <managingOrganization>
+          <reference value="Organization/6357b0b9-d006-473a-8d2c-e31841c5c6ed"/>
+        </managingOrganization>
+      </Patient>
+    </resource>
+  </entry>
+  <entry>
+    <fullUrl value="urn:uuid:6357b0b9-d006-473a-8d2c-e31841c5c6ed"/>
+    <resource>
+      <Organization>
+        <id value="6357b0b9-d006-473a-8d2c-e31841c5c6ed"/>
+        <identifier>
+          <system value="urn:oid:2.51.1.3"/>
+          <value value="7601000201041"/>
+        </identifier>
+        <name value="Gruppenpraxis CH, Dr. med. Allzeit Bereit"/>
+      </Organization>
+    </resource>
+  </entry>
+  <entry>
+    <fullUrl value="urn:uuid:06033e58-d92b-4663-b85d-59068c13b914"/>
+    <resource>
+      <Practitioner>
+        <id value="06033e58-d92b-4663-b85d-59068c13b914"/>
+        <identifier>
+          <system value="urn:oid:2.51.1.3"/>
+          <value value="7601000201041"/>
+        </identifier>
+        <name>
+          <family value="Bereit"/>
+          <given value="Allzeit"/>
+          <prefix value="Dr. med."/>
+          <suffix value="Facharzt f&#xFC;r Allgemeine Medizin"/>
+        </name>
+      </Practitioner>
+    </resource>
+  </entry>
+  <entry>
+    <fullUrl value="urn:uuid:07a18943-0193-4679-8a0e-48d152be84d5"/>
+    <resource>
+      <Organization>
+        <id value="07a18943-0193-4679-8a0e-48d152be84d5"/>
+        <identifier>
+          <system value="urn:oid:2.51.1.3"/>
+          <value value="7601000201041"/>
+        </identifier>
+        <name value="Gruppenpraxis CH"/>
+        <telecom>
+          <system value="phone"/>
+          <value value="+41.32.234.55.66"/>
+          <use value="work"/>
+        </telecom>
+        <telecom>
+          <system value="fax"/>
+          <value value="+41.32.234.66.77"/>
+          <use value="work"/>
+        </telecom>
+        <telecom>
+          <system value="email"/>
+          <value value="bereit@gruppenpraxis.ch"/>
+          <use value="work"/>
+        </telecom>
+        <telecom>
+          <system value="url"/>
+          <value value="//www.gruppenpraxis.ch"/>
+          <use value="work"/>
+        </telecom>
+        <address>
+          <use value="work"/>
+          <line value="Doktorgasse"/>
+          <line value="2"/>
+          <city value="Musterhausen"/>
+          <postalCode value="8888"/>
+          <country value="CH"/>
+        </address>
+      </Organization>
+    </resource>
+  </entry>
+  <entry>
+    <fullUrl value="urn:uuid:7a8461a8-d6a0-4d27-8457-b03d4f8c57c7"/>
+    <resource>
+      <Practitioner>
+        <id value="7a8461a8-d6a0-4d27-8457-b03d4f8c57c7"/>
+        <identifier>
+          <system value="urn:oid:2.51.1.3"/>
+          <value value="7601000201041"/>
+        </identifier>
+        <name>
+          <family value="Bereit"/>
+          <given value="Allzeit"/>
+          <prefix value="Dr. med."/>
+          <suffix value="Facharzt f&#xFC;r Allgemeine Medizin"/>
+        </name>
+      </Practitioner>
+    </resource>
+  </entry>
+  <entry>
+    <fullUrl value="urn:uuid:c9ed9cd7-fc2e-4d0d-934b-11a72e7f3622"/>
+    <resource>
+      <Organization>
+        <id value="c9ed9cd7-fc2e-4d0d-934b-11a72e7f3622"/>
+        <identifier>
+          <system value="urn:oid:2.51.1.3"/>
+          <value value="7601000201041"/>
+        </identifier>
+        <name value="Gruppenpraxis CH, Dr. med. Allzeit Bereit, Facharzt f&#xFC;r Allgemeine Medizin"/>
+        <address>
+          <use value="work"/>
+          <line value="Doktorgasse"/>
+          <line value="2"/>
+          <city value="Musterhausen"/>
+          <postalCode value="8888"/>
+          <country value="CH"/>
+        </address>
+      </Organization>
+    </resource>
+  </entry>
+  <entry>
+    <fullUrl value="urn:uuid:4faa0ef8-c454-4117-aebe-898598411b73"/>
+    <resource>
+      <Organization>
+        <id value="4faa0ef8-c454-4117-aebe-898598411b73"/>
+        <name value="RoDiag Radiologieinstitut"/>
+        <address>
+          <use value="work"/>
+          <line value="R&#xF6;ntgenstr."/>
+          <line value="1"/>
+          <city value="Musterhausen"/>
+          <postalCode value="8888"/>
+          <country value="CH"/>
+        </address>
+      </Organization>
+    </resource>
+  </entry>
+  <entry>
+    <fullUrl value="urn:uuid:a9cd5693-72d1-47db-aa17-0b9136cbe88c"/>
+    <resource>
+      <Person>
+        <id value="a9cd5693-72d1-47db-aa17-0b9136cbe88c"/>
+        <identifier>
+          <system value="urn:oid:2.999"/>
+          <value value="0812763"/>
+        </identifier>
+        <name>
+          <family value="Kraft"/>
+          <given value="Schreib"/>
+        </name>
+      </Person>
+    </resource>
+  </entry>
+</Bundle>

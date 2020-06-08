@@ -1,16 +1,16 @@
 ### Create and Update FHIR maps for converting to CDA with RESTClient and running matchbox (locally)
 ### Note: POST the maps in the following order, if you update one map you need to repost also the maps below
 
-@host = https://test.ahdis.ch/r4
-### @host = http://localhost:8080/r4
+###@host = https://test.ahdis.ch/r4
+@host = http://localhost:8080/r4
 
 
-### 1. POST FhirtoCdaTypes.map
+### 1. POST FhirToCdaTypes.map
 POST {{host}}/StructureMap HTTP/1.1
 Accept: application/fhir+xml;fhirVersion=4.0
 Content-Type: text/fhir-mapping
 
-< ./input/maps/FhirtoCdaTypes.map
+< ./input/maps/FhirToCdaTypes.map
 
 
 ### 2. POST BundleToCda.map
@@ -31,7 +31,7 @@ Content-Type: text/fhir-mapping
 
 
 ### 5a. Transform 1-Zuweisung zur Radiologischen Diagnostik.xml from FHIR to CDA
-POST {{host}}/StructureMap/$transform?source=http://ahdis.ch/ig/cda-fhir-maps/StructureMap/BundleToCdaCh
+POST {{host}}/StructureMap/$transform?source=http://fhir.ch/ig/cda-fhir-maps/StructureMap/BundleToCdaCh
 Accept: application/fhir+xml;fhirVersion=4.0
 Content-Type: application/fhir+xml;fhirVersion=4.0
 
@@ -39,17 +39,9 @@ Content-Type: application/fhir+xml;fhirVersion=4.0
 
 
 ### 5b. CdaContainingOriginalRepresentationAsPdfA.xml from FHIR to CDA
-POST {{host}}/StructureMap/$transform?source=http://ahdis.ch/ig/cda-fhir-maps/StructureMap/BundleToCdaCh
+POST {{host}}/StructureMap/$transform?source=http://fhir.ch/ig/cda-fhir-maps/StructureMap/BundleToCdaCh
 Accept: application/fhir+xml;fhirVersion=4.0
 Content-Type: application/fhir+xml;fhirVersion=4.0
 
 < ./input/ch-core/CdaContainingOriginalRepresentationAsPdfA.xml
 
-
-
-### 6. Validate the transformed document
-POST {{host}}/$validate?profile=http://hl7.org/fhir/cda/StructureDefinition/ClinicalDocument
-Accept: application/fhir+xml;fhirVersion=4.0
-Content-Type: application/fhir+xml;fhirVersion=4.0
-
-< ./input/compare-files/1-2-CDA-generiert.xml

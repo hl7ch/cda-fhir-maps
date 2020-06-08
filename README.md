@@ -69,10 +69,10 @@ To transform the documents from CDA to FHIR and back and maybe add your own maps
 
 ## Development
 
-Clone this project https://github.com/ahdis/cda-fhir-maps/
+Clone this project https://github.com/hl7ch/cda-fhir-maps
    * Option 1: GitHub Desktop
    * Option 2: VSC Terminal:   
-    `git clone https://github.com/ahdis/cda-fhir-maps.git`
+    `git clone https://github.com/hl7ch/cda-fhir-maps.git`
 
 Open it with Visual Studio Code (REST Client extension is needed).
 
