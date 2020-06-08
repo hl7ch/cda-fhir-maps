@@ -87,8 +87,8 @@ group CompositionClinicalDocument(source bundle : Bundle, source composition : C
     entry.resource as practitioner where ('Practitioner'+'/'+$this.id) in %composition.attester.party.reference -> cda.legalAuthenticator as legalAuthenticator then PractitionerLegalAuthenticator(bundle, composition, practitioner, legalAuthenticator) "legalAuthenticator";
   } "patient";
   
-  //  source.date -> target.effectiveTime "effectiveTime";
-//  source.event as srcEvent ->  target.documentationOf as doc,  doc.serviceEvent as event then {
+  //  source.date -> tgt.effectiveTime "effectiveTime";
+//  source.event as srcEvent ->  tgt.documentationOf as doc,  doc.serviceEvent as event then {
 //    srcEvent.period -> event.effectiveTime;
 //  } "event";
 
@@ -98,14 +98,14 @@ group CompositionClinicalDocument(source bundle : Bundle, source composition : C
     } "section";
 }
 
-group PatientRecordTarget(source source : Patient, source bundle: Bundle, target target : RecordTarget) {
-  source -> target.patientRole as patientRole then {
-    source.identifier as identifier -> patientRole.id as id then IdentifierII(identifier, id) "identifier";
-    source.address as address -> patientRole.addr as ad then AddressAD(address, ad) "address";
-    source -> patientRole.patient as patient then {
-      source.name as humanname -> patient.name as en then HumanNameEN(humanname, en) "name";
-      source.birthDate as birthDate -> patient.birthTime as birthTime then DateTS(birthDate, birthTime) "birthDate";
-      source.gender as v log $this -> patient.administrativeGenderCode as adminGender then {
+group PatientRecordTarget(source src : Patient, source bundle: Bundle, target tgt : RecordTarget) {
+  src -> tgt.patientRole as patientRole then {
+    src.identifier as identifier -> patientRole.id as id then IdentifierII(identifier, id) "identifier";
+    src.address as address -> patientRole.addr as ad then AddressAD(address, ad) "address";
+    src -> patientRole.patient as patient then {
+      src.name as humanname -> patient.name as en then HumanNameEN(humanname, en) "name";
+      src.birthDate as birthDate -> patient.birthTime as birthTime then DateTS(birthDate, birthTime) "birthDate";
+      src.gender as v log $this -> patient.administrativeGenderCode as adminGender then {
         v -> adminGender.code = translate(v, 'http://hl7.org/fhir/ConceptMap/cm-administrative-gender-v3', 'code') "gender";
         v -> adminGender.codeSystem ='2.16.840.1.113883.5.1' "codeSytem";
         v -> adminGender.codeSystemName='HL7 AdministrativeGender' "codeSystemName";
@@ -114,63 +114,63 @@ group PatientRecordTarget(source source : Patient, source bundle: Bundle, target
         v as v where $this = 'other' -> adminGender.displayName = 'Undifferentiated' "other";
       } "gender";
     } "patient";
-    source.telecom as telecom -> patientRole.telecom as tel then ContactPointTEL(telecom, tel);
-    source.managingOrganization as managingOrganization then {
+    src.telecom as telecom -> patientRole.telecom as tel then ContactPointTEL(telecom, tel);
+    src.managingOrganization as managingOrganization then {
       bundle.entry as entry then {
         entry.resource as organization where ('Organization'+'/'+$this.id) in %managingOrganization.reference -> patientRole.providerOrganization as providerOrganization then Organization2CdaOrganization(organization, providerOrganization) "providerOrganization";
       } "entry";
     } "managingOrganization";
   } "patientRole";
-//  source.patient as patient then {
-//    patient.deceasedInd as indicator where patient.deceasedTime.empty() -> target.deceased = create('boolean') as bool then boolean(indicator, bool) "deceasedBL";
-//    patient.deceasedTime -> target.deceased;
-//    patient.maritalStatusCode -> target.maritalStatus "maritalStatus";
-//    patient.languageCommunication as language -> target.communication as communication then {
+//  src.patient as patient then {
+//    patient.deceasedInd as indicator where patient.deceasedTime.empty() -> tgt.deceased = create('boolean') as bool then boolean(indicator, bool) "deceasedBL";
+//    patient.deceasedTime -> tgt.deceased;
+//    patient.maritalStatusCode -> tgt.maritalStatus "maritalStatus";
+//    patient.languageCommunication as language -> tgt.communication as communication then {
 //     language.languageCode -> communication.language "communication"; // preference: for language.preferenceInd make communication.preferred
 //    } "language";
 //  } "patient";
 }
 
-group PractitionerAuthor(source bundle : Bundle, source composition : Composition, source source : Practitioner, target target : Author) {
+group PractitionerAuthor(source bundle : Bundle, source composition : Composition, source src : Practitioner, target tgt : Author) {
   composition.author as srcauthor then{
     srcauthor.extension as extensionTime where $this.url='http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-time' then {
-        extensionTime.valueDateTime as valueDateTime -> target.time as time then DateTimeTS(valueDateTime,time) "DateTime";
+        extensionTime.valueDateTime as valueDateTime -> tgt.time as time then DateTimeTS(valueDateTime,time) "DateTime";
     } "extensionTime";
   } "srcAuthor";  
-  source -> target.assignedAuthor as assignedAuthor then {
-      source.identifier as identifier -> assignedAuthor.id as id then IdentifierII(identifier, id) "id";
-      source.name as name -> assignedAuthor.assignedPerson as assignedPerson, assignedPerson.name as en then HumanNameEN(name, en) "name";
+  src -> tgt.assignedAuthor as assignedAuthor then {
+      src.identifier as identifier -> assignedAuthor.id as id then IdentifierII(identifier, id) "id";
+      src.name as name -> assignedAuthor.assignedPerson as assignedPerson, assignedPerson.name as en then HumanNameEN(name, en) "name";
       bundle.entry as entry then {
          entry.resource as organization where ('Organization'+'/'+$this.id) in %composition.author.reference -> assignedAuthor.representedOrganization as cdaorganization then Organization2CdaOrganization(organization, cdaorganization) "organization";
       } "patient";
   } "assignedAuthor";
 } 
 
-group OrganizationCustodian(source source : Organization, target target : Custodian) {
-  source -> target.assignedCustodian as assignedCustodian then {
-    source -> assignedCustodian.representedCustodianOrganization as representedCustodianOrganization then Organization2CdaOrganization(source, representedCustodianOrganization) "representedCustodianOrganization";
+group OrganizationCustodian(source src : Organization, target tgt : Custodian) {
+  src -> tgt.assignedCustodian as assignedCustodian then {
+    src -> assignedCustodian.representedCustodianOrganization as representedCustodianOrganization then Organization2CdaOrganization(src, representedCustodianOrganization) "representedCustodianOrganization";
   } "assignedCustodian";
 }
 
-group Organization2CdaOrganization(source source : Organization, target target : CdaOrganization) {
-  source.identifier as identifier -> target.id as id then IdentifierII(identifier, id) "id";
-  source.name as name -> target.name as orgname, orgname.other = name "name";
-  source.address as address -> target.addr as ad then AddressAD(address, ad) "address";
-  source.telecom as telecom -> target.telecom as tel then ContactPointTEL(telecom, tel);
+group Organization2CdaOrganization(source src : Organization, target tgt : CdaOrganization) {
+  src.identifier as identifier -> tgt.id as id then IdentifierII(identifier, id) "id";
+  src.name as name -> tgt.name as orgname, orgname.other = name "name";
+  src.address as address -> tgt.addr as ad then AddressAD(address, ad) "address";
+  src.telecom as telecom -> tgt.telecom as tel then ContactPointTEL(telecom, tel);
 }
 
 
-group PractitionerLegalAuthenticator(source bundle : Bundle, source composition : Composition, source source : Practitioner, target target : LegalAuthenticator) {
-  source -> target.templateId as templateId, templateId.root='2.16.756.5.30.1.1.10.2.5' "templateId";
+group PractitionerLegalAuthenticator(source bundle : Bundle, source composition : Composition, source src : Practitioner, target tgt : LegalAuthenticator) {
+  src -> tgt.templateId as templateId, templateId.root='2.16.756.5.30.1.1.10.2.5' "templateId";
   composition.attester as attester then{
-    attester.time as srcTime -> target.time as time then InstantTS(srcTime, time) "timestamp";
+    attester.time as srcTime -> tgt.time as time then InstantTS(srcTime, time) "timestamp";
   } "time";
-  //source -> target.signatureCode = 'S' "S";
-  //source = 'S' as srcCode -> target.signatureCode as signature then CodeCS(srcCode, signature) "signature";
-  source -> target.signatureCode as signatureCode, signatureCode.code='S' "signature";
-  source -> target.assignedEntity as assignedEntity then {
-    source.identifier as identifier -> assignedEntity.id as id then IdentifierII(identifier, id) "identifier";
-    source.name as name -> assignedEntity.assignedPerson as assignedPerson, assignedPerson.name as en then HumanNameEN(name, en) "name";
+  //src -> tgt.signatureCode = 'S' "S";
+  //src = 'S' as srcCode -> tgt.signatureCode as signature then CodeCS(srcCode, signature) "signature";
+  src -> tgt.signatureCode as signatureCode, signatureCode.code='S' "signature";
+  src -> tgt.assignedEntity as assignedEntity then {
+    src.identifier as identifier -> assignedEntity.id as id then IdentifierII(identifier, id) "identifier";
+    src.name as name -> assignedEntity.assignedPerson as assignedPerson, assignedPerson.name as en then HumanNameEN(name, en) "name";
   } "assignedEntity";
 } 
 

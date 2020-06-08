@@ -268,7 +268,7 @@
       <extends value="ClinicalDocumentSection"></extends>
       <typeMode value="none"></typeMode>
       <input>
-         <name value="source"></name>
+         <name value="src"></name>
          <type value="Section"></type>
          <mode value="source"></mode>
       </input>
@@ -278,7 +278,7 @@
          <mode value="source"></mode>
       </input>
       <input>
-         <name value="target"></name>
+         <name value="tgt"></name>
          <mode value="target"></mode>
       </input>
       <input>
@@ -289,7 +289,7 @@
       <rule>
          <name value="cdaEntry"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="entry"></element>
             <variable value="cdaEntry"></variable>
          </source>
@@ -329,7 +329,7 @@
             </parameter>
          </target>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="entry"></element>
             <variable value="reference"></variable>
@@ -471,7 +471,7 @@
       <name value="ChExtEprConfidentialityCode"></name>
       <typeMode value="none"></typeMode>
       <input>
-         <name value="source"></name>
+         <name value="src"></name>
          <type value="CE"></type>
          <mode value="source"></mode>
       </input>
@@ -483,7 +483,7 @@
       <rule>
          <name value="url"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
          </source>
          <target>
             <context value="ext"></context>
@@ -498,7 +498,7 @@
       <rule>
          <name value="code"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
          </source>
          <target>
             <context value="ext"></context>
@@ -512,7 +512,7 @@
          </target>
          <dependent>
             <name value="CECodeableConcept"></name>
-            <variable value="source"></variable>
+            <variable value="src"></variable>
             <variable value="value"></variable>
          </dependent>
       </rule>
@@ -521,7 +521,7 @@
       <name value="ChExtEprSetId"></name>
       <typeMode value="none"></typeMode>
       <input>
-         <name value="source"></name>
+         <name value="src"></name>
          <type value="II"></type>
          <mode value="source"></mode>
       </input>
@@ -533,7 +533,7 @@
       <rule>
          <name value="url"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
          </source>
          <target>
             <context value="ext"></context>
@@ -548,7 +548,7 @@
       <rule>
          <name value="value"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
          </source>
          <target>
             <context value="ext"></context>
@@ -562,7 +562,7 @@
          </target>
          <dependent>
             <name value="II"></name>
-            <variable value="source"></variable>
+            <variable value="src"></variable>
             <variable value="value"></variable>
          </dependent>
       </rule>
@@ -571,7 +571,7 @@
       <name value="ChExtEprVersionNumber"></name>
       <typeMode value="none"></typeMode>
       <input>
-         <name value="source"></name>
+         <name value="src"></name>
          <type value="INT"></type>
          <mode value="source"></mode>
       </input>
@@ -583,7 +583,7 @@
       <rule>
          <name value="url"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
          </source>
          <target>
             <context value="ext"></context>
@@ -598,7 +598,7 @@
       <rule>
          <name value="value"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
          </source>
          <target>
             <context value="ext"></context>
@@ -612,7 +612,7 @@
          </target>
          <dependent>
             <name value="INT"></name>
-            <variable value="source"></variable>
+            <variable value="src"></variable>
             <variable value="value"></variable>
          </dependent>
       </rule>
@@ -621,7 +621,7 @@
       <name value="ChExtEprInformationRecipient"></name>
       <typeMode value="none"></typeMode>
       <input>
-         <name value="source"></name>
+         <name value="src"></name>
          <type value="IntendedRecipient"></type>
          <mode value="source"></mode>
       </input>
@@ -638,7 +638,7 @@
       <rule>
          <name value="url"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
          </source>
          <target>
             <context value="ext"></context>
@@ -653,7 +653,7 @@
       <rule>
          <name value="value"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
          </source>
          <target>
             <context value="ext"></context>
@@ -678,7 +678,7 @@
       <rule>
          <name value="address"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="addr"></element>
             <variable value="addr"></variable>
          </source>
@@ -697,7 +697,7 @@
       <rule>
          <name value="informationRecipient"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="informationRecipient"></element>
             <variable value="informationRecipient"></variable>
          </source>
@@ -726,7 +726,7 @@
       <name value="ChExtEprInformationRecipientOrganization"></name>
       <typeMode value="none"></typeMode>
       <input>
-         <name value="source"></name>
+         <name value="src"></name>
          <type value="IntendedRecipient"></type>
          <mode value="source"></mode>
       </input>
@@ -743,7 +743,7 @@
       <rule>
          <name value="url"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
          </source>
          <target>
             <context value="ext"></context>
@@ -758,7 +758,7 @@
       <rule>
          <name value="value"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
          </source>
          <target>
             <context value="ext"></context>
@@ -783,7 +783,7 @@
       <rule>
          <name value="organization"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="receivedOrganization"></element>
             <variable value="receivedOrganization"></variable>
          </source>
@@ -798,7 +798,7 @@
       <name value="ChExtEprDataEnterer"></name>
       <typeMode value="none"></typeMode>
       <input>
-         <name value="source"></name>
+         <name value="src"></name>
          <type value="DataEnterer"></type>
          <mode value="source"></mode>
       </input>
@@ -815,7 +815,7 @@
       <rule>
          <name value="url"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
          </source>
          <target>
             <context value="ext"></context>
@@ -830,7 +830,7 @@
       <rule>
          <name value="person"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="assignedEntity"></element>
             <variable value="assignedEntity"></variable>
          </source>
@@ -877,7 +877,7 @@
       <rule>
          <name value="time"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="time"></element>
             <variable value="time"></variable>
          </source>
@@ -898,12 +898,12 @@
       <name value="ClinicalDocumentCompositionCh"></name>
       <typeMode value="none"></typeMode>
       <input>
-         <name value="source"></name>
+         <name value="src"></name>
          <type value="ClinicalDocument"></type>
          <mode value="source"></mode>
       </input>
       <input>
-         <name value="target"></name>
+         <name value="tgt"></name>
          <type value="Composition"></type>
          <mode value="target"></mode>
       </input>
@@ -920,7 +920,7 @@
       <rule>
          <name value="confidentialityCode"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="confidentialityCode"></element>
             <variable value="confidentialityCode"></variable>
          </source>
@@ -932,7 +932,7 @@
                <variable value="v"></variable>
             </source>
             <target>
-               <context value="target"></context>
+               <context value="tgt"></context>
                <contextType value="variable"></contextType>
                <element value="confidentiality"></element>
                <variable value="fhirconf"></variable>
@@ -965,12 +965,12 @@
       <rule>
          <name value="setId"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="setId"></element>
             <variable value="setId"></variable>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="extension"></element>
             <variable value="ext"></variable>
@@ -984,12 +984,12 @@
       <rule>
          <name value="versionNumber"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="versionNumber"></element>
             <variable value="versionNumber"></variable>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="extension"></element>
             <variable value="ext2"></variable>
@@ -1003,7 +1003,7 @@
       <rule>
          <name value="entry"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="informationRecipient"></element>
             <variable value="informationRecipient"></variable>
          </source>
@@ -1051,7 +1051,7 @@
                </parameter>
             </target>
             <target>
-               <context value="target"></context>
+               <context value="tgt"></context>
                <contextType value="variable"></contextType>
                <element value="extension"></element>
                <variable value="ext"></variable>
@@ -1106,7 +1106,7 @@
                   </parameter>
                </target>
                <target>
-                  <context value="target"></context>
+                  <context value="tgt"></context>
                   <contextType value="variable"></contextType>
                   <element value="extension"></element>
                   <variable value="ext"></variable>
@@ -1123,7 +1123,7 @@
       <rule>
          <name value="dataEnterer"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="dataEnterer"></element>
             <variable value="dataEnterer"></variable>
          </source>
@@ -1163,7 +1163,7 @@
             </parameter>
          </target>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="extension"></element>
             <variable value="ext"></variable>

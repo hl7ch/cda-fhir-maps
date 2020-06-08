@@ -317,7 +317,7 @@
       <name value="ClinicalDocumentSection"></name>
       <typeMode value="none"></typeMode>
       <input>
-         <name value="source"></name>
+         <name value="src"></name>
          <type value="Section"></type>
          <mode value="source"></mode>
       </input>
@@ -327,7 +327,7 @@
          <mode value="source"></mode>
       </input>
       <input>
-         <name value="target"></name>
+         <name value="tgt"></name>
          <mode value="target"></mode>
       </input>
       <input>
@@ -338,12 +338,12 @@
       <rule>
          <name value="sectionId"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="id"></element>
             <variable value="id"></variable>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="extension"></element>
             <variable value="ext"></variable>
@@ -357,12 +357,12 @@
       <rule>
          <name value="title"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="title"></element>
             <variable value="t"></variable>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="title"></element>
             <transform value="evaluate"></transform>
@@ -374,12 +374,12 @@
       <rule>
          <name value="code"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="code"></element>
             <variable value="vvv"></variable>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="code"></element>
             <variable value="vvv"></variable>
@@ -389,12 +389,12 @@
       <rule>
          <name value="cdaText"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="text"></element>
             <variable value="cdaText"></variable>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="text"></element>
             <variable value="fhirText"></variable>
@@ -434,12 +434,12 @@
       <rule>
          <name value="section"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="section"></element>
             <variable value="srcSection"></variable>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="section"></element>
             <variable value="tgtSection"></variable>
@@ -457,12 +457,12 @@
       <name value="ClinicalDocumentComposition"></name>
       <typeMode value="none"></typeMode>
       <input>
-         <name value="source"></name>
+         <name value="src"></name>
          <type value="ClinicalDocument"></type>
          <mode value="source"></mode>
       </input>
       <input>
-         <name value="target"></name>
+         <name value="tgt"></name>
          <type value="Composition"></type>
          <mode value="target"></mode>
       </input>
@@ -479,12 +479,12 @@
       <rule>
          <name value="languageCode"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="languageCode"></element>
             <variable value="vvv"></variable>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="language"></element>
             <variable value="vvv"></variable>
@@ -494,12 +494,12 @@
       <rule>
          <name value="setId"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="setId"></element>
             <variable value="vvv"></variable>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="identifier"></element>
             <variable value="vvv"></variable>
@@ -509,10 +509,10 @@
       <rule>
          <name value="status"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="status"></element>
             <transform value="copy"></transform>
@@ -524,12 +524,12 @@
       <rule>
          <name value="code"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="code"></element>
             <variable value="vvv"></variable>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="type"></element>
             <variable value="vvv"></variable>
@@ -539,12 +539,12 @@
       <rule>
          <name value="title"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="title"></element>
             <variable value="t"></variable>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="title"></element>
             <transform value="evaluate"></transform>
@@ -556,7 +556,7 @@
       <rule>
          <name value="patientRole"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="recordTarget"></element>
             <variable value="recordTarget"></variable>
          </source>
@@ -568,7 +568,7 @@
                <variable value="patient"></variable>
             </source>
             <target>
-               <context value="target"></context>
+               <context value="tgt"></context>
                <contextType value="variable"></contextType>
                <element value="subject"></element>
                <variable value="reference"></variable>
@@ -597,7 +597,7 @@
       <rule>
          <name value="encompassingEncounter"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="componentOf"></element>
             <variable value="comp"></variable>
          </source>
@@ -644,7 +644,7 @@
                <variable value="srcEnc"></variable>
             </source>
             <target>
-               <context value="target"></context>
+               <context value="tgt"></context>
                <contextType value="variable"></contextType>
                <element value="encounter"></element>
                <variable value="reference"></variable>
@@ -673,12 +673,12 @@
       <rule>
          <name value="effectiveTime"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="effectiveTime"></element>
             <variable value="vvv"></variable>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="date"></element>
             <variable value="vvv"></variable>
@@ -688,7 +688,7 @@
       <rule>
          <name value="srcAuthor"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="author"></element>
             <variable value="srcAuthor"></variable>
          </source>
@@ -728,7 +728,7 @@
             </parameter>
          </target>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="author"></element>
             <variable value="reference"></variable>
@@ -883,7 +883,7 @@
                   </parameter>
                </target>
                <target>
-                  <context value="target"></context>
+                  <context value="tgt"></context>
                   <contextType value="variable"></contextType>
                   <element value="author"></element>
                   <variable value="reference2"></variable>
@@ -912,12 +912,12 @@
       <rule>
          <name value="confidentialityCode"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="confidentialityCode"></element>
             <variable value="vvv"></variable>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="confidentiality"></element>
             <variable value="vvv"></variable>
@@ -929,7 +929,7 @@
       <rule>
          <name value="legalAuth"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="legalAuthenticator"></element>
             <variable value="legalAuth"></variable>
          </source>
@@ -974,7 +974,7 @@
                <context value="legalAuth"></context>
             </source>
             <target>
-               <context value="target"></context>
+               <context value="tgt"></context>
                <contextType value="variable"></contextType>
                <element value="attester"></element>
                <variable value="attester"></variable>
@@ -1046,7 +1046,7 @@
       <rule>
          <name value="auth"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="authenticator"></element>
             <variable value="auth"></variable>
          </source>
@@ -1091,7 +1091,7 @@
                <context value="auth"></context>
             </source>
             <target>
-               <context value="target"></context>
+               <context value="tgt"></context>
                <contextType value="variable"></contextType>
                <element value="attester"></element>
                <variable value="attester"></variable>
@@ -1163,7 +1163,7 @@
       <rule>
          <name value="cust"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="custodian"></element>
             <variable value="custodian"></variable>
          </source>
@@ -1217,7 +1217,7 @@
                   <variable value="srcOrg"></variable>
                </source>
                <target>
-                  <context value="target"></context>
+                  <context value="tgt"></context>
                   <contextType value="variable"></contextType>
                   <element value="custodian"></element>
                   <variable value="reference"></variable>
@@ -1246,7 +1246,7 @@
       <rule>
          <name value="documentationOf"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="documentationOf"></element>
             <variable value="docOf"></variable>
          </source>
@@ -1258,7 +1258,7 @@
                <variable value="serviceEvent"></variable>
             </source>
             <target>
-               <context value="target"></context>
+               <context value="tgt"></context>
                <contextType value="variable"></contextType>
                <element value="event"></element>
                <variable value="event"></variable>
@@ -1298,12 +1298,12 @@
       <rule>
          <name value="relatedDoc"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="relatedDocument"></element>
             <variable value="relatedDoc"></variable>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="relatesTo"></element>
             <variable value="relates"></variable>
@@ -1352,24 +1352,24 @@
       <name value="ClinicalDocumentEntityPerson"></name>
       <typeMode value="none"></typeMode>
       <input>
-         <name value="source"></name>
+         <name value="src"></name>
          <type value="AssignedEntity"></type>
          <mode value="source"></mode>
       </input>
       <input>
-         <name value="target"></name>
+         <name value="tgt"></name>
          <type value="Person"></type>
          <mode value="target"></mode>
       </input>
       <rule>
          <name value="id"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="id"></element>
             <variable value="vvv"></variable>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="identifier"></element>
             <variable value="vvv"></variable>
@@ -1379,12 +1379,12 @@
       <rule>
          <name value="addr"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="addr"></element>
             <variable value="vvv"></variable>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="address"></element>
             <variable value="vvv"></variable>
@@ -1394,12 +1394,12 @@
       <rule>
          <name value="telecom"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="telecom"></element>
             <variable value="vvv"></variable>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="telecom"></element>
             <variable value="vvv"></variable>
@@ -1409,7 +1409,7 @@
       <rule>
          <name value="name"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="assignedPerson"></element>
             <variable value="person"></variable>
          </source>
@@ -1421,7 +1421,7 @@
                <variable value="vvv"></variable>
             </source>
             <target>
-               <context value="target"></context>
+               <context value="tgt"></context>
                <contextType value="variable"></contextType>
                <element value="name"></element>
                <variable value="vvv"></variable>
@@ -1434,24 +1434,24 @@
       <name value="ClinicalDocumentEntityPractitioner"></name>
       <typeMode value="none"></typeMode>
       <input>
-         <name value="source"></name>
+         <name value="src"></name>
          <type value="AssignedEntity"></type>
          <mode value="source"></mode>
       </input>
       <input>
-         <name value="target"></name>
+         <name value="tgt"></name>
          <type value="Practitioner"></type>
          <mode value="target"></mode>
       </input>
       <rule>
          <name value="id"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="id"></element>
             <variable value="vvv"></variable>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="identifier"></element>
             <variable value="vvv"></variable>
@@ -1461,12 +1461,12 @@
       <rule>
          <name value="addr"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="addr"></element>
             <variable value="vvv"></variable>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="address"></element>
             <variable value="vvv"></variable>
@@ -1476,12 +1476,12 @@
       <rule>
          <name value="telecom"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="telecom"></element>
             <variable value="vvv"></variable>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="telecom"></element>
             <variable value="vvv"></variable>
@@ -1491,7 +1491,7 @@
       <rule>
          <name value="name"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="assignedPerson"></element>
             <variable value="person"></variable>
          </source>
@@ -1503,7 +1503,7 @@
                <variable value="vvv"></variable>
             </source>
             <target>
-               <context value="target"></context>
+               <context value="tgt"></context>
                <contextType value="variable"></contextType>
                <element value="name"></element>
                <variable value="vvv"></variable>
@@ -1516,24 +1516,24 @@
       <name value="ClinicalDocumentOrganization"></name>
       <typeMode value="none"></typeMode>
       <input>
-         <name value="source"></name>
+         <name value="src"></name>
          <type value="CustodianOrganization"></type>
          <mode value="source"></mode>
       </input>
       <input>
-         <name value="target"></name>
+         <name value="tgt"></name>
          <type value="Organization"></type>
          <mode value="target"></mode>
       </input>
       <rule>
          <name value="id"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="id"></element>
             <variable value="vvv"></variable>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="identifier"></element>
             <variable value="vvv"></variable>
@@ -1543,12 +1543,12 @@
       <rule>
          <name value="name"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="name"></element>
             <variable value="v"></variable>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="name"></element>
             <transform value="evaluate"></transform>
@@ -1560,12 +1560,12 @@
       <rule>
          <name value="telecom"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="telecom"></element>
             <variable value="vvv"></variable>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="telecom"></element>
             <variable value="vvv"></variable>
@@ -1575,12 +1575,12 @@
       <rule>
          <name value="addr"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="addr"></element>
             <variable value="vvv"></variable>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="address"></element>
             <variable value="vvv"></variable>
@@ -1592,12 +1592,12 @@
       <name value="ClinicalDocumentPatientRole"></name>
       <typeMode value="none"></typeMode>
       <input>
-         <name value="source"></name>
+         <name value="src"></name>
          <type value="PatientRole"></type>
          <mode value="source"></mode>
       </input>
       <input>
-         <name value="target"></name>
+         <name value="tgt"></name>
          <type value="Patient"></type>
          <mode value="target"></mode>
       </input>
@@ -1609,10 +1609,10 @@
       <rule>
          <name value="identifier"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="identifier"></element>
             <variable value="identifier"></variable>
@@ -1620,7 +1620,7 @@
          <rule>
             <name value="id"></name>
             <source>
-               <context value="source"></context>
+               <context value="src"></context>
                <element value="id"></element>
                <variable value="id"></variable>
             </source>
@@ -1651,7 +1651,7 @@
             <rule>
                <name value="system"></name>
                <source>
-                  <context value="source"></context>
+                  <context value="src"></context>
                </source>
                <target>
                   <context value="system"></context>
@@ -1666,7 +1666,7 @@
             <rule>
                <name value="code"></name>
                <source>
-                  <context value="source"></context>
+                  <context value="src"></context>
                </source>
                <target>
                   <context value="code"></context>
@@ -1732,12 +1732,12 @@
       <rule>
          <name value="addr"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="addr"></element>
             <variable value="vvv"></variable>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="address"></element>
             <variable value="vvv"></variable>
@@ -1747,12 +1747,12 @@
       <rule>
          <name value="telecom"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="telecom"></element>
             <variable value="vvv"></variable>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="telecom"></element>
             <variable value="vvv"></variable>
@@ -1762,7 +1762,7 @@
       <rule>
          <name value="patient"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="patient"></element>
             <variable value="patient"></variable>
          </source>
@@ -1774,7 +1774,7 @@
                <variable value="vvv"></variable>
             </source>
             <target>
-               <context value="target"></context>
+               <context value="tgt"></context>
                <contextType value="variable"></contextType>
                <element value="name"></element>
                <variable value="vvv"></variable>
@@ -1796,7 +1796,7 @@
                   <variable value="v"></variable>
                </source>
                <target>
-                  <context value="target"></context>
+                  <context value="tgt"></context>
                   <contextType value="variable"></contextType>
                   <element value="gender"></element>
                   <transform value="translate"></transform>
@@ -1820,7 +1820,7 @@
                <variable value="vvv"></variable>
             </source>
             <target>
-               <context value="target"></context>
+               <context value="tgt"></context>
                <contextType value="variable"></contextType>
                <element value="birthDate"></element>
                <variable value="vvv"></variable>
@@ -1836,7 +1836,7 @@
                <condition value="patient.deceasedTime.empty()"></condition>
             </source>
             <target>
-               <context value="target"></context>
+               <context value="tgt"></context>
                <contextType value="variable"></contextType>
                <element value="deceased"></element>
                <variable value="bool"></variable>
@@ -1859,7 +1859,7 @@
                <variable value="vvv"></variable>
             </source>
             <target>
-               <context value="target"></context>
+               <context value="tgt"></context>
                <contextType value="variable"></contextType>
                <element value="deceased"></element>
                <variable value="vvv"></variable>
@@ -1874,7 +1874,7 @@
                <variable value="vvv"></variable>
             </source>
             <target>
-               <context value="target"></context>
+               <context value="tgt"></context>
                <contextType value="variable"></contextType>
                <element value="maritalStatus"></element>
                <variable value="vvv"></variable>
@@ -1889,7 +1889,7 @@
                <variable value="language"></variable>
             </source>
             <target>
-               <context value="target"></context>
+               <context value="tgt"></context>
                <contextType value="variable"></contextType>
                <element value="communication"></element>
                <variable value="communication"></variable>
@@ -1914,7 +1914,7 @@
       <rule>
          <name value="organization"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="providerOrganization"></element>
             <variable value="org"></variable>
          </source>
@@ -1959,7 +1959,7 @@
                <context value="org"></context>
             </source>
             <target>
-               <context value="target"></context>
+               <context value="tgt"></context>
                <contextType value="variable"></contextType>
                <element value="managingOrganization"></element>
                <variable value="reference"></variable>
@@ -2046,7 +2046,7 @@
       <name value="ClinicalDocumentEncounter"></name>
       <typeMode value="none"></typeMode>
       <input>
-         <name value="source"></name>
+         <name value="src"></name>
          <type value="EncompassingEncounter"></type>
          <mode value="source"></mode>
       </input>
@@ -2056,19 +2056,19 @@
          <mode value="target"></mode>
       </input>
       <input>
-         <name value="target"></name>
+         <name value="tgt"></name>
          <type value="Encounter"></type>
          <mode value="target"></mode>
       </input>
       <rule>
          <name value="id"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="id"></element>
             <variable value="vvv"></variable>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="identifier"></element>
             <variable value="vvv"></variable>
@@ -2078,12 +2078,12 @@
       <rule>
          <name value="code"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="code"></element>
             <variable value="vvv"></variable>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="type"></element>
             <variable value="vvv"></variable>
@@ -2093,12 +2093,12 @@
       <rule>
          <name value="effectiveTime"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="effectiveTime"></element>
             <variable value="vvv"></variable>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="period"></element>
             <variable value="vvv"></variable>
@@ -2108,11 +2108,11 @@
       <rule>
          <name value="hospitalization"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <condition value="admissionReferralSourceCode.exists() or dischargeDispositionCode.exists()"></condition>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="hospitalization"></element>
             <variable value="hosp"></variable>
@@ -2120,7 +2120,7 @@
          <rule>
             <name value="adminReferral"></name>
             <source>
-               <context value="source"></context>
+               <context value="src"></context>
                <element value="admissionReferralSourceCode"></element>
                <variable value="vvv"></variable>
             </source>
@@ -2135,7 +2135,7 @@
          <rule>
             <name value="discDisposition"></name>
             <source>
-               <context value="source"></context>
+               <context value="src"></context>
                <element value="dischargeDispositionCode"></element>
                <variable value="vvv"></variable>
             </source>
@@ -2151,12 +2151,12 @@
       <rule>
          <name value="participant"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="encounterParticipant"></element>
             <variable value="srcPart"></variable>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="participant"></element>
             <variable value="tgtPart"></variable>
@@ -2273,7 +2273,7 @@
       <rule>
          <name value="location"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="location"></element>
             <variable value="srcLocation"></variable>
          </source>
@@ -2325,7 +2325,7 @@
                   <context value="facility"></context>
                </source>
                <target>
-                  <context value="target"></context>
+                  <context value="tgt"></context>
                   <contextType value="variable"></contextType>
                   <element value="location"></element>
                   <variable value="tgtLocation"></variable>
@@ -2363,7 +2363,7 @@
       <name value="ClinicalDocumentLocation"></name>
       <typeMode value="none"></typeMode>
       <input>
-         <name value="source"></name>
+         <name value="src"></name>
          <type value="HealthCareFacility"></type>
          <mode value="source"></mode>
       </input>
@@ -2373,19 +2373,19 @@
          <mode value="target"></mode>
       </input>
       <input>
-         <name value="target"></name>
+         <name value="tgt"></name>
          <type value="Location"></type>
          <mode value="target"></mode>
       </input>
       <rule>
          <name value="id"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="id"></element>
             <variable value="vvv"></variable>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="identifier"></element>
             <variable value="vvv"></variable>
@@ -2395,12 +2395,12 @@
       <rule>
          <name value="code"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="code"></element>
             <variable value="vvv"></variable>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="type"></element>
             <variable value="vvv"></variable>
@@ -2410,7 +2410,7 @@
       <rule>
          <name value="location"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="location"></element>
             <variable value="location"></variable>
          </source>
@@ -2422,7 +2422,7 @@
                <variable value="vvv"></variable>
             </source>
             <target>
-               <context value="target"></context>
+               <context value="tgt"></context>
                <contextType value="variable"></contextType>
                <element value="address"></element>
                <variable value="vvv"></variable>
@@ -2477,7 +2477,7 @@
                   <context value="srcOrg"></context>
                </source>
                <target>
-                  <context value="target"></context>
+                  <context value="tgt"></context>
                   <contextType value="variable"></contextType>
                   <element value="managingOrganization"></element>
                   <variable value="reference"></variable>
@@ -2502,14 +2502,14 @@
                </dependent>
             </rule>
          </rule>
-         <documentation value="place names are usually stored with no parts    location.name as srcName -&gt; target.name = cast(srcName, 'string');"></documentation>
+         <documentation value="place names are usually stored with no parts    location.name as srcName -&gt; tgt.name = cast(srcName, 'string');"></documentation>
       </rule>
    </group>
    <group>
       <name value="ChExtEprTime"></name>
       <typeMode value="none"></typeMode>
       <input>
-         <name value="source"></name>
+         <name value="src"></name>
          <type value="TSDateTime"></type>
          <mode value="source"></mode>
       </input>
@@ -2521,7 +2521,7 @@
       <rule>
          <name value="url"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
          </source>
          <target>
             <context value="ext"></context>
@@ -2536,7 +2536,7 @@
       <rule>
          <name value="value"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
          </source>
          <target>
             <context value="ext"></context>
@@ -2550,7 +2550,7 @@
          </target>
          <dependent>
             <name value="TSDateTime"></name>
-            <variable value="source"></variable>
+            <variable value="src"></variable>
             <variable value="value"></variable>
          </dependent>
       </rule>
@@ -2559,7 +2559,7 @@
       <name value="ChExtEprSectionId"></name>
       <typeMode value="none"></typeMode>
       <input>
-         <name value="source"></name>
+         <name value="src"></name>
          <type value="II"></type>
          <mode value="source"></mode>
       </input>
@@ -2571,7 +2571,7 @@
       <rule>
          <name value="url"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
          </source>
          <target>
             <context value="ext"></context>
@@ -2586,7 +2586,7 @@
       <rule>
          <name value="value"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
          </source>
          <target>
             <context value="ext"></context>
@@ -2600,7 +2600,7 @@
          </target>
          <dependent>
             <name value="II"></name>
-            <variable value="source"></variable>
+            <variable value="src"></variable>
             <variable value="value"></variable>
          </dependent>
       </rule>

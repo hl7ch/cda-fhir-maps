@@ -91,22 +91,22 @@
       <name value="Any"></name>
       <typeMode value="none"></typeMode>
       <input>
-         <name value="source"></name>
+         <name value="src"></name>
          <mode value="source"></mode>
       </input>
       <input>
-         <name value="target"></name>
+         <name value="tgt"></name>
          <mode value="target"></mode>
       </input>
       <rule>
          <name value="extension"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="nullFlavor"></element>
             <variable value="nullFlavor"></variable>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="extension"></element>
             <variable value="ext"></variable>
@@ -166,25 +166,25 @@
       <extends value="Any"></extends>
       <typeMode value="types"></typeMode>
       <input>
-         <name value="source"></name>
+         <name value="src"></name>
          <type value="II"></type>
          <mode value="source"></mode>
       </input>
       <input>
-         <name value="target"></name>
+         <name value="tgt"></name>
          <type value="Identifier"></type>
          <mode value="target"></mode>
       </input>
       <rule>
          <name value="root1"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="root"></element>
             <variable value="r"></variable>
-            <condition value="source.extension.exists()"></condition>
+            <condition value="src.extension.exists()"></condition>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="system"></element>
             <transform value="translate"></transform>
@@ -202,13 +202,13 @@
       <rule>
          <name value="rootuuid"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="root"></element>
             <variable value="r"></variable>
-            <condition value="source.extension.empty() and source.root.matches('[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}')"></condition>
+            <condition value="src.extension.empty() and src.root.matches('[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}')"></condition>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="system"></element>
             <transform value="copy"></transform>
@@ -217,7 +217,7 @@
             </parameter>
          </target>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="value"></element>
             <transform value="evaluate"></transform>
@@ -229,13 +229,13 @@
       <rule>
          <name value="rootoid"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="root"></element>
             <variable value="r"></variable>
-            <condition value="source.extension.empty() and source.root.contains('.')"></condition>
+            <condition value="src.extension.empty() and src.root.contains('.')"></condition>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="system"></element>
             <transform value="copy"></transform>
@@ -244,7 +244,7 @@
             </parameter>
          </target>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="value"></element>
             <transform value="append"></transform>
@@ -259,12 +259,12 @@
       <rule>
          <name value="extension"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="extension"></element>
             <variable value="e"></variable>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="value"></element>
             <transform value="copy"></transform>
@@ -276,12 +276,12 @@
       <rule>
          <name value="assigningAuthorityName"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="assigningAuthorityName"></element>
             <variable value="s"></variable>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="assigner"></element>
             <variable value="a"></variable>
@@ -299,12 +299,12 @@
       <rule>
          <name value="extension"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="displayable"></element>
             <variable value="displayable"></variable>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="extension"></element>
             <variable value="ext"></variable>
@@ -351,24 +351,24 @@
       <extends value="Any"></extends>
       <typeMode value="types"></typeMode>
       <input>
-         <name value="source"></name>
+         <name value="src"></name>
          <type value="INT"></type>
          <mode value="source"></mode>
       </input>
       <input>
-         <name value="target"></name>
+         <name value="tgt"></name>
          <type value="integer"></type>
          <mode value="target"></mode>
       </input>
       <rule>
          <name value="integer"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="value"></element>
             <variable value="v"></variable>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="value"></element>
             <transform value="copy"></transform>
@@ -387,7 +387,7 @@
          <mode value="source"></mode>
       </input>
       <input>
-         <name value="target"></name>
+         <name value="tgt"></name>
          <mode value="target"></mode>
       </input>
       <rule>
@@ -396,7 +396,7 @@
             <context value="template"></context>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="extension"></element>
             <variable value="ext"></variable>
@@ -448,7 +448,7 @@
          <mode value="source"></mode>
       </input>
       <input>
-         <name value="target"></name>
+         <name value="tgt"></name>
          <mode value="target"></mode>
       </input>
       <rule>
@@ -457,7 +457,7 @@
             <context value="negation"></context>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="modifierExtension"></element>
             <variable value="ext"></variable>
@@ -509,24 +509,24 @@
       <extends value="Any"></extends>
       <typeMode value="types"></typeMode>
       <input>
-         <name value="source"></name>
+         <name value="src"></name>
          <type value="TS"></type>
          <mode value="source"></mode>
       </input>
       <input>
-         <name value="target"></name>
+         <name value="tgt"></name>
          <type value="instant"></type>
          <mode value="target"></mode>
       </input>
       <rule>
          <name value="value"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="value"></element>
             <variable value="v"></variable>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="value"></element>
             <transform value="cast"></transform>
@@ -544,12 +544,12 @@
       <extends value="TSInstant"></extends>
       <typeMode value="types"></typeMode>
       <input>
-         <name value="source"></name>
+         <name value="src"></name>
          <type value="TS"></type>
          <mode value="source"></mode>
       </input>
       <input>
-         <name value="target"></name>
+         <name value="tgt"></name>
          <type value="dateTime"></type>
          <mode value="target"></mode>
       </input>
@@ -559,12 +559,12 @@
       <extends value="TSInstant"></extends>
       <typeMode value="types"></typeMode>
       <input>
-         <name value="source"></name>
+         <name value="src"></name>
          <type value="TS"></type>
          <mode value="source"></mode>
       </input>
       <input>
-         <name value="target"></name>
+         <name value="tgt"></name>
          <type value="date"></type>
          <mode value="target"></mode>
       </input>
@@ -574,24 +574,24 @@
       <extends value="Any"></extends>
       <typeMode value="types"></typeMode>
       <input>
-         <name value="source"></name>
+         <name value="src"></name>
          <type value="IVL_TS"></type>
          <mode value="source"></mode>
       </input>
       <input>
-         <name value="target"></name>
+         <name value="tgt"></name>
          <type value="Period"></type>
          <mode value="target"></mode>
       </input>
       <rule>
          <name value="low"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="low"></element>
             <variable value="vvv"></variable>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="start"></element>
             <variable value="vvv"></variable>
@@ -601,12 +601,12 @@
       <rule>
          <name value="high"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="high"></element>
             <variable value="vvv"></variable>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="end"></element>
             <variable value="vvv"></variable>
@@ -619,26 +619,26 @@
       <extends value="Any"></extends>
       <typeMode value="types"></typeMode>
       <input>
-         <name value="source"></name>
+         <name value="src"></name>
          <type value="IVL_TS"></type>
          <mode value="source"></mode>
       </input>
       <input>
-         <name value="target"></name>
+         <name value="tgt"></name>
          <type value="dateTime"></type>
          <mode value="target"></mode>
       </input>
       <rule>
          <name value="low"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="low"></element>
             <variable value="s"></variable>
          </source>
          <dependent>
             <name value="TSDateTime"></name>
             <variable value="s"></variable>
-            <variable value="target"></variable>
+            <variable value="tgt"></variable>
          </dependent>
       </rule>
    </group>
@@ -647,23 +647,23 @@
       <extends value="Any"></extends>
       <typeMode value="types"></typeMode>
       <input>
-         <name value="source"></name>
+         <name value="src"></name>
          <type value="ST"></type>
          <mode value="source"></mode>
       </input>
       <input>
-         <name value="target"></name>
+         <name value="tgt"></name>
          <type value="string"></type>
          <mode value="target"></mode>
       </input>
       <rule>
          <name value="value"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <variable value="v"></variable>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="value"></element>
             <transform value="cast"></transform>
@@ -681,12 +681,12 @@
       <extends value="STstring"></extends>
       <typeMode value="types"></typeMode>
       <input>
-         <name value="source"></name>
+         <name value="src"></name>
          <type value="ED"></type>
          <mode value="source"></mode>
       </input>
       <input>
-         <name value="target"></name>
+         <name value="tgt"></name>
          <type value="string"></type>
          <mode value="target"></mode>
       </input>
@@ -696,12 +696,12 @@
       <extends value="STstring"></extends>
       <typeMode value="types"></typeMode>
       <input>
-         <name value="source"></name>
+         <name value="src"></name>
          <type value="ON"></type>
          <mode value="source"></mode>
       </input>
       <input>
-         <name value="target"></name>
+         <name value="tgt"></name>
          <type value="string"></type>
          <mode value="target"></mode>
       </input>
@@ -711,24 +711,24 @@
       <extends value="Any"></extends>
       <typeMode value="types"></typeMode>
       <input>
-         <name value="source"></name>
+         <name value="src"></name>
          <type value="CS"></type>
          <mode value="source"></mode>
       </input>
       <input>
-         <name value="target"></name>
+         <name value="tgt"></name>
          <type value="code"></type>
          <mode value="target"></mode>
       </input>
       <rule>
          <name value="code"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="code"></element>
             <variable value="c"></variable>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="value"></element>
             <transform value="cast"></transform>
@@ -746,12 +746,12 @@
       <extends value="CSCode"></extends>
       <typeMode value="types"></typeMode>
       <input>
-         <name value="source"></name>
+         <name value="src"></name>
          <type value="CE"></type>
          <mode value="source"></mode>
       </input>
       <input>
-         <name value="target"></name>
+         <name value="tgt"></name>
          <type value="code"></type>
          <mode value="target"></mode>
       </input>
@@ -761,12 +761,12 @@
       <extends value="CSCode"></extends>
       <typeMode value="types"></typeMode>
       <input>
-         <name value="source"></name>
+         <name value="src"></name>
          <type value="CD"></type>
          <mode value="source"></mode>
       </input>
       <input>
-         <name value="target"></name>
+         <name value="tgt"></name>
          <type value="code"></type>
          <mode value="target"></mode>
       </input>
@@ -776,24 +776,24 @@
       <extends value="Any"></extends>
       <typeMode value="types"></typeMode>
       <input>
-         <name value="source"></name>
+         <name value="src"></name>
          <type value="CE"></type>
          <mode value="source"></mode>
       </input>
       <input>
-         <name value="target"></name>
+         <name value="tgt"></name>
          <type value="CodeableConcept"></type>
          <mode value="target"></mode>
       </input>
       <rule>
          <name value="originalText"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="originalText"></element>
             <variable value="vvv"></variable>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="text"></element>
             <variable value="vvv"></variable>
@@ -803,10 +803,10 @@
       <rule>
          <name value="code"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="coding"></element>
             <variable value="coding"></variable>
@@ -814,7 +814,7 @@
          <rule>
             <name value="code"></name>
             <source>
-               <context value="source"></context>
+               <context value="src"></context>
                <element value="code"></element>
                <variable value="code"></variable>
             </source>
@@ -834,7 +834,7 @@
          <rule>
             <name value="codeSystem"></name>
             <source>
-               <context value="source"></context>
+               <context value="src"></context>
                <element value="codeSystem"></element>
                <variable value="system"></variable>
             </source>
@@ -857,7 +857,7 @@
          <rule>
             <name value="displayName"></name>
             <source>
-               <context value="source"></context>
+               <context value="src"></context>
                <element value="displayName"></element>
                <variable value="display"></variable>
             </source>
@@ -878,12 +878,12 @@
       <rule>
          <name value="translation"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="translation"></element>
             <variable value="translation"></variable>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="coding"></element>
             <variable value="coding"></variable>
@@ -958,12 +958,12 @@
       <extends value="CECodeableConcept"></extends>
       <typeMode value="types"></typeMode>
       <input>
-         <name value="source"></name>
+         <name value="src"></name>
          <type value="CS"></type>
          <mode value="source"></mode>
       </input>
       <input>
-         <name value="target"></name>
+         <name value="tgt"></name>
          <type value="CodeableConcept"></type>
          <mode value="target"></mode>
       </input>
@@ -973,12 +973,12 @@
       <extends value="CECodeableConcept"></extends>
       <typeMode value="types"></typeMode>
       <input>
-         <name value="source"></name>
+         <name value="src"></name>
          <type value="CD"></type>
          <mode value="source"></mode>
       </input>
       <input>
-         <name value="target"></name>
+         <name value="tgt"></name>
          <type value="CodeableConcept"></type>
          <mode value="target"></mode>
       </input>
@@ -988,24 +988,24 @@
       <extends value="Any"></extends>
       <typeMode value="types"></typeMode>
       <input>
-         <name value="source"></name>
+         <name value="src"></name>
          <type value="EN"></type>
          <mode value="source"></mode>
       </input>
       <input>
-         <name value="target"></name>
+         <name value="tgt"></name>
          <type value="HumanName"></type>
          <mode value="target"></mode>
       </input>
       <rule>
          <name value="family"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="family"></element>
             <variable value="v"></variable>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="family"></element>
             <transform value="evaluate"></transform>
@@ -1017,12 +1017,12 @@
       <rule>
          <name value="given"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="given"></element>
             <variable value="v"></variable>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="given"></element>
             <transform value="evaluate"></transform>
@@ -1034,12 +1034,12 @@
       <rule>
          <name value="prefix"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="prefix"></element>
             <variable value="v"></variable>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="prefix"></element>
             <transform value="evaluate"></transform>
@@ -1051,12 +1051,12 @@
       <rule>
          <name value="suffix"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="suffix"></element>
             <variable value="v"></variable>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="suffix"></element>
             <transform value="evaluate"></transform>
@@ -1068,12 +1068,12 @@
       <rule>
          <name value="validTime"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="validTime"></element>
             <variable value="vvv"></variable>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="period"></element>
             <variable value="vvv"></variable>
@@ -1086,24 +1086,24 @@
       <extends value="Any"></extends>
       <typeMode value="types"></typeMode>
       <input>
-         <name value="source"></name>
+         <name value="src"></name>
          <type value="AD"></type>
          <mode value="source"></mode>
       </input>
       <input>
-         <name value="target"></name>
+         <name value="tgt"></name>
          <type value="Address"></type>
          <mode value="target"></mode>
       </input>
       <rule>
          <name value="country"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="country"></element>
             <variable value="v"></variable>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="country"></element>
             <transform value="evaluate"></transform>
@@ -1115,12 +1115,12 @@
       <rule>
          <name value="state"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="state"></element>
             <variable value="v"></variable>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="state"></element>
             <transform value="evaluate"></transform>
@@ -1132,12 +1132,12 @@
       <rule>
          <name value="county"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="county"></element>
             <variable value="v"></variable>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="district"></element>
             <transform value="evaluate"></transform>
@@ -1149,12 +1149,12 @@
       <rule>
          <name value="city"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="city"></element>
             <variable value="v"></variable>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="city"></element>
             <transform value="evaluate"></transform>
@@ -1166,12 +1166,12 @@
       <rule>
          <name value="postalCode"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="postalCode"></element>
             <variable value="v"></variable>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="postalCode"></element>
             <transform value="evaluate"></transform>
@@ -1183,12 +1183,12 @@
       <rule>
          <name value="streetAddress"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="streetAddressLine"></element>
             <variable value="v"></variable>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="line"></element>
             <transform value="evaluate"></transform>
@@ -1200,12 +1200,12 @@
       <rule>
          <name value="streetName"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="streetName"></element>
             <variable value="v"></variable>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="line"></element>
             <transform value="evaluate"></transform>
@@ -1217,12 +1217,12 @@
       <rule>
          <name value="houseNumber"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="houseNumber"></element>
             <variable value="v"></variable>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="line"></element>
             <transform value="evaluate"></transform>
@@ -1234,12 +1234,12 @@
       <rule>
          <name value="addressUse"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="use"></element>
             <variable value="c"></variable>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="use"></element>
             <transform value="translate"></transform>
@@ -1257,12 +1257,12 @@
       <rule>
          <name value="useablePeriod"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="useablePeriod"></element>
             <variable value="vvv"></variable>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="period"></element>
             <variable value="vvv"></variable>
@@ -1275,25 +1275,25 @@
       <extends value="Any"></extends>
       <typeMode value="types"></typeMode>
       <input>
-         <name value="source"></name>
+         <name value="src"></name>
          <type value="TEL"></type>
          <mode value="source"></mode>
       </input>
       <input>
-         <name value="target"></name>
+         <name value="tgt"></name>
          <type value="ContactPoint"></type>
          <mode value="target"></mode>
       </input>
       <rule>
          <name value="valuetel"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="value"></element>
             <variable value="v"></variable>
-            <condition value="(source.value.startsWith('tel:'))"></condition>
+            <condition value="(src.value.startsWith('tel:'))"></condition>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="value"></element>
             <transform value="evaluate"></transform>
@@ -1302,7 +1302,7 @@
             </parameter>
          </target>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="system"></element>
             <transform value="copy"></transform>
@@ -1314,13 +1314,13 @@
       <rule>
          <name value="valuefax"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="value"></element>
             <variable value="v"></variable>
-            <condition value="(source.value.startsWith('fax:'))"></condition>
+            <condition value="(src.value.startsWith('fax:'))"></condition>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="value"></element>
             <transform value="evaluate"></transform>
@@ -1329,7 +1329,7 @@
             </parameter>
          </target>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="system"></element>
             <transform value="copy"></transform>
@@ -1341,13 +1341,13 @@
       <rule>
          <name value="valuemail"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="value"></element>
             <variable value="v"></variable>
-            <condition value="(source.value.startsWith('mailto:'))"></condition>
+            <condition value="(src.value.startsWith('mailto:'))"></condition>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="value"></element>
             <transform value="evaluate"></transform>
@@ -1356,7 +1356,7 @@
             </parameter>
          </target>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="system"></element>
             <transform value="copy"></transform>
@@ -1368,13 +1368,13 @@
       <rule>
          <name value="valuehttp"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="value"></element>
             <variable value="v"></variable>
-            <condition value="(source.value.startsWith('http:'))"></condition>
+            <condition value="(src.value.startsWith('http:'))"></condition>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="value"></element>
             <transform value="evaluate"></transform>
@@ -1383,7 +1383,7 @@
             </parameter>
          </target>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="system"></element>
             <transform value="copy"></transform>
@@ -1395,12 +1395,12 @@
       <rule>
          <name value="usehome"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="use"></element>
-            <condition value="(source.use.startsWith('H'))"></condition>
+            <condition value="(src.use.startsWith('H'))"></condition>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="use"></element>
             <transform value="copy"></transform>
@@ -1412,12 +1412,12 @@
       <rule>
          <name value="usework"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="use"></element>
-            <condition value="((source.use = 'WP') or (source.use = 'DIR') or (source.use = 'PUB'))"></condition>
+            <condition value="((src.use = 'WP') or (src.use = 'DIR') or (src.use = 'PUB'))"></condition>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="use"></element>
             <transform value="copy"></transform>
@@ -1429,12 +1429,12 @@
       <rule>
          <name value="usebad"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="use"></element>
-            <condition value="(source.use = 'BAD')"></condition>
+            <condition value="(src.use = 'BAD')"></condition>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="use"></element>
             <transform value="copy"></transform>
@@ -1446,12 +1446,12 @@
       <rule>
          <name value="usetmp"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="use"></element>
-            <condition value="(source.use = 'TMP')"></condition>
+            <condition value="(src.use = 'TMP')"></condition>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="use"></element>
             <transform value="copy"></transform>
@@ -1463,12 +1463,12 @@
       <rule>
          <name value="usemobile"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="use"></element>
-            <condition value="(source.use = 'MC')"></condition>
+            <condition value="(src.use = 'MC')"></condition>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="use"></element>
             <transform value="copy"></transform>
@@ -1480,12 +1480,12 @@
       <rule>
          <name value="useablePeriod"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="useablePeriod"></element>
             <variable value="vvv"></variable>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="period"></element>
             <variable value="vvv"></variable>
@@ -1498,24 +1498,24 @@
       <extends value="Any"></extends>
       <typeMode value="types"></typeMode>
       <input>
-         <name value="source"></name>
+         <name value="src"></name>
          <type value="PQ"></type>
          <mode value="source"></mode>
       </input>
       <input>
-         <name value="target"></name>
+         <name value="tgt"></name>
          <type value="Quantity"></type>
          <mode value="target"></mode>
       </input>
       <rule>
          <name value="unit"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="unit"></element>
             <variable value="unit"></variable>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="unit"></element>
             <transform value="copy"></transform>
@@ -1527,12 +1527,12 @@
       <rule>
          <name value="value"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="value"></element>
             <variable value="value"></variable>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="value"></element>
             <transform value="copy"></transform>
@@ -1547,24 +1547,24 @@
       <extends value="Any"></extends>
       <typeMode value="types"></typeMode>
       <input>
-         <name value="source"></name>
+         <name value="src"></name>
          <type value="RTO_PQ_PQ"></type>
          <mode value="source"></mode>
       </input>
       <input>
-         <name value="target"></name>
+         <name value="tgt"></name>
          <type value="Ratio"></type>
          <mode value="target"></mode>
       </input>
       <rule>
          <name value="numerator"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="numerator"></element>
             <variable value="numerator"></variable>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="numerator"></element>
             <variable value="targetNumerator"></variable>
@@ -1578,12 +1578,12 @@
       <rule>
          <name value="denominator"></name>
          <source>
-            <context value="source"></context>
+            <context value="src"></context>
             <element value="denominator"></element>
             <variable value="denominator"></variable>
          </source>
          <target>
-            <context value="target"></context>
+            <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="denominator"></element>
             <variable value="targetDenominator"></variable>
