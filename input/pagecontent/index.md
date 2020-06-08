@@ -1,6 +1,7 @@
 ### Introduction
 
-This implementation guide provides maps to transform documents from CDA to FHIR and back. The maps are based on each other, first the transformation of the data types is defined. Then based on this the mapping between the documents (CDA/FHIR), which becomes more and more specific (Swiss EPR Context, eMedication).
+This implementation guide provides maps to transform documents from CDA to FHIR and back using the [FHIR Mapping Language (FML)](https://www.hl7.org/fhir/mapping-language.html).   
+The maps are based on each other, first the transformation of the data types is defined. Then based on this the mapping between the documents (CDA/FHIR), which becomes more and more specific (Swiss EPR Context, eMedication).
 
 To execute the transformation of the documents locally, see the description [here](https://github.com/hl7ch/cda-fhir-maps#development).
 
