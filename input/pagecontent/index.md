@@ -10,7 +10,7 @@ To execute the transformation of the documents locally, see the description [her
 The following maps are present as [FHIR Structure Maps](https://www.hl7.org/fhir/structuremap.html):
 
 * Mapping of **data types**
-   * [CDA to FHIR types](StructureMap-CdaToFHIRTypes.html)
+   * [CDA to FHIR types](StructureMap-CdaToFhirTypes.html)
    * [FHIR to CDA types](StructureMap-FhirToCdaTypes.html)
 
 * Mapping of **documents**
