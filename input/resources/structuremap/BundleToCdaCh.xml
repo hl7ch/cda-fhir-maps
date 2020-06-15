@@ -976,11 +976,11 @@
          </rule>
       </rule>
       <rule>
-         <name value="valueIdentifier"></name>
+         <name value="setIdMapped"></name>
          <source>
             <context value="composition"></context>
             <element value="extension"></element>
-            <variable value="extension"></variable>
+            <variable value="ext"></variable>
             <condition value="$this.url = 'http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-setid'"></condition>
          </source>
          <target>
@@ -992,7 +992,7 @@
          <rule>
             <name value="IdentifierII"></name>
             <source>
-               <context value="extension"></context>
+               <context value="ext"></context>
                <element value="valueIdentifier"></element>
                <variable value="valueIdentifier"></variable>
             </source>
@@ -1004,11 +1004,44 @@
          </rule>
       </rule>
       <rule>
-         <name value="valueIdentifier"></name>
+         <name value="setIdCreated"></name>
+         <source>
+            <context value="composition"></context>
+            <variable value="composition"></variable>
+            <condition value="$this.extension.where(url = 'http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-setid').exists() = false"></condition>
+         </source>
+         <target>
+            <context value="cda"></context>
+            <contextType value="variable"></contextType>
+            <element value="setId"></element>
+            <variable value="setId"></variable>
+         </target>
+         <rule>
+            <name value="upper"></name>
+            <source>
+               <context value="composition"></context>
+            </source>
+            <target>
+               <variable value="uuid"></variable>
+               <transform value="uuid"></transform>
+            </target>
+            <target>
+               <context value="setId"></context>
+               <contextType value="variable"></contextType>
+               <element value="root"></element>
+               <transform value="evaluate"></transform>
+               <parameter>
+                  <valueString value="%uuid.upper()"></valueString>
+               </parameter>
+            </target>
+         </rule>
+      </rule>
+      <rule>
+         <name value="versionNumberMapped"></name>
          <source>
             <context value="composition"></context>
             <element value="extension"></element>
-            <variable value="extension"></variable>
+            <variable value="ext"></variable>
             <condition value="$this.url = 'http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-versionnumber'"></condition>
          </source>
          <target>
@@ -1020,7 +1053,7 @@
          <rule>
             <name value="IntegerInt"></name>
             <source>
-               <context value="extension"></context>
+               <context value="ext"></context>
                <element value="valueUnsignedInt"></element>
                <variable value="valueUnsignedInt"></variable>
             </source>
@@ -1029,6 +1062,35 @@
                <variable value="valueUnsignedInt"></variable>
                <variable value="versionNumber"></variable>
             </dependent>
+         </rule>
+      </rule>
+      <rule>
+         <name value="versionNumberCreated"></name>
+         <source>
+            <context value="composition"></context>
+            <variable value="composition"></variable>
+            <condition value="$this.extension.where(url = 'http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-versionnumber').exists() = false"></condition>
+         </source>
+         <target>
+            <context value="cda"></context>
+            <contextType value="variable"></contextType>
+            <element value="versionNumber"></element>
+            <variable value="versionNumber"></variable>
+         </target>
+         <rule>
+            <name value="versionNumber"></name>
+            <source>
+               <context value="composition"></context>
+            </source>
+            <target>
+               <context value="versionNumber"></context>
+               <contextType value="variable"></contextType>
+               <element value="value"></element>
+               <transform value="copy"></transform>
+               <parameter>
+                  <valueString value="1"></valueString>
+               </parameter>
+            </target>
          </rule>
       </rule>
       <rule>

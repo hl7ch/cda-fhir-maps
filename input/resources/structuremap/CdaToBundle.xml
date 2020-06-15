@@ -208,7 +208,7 @@
          </target>
       </rule>
       <rule>
-         <name value="id"></name>
+         <name value="identifier"></name>
          <source>
             <context value="cda"></context>
             <element value="id"></element>
@@ -492,10 +492,10 @@
          </target>
       </rule>
       <rule>
-         <name value="setId"></name>
+         <name value="identifier"></name>
          <source>
             <context value="src"></context>
-            <element value="setId"></element>
+            <element value="id"></element>
             <variable value="vvv"></variable>
          </source>
          <target>
