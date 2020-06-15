@@ -49,7 +49,7 @@ group CdaToBundle(source cda : ClinicalDocument, target bundle : Bundle) {
 
 group ClinicalDocumentToBundle(source cda : ClinicalDocument, target patient : Patient, target composition : Composition, target bundle : Bundle) {
   cda -> bundle.id = uuid() "id";
-  cda.id -> bundle.identifier;
+  cda.id -> bundle.identifier "identifier";
   cda -> bundle.type = 'document' "type";
   cda.effectiveTime -> bundle.timestamp;
   cda then ClinicalDocumentComposition(cda, composition, patient, bundle) "composition";
@@ -82,7 +82,7 @@ group ClinicalDocumentSection(source src : Section, source patient : Patient, ta
 
 group ClinicalDocumentComposition(source src : ClinicalDocument, target tgt : Composition, target patientResource: Patient, target bundle : Bundle) {
   src.languageCode -> tgt.language;
-  src.setId -> tgt.identifier "setId";
+  src.id -> tgt.identifier "identifier";
   src -> tgt.status = 'final' "status";
   src.code -> tgt.type;
   src.title as t -> tgt.title = (t.dataString);
