@@ -121,12 +121,29 @@ group CompositionClinicalDocumentCH(source bundle : Bundle, source composition :
       } "valueCodeableConcept";
     } "extension";
   } "confidentialityCode";
-  composition.extension as extension where $this.url='http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-setid' -> cda.setId as setId then {
-    extension.valueIdentifier as valueIdentifier then IdentifierII(valueIdentifier,setId) "IdentifierII";
-  } "valueIdentifier";
-  composition.extension as extension where $this.url='http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-versionnumber' -> cda.versionNumber as versionNumber then {
-    extension.valueUnsignedInt as valueUnsignedInt then IntegerINT(valueUnsignedInt,versionNumber) "IntegerInt";
-  } "valueIdentifier";  
+
+  // If setId exists as Composition.ch-ext-epr-setid, then map to ClinicalDocument.setId
+  composition.extension as ext where $this.url='http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-setid'
+    -> cda.setId as setId then {
+      ext.valueIdentifier as valueIdentifier then IdentifierII(valueIdentifier,setId) "IdentifierII";
+  } "setIdMapped";
+  // If setId doesn't exist, create ClinicalDocument.setId as UUID upper case
+  composition as composition where $this.extension.where(url='http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-setid').exists()=false
+    -> cda.setId as setId then {
+      composition -> uuid() as uuid, setId.root=(%uuid.upper()) "upper";
+  } "setIdCreated";
+
+  // If versionNumber exists as Composition.ch-ext-epr-versionnumber, then map to ClinicalDocument.versionNumber
+  composition.extension as ext where $this.url='http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-versionnumber'
+    -> cda.versionNumber as versionNumber then {
+      ext.valueUnsignedInt as valueUnsignedInt then IntegerINT(valueUnsignedInt,versionNumber) "IntegerInt";
+  } "versionNumberMapped";
+  // If versionNumber doesn't exist, create ClinicalDocument.versionNumber = 1
+  composition as composition where $this.extension.where(url='http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-versionnumber').exists()=false 
+    -> cda.versionNumber as versionNumber then {
+      composition -> versionNumber.value = '1' "versionNumber";
+  } "versionNumberCreated";
+  
   composition.extension as extension where $this.url='http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-informationrecipient' -> cda.informationRecipient as informationRecipient then {
     extension -> informationRecipient.typeCode = 'PRCP' "PRCP";
     extension -> informationRecipient.templateId as templateId, templateId.root='2.16.756.5.30.1.1.10.2.4' "templateId";
