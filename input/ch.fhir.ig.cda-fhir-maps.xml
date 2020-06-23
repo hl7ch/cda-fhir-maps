@@ -125,7 +125,7 @@
       <description value="CDA-CH-EMED Medication Prescription document to FHIR Bundle"/>
     </resource>
 
-    <!-- Map for Testing Narrative View -->
+    <!-- Map just for Testing Narrative View -->
     <resource>
       <reference>
         <reference value="StructureMap/CdaToFhirTypesNarrativeTest"/>
