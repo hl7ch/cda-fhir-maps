@@ -1,5 +1,150 @@
 <StructureMap xmlns="http://hl7.org/fhir">
    <id value="BundleToCda"></id>
+   <text>
+      <status value="generated"></status>
+      <div xmlns="http://www.w3.org/1999/xhtml">
+         <pre>map "http://fhir.ch/ig/cda-fhir-maps/StructureMap/BundleToCda" = "FhirBundleToCdaDocument"
+
+uses "http://hl7.org/fhir/cda/StructureDefinition/ClinicalDocument" alias ClinicalDocument as target
+uses "http://hl7.org/fhir/cda/StructureDefinition/Author" alias Author as target
+uses "http://hl7.org/fhir/cda/StructureDefinition/RecordTarget" alias RecordTarget as target
+uses "http://hl7.org/fhir/cda/StructureDefinition/Custodian" alias Custodian as target
+uses "http://hl7.org/fhir/cda/StructureDefinition/Organization" alias CdaOrganization as target
+uses "http://hl7.org/fhir/cda/StructureDefinition/LegalAuthenticator" alias LegalAuthenticator as target
+uses "http://hl7.org/fhir/cda/StructureDefinition/Section" alias CdaSection as target
+uses "http://hl7.org/fhir/StructureDefinition/Bundle" alias Bundle as source
+uses "http://hl7.org/fhir/StructureDefinition/Composition" alias Composition as source
+uses "http://hl7.org/fhir/StructureDefinition/Practitioner" alias Practitioner as source
+uses "http://hl7.org/fhir/StructureDefinition/Patient" alias Patient as source
+uses "http://hl7.org/fhir/StructureDefinition/Organization" alias Organization as source
+uses "http://hl7.org/fhir/StructureDefinition/BackboneElement" alias BackboneElement as source
+
+imports "http://fhir.ch/ig/cda-fhir-maps/StructureMap/FhirToCdaTypes"
+
+group BundleToCda(source bundle : Bundle, target cda : ClinicalDocument) {
+  bundle -&gt;  cda.recordTarget as recordTarget,  cda.author as author then BundleToClinicalDocument(bundle, recordTarget, author, cda) "bundle";
+}
+
+group BundleToClinicalDocument(source bundle : Bundle, target recordTarget : RecordTarget, target author : Author, target cda : ClinicalDocument) {
+  bundle -&gt; cda.typeId as typeId then {
+    bundle -&gt; typeId.root = '2.16.840.1.113883.1.3' "root";
+    bundle -&gt; typeId.extension = 'POCD_HD000040' "extension";
+  } "typeId";
+  bundle -&gt; cda.templateId as templateId then {
+    bundle -&gt; templateId.root = '2.16.840.1.113883.10.12.1' "root";
+  } "HL7CdaR2-2005";
+  bundle.identifier as identifier -&gt; cda.id as id then IdentifierII(identifier, id) "id";
+  bundle.timestamp as timestamp -&gt; cda.effectiveTime as effectiveTime then InstantTS(timestamp, effectiveTime) "effectiveTime";
+  bundle.entry as entry then {
+    entry.resource as resource where $this.ofType(FHIR.Composition) then CompositionClinicalDocument(bundle, resource, recordTarget, author, cda);
+  };
+}
+
+group SectionCdaSection(source bundle : Bundle, source section : BackboneElement, target cdasection : CdaSection) {
+  section.extension as extension where $this.url = 'http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-sectionid' -&gt; cdasection.id as id then {
+    extension.valueIdentifier as valueIdentifier then IdentifierII(valueIdentifier, id) "IdentifierII";
+  } "valueIdentifier";
+  section.code as code then {
+    code.coding as coding where $this.system = 'http://loinc.org' -&gt; cdasection.code as cdacode then CodingCE(coding, cdacode) "codingsection";
+  };
+  section.title as title -&gt;  cdasection.title as cdatitle,  cdatitle.data = title;
+  section.text as text then {
+    text.div as div -&gt; cdasection.text = div;
+  };
+}
+
+group CompositionClinicalDocument(source bundle : Bundle, source composition : Composition, target recordTarget : RecordTarget, target author : Author, target cda : ClinicalDocument) {
+  composition.type as type then {
+    type.coding as coding where $this.system = 'http://loinc.org' -&gt; cda.code as code share docCode then CodingCE(coding, code) "code";
+  };
+  composition.title as title -&gt; cda.title as t then {
+    title -&gt; t.data = title "titleInner";
+  };
+  composition.confidentiality as conf -&gt; cda.confidentialityCode as cdaconf then {
+    conf -&gt; cdaconf.code = conf "conf";
+    conf -&gt; cdaconf.codeSystem = '2.16.840.1.113883.5.25' "codeSystem";
+  } "confidentialityCode";
+  composition.language as language -&gt;  cda.languageCode as languageCode,  languageCode.code = language "languageCode";
+  bundle.entry as entry then {
+    entry.resource as patient where ('Patient' + '/' + $this.id) in %composition.subject.reference then PatientRecordTarget(patient, bundle, recordTarget) "patient";
+    entry.resource as organization where ('Organization' + '/' + $this.id) in %composition.custodian.reference -&gt; cda.custodian as custodian then OrganizationCustodian(organization, custodian) "custodian";
+    entry.resource as practitioner where ('Practitioner' + '/' + $this.id) in %composition.author.reference then PractitionerAuthor(bundle, composition, practitioner, author) "author";
+    entry.resource as practitioner where ('Practitioner' + '/' + $this.id) in %composition.attester.party.reference -&gt; cda.legalAuthenticator as legalAuthenticator then PractitionerLegalAuthenticator(bundle, composition, practitioner, legalAuthenticator) "legalAuthenticator";
+  } "patient";
+  composition.section as section where $this.code.exists() = false -&gt; cda.component as component then {
+    section -&gt; component.contextConductionInd = true "contextConductionInd";
+    section -&gt;  component.structuredBody as structuredBody,  structuredBody.component as component,  component.section as cdasection then SectionCdaSection(bundle, section, cdasection) "cdasection";
+  };
+}
+
+group PatientRecordTarget(source src : Patient, source bundle : Bundle, target tgt : RecordTarget) {
+  src -&gt; tgt.patientRole as patientRole then {
+    src.identifier as identifier -&gt; patientRole.id as id then IdentifierII(identifier, id);
+    src.address as address -&gt; patientRole.addr as ad then AddressAD(address, ad);
+    src -&gt; patientRole.patient as patient then {
+      src.name as humanname -&gt; patient.name as en then HumanNameEN(humanname, en);
+      src.birthDate as birthDate -&gt; patient.birthTime as birthTime then DateTS(birthDate, birthTime);
+      src.gender as v log $this -&gt; patient.administrativeGenderCode as adminGender then {
+        v -&gt; adminGender.code = translate(v, 'http://hl7.org/fhir/ConceptMap/cm-administrative-gender-v3', 'code') "gender";
+        v -&gt; adminGender.codeSystem = '2.16.840.1.113883.5.1' "codeSytem";
+        v -&gt; adminGender.codeSystemName = 'HL7 AdministrativeGender' "codeSystemName";
+        v as v where $this = 'male' -&gt; adminGender.displayName = 'Male' "male";
+        v as v where $this = 'female' -&gt; adminGender.displayName = 'Female' "female";
+        v as v where $this = 'other' -&gt; adminGender.displayName = 'Undifferentiated' "other";
+      };
+    } "patient";
+    src.telecom as telecom -&gt; patientRole.telecom as tel then ContactPointTEL(telecom, tel);
+    src.managingOrganization as managingOrganization then {
+      bundle.entry as entry then {
+        entry.resource as organization where ('Organization' + '/' + $this.id) in %managingOrganization.reference -&gt; patientRole.providerOrganization as providerOrganization then Organization2CdaOrganization(organization, providerOrganization) "providerOrganization";
+      };
+    };
+  } "patientRole";
+}
+
+group PractitionerAuthor(source bundle : Bundle, source composition : Composition, source src : Practitioner, target tgt : Author) {
+  composition.author as srcauthor then {
+    srcauthor.extension as extensionTime where $this.url = 'http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-time' then {
+      extensionTime.valueDateTime as valueDateTime -&gt; tgt.time as time then DateTimeTS(valueDateTime, time) "DateTime";
+    } "extensionTime";
+  } "srcAuthor";
+  src -&gt; tgt.assignedAuthor as assignedAuthor then {
+    src.identifier as identifier -&gt; assignedAuthor.id as id then IdentifierII(identifier, id) "id";
+    src.name as name -&gt;  assignedAuthor.assignedPerson as assignedPerson,  assignedPerson.name as en then HumanNameEN(name, en);
+    bundle.entry as entry then {
+      entry.resource as organization where ('Organization' + '/' + $this.id) in %composition.author.reference -&gt; assignedAuthor.representedOrganization as cdaorganization then Organization2CdaOrganization(organization, cdaorganization) "organization";
+    } "patient";
+  } "assignedAuthor";
+}
+
+group OrganizationCustodian(source src : Organization, target tgt : Custodian) {
+  src -&gt; tgt.assignedCustodian as assignedCustodian then {
+    src -&gt; assignedCustodian.representedCustodianOrganization as representedCustodianOrganization then Organization2CdaOrganization(src, representedCustodianOrganization) "representedCustodianOrganization";
+  } "assignedCustodian";
+}
+
+group Organization2CdaOrganization(source src : Organization, target tgt : CdaOrganization) {
+  src.identifier as identifier -&gt; tgt.id as id then IdentifierII(identifier, id) "id";
+  src.name as name -&gt;  tgt.name as orgname,  orgname.other = name;
+  src.address as address -&gt; tgt.addr as ad then AddressAD(address, ad);
+  src.telecom as telecom -&gt; tgt.telecom as tel then ContactPointTEL(telecom, tel);
+}
+
+group PractitionerLegalAuthenticator(source bundle : Bundle, source composition : Composition, source src : Practitioner, target tgt : LegalAuthenticator) {
+  src -&gt;  tgt.templateId as templateId,  templateId.root = '2.16.756.5.30.1.1.10.2.5' "templateId";
+  composition.attester as attester then {
+    attester.time as srcTime -&gt; tgt.time as time then InstantTS(srcTime, time) "timestamp";
+  } "time";
+  src -&gt;  tgt.signatureCode as signatureCode,  signatureCode.code = 'S' "signature";
+  src -&gt; tgt.assignedEntity as assignedEntity then {
+    src.identifier as identifier -&gt; assignedEntity.id as id then IdentifierII(identifier, id);
+    src.name as name -&gt;  assignedEntity.assignedPerson as assignedPerson,  assignedPerson.name as en then HumanNameEN(name, en);
+  } "assignedEntity";
+}
+
+         </pre>
+      </div>
+   </text>
    <url value="http://fhir.ch/ig/cda-fhir-maps/StructureMap/BundleToCda"></url>
    <name value="FhirBundleToCdaDocument"></name>
    <structure>

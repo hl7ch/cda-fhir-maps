@@ -1,5 +1,149 @@
 <StructureMap xmlns="http://hl7.org/fhir">
    <id value="BundleToCdaCh"></id>
+   <text>
+      <status value="generated"></status>
+      <div xmlns="http://www.w3.org/1999/xhtml">
+         <pre>map "http://fhir.ch/ig/cda-fhir-maps/StructureMap/BundleToCdaCh" = "FhirBundleToCdaChDocument"
+
+uses "http://hl7.org/fhir/cda/StructureDefinition/ClinicalDocument" alias ClinicalDocument as target
+uses "http://hl7.org/fhir/cda/StructureDefinition/Author" alias Author as target
+uses "http://hl7.org/fhir/cda/StructureDefinition/RecordTarget" alias RecordTarget as target
+uses "http://hl7.org/fhir/cda/StructureDefinition/DataEnterer" alias DataEnterer as target
+uses "http://hl7.org/fhir/cda/StructureDefinition/AssignedEntity" alias AssignedEntity as target
+uses "http://hl7.org/fhir/StructureDefinition/Bundle" alias Bundle as source
+uses "http://hl7.org/fhir/StructureDefinition/Composition" alias Composition as source
+uses "http://hl7.org/fhir/StructureDefinition/Person" alias Person as source
+
+imports "http://fhir.ch/ig/cda-fhir-maps/StructureMap/FhirToCdaTypes"
+imports "http://fhir.ch/ig/cda-fhir-maps/StructureMap/BundleToCda"
+
+group BundleToCdaCh(source bundle : Bundle, target cda : ClinicalDocument) {
+  bundle -&gt;  cda.recordTarget as recordTarget,  cda.author as author then BundleToClinicalDocumentCh(bundle, recordTarget, author, cda) "bundle";
+}
+
+group BundleToClinicalDocumentCh(source bundle : Bundle, target recordTarget : RecordTarget, target author : Author, target cda : ClinicalDocument) extends BundleToClinicalDocument {
+  bundle -&gt;  author.templateId as templateId,  templateId.root = '2.16.756.5.30.1.1.10.9.23' "tempalteId";
+  bundle -&gt;  recordTarget.templateId as templateId,  templateId.root = '2.16.756.5.30.1.1.10.2.1' "tempalteId";
+  bundle -&gt;  cda.custodian as custodian,  custodian.templateId as templateId,  templateId.root = '2.16.756.5.30.1.1.10.2.3' "tempalteId";
+  bundle -&gt; cda.realmCode as realmCode then {
+    bundle -&gt; realmCode.code = 'CHE' "CHE";
+  } "realmCode";
+  bundle -&gt; cda.templateId as templateId then {
+    bundle -&gt; templateId.root = '2.16.840.1.113883.10.12.2' "root";
+  } "componentAsStructuredBody";
+  bundle -&gt; cda.templateId as templateId then {
+    bundle -&gt; templateId.root = '2.16.756.5.30.1.1.10.1.9' "root";
+  } "0-structuredBody";
+  bundle.entry as entry then {
+    entry.resource as resource where $this.ofType(FHIR.Composition) then CompositionClinicalDocumentCH(bundle, resource, cda);
+  };
+}
+
+group SectionCdaRemarksCoded(source bundle : Bundle, source section : Section, target cdasection : CdaSection) extends SectionCdaSection {
+  section -&gt;  cdasection.templateId as templateId,  templateId.root = '2.16.756.5.30.1.1.10.3.2' "templateId";
+  section -&gt;  cdasection.entry as entry,  entry.act as act,  act.classCode = 'ACT',  act.moodCode = 'EVN' then {
+    section -&gt;  act.templateId as templateId,  templateId.root = '2.16.756.5.30.1.1.10.4.2' "templateId";
+    section -&gt;  act.templateId as templateId,  templateId.root = '2.16.840.1.113883.10.20.1.40' "templateId";
+    section -&gt;  act.templateId as templateId,  templateId.root = '1.3.6.1.4.1.19376.1.5.3.1.4.2' "templateId";
+    section -&gt;  act.code as code,  code.code = '48767-8',  code.codeSystem = '2.16.840.1.113883.6.1',  code.codeSystemName = 'LOINC',  code.displayName = 'Annotation comment' "code";
+    section.text as text then {
+      text.div as div -&gt;  act.text as text,  text.reference as reference,  reference.value = ("'#' + %div.substring(%div.indexOf('id') + %div.substring(%div.indexOf('id')).indexOf('\"') + 1, %div.substring(%div.indexOf('id') + %div.substring(%div.indexOf('id')).indexOf('\"') + 1).indexOf('\"'))") "id";
+    };
+    section -&gt;  act.statusCode as statusCode,  statusCode.code = 'completed' "completed";
+  } "entry";
+}
+
+group SectionCdaOriginalRepresentation(source bundle : Bundle, source section : Section, target cdasection : CdaSection) extends SectionCdaSection {
+  section -&gt;  cdasection.templateId as templateId,  templateId.root = '2.16.756.5.30.1.1.10.3.45' "templateId";
+  bundle.entry as entry then {
+    entry.resource as binary where ('Binary' + '/' + $this.id) in %section.entry.reference -&gt; cdasection.entry as entry then {
+      binary -&gt; entry.typeCode = 'DRIV' "driv";
+      binary -&gt;  entry.observationMedia as observationMedia,  observationMedia.classCode = 'OBS',  observationMedia.moodCode = 'EVN' then {
+        section.entry as entry then {
+          entry.extension as extension where $this.url = 'http://hl7.org/fhir/StructureDefinition/narrativeLink' then {
+            extension.valueUrl as valueUrl -&gt; observationMedia.ID = valueUrl "reference";
+          } "narrativeLink";
+        };
+        binary -&gt;  observationMedia.templateId as templateId,  templateId.root = '2.16.756.5.30.1.1.10.4.83' "templateId";
+        binary -&gt;  observationMedia.value as value,  value.mediaType = '2.16.756.5.30.1.1.10.4.83',  value.representation = 'B64' then {
+          binary.contentType as contentType -&gt; value.mediaType = contentType;
+          binary.data as data -&gt; value.data = data;
+          binary.language as lang -&gt;  observationMedia.languageCode as languageCode,  languageCode.code = lang "lang";
+          binary where $this.language.exists() = false -&gt;  observationMedia.languageCode as languageCode,  languageCode.nullFlavor = 'UNK' "langUnknown";
+        } "value";
+      } "observationMedia";
+    } "entry";
+  } "patient";
+}
+
+group PersonAssignedEntityWithId(source person : Person, target assignedEntity : AssignedEntity) {
+  person.identifier as identifier -&gt; assignedEntity.id as id then IdentifierII(identifier, id);
+  person.address as address -&gt; assignedEntity.addr as addr then AddressAD(address, addr);
+  person.name as humanname -&gt;  assignedEntity.assignedPerson as assignedPerson,  assignedPerson.name as en then HumanNameEN(humanname, en);
+}
+
+group CompositionClinicalDocumentCH(source bundle : Bundle, source composition : Composition, target cda : ClinicalDocument) {
+  composition.type as type then {
+    type.coding as coding where $this.system = 'http://snomed.info/sct' -&gt;  cda.code as code share docCode,  code.translation as translation then CodingCE(coding, translation) "translation";
+  };
+  composition.confidentiality as conf where $this.extension.where(url = 'http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-confidentialitycode').exists() -&gt; cda.confidentialityCode as cdaconf then {
+    conf.extension as extension then {
+      extension.valueCodeableConcept as valueCodeableConcept then {
+        valueCodeableConcept.coding as coding then CodingCE(coding, cdaconf);
+      };
+    };
+  } "confidentialityCode";
+  composition.extension as ext where $this.url = 'http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-setid' -&gt; cda.setId as setId then {
+    ext.valueIdentifier as valueIdentifier then IdentifierII(valueIdentifier, setId) "IdentifierII";
+  } "setIdMapped";
+  composition as composition where $this.extension.where(url = 'http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-setid').exists() = false -&gt; cda.setId as setId then {
+    composition -&gt;  uuid() as uuid,  setId.root = ("%uuid.upper()") "upper";
+  } "setIdCreated";
+  composition.extension as ext where $this.url = 'http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-versionnumber' -&gt; cda.versionNumber as versionNumber then {
+    ext.valueUnsignedInt as valueUnsignedInt then IntegerINT(valueUnsignedInt, versionNumber) "IntegerInt";
+  } "versionNumberMapped";
+  composition as composition where $this.extension.where(url = 'http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-versionnumber').exists() = false -&gt; cda.versionNumber as versionNumber then {
+    composition -&gt; versionNumber.value = '1' "versionNumber";
+  } "versionNumberCreated";
+  composition.extension as extension where $this.url = 'http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-informationrecipient' -&gt; cda.informationRecipient as informationRecipient then {
+    extension -&gt; informationRecipient.typeCode = 'PRCP' "PRCP";
+    extension -&gt;  informationRecipient.templateId as templateId,  templateId.root = '2.16.756.5.30.1.1.10.2.4' "templateId";
+    extension.valueReference as valueReference then {
+      bundle.entry as entry then {
+        entry.resource as patient where ($this.id = %valueReference.reference.substring(8)) -&gt; informationRecipient.intendedRecipient as intendedRecipient then {
+          patient.address as address -&gt; intendedRecipient.addr as addr then AddressAD(address, addr);
+          patient.name as humanname -&gt;  intendedRecipient.informationRecipient as informationRecipient2,  informationRecipient2.name as en then HumanNameEN(humanname, en);
+        } "intendedRecipient";
+        entry.resource as organization where ($this.id = %valueReference.reference.substring(13)) -&gt;  informationRecipient.intendedRecipient as intendedRecipient,  intendedRecipient.receivedOrganization as receivedOrganization then Organization2CdaOrganization(organization, receivedOrganization) "organization";
+      } "patient";
+    };
+  } "informationRecipient";
+  composition.extension as extension where $this.url = 'http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-dataenterer' -&gt; cda.dataEnterer as dataEnterer then {
+    extension -&gt;  dataEnterer.templateId as templateId,  templateId.root = '2.16.756.5.30.1.1.10.2.7' "templateId";
+    extension.extension as extensionTime where $this.url = 'http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-time' then {
+      extensionTime.valueDateTime as valueDateTime -&gt; dataEnterer.time as time then DateTimeTS(valueDateTime, time) "DateTime";
+    } "extensionTime";
+    extension.extension as extensionPerson where $this.url = 'enterer' then {
+      extensionPerson.valueReference as valueReference then {
+        bundle.entry as entry then {
+          entry.resource as person where ($this.id = %valueReference.reference.substring(7)) -&gt; dataEnterer.assignedEntity as assignedEntity then PersonAssignedEntityWithId(person, assignedEntity) "AssignedEntityWithId";
+        } "person";
+      };
+    } "extensionPerson";
+  } "dataEnterer";
+  composition.section as section where $this.code.coding.where((system = 'http://loinc.org') and (code = '55108-5')) -&gt; cda.component as component then {
+    section -&gt; component.contextConductionInd = true "contextConductionInd";
+    section -&gt;  component.structuredBody as structuredBody,  structuredBody.component as component,  component.section as cdasection then SectionCdaOriginalRepresentation(bundle, section, cdasection) "cdasection";
+  } "SectionCdaOriginalRepresentation";
+  composition.section as section where $this.code.coding.where((system = 'http://loinc.org') and (code = '48767-8')) -&gt; cda.component as component then {
+    section -&gt; component.contextConductionInd = true "contextConductionInd";
+    section -&gt;  component.structuredBody as structuredBody,  structuredBody.component as component,  component.section as cdasection then SectionCdaRemarksCoded(bundle, section, cdasection) "cdasection";
+  } "SectionCdaOriginalRepresentation";
+}
+
+         </pre>
+      </div>
+   </text>
    <url value="http://fhir.ch/ig/cda-fhir-maps/StructureMap/BundleToCdaCh"></url>
    <name value="FhirBundleToCdaChDocument"></name>
    <structure>

@@ -1,5 +1,148 @@
 <StructureMap xmlns="http://hl7.org/fhir">
    <id value="FhirToCdaTypes"></id>
+   <text>
+      <status value="generated"></status>
+      <div xmlns="http://www.w3.org/1999/xhtml">
+         <pre>map "http://fhir.ch/ig/cda-fhir-maps/StructureMap/FhirToCdaTypes" = "TransformForFhirTypesToCdaTypes"
+
+conceptmap "uri2oid" {
+  prefix s = "http://hl7.org/fhir"
+  prefix t = "http://hl7.org/cda"
+
+  s:"http://snomed.info/sct" == t:"2.16.840.1.113883.6.96"
+  s:"http://loinc.org" == t:"2.16.840.1.113883.6.1"
+  s:"http://hl7.org/fhir/sid/atc" == t:"2.16.840.1.113883.6.73"
+  s:"http://www.whocc.no/atc" == t:"2.16.840.1.113883.6.73"
+  s:"http://terminology.hl7.org/CodeSystem/v3-substanceAdminSubstitution" == t:"2.16.840.1.113883.5.1070"
+}
+
+conceptmap "uri2system" {
+  prefix s = "http://hl7.org/fhir"
+  prefix t = "http://hl7.org/cda"
+
+  s:"http://snomed.info/sct" == t:"SNOMED CT"
+  s:"http://loinc.org" == t:LOINC
+  s:"http://hl7.org/fhir/sid/atc" == t:"ATC WHO"
+  s:"http://www.whocc.no/atc" == t:"ATC WHO"
+  s:"http://terminology.hl7.org/CodeSystem/v3-substanceAdminSubstitution" == t:"HL7 Substance Admin Substitution"
+}
+
+conceptmap "oid2system" {
+  prefix s = "http://hl7.org/fhir"
+  prefix t = "http://hl7.org/cda"
+
+  s:"urn:oid:2.51.1.1" == t:GTIN
+}
+
+conceptmap "addressUse" {
+  prefix s = "http://hl7.org/fhir/valueset-address-use.html"
+  prefix t = "http://terminology.hl7.org/ValueSet/v3-AddressUse"
+
+  s:home == t:H
+  s:work == t:WP
+  s:temp == t:TMP
+  s:old == t:OLD
+}
+
+uses "http://hl7.org/fhir/StructureDefinition/Identifier" as source
+uses "http://hl7.org/fhir/cda/StructureDefinition/II" as target
+
+group Any(source src, target tgt) {
+  src.extension as extension where $this.url = 'http://hl7.org/fhir/StructureDefinition/iso21090-nullFlavor' -&gt; tgt.nullFlavor as nullFlavor then {
+    extension.valueCode as valueCode then {
+      valueCode.value as v -&gt; nullFlavor.value = cast(v, 'string');
+    } "nullFlavor";
+  };
+}
+
+group IdentifierII(source src : Identifier, target tgt : II) extends Any &lt;&lt;types&gt;&gt; {
+  src.value as value where src.system.empty() and src.value.startsWith('urn:uuid:') -&gt; tgt.root = ("value.substring(9).upper()") "idAsUuid";
+  src.value as value where src.system = 'urn:ietf:rfc:3986' -&gt; tgt.root = ("value.substring(9).upper()") "idAsUuid";
+  src.value as value where src.system.startsWith('urn:oid:') then {
+    src.system as system -&gt;  tgt.root = ("system.substring(8)"),  tgt.extension = value "oidident";
+  } "system";
+}
+
+group IntegerINT(source src : integer, target tgt : INT) extends Any &lt;&lt;types&gt;&gt; {
+  src.value as v -&gt; tgt.value = v "integer";
+}
+
+group InstantTS(source src : instant, target tgt : TS) extends Any &lt;&lt;types&gt;&gt; {
+  src.value as v -&gt; tgt.value = v "copy";
+}
+
+group DateTimeTS(source src : dateTime, target tgt : TS) extends InstantTS &lt;&lt;types&gt;&gt; {
+}
+
+group DateTS(source src : date, target tgt : TS) extends InstantTS &lt;&lt;types&gt;&gt; {
+}
+
+group CodeCS(source src : code, target tgt : CS) extends Any &lt;&lt;types&gt;&gt; {
+  src.code as c -&gt; tgt.value = cast(c, 'string');
+}
+
+group CodeCE(source src : code, target tgt : CE) extends CodeCS &lt;&lt;types&gt;&gt; {
+}
+
+group CodeCD(source src : code, target tgt : CD) extends CodeCS &lt;&lt;types&gt;&gt; {
+}
+
+group CodingCE(source src : Coding, target tgt : CE) extends Any &lt;&lt;types&gt;&gt; {
+  src.code as code -&gt; tgt.code = code;
+  src.system as system where $this.startsWith('http:') -&gt; tgt.codeSystem = translate(system, '#uri2oid', 'code');
+  src.system as system where $this.startsWith('urn:oid:') then {
+    src.system as system -&gt; tgt.codeSystem = ("system.substring(8)") "oidident";
+  };
+  src.system as system where $this.startsWith('http:') -&gt; tgt.codeSystemName = translate(system, '#uri2system', 'code') "systemName1";
+  src.system as system where $this.startsWith('urn:oid:') -&gt; tgt.codeSystemName = translate(system, '#oid2system', 'code') "systemName2";
+  src.display as display -&gt; tgt.displayName = display;
+}
+
+group CodeableConceptCE(source src : CodeableConcept, target tgt : CE) extends Any &lt;&lt;types&gt;&gt; {
+  src.text as text -&gt;  tgt.orginialText as originalText,  originalText.data = text;
+  src.coding first as coding then CodingCE(coding, tgt) "first";
+  src.coding not_first as coding -&gt; tgt.translation as translation then CodingCE(coding, translation) "translation";
+}
+
+group AddressAD(source src : Address, target tgt : AD) extends Any &lt;&lt;types&gt;&gt; {
+  src.line as v -&gt;  tgt.streetAddressLine as line,  line.data = v "streetAddress";
+  src.postalCode as v -&gt;  tgt.postalCode as postalCode,  postalCode.data = v;
+  src.city as v -&gt;  tgt.city as city,  city.data = v;
+  src.state as v -&gt;  tgt.state as state,  state.data = v;
+  src.district as v -&gt;  tgt.county as county,  county.data = v;
+  src.country as v -&gt;  tgt.country as country,  country.data = v;
+  src.use as c -&gt; tgt.use = translate(c, '#addressUse', 'code') "addressUse";
+}
+
+group ContactPointTEL(source src : ContactPoint, target tgt : TEL) extends Any &lt;&lt;types&gt;&gt; {
+  src.value as value -&gt; tgt.value = ("iif(%src.system = 'phone', 'tel:', '') + iif(%src.system = 'fax', 'fax:', '') + iif(%src.system = 'email', 'mailto:', '') + iif(%src.system = 'url', 'http:', '') + value");
+  src.use as use where $this = 'home' -&gt; tgt.use = 'HP';
+  src.use as use where $this = 'work' -&gt; tgt.use = 'WP';
+  src.use as use where $this = 'old' -&gt; tgt.use = 'BAD';
+  src.use as use where $this = 'temp' -&gt; tgt.use = 'TMP';
+  src.use as use where $this = 'mobile' -&gt; tgt.use = 'MC';
+}
+
+group HumanNameEN(source src : HumanName, target tgt : EN) extends Any &lt;&lt;types&gt;&gt; {
+  src.family as v -&gt;  tgt.family as family,  family.data = v;
+  src.given as v -&gt;  tgt.given as given,  given.data = v;
+  src.prefix as v -&gt;  tgt.prefix as prefix,  prefix.data = v;
+  src.suffix as v -&gt;  tgt.suffix as suffix,  suffix.data = v;
+}
+
+group QuantityPQ(source src : Quantity, target tgt : PQ) extends Any &lt;&lt;types&gt;&gt; {
+  src.unit as unit -&gt; tgt.unit = unit;
+  src.value as value -&gt; tgt.value = value;
+}
+
+group RatioRTOPQPQ(source src : Ratio, target tgt : RTO_PQ_PQ) extends Any &lt;&lt;types&gt;&gt; {
+  src.numerator as numerator -&gt; tgt.numerator as targetNumerator then QuantityPQ(numerator, targetNumerator);
+  src.denominator as denominator -&gt; tgt.denominator as targetDenominator then QuantityPQ(denominator, targetDenominator);
+}
+
+         </pre>
+      </div>
+   </text>
    <url value="http://fhir.ch/ig/cda-fhir-maps/StructureMap/FhirToCdaTypes"></url>
    <name value="TransformForFhirTypesToCdaTypes"></name>
    <structure>
