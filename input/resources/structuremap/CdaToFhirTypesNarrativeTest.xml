@@ -1,9 +1,9 @@
 <StructureMap xmlns="http://hl7.org/fhir">
-   <id value="CdaToFhirTypes"></id>
+   <id value="CdaToFhirTypesNarrativeTest"></id>
    <text>
       <status value="generated"></status>
       <div xmlns="http://www.w3.org/1999/xhtml">
-         <pre>map "http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaToFhirTypes" = "TransformForCdaTypesToFhirTypes"
+         <pre>map "http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaToFhirTypesNarrativeTest" = "TransformForCdaTypesToFhirTypes"
 
 conceptmap "addressUse" {
   prefix s = "http://terminology.hl7.org/ValueSet/v3-AddressUse"
@@ -187,7 +187,7 @@ group RTOPQPQRatio(source src : RTO_PQ_PQ, target tgt : Ratio) extends Any &lt;&
          </pre>
       </div>
    </text>
-   <url value="http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaToFhirTypes"></url>
+   <url value="http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaToFhirTypesNarrativeTest"></url>
    <name value="TransformForCdaTypesToFhirTypes"></name>
    <structure>
       <url value="http://hl7.org/fhir/cda/StructureDefinition/ED"></url>
