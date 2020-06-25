@@ -203,11 +203,11 @@ group ClinicalDocumentLocation(source src : HealthCareFacility, target bundle : 
   src.id -&gt; tgt.identifier;
   src.code -&gt; tgt.type;
   src.location as location then {
- // place names are usually stored with no parts    location.name as srcName -&gt; tgt.name = cast(srcName, 'string');    location.addr -&gt; tgt.address;
+    location.addr -&gt; tgt.address;
     location.serviceProviderOrganization as srcOrg -&gt;  bundle.entry as e,  e.resource = create('Organization') as organization,  organization.id = uuid() as uuid3,  e.fullUrl = append('urn:uuid:', uuid3) then {
       srcOrg -&gt;  tgt.managingOrganization = create('Reference') as reference,  reference.reference = reference(organization) then ClinicalDocumentOrganization(srcOrg, organization) "organization";
     } "org";
-  }; // place names are usually stored with no parts    location.name as srcName -&gt; tgt.name = cast(srcName, 'string');
+  };
 }
 
 group ChExtEprTime(source src : TSDateTime, target ext : Extension) {

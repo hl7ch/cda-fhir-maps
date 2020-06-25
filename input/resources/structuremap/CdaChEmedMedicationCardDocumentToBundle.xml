@@ -64,7 +64,7 @@ group ManufacturedMaterialEntryContentModule(source src : SubstanceAdministratio
   src.consumable as consumable then {
     consumable.manufacturedProduct as manufacturedProduct then {
       manufacturedProduct.manufacturedMaterial as manufacturedMaterial then {
- // #mtpc.no.brandedmedication        manufacturedMaterial.code as code then {
+        manufacturedMaterial.code as code then {
           code.originalText as text then {
             text.reference as reference -&gt; medication.code as medCode then {
               reference.value as value -&gt; medCode.extension as ext then NarrativeLink(value, ext) "narrativeLink";
@@ -76,7 +76,7 @@ group ManufacturedMaterialEntryContentModule(source src : SubstanceAdministratio
             containerPackagedMedicine.code as code -&gt;  medication.code as fhircode,  fhircode.text = ("%manufacturedMaterial.name.other") then CECodeableConcept(code, fhircode);
             containerPackagedMedicine.formCode as formCode -&gt; medication.form as form then CECodeableConcept(formCode, form);
             containerPackagedMedicine.capacityQuantity as capacityQuantity where (%containerPackagedMedicine.formCode.code = '10219000') -&gt; medication.amount = create('Ratio') as ratio then {
- // IHE: Case 1: If the capacityQuantity is given in countable units, the unit attribute SHALL NOT be present              capacityQuantity where $this.unit.exists() = false then {
+              capacityQuantity where $this.unit.exists() = false then {
                 capacityQuantity.value as value -&gt;  ratio.numerator = create('Quantity') as quantity,  quantity.value = value,  ratio.denominator = create('Quantity') as denominator,  denominator.value = '1' "capacityQuantity";
               } "noUnit";
               capacityQuantity where $this.unit.exists() then {
@@ -84,7 +84,7 @@ group ManufacturedMaterialEntryContentModule(source src : SubstanceAdministratio
                   capacityQuantity.value as value -&gt;  ratio.numerator = create('Quantity') as quantity,  quantity.value = value,  quantity.unit = unit,  quantity.system = 'http://unitsofmeasure.org',  quantity.code = unit,  ratio.denominator = create('Quantity') as denominator,  denominator.value = '1',  denominator.unit = 'Package',  denominator.system = 'http://unitsofmeasure.org',  denominator.code = '1' "capacityQuantity";
                 } "capQuantUnit";
               } "unit";
-            } "ratio"; // IHE: Case 1: If the capacityQuantity is given in countable units, the unit attribute SHALL NOT be present
+            } "ratio";
           };
         };
         manufacturedMaterial.ingredient as ingredient -&gt; medication.ingredient as ing then {
@@ -93,7 +93,7 @@ group ManufacturedMaterialEntryContentModule(source src : SubstanceAdministratio
             medingredient.code as code -&gt;  ing.item = create('CodeableConcept') as ingcode,  ingcode.text = ("%medingredient.name.other") then CECodeableConcept(code, ingcode) "ingredientCode";
           };
         };
-      }; // #mtpc.no.brandedmedication
+      };
     };
     src where $this.entryRelationship.sequenceNumber.exists() = false -&gt; medicationStatement.dosage as dosage then DosageInstructionsStartStopFrequency(src, dosage) "dosage";
   };

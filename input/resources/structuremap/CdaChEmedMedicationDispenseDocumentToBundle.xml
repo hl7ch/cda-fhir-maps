@@ -74,17 +74,17 @@ group Substitution(source act : Act, target medicationDispense : MedicationDispe
 group ManufacturedMaterialEntryContentModule(source src : Supply, target medicationDispense : MedicationDispense, target medication : Medication) {
   src -&gt;  medication.id = 'med',  medicationDispense.medication = create('Reference') as vt,  vt.reference = '#med' "medication";
   src.quantity as quantity -&gt; medicationDispense.quantity as medDispQuantity then {
- // IHE-DIS: If the product-element contains package information, the unit attribute is not be present    quantity.value as value -&gt; medDispQuantity.value = value;
+    quantity.value as value -&gt; medDispQuantity.value = value;
     quantity.unit as unit then {
       unit -&gt; medDispQuantity.unit = unit "unit";
       unit -&gt; medDispQuantity.system = 'http://unitsofmeasure.org' "ucum";
       unit -&gt; medDispQuantity.code = unit "code";
     };
-  }; // IHE-DIS: If the product-element contains package information, the unit attribute is not be present
+  };
   src.product as product then {
     product.manufacturedProduct as manufacturedProduct then {
       manufacturedProduct.manufacturedMaterial as manufacturedMaterial then {
- // #dis.no.brandedmedication        manufacturedMaterial.code as code then {
+        manufacturedMaterial.code as code then {
           code.originalText as text then {
             text.reference as reference -&gt; medication.code as medCode then {
               reference.value as value -&gt; medCode.extension as ext then NarrativeLink(value, ext) "narrativeLink";
@@ -96,7 +96,7 @@ group ManufacturedMaterialEntryContentModule(source src : Supply, target medicat
             containerPackagedMedicine.code as code -&gt;  medication.code as fhircode,  fhircode.text = ("%manufacturedMaterial.name.other") then CECodeableConcept(code, fhircode);
             containerPackagedMedicine.formCode as formCode -&gt; medication.form as form then CECodeableConcept(formCode, form);
             containerPackagedMedicine.capacityQuantity as capacityQuantity where (%containerPackagedMedicine.formCode.code = '10219000') -&gt; medication.amount = create('Ratio') as ratio then {
- // IHE: Case 1: If the capacityQuantity is given in countable units, the unit attribute SHALL NOT be present              capacityQuantity where $this.unit.exists() = false then {
+              capacityQuantity where $this.unit.exists() = false then {
                 capacityQuantity.value as value -&gt;  ratio.numerator = create('Quantity') as quantity,  quantity.value = value,  ratio.denominator = create('Quantity') as denominator,  denominator.value = '1' "capacityQuantity";
               } "noUnit";
               capacityQuantity where $this.unit.exists() then {
@@ -104,7 +104,7 @@ group ManufacturedMaterialEntryContentModule(source src : Supply, target medicat
                   capacityQuantity.value as value -&gt;  ratio.numerator = create('Quantity') as quantity,  quantity.value = value,  quantity.unit = unit,  quantity.system = 'http://unitsofmeasure.org',  quantity.code = unit,  ratio.denominator = create('Quantity') as denominator,  denominator.value = '1',  denominator.unit = 'Package',  denominator.system = 'http://unitsofmeasure.org',  denominator.code = '1' "capacityQuantity";
                 } "capQuantUnit";
               } "unit";
-            } "ratio"; // IHE: Case 1: If the capacityQuantity is given in countable units, the unit attribute SHALL NOT be present
+            } "ratio";
           };
         };
         manufacturedMaterial.ingredient as ingredient -&gt; medication.ingredient as ing then {
@@ -113,7 +113,7 @@ group ManufacturedMaterialEntryContentModule(source src : Supply, target medicat
             medingredient.code as code -&gt;  ing.item = create('CodeableConcept') as ingcode,  ingcode.text = ("%medingredient.name.other") then CECodeableConcept(code, ingcode) "ingredientCode";
           };
         };
-      }; // #dis.no.brandedmedication
+      };
     };
     src.entryRelationship as entry then {
       entry.substanceAdministration as substanceAdministration then {
@@ -136,8 +136,8 @@ group DispenseItemEntryContentModule(source section : Section, source src : Supp
   src.entryRelationship as entry where ((typeCode = 'COMP') and (substanceAdministration.templateId.root = '2.16.756.5.30.1.1.10.4.37')) -&gt; medicationDispense.dosageInstruction as dosage then DosageInstructionsNonStructuredEntryContentModule(section, entry, dosage) "37";
   src.entryRelationship as entryRelationship then {
     entryRelationship.substanceAdministration as substanceAdministration then {
- // dosage for split dosing, as sequences are present there      substanceAdministration.entryRelationship as entryRelationship where ((typeCode = 'COMP') and (sequenceNumber.value &gt;= 0)) -&gt; medicationDispense.dosageInstruction as dosage then DosageInstructionsEntryDosageChange(substanceAdministration, entryRelationship, dosage) "36";
-    }; // dosage for split dosing, as sequences are present there
+      substanceAdministration.entryRelationship as entryRelationship where ((typeCode = 'COMP') and (sequenceNumber.value &gt;= 0)) -&gt; medicationDispense.dosageInstruction as dosage then DosageInstructionsEntryDosageChange(substanceAdministration, entryRelationship, dosage) "36";
+    };
   };
   src.entryRelationship as entry where ((typeCode = 'REFR') and substanceAdministration.templateId.where(root = '1.3.6.1.4.1.19376.1.9.1.3.10').exists()) -&gt; medicationDispense.extension as ext then MTPReferenceEntryContentModule(entry, ext) "MTPReferenceEntry";
   src.entryRelationship as entry where ((typeCode = 'COMP') and act.templateId.where(root = '2.16.756.5.30.1.1.10.4.2').exists()) then {

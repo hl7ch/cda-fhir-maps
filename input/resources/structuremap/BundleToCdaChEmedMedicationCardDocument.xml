@@ -74,11 +74,11 @@ group ManufacturedMaterialEntryContentModule(source bundle : Bundle, source medi
     code.text as text -&gt;  manufacturedMaterial.name as name,  name.other = text "brandname";
   } "name";
   medication.code as code then {
- // #mtpc.no.brandedmedication    code.extension as extension where $this.url = 'http://hl7.org/fhir/StructureDefinition/narrativeLink' -&gt; manufacturedMaterial.code as code then {
+   code.extension as extension where $this.url = 'http://hl7.org/fhir/StructureDefinition/narrativeLink' -&gt; manufacturedMaterial.code as code then {
       extension.valueUrl as valueUrl -&gt;  code.originalText as text,  text.reference as reference,  reference.value = valueUrl "reference";
     } "id";
     code.coding as coding -&gt; manufacturedMaterial.code as ce then CodingCE(coding, ce) "code";
-  }; // #mtpc.no.brandedmedication
+  };
   medication.form as form then {
     form.coding as coding -&gt; manufacturedMaterial.formCode as formCode then CodingCE(coding, formCode) "formCode";
   };
@@ -92,7 +92,7 @@ group ManufacturedMaterialEntryContentModule(source bundle : Bundle, source medi
     };
     medication.amount as amount then {
       amount.numerator as numerator then {
- // if the value of numerator.code is "1", then it is not a UCUM code, so generate case 1        numerator.code as code where $this = '1' -&gt; containerPackagedMedicine.capacityQuantity as capacityQuantity then {
+        numerator.code as code where $this = '1' -&gt; containerPackagedMedicine.capacityQuantity as capacityQuantity then {
           numerator.value as value -&gt; capacityQuantity.value = value;
         } "noUcum";
         numerator.code as code where $this != '1' -&gt; containerPackagedMedicine.capacityQuantity as capacityQuantity then {
@@ -102,7 +102,7 @@ group ManufacturedMaterialEntryContentModule(source bundle : Bundle, source medi
         numerator as numerator where $this.code.exists() = false -&gt; containerPackagedMedicine.capacityQuantity as capacityQuantity then {
           numerator.value as value -&gt; capacityQuantity.value = value;
         } "noUcum";
-      }; // if the value of numerator.code is "1", then it is not a UCUM code, so generate case 1
+      };
     };
   };
   medication.ingredient as ingredient -&gt;  manufacturedMaterial.ingredient as ingredient,  ingredient.classCode = 'ACTI' then {
