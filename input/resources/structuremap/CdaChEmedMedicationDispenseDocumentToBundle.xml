@@ -52,7 +52,7 @@ group SectionDispenseSectionContentModule(source src : Section, source patient :
 }
 
 group AnnotationComment(source section : Section, source act : Act, target note : Annotation) {
-  act -&gt; note.text = ("%section.text.substring(%section.text.indexOf(%act.text.reference.value.substring(1))).substring(%section.text.substring(%section.text.indexOf(%act.text.reference.value.substring(1))).indexOf('&gt;') + 1, %section.text.substring(%section.text.indexOf(%act.text.reference.value.substring(1))).indexOf('&lt;') - %section.text.substring(%section.text.indexOf(%act.text.reference.value.substring(1))).indexOf('&gt;') - 1)") "idRef";
+  act -&gt; note.text = (%section.text.substring(%section.text.indexOf(%act.text.reference.value.substring(1))).substring(%section.text.substring(%section.text.indexOf(%act.text.reference.value.substring(1))).indexOf('&gt;') + 1, %section.text.substring(%section.text.indexOf(%act.text.reference.value.substring(1))).indexOf('&lt;') - %section.text.substring(%section.text.indexOf(%act.text.reference.value.substring(1))).indexOf('&gt;') - 1)) "idRef";
   act.text as text then {
     text.reference as reference then {
       reference.value as value -&gt; note.extension as ext then NarrativeLink(value, ext) "narrativeLink";
@@ -230,7 +230,7 @@ group MTPReferenceEntryContentModule(source entryrelationship, target ext : Exte
 }
 
 group DosageInstructionsNonStructuredEntryContentModule(source section : Section, source entry : Element, target dosage : Dosage) {
-  entry.substanceAdministration as observation -&gt; dosage.text = ("%section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).substring(%section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).indexOf('&gt;') + 1, %section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).indexOf('&lt;') - %section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).indexOf('&gt;') - 1)") "idRef";
+  entry.substanceAdministration as observation -&gt; dosage.text = (%section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).substring(%section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).indexOf('&gt;') + 1, %section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).indexOf('&lt;') - %section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).indexOf('&gt;') - 1)) "idRef";
   entry.substanceAdministration as observation then {
     observation.text as text then {
       text.reference as reference then {

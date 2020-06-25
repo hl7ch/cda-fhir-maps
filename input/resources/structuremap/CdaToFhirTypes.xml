@@ -53,7 +53,7 @@ group Any(source src, target tgt) {
 
 group II(source src : II, target tgt : Identifier) extends Any &lt;&lt;types&gt;&gt; {
   src.root as r where src.extension.exists() -&gt; tgt.system = translate(r, 'http://hl7.org/fhir/ConceptMap/special-oid2uri', 'uri') "root1";
-  src.root as r where src.extension.empty() and src.root.matches('[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}') -&gt;  tgt.system = 'urn:ietf:rfc:3986',  tgt.value = ("'urn:uuid:' + r.lower()") "rootuuid";
+  src.root as r where src.extension.empty() and src.root.matches('[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}') -&gt;  tgt.system = 'urn:ietf:rfc:3986',  tgt.value = ('urn:uuid:' + r.lower()) "rootuuid";
   src.root as r where src.extension.empty() and src.root.contains('.') -&gt;  tgt.system = 'urn:ietf:rfc:3986',  tgt.value = append('urn:oid:', r) "rootoid";
   src.extension as e -&gt; tgt.value = e;
   src.assigningAuthorityName as s -&gt;  tgt.assigner as a,  a.display = s;

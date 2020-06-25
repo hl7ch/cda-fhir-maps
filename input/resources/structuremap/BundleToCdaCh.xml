@@ -47,7 +47,7 @@ group SectionCdaRemarksCoded(source bundle : Bundle, source section : Section, t
     section -&gt;  act.templateId as templateId,  templateId.root = '1.3.6.1.4.1.19376.1.5.3.1.4.2' "templateId";
     section -&gt;  act.code as code,  code.code = '48767-8',  code.codeSystem = '2.16.840.1.113883.6.1',  code.codeSystemName = 'LOINC',  code.displayName = 'Annotation comment' "code";
     section.text as text then {
-      text.div as div -&gt;  act.text as text,  text.reference as reference,  reference.value = ("'#' + %div.substring(%div.indexOf('id') + %div.substring(%div.indexOf('id')).indexOf('\"') + 1, %div.substring(%div.indexOf('id') + %div.substring(%div.indexOf('id')).indexOf('\"') + 1).indexOf('\"'))") "id";
+      text.div as div -&gt;  act.text as text,  text.reference as reference,  reference.value = ('#' + %div.substring(%div.indexOf('id') + %div.substring(%div.indexOf('id')).indexOf('\"') + 1, %div.substring(%div.indexOf('id') + %div.substring(%div.indexOf('id')).indexOf('\"') + 1).indexOf('\"'))) "id";
     };
     section -&gt;  act.statusCode as statusCode,  statusCode.code = 'completed' "completed";
   } "entry";

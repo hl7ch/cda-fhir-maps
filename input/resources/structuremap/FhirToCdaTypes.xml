@@ -115,7 +115,7 @@ group AddressAD(source src : Address, target tgt : AD) extends Any &lt;&lt;types
 }
 
 group ContactPointTEL(source src : ContactPoint, target tgt : TEL) extends Any &lt;&lt;types&gt;&gt; {
-  src.value as value -&gt; tgt.value = ("iif(%src.system = 'phone', 'tel:', '') + iif(%src.system = 'fax', 'fax:', '') + iif(%src.system = 'email', 'mailto:', '') + iif(%src.system = 'url', 'http:', '') + value");
+  src.value as value -&gt; tgt.value = (iif(%src.system = 'phone', 'tel:', '') + iif(%src.system = 'fax', 'fax:', '') + iif(%src.system = 'email', 'mailto:', '') + iif(%src.system = 'url', 'http:', '') + value);
   src.use as use where $this = 'home' -&gt; tgt.use = 'HP';
   src.use as use where $this = 'work' -&gt; tgt.use = 'WP';
   src.use as use where $this = 'old' -&gt; tgt.use = 'BAD';
