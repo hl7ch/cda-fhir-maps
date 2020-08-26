@@ -1,4 +1,4 @@
-map "http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaToBundle" = "CdaDocumentToFhirBundle"
+map "http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaToBundle" = "CdaToBundle"
 
 //
 // CDA document

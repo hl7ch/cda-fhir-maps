@@ -1,4 +1,4 @@
-map "http://fhir.ch/ig/cda-fhir-maps/StructureMap/FhirToCdaTypes" = "TransformForFhirTypesToCdaTypes"
+map "http://fhir.ch/ig/cda-fhir-maps/StructureMap/FhirToCdaTypes" = "FhirToCdaTypes"
 
 
 // Adapted from https://github.com/HL7/ccda-to-fhir/tree/master/mappings
@@ -159,7 +159,6 @@ group AddressAD(source src : Address, target tgt : AD) extends Any <<types>> {
   src.district as v -> tgt.county as county, county.data = v;
   src.country as v -> tgt.country as country, country.data = v;
   src.use as c -> tgt.use = translate(c, '#addressUse', 'code') "addressUse";
-  // src.useablePeriod -> tgt.period;
 }
 
 group ContactPointTEL(source src : ContactPoint, target tgt : TEL) extends Any <<types>> {
