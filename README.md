@@ -58,14 +58,21 @@ To transform the documents from CDA to FHIR and back and maybe add your own maps
 * Install a REST Client for Visual Studio Code:   
     Open VSC, press **Ctrl + Shift + X**, search for **rest-client**, then install it (humao.rest-client) 
 
-### Java
+### Docker
 
-* Download [Java](https://www.java.com/de/download/help/download_options.xml)
+* Download and install [Docker](https://www.docker.com/)
+
+```
+docker pull eu.gcr.io/fhir-ch/matchbox:v0812
+docker run -d --name matchbox -p 8080:8080 matchbox
+docker logs matchbox
+```
 
 ### GitHub Desktop (optional)
 
 * Download [GitHub Desktop](https://desktop.github.com/)
 
+https://www.docker.com/
 
 ## Development
 
@@ -76,30 +83,6 @@ Clone this project https://github.com/hl7ch/cda-fhir-maps
 
 Open it with Visual Studio Code (REST Client extension is needed).
 
-Download matchbox-0.4.0-SNAPSHOT.jar from https://github.com/ahdis/matchbox/releases/tag/0.4.0 into the main directory of the project cda-fhir-maps.
-
-You need to download and install the package to your package cache the first time.
-
-Mac:
-```
-java -cp matchbox-0.4.0-SNAPSHOT.jar -Dloader.main=ch.ahdis.matchbox.util.PackageCacheInitializer org.springframework.boot.loader.PropertiesLauncher -id hl7.fhir.cda -v dev -tgz http://build.fhir.org/ig/ahdis/cda-core-2.0/branches/pullrequests/package.tgz -desc hl7.fhir.cda
-java -cp matchbox-0.4.0-SNAPSHOT.jar -Dloader.main=ch.ahdis.matchbox.util.PackageCacheInitializer org.springframework.boot.loader.PropertiesLauncher -id ch.fhir.ig.ch-epr-term -v current -tgz http://build.fhir.org/ig/hl7ch/ch-epr-term/package.tgz -desc ch.fhir.ig.ch-epr-term
-java -cp matchbox-0.4.0-SNAPSHOT.jar -Dloader.main=ch.ahdis.matchbox.util.PackageCacheInitializer org.springframework.boot.loader.PropertiesLauncher -id ch.fhir.ig.ch-core -v current -tgz http://build.fhir.org/ig/hl7ch/ch-core/package.tgz -desc ch.fhir.ig.ch-core
-java -cp matchbox-0.4.0-SNAPSHOT.jar -Dloader.main=ch.ahdis.matchbox.util.PackageCacheInitializer org.springframework.boot.loader.PropertiesLauncher -id ch.fhir.ig.ch-emed -v current -tgz http://build.fhir.org/ig/hl7ch/ch-emed/package.tgz -desc ch.fhir.ig.ch-emed
-```
-
-Windows:
-```
-java -cp matchbox-0.4.0-SNAPSHOT.jar -D"loader.main=ch.ahdis.matchbox.util.PackageCacheInitializer" org.springframework.boot.loader.PropertiesLauncher -id hl7.fhir.cda -v dev -tgz http://build.fhir.org/ig/ahdis/cda-core-2.0/branches/pullrequests/package.tgz -desc hl7.fhir.cda
-java -cp matchbox-0.4.0-SNAPSHOT.jar -D"loader.main=ch.ahdis.matchbox.util.PackageCacheInitializer" org.springframework.boot.loader.PropertiesLauncher -id ch.fhir.ig.ch-epr-term -v current -tgz http://build.fhir.org/ig/hl7ch/ch-epr-term/package.tgz -desc ch.fhir.ig.ch-epr-term
-java -cp matchbox-0.4.0-SNAPSHOT.jar -D"loader.main=ch.ahdis.matchbox.util.PackageCacheInitializer" org.springframework.boot.loader.PropertiesLauncher -id ch.fhir.ig.ch-core -v current -tgz http://build.fhir.org/ig/hl7ch/ch-core/package.tgz -desc ch.fhir.ig.ch-core
-java -cp matchbox-0.4.0-SNAPSHOT.jar -D"loader.main=ch.ahdis.matchbox.util.PackageCacheInitializer" org.springframework.boot.loader.PropertiesLauncher -id ch.fhir.ig.ch-emed -v current -tgz http://build.fhir.org/ig/hl7ch/ch-emed/package.tgz -desc ch.fhir.ig.ch-emed
-```
-
-Start the matchbox.
-```
-java -jar matchbox-0.4.0-SNAPSHOT.jar  
-```
 
 ## Transform documents between CDA and FHIR and back
 * Open **cdatofhir.http** or **fhirtocda.http** from the main directory with Visual Studio Code. 
@@ -113,5 +96,4 @@ java -jar matchbox-0.4.0-SNAPSHOT.jar
    * Medication Dispense document: cdatofhir_dispense.http, fhirtocda_dispense.http
    * Medication Prescription document: cdatofhir_prescription.http, fhirtocda_prescription.http
 * Choose @host = http://localhost:8080/r4  
-* Add the maps to matchbox. For **eMedication documents** you need an additional map, which is added to the matchbox in Step 4 (do Step 1-4).
 * Transform your document of the choosen exchange format (Examples shown in Step 5).
