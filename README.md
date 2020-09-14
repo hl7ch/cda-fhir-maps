@@ -63,8 +63,8 @@ To transform the documents from CDA to FHIR and back and maybe add your own maps
 * Download and install [Docker](https://www.docker.com/)
 
 ```
-docker pull eu.gcr.io/fhir-ch/matchbox:v0812
-docker run -d --name matchbox -p 8080:8080 eu.gcr.io/fhir-ch/matchbox:v0812
+docker pull eu.gcr.io/fhir-ch/matchbox:v0814
+docker run -d --name matchbox -p 8080:8080 eu.gcr.io/fhir-ch/matchbox:v0814
 docker logs matchbox
 ```
 
