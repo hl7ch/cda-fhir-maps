@@ -28,6 +28,12 @@ Content-Type: text/fhir-mapping
 
 < ./input/maps/CdaChToBundle.map
 
+### 3b. POST CdaChEemdToBundle.map
+POST {{host}}/StructureMap HTTP/1.1
+Accept: application/fhir+xml;fhirVersion=4.0
+Content-Type: text/fhir-mapping
+
+< ./input/maps/CdaChEmedToBundle.map
 
 ### 4. POST CdaChEmedMedicationPrescriptionDocumentToBundle.map 
 POST {{host}}/StructureMap HTTP/1.1

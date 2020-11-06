@@ -1,8 +1,31 @@
 ### Create and Update CDA maps for converting to FHIR with RESTClient and running matchbox (locally)
 ### Note: POST the maps in the following order, if you update one map you need to repost also the maps below
 
-@host = https://test.ahdis.ch/r4
-###@host = http://localhost:8080/r4
+### @host = https://test.ahdis.ch/r4
+@host = http://localhost:8080/r4
+
+
+### 0a. Provide CDA Implementation Guide
+POST {{host}}/ImplementationGuide HTTP/1.1
+Accept: application/fhir+json;fhirVersion=4.0
+Content-Type: application/fhir+json;fhirVersion=4.0
+
+{
+    "resourceType" : "ImplementationGuide",
+    "version" : "dev",
+    "packageId": "hl7.fhir.cda"
+}
+
+### 0b. Provide CH EMED Implementation Guide
+POST {{host}}/ImplementationGuide HTTP/1.1
+Accept: application/fhir+json;fhirVersion=4.0
+Content-Type: application/fhir+json;fhirVersion=4.0
+
+{
+    "resourceType" : "ImplementationGuide",
+    "version" : "current",
+    "packageId": "ch.fhir.ig.ch-emed"
+}
 
 
 ### 1. POST CdaToFhirTypes.map
@@ -28,32 +51,24 @@ Content-Type: text/fhir-mapping
 
 < ./input/maps/CdaChToBundle.map
 
-### 3b. POST CdaChEemdToBundle.map
+
+### 3b. POST CdaChEmedToBundle.map
 POST {{host}}/StructureMap HTTP/1.1
 Accept: application/fhir+xml;fhirVersion=4.0
 Content-Type: text/fhir-mapping
 
 < ./input/maps/CdaChEmedToBundle.map
 
-### 4. POST CdaChEmedMedicationDispenseDocumentToBundle.map 
+### 4. POST CdaChEmedMedicationListDocumentToBundle.map 
 POST {{host}}/StructureMap HTTP/1.1
 Accept: application/fhir+xml;fhirVersion=4.0
 Content-Type: text/fhir-mapping
 
-< ./input/maps/CdaChEmedMedicationDispenseDocumentToBundle.map
+< ./input/maps/CdaChEmedMedicationListDocumentToBundle.map
 
-
-### 5a. Transform Medication Dispense document (1-2-MedicationDispense.xml) from CDA to FHIR
-POST {{host}}/StructureMap/$transform?source=http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaChEmedMedicationDispenseDocumentToBundle
+### 5. Transform eMedicationService 
+POST {{host}}/StructureMap/$transform?source=http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaChEmedMedicationListDocumentToBundle
 Accept: application/fhir+xml;fhirVersion=4.0
 Content-Type: application/fhir+xml;fhirVersion=4.0
 
-< ./input/cda-ch-emed/1-2-MedicationDispense.xml
-
-
-### 5b. Transform Medication Dispense document (2-4-MedicationDispense.xml) from CDA to FHIR
-POST {{host}}/StructureMap/$transform?source=http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaChEmedMedicationDispenseDocumentToBundle
-Accept: application/fhir+xml;fhirVersion=4.0
-Content-Type: application/fhir+xml;fhirVersion=4.0
-
-< ./input/cda-ch-emed/2-4-MedicationDispense.xml
+< ./input/cda-ch-emed/pml.xml

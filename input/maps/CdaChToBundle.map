@@ -27,12 +27,12 @@ imports "http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaToBundle"
 // source: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5.30.1.1.10.1.14
 // target: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefinition-ch-core-document.html
 group CdaChToBundle(source cda : ClinicalDocument, target bundle : Bundle) {
-  cda ->  bundle.entry as e share e, 
-             e.resource = create('Composition') as composition share composition, 
+  cda ->  bundle.entry as e, 
+             e.resource = create('Composition') as composition, 
              composition.id = uuid() as uuid,
              e.fullUrl = append('urn:uuid:',uuid),
              bundle.entry as e2, 
-             e2.resource = create('Patient') as patient share patient,
+             e2.resource = create('Patient') as patient,
              patient.id = uuid() as uuid2,
              e2.fullUrl = append('urn:uuid:',uuid2)
              then ClinicalDocumentChToBundle(cda, patient, composition, bundle) "ClinicalDocumentToBody";
@@ -65,9 +65,10 @@ group SectionOriginalRepresentation(source src : Section, source patient : Patie
   src.entry as cdaEntry ->  bundle.entry as e,  
     e.resource = create('Binary') as binary,
     binary.id = uuid() as uuid,
-    e.fullUrl = append('urn:uuid:',uuid), 
-    tgt.entry = create('Reference') as reference share reference,
-    reference.reference = reference(binary) then {
+    e.fullUrl = append('urn:uuid:',uuid) as urnuuid, 
+    tgt.entry = create('Reference') as reference,
+    reference.type = 'Binary',
+    reference.reference = urnuuid then {
       cdaEntry.observationMedia as observationMedia then {
         observationMedia then ObservationMedia(observationMedia, binary) "observationMedia";
         observationMedia.ID as value -> reference.extension as ext then NarrativeLink(value, ext) "narrativeLink";
@@ -119,7 +120,7 @@ group ChExtEprVersionNumber(source src: INT, target ext: Extension) {
 // target: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefinition-ch-ext-epr-informationrecipient.html
 group ChExtEprInformationRecipient(source src: IntendedRecipient, target patient: Patient, target ext: Extension) {
   src -> ext.url = 'http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-informationrecipient' "url";
-  src -> ext.value = create('Reference') as reference, reference.reference = reference(patient) "value";
+  src -> ext.value = create('Reference') as reference, reference.type='Patient', reference.reference = ('urn:uuid:'+%patient.id) "value";
   src.addr as addr -> patient.address as address then ADAddress(addr, address) "address";
   src.informationRecipient as informationRecipient then {
     informationRecipient.name as cdaname -> patient.name as fhirname then ENHumanName(cdaname, fhirname) "name";
@@ -130,7 +131,7 @@ group ChExtEprInformationRecipient(source src: IntendedRecipient, target patient
 // target: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefinition-ch-ext-epr-informationrecipient.html
 group ChExtEprInformationRecipientOrganization(source src: IntendedRecipient, target organization: Organization, target ext: Extension) {
   src -> ext.url = 'http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-informationrecipient' "url";
-  src -> ext.value = create('Reference') as reference, reference.reference = reference(organization) "value";
+  src -> ext.value = create('Reference') as reference, reference.type='Organization', reference.reference = ('urn:uuid:'+%organization.id) "value";
   src.receivedOrganization as receivedOrganization then ClinicalDocumentOrganization(receivedOrganization, organization) "organization";
 }
 
@@ -139,7 +140,7 @@ group ChExtEprInformationRecipientOrganization(source src: IntendedRecipient, ta
 group ChExtEprDataEnterer(source src: DataEnterer, target person: Person, target ext: Extension) {
   src -> ext.url = 'http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-dataenterer' "url";
   src.assignedEntity as assignedEntity -> ext.extension as ext, ext.url='enterer', ext.value = create('Reference') as reference, 
-                reference.reference = reference(person) then ClinicalDocumentEntityPerson(assignedEntity, person) "person";
+                reference.type='Person', reference.reference = ('urn:uuid:'+%person.id) then ClinicalDocumentEntityPerson(assignedEntity, person) "person";
   src.time as time -> ext.extension as exttime then ChExtEprTime(time, exttime) "time";
 }
 
@@ -150,7 +151,7 @@ group ChExtEprDataEnterer(source src: DataEnterer, target person: Person, target
 group ClinicalDocumentCompositionCh(source src : ClinicalDocument, target tgt : Composition, target patientResource: Patient, target bundle : Bundle) {
   src.confidentialityCode as confidentialityCode then {
     confidentialityCode.code as v -> 
-      tgt.confidentiality = translate(v, 'http://fhir.ch/ig/ch-core/ConceptMap/documententry-confidentialitycode-to-fhir', 'code') as fhirconf share confidentialityCode,
+      tgt.confidentiality = translate(v, 'http://fhir.ch/ig/ch-core/ConceptMap/documententry-confidentialitycode-to-fhir', 'code') as fhirconf,
             fhirconf.extension as ext then ChExtEprConfidentialityCode(confidentialityCode, ext) "confCode";
   } "confidentialityCode";
   src.setId as setId -> tgt.extension as ext then ChExtEprSetId(setId, ext) "setId";

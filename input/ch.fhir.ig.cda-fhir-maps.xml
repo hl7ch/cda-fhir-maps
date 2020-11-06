@@ -105,6 +105,13 @@
     </resource>
     <resource>
       <reference>
+        <reference value="StructureMap/CdaChEmedToBundle"/>
+      </reference>
+      <name value="CDA-CH to Bundle"/>
+      <description value="CDA-CH EMed to FHIR Bundle"/>
+    </resource>
+    <resource>
+      <reference>
         <reference value="StructureMap/CdaChEmedMedicationCardDocumentToBundle"/>
       </reference>
       <name value="CDA-CH-EMED Medication Card document to Bundle"/>
