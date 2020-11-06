@@ -1,14 +1,14 @@
 <StructureMap xmlns="http://hl7.org/fhir">
-   <id value="CdaChEmedMedicationPrescriptionDocumentToBundle"></id>
+   <id value="CdaChEmedMedicationListDocumentToBundle"></id>
    <text>
       <status value="generated"></status>
       <div xmlns="http://www.w3.org/1999/xhtml">
-         <pre>map "http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaChEmedMedicationPrescriptionDocumentToBundle" = "CdaChEmedMedicationPrescriptionDocumentToBundle"
+         <pre>map "http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaChEmedMedicationListDocumentToBundle" = "CdaChEmedMedicationListDocumentToBundle"
 
-// Medication Prescription document,	2.16.756.5.30.1.1.10.1.4
-// 2020-01-22 Michaela Ziegler, copyright ahdis ag, Apache License
+// Medication List document, 2.16.756.5.30.1.1.10.1.13
+// 2020-10-30 Oliver Egger, copyright ahdis ag, Apache License
 // CDA-CH-EMED:  https://art-decor.org/art-decor/decor-project--cdachemed-
-// FHIR CH-EMED: http://fhir.ch/ig/ch-emed/index.html, http://build.fhir.org/ig/hl7ch/ch-emed/index.html
+// FHIR CH-EMED: http://fhir.ch/ig/ch-emed/index.html
 
 uses "http://hl7.org/fhir/cda/StructureDefinition/ClinicalDocument" alias ClinicalDocument as source
 uses "http://hl7.org/fhir/cda/StructureDefinition/AssignedAuthor" alias AssignedAuthor as source
@@ -28,7 +28,7 @@ uses "http://hl7.org/fhir/StructureDefinition/Composition" alias Composition as 
 uses "http://hl7.org/fhir/StructureDefinition/Patient" alias Patient as produced
 uses "http://hl7.org/fhir/StructureDefinition/Practitioner" alias Practitioner as produced
 uses "http://hl7.org/fhir/StructureDefinition/Organization" alias Organization as produced
-uses "http://hl7.org/fhir/StructureDefinition/MedicationRequest" alias MedicationRequest as produced
+uses "http://hl7.org/fhir/StructureDefinition/MedicationStatement" alias MedicationStatement as produced
 uses "http://hl7.org/fhir/StructureDefinition/Dosage" alias Dosage as produced
 
 imports "http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaToFhirTypes"
@@ -37,28 +37,34 @@ imports "http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaChToBundle"
 imports "http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaChEmedToBundle"
 
 // _________________________ Document Level Template  _________________________
-// source: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.1.4
-// target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-composition-medicationprescription.html
-group CdaChEmedMedicationPrescriptionDocumentToBundle(source cda : ClinicalDocument, target bundle : Bundle) {
-  cda -&gt;  bundle.entry as e,  e.resource = create('Composition') as composition,  composition.id = uuid() as uuid,  e.fullUrl = append('urn:uuid:', uuid),  bundle.entry as e2,  e2.resource = create('Patient') as patient,  patient.id = uuid() as uuid2,  e2.fullUrl = append('urn:uuid:', uuid2) then ClinicalDocumentChEmedMedicationPrescriptionDocumentToBundle(cda, patient, composition, bundle) "ClinicalDocumentToBody";
+// source: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.1.13
+// target: http://fhir.ch/ig/ch-emed/medication-list-document.html
+group CdaChEmedMedicationListDocumentToBundle(source cda : ClinicalDocument, target bundle : Bundle) {
+  cda -&gt;  bundle.entry as e,  e.resource = create('Composition') as composition,  composition.id = uuid() as uuid,  e.fullUrl = append('urn:uuid:', uuid),  bundle.entry as e2,  e2.resource = create('Patient') as patient,  patient.id = uuid() as uuid2,  e2.fullUrl = append('urn:uuid:', uuid2) then ClinicalDocumentChEmedMedicationListDocumentToBundle(cda, patient, composition, bundle) "ClinicalDocumentToBody";
 }
 
-// source: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.1.4
-// target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-composition-medicationprescription.html
-group ClinicalDocumentChEmedMedicationPrescriptionDocumentToBundle(source cda : ClinicalDocument, target patient : Patient, target composition : Composition, target bundle : Bundle) extends ClinicalDocumentChToBundle {
+// source: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.1.13
+// target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-composition-MedicationList.html
+group ClinicalDocumentChEmedMedicationListDocumentToBundle(source cda : ClinicalDocument, target patient : Patient, target composition : Composition, target bundle : Bundle) extends ClinicalDocumentChToBundle {
   cda.component as component then {
     component.structuredBody as body then {
       body.component as component then {
-        component.section as srcSection where (templateId.where(root = '2.16.756.5.30.1.1.10.3.10')) -&gt; composition.section as tgtSection then SectionPrescriptionSectionContentModule(srcSection, patient, tgtSection, bundle);
+        component.section as srcSection where (templateId.where(root = '2.16.756.5.30.1.1.10.3.44')) -&gt; composition.section as tgtSection then SectionMedicationListSectionContentModule(srcSection, patient, tgtSection, bundle);
       };
     } "body";
   };
 }
 
 // _________________________ Section Level Templates _________________________
-// source: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.3.10
-// target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-composition-medicationprescription.html
-group SectionPrescriptionSectionContentModule(source src : Section, source patient : Patient, target tgt, target bundle : Bundle) extends ClinicalDocumentSection {
+// source: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-composition-MedicationList.html
+// target:
+group SectionMedicationListSectionContentModule(source src : Section, source patient : Patient, target tgt, target bundle : Bundle) extends ClinicalDocumentSection {
+  src.entry as cdaEntry where (substanceAdministration.templateId.where(root = '2.16.756.5.30.1.1.10.4.34')) -&gt;  bundle.entry as e,  e.resource = create('MedicationStatement') as medicationstatement,  medicationstatement.id = uuid() as uuid,  e.fullUrl = append('urn:uuid:', uuid),  tgt.entry = create('Reference') as reference,  reference.type = 'MedicationStatement',  reference.reference = append('urn:uuid:', uuid) then {
+    cdaEntry.substanceAdministration as substanceAdministration then MedicationTreatmentPlanEntryContentModule(src, substanceAdministration, patient, medicationstatement);
+  } "MedicationTreatmentPlanEntryContentModule";
+  src.entry as cdaEntry where (supply.templateId.where(root = '2.16.756.5.30.1.1.10.4.42')) -&gt;  bundle.entry as e,  e.resource = create('MedicationDispense') as medicationdispense,  medicationdispense.id = uuid() as uuid,  e.fullUrl = append('urn:uuid:', uuid),  tgt.entry = create('Reference') as reference,  reference.type = 'MedicationDispense',  reference.reference = append('urn:uuid:', uuid) then {
+    cdaEntry.supply as supply then DispenseItemEntryContentModule(src, supply, patient, medicationdispense);
+  } "DispenseItemEntryContentModule";
   src.entry as cdaEntry where (substanceAdministration.templateId.where(root = '2.16.756.5.30.1.1.10.4.43')) -&gt;  bundle.entry as e,  e.resource = create('MedicationRequest') as medicationrequest,  medicationrequest.id = uuid() as uuid,  e.fullUrl = append('urn:uuid:', uuid),  tgt.entry = create('Reference') as reference,  reference.type = 'MedicationRequest',  reference.reference = append('urn:uuid:', uuid) then {
     cdaEntry.substanceAdministration as substanceAdministration then PrescriptionItemEntryContentModule(src, substanceAdministration, patient, medicationrequest);
   } "PrescriptionSectionContentModule";
@@ -67,12 +73,12 @@ group SectionPrescriptionSectionContentModule(source src : Section, source patie
 </pre>
       </div>
    </text>
-   <url value="http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaChEmedMedicationPrescriptionDocumentToBundle"></url>
-   <name value="CdaChEmedMedicationPrescriptionDocumentToBundle"></name>
-   <description value="Medication Prescription document,	2.16.756.5.30.1.1.10.1.4
-2020-01-22 Michaela Ziegler, copyright ahdis ag, Apache License
+   <url value="http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaChEmedMedicationListDocumentToBundle"></url>
+   <name value="CdaChEmedMedicationListDocumentToBundle"></name>
+   <description value="Medication List document, 2.16.756.5.30.1.1.10.1.13
+2020-10-30 Oliver Egger, copyright ahdis ag, Apache License
 CDA-CH-EMED:  https://art-decor.org/art-decor/decor-project--cdachemed-
-FHIR CH-EMED: http://fhir.ch/ig/ch-emed/index.html, http://build.fhir.org/ig/hl7ch/ch-emed/index.html"></description>
+FHIR CH-EMED: http://fhir.ch/ig/ch-emed/index.html"></description>
    <structure>
       <url value="http://hl7.org/fhir/cda/StructureDefinition/ClinicalDocument"></url>
       <mode value="source"></mode>
@@ -164,9 +170,9 @@ FHIR CH-EMED: http://fhir.ch/ig/ch-emed/index.html, http://build.fhir.org/ig/hl7
       <alias value="Organization"></alias>
    </structure>
    <structure>
-      <url value="http://hl7.org/fhir/StructureDefinition/MedicationRequest"></url>
+      <url value="http://hl7.org/fhir/StructureDefinition/MedicationStatement"></url>
       <mode value="produced"></mode>
-      <alias value="MedicationRequest"></alias>
+      <alias value="MedicationStatement"></alias>
    </structure>
    <structure>
       <url value="http://hl7.org/fhir/StructureDefinition/Dosage"></url>
@@ -178,10 +184,10 @@ FHIR CH-EMED: http://fhir.ch/ig/ch-emed/index.html, http://build.fhir.org/ig/hl7
    <import value="http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaChToBundle"></import>
    <import value="http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaChEmedToBundle"></import>
    <group>
-      <name value="CdaChEmedMedicationPrescriptionDocumentToBundle"></name>
+      <name value="CdaChEmedMedicationListDocumentToBundle"></name>
       <documentation value="_________________________ Document Level Template  _________________________
-source: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.1.4
-target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-composition-medicationprescription.html"></documentation>
+source: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.1.13
+target: http://fhir.ch/ig/ch-emed/medication-list-document.html"></documentation>
       <input>
          <name value="cda"></name>
          <type value="ClinicalDocument"></type>
@@ -268,7 +274,7 @@ target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-compo
             </parameter>
          </target>
          <dependent>
-            <name value="ClinicalDocumentChEmedMedicationPrescriptionDocumentToBundle"></name>
+            <name value="ClinicalDocumentChEmedMedicationListDocumentToBundle"></name>
             <variable value="cda"></variable>
             <variable value="patient"></variable>
             <variable value="composition"></variable>
@@ -277,10 +283,10 @@ target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-compo
       </rule>
    </group>
    <group>
-      <name value="ClinicalDocumentChEmedMedicationPrescriptionDocumentToBundle"></name>
+      <name value="ClinicalDocumentChEmedMedicationListDocumentToBundle"></name>
       <extends value="ClinicalDocumentChToBundle"></extends>
-      <documentation value="source: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.1.4
-target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-composition-medicationprescription.html"></documentation>
+      <documentation value="source: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.1.13
+target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-composition-MedicationList.html"></documentation>
       <input>
          <name value="cda"></name>
          <type value="ClinicalDocument"></type>
@@ -328,7 +334,7 @@ target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-compo
                      <context value="component"></context>
                      <element value="section"></element>
                      <variable value="srcSection"></variable>
-                     <condition value="(templateId.where(root = '2.16.756.5.30.1.1.10.3.10'))"></condition>
+                     <condition value="(templateId.where(root = '2.16.756.5.30.1.1.10.3.44'))"></condition>
                   </source>
                   <target>
                      <context value="composition"></context>
@@ -337,7 +343,7 @@ target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-compo
                      <variable value="tgtSection"></variable>
                   </target>
                   <dependent>
-                     <name value="SectionPrescriptionSectionContentModule"></name>
+                     <name value="SectionMedicationListSectionContentModule"></name>
                      <variable value="srcSection"></variable>
                      <variable value="patient"></variable>
                      <variable value="tgtSection"></variable>
@@ -349,11 +355,11 @@ target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-compo
       </rule>
    </group>
    <group>
-      <name value="SectionPrescriptionSectionContentModule"></name>
+      <name value="SectionMedicationListSectionContentModule"></name>
       <extends value="ClinicalDocumentSection"></extends>
       <documentation value="_________________________ Section Level Templates _________________________
-source: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.3.10
-target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-composition-medicationprescription.html"></documentation>
+source: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-composition-MedicationList.html
+target:"></documentation>
       <input>
          <name value="src"></name>
          <type value="Section"></type>
@@ -373,6 +379,186 @@ target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-compo
          <type value="Bundle"></type>
          <mode value="target"></mode>
       </input>
+      <rule>
+         <name value="MedicationTreatmentPlanEntryContentModule"></name>
+         <source>
+            <context value="src"></context>
+            <element value="entry"></element>
+            <variable value="cdaEntry"></variable>
+            <condition value="(substanceAdministration.templateId.where(root = '2.16.756.5.30.1.1.10.4.34'))"></condition>
+         </source>
+         <target>
+            <context value="bundle"></context>
+            <contextType value="variable"></contextType>
+            <element value="entry"></element>
+            <variable value="e"></variable>
+         </target>
+         <target>
+            <context value="e"></context>
+            <contextType value="variable"></contextType>
+            <element value="resource"></element>
+            <variable value="medicationstatement"></variable>
+            <transform value="create"></transform>
+            <parameter>
+               <valueString value="MedicationStatement"></valueString>
+            </parameter>
+         </target>
+         <target>
+            <context value="medicationstatement"></context>
+            <contextType value="variable"></contextType>
+            <element value="id"></element>
+            <variable value="uuid"></variable>
+            <transform value="uuid"></transform>
+         </target>
+         <target>
+            <context value="e"></context>
+            <contextType value="variable"></contextType>
+            <element value="fullUrl"></element>
+            <transform value="append"></transform>
+            <parameter>
+               <valueString value="urn:uuid:"></valueString>
+            </parameter>
+            <parameter>
+               <valueId value="uuid"></valueId>
+            </parameter>
+         </target>
+         <target>
+            <context value="tgt"></context>
+            <contextType value="variable"></contextType>
+            <element value="entry"></element>
+            <variable value="reference"></variable>
+            <transform value="create"></transform>
+            <parameter>
+               <valueString value="Reference"></valueString>
+            </parameter>
+         </target>
+         <target>
+            <context value="reference"></context>
+            <contextType value="variable"></contextType>
+            <element value="type"></element>
+            <transform value="copy"></transform>
+            <parameter>
+               <valueString value="MedicationStatement"></valueString>
+            </parameter>
+         </target>
+         <target>
+            <context value="reference"></context>
+            <contextType value="variable"></contextType>
+            <element value="reference"></element>
+            <transform value="append"></transform>
+            <parameter>
+               <valueString value="urn:uuid:"></valueString>
+            </parameter>
+            <parameter>
+               <valueId value="uuid"></valueId>
+            </parameter>
+         </target>
+         <rule>
+            <name value="substanceAdministration"></name>
+            <source>
+               <context value="cdaEntry"></context>
+               <element value="substanceAdministration"></element>
+               <variable value="substanceAdministration"></variable>
+            </source>
+            <dependent>
+               <name value="MedicationTreatmentPlanEntryContentModule"></name>
+               <variable value="src"></variable>
+               <variable value="substanceAdministration"></variable>
+               <variable value="patient"></variable>
+               <variable value="medicationstatement"></variable>
+            </dependent>
+         </rule>
+      </rule>
+      <rule>
+         <name value="DispenseItemEntryContentModule"></name>
+         <source>
+            <context value="src"></context>
+            <element value="entry"></element>
+            <variable value="cdaEntry"></variable>
+            <condition value="(supply.templateId.where(root = '2.16.756.5.30.1.1.10.4.42'))"></condition>
+         </source>
+         <target>
+            <context value="bundle"></context>
+            <contextType value="variable"></contextType>
+            <element value="entry"></element>
+            <variable value="e"></variable>
+         </target>
+         <target>
+            <context value="e"></context>
+            <contextType value="variable"></contextType>
+            <element value="resource"></element>
+            <variable value="medicationdispense"></variable>
+            <transform value="create"></transform>
+            <parameter>
+               <valueString value="MedicationDispense"></valueString>
+            </parameter>
+         </target>
+         <target>
+            <context value="medicationdispense"></context>
+            <contextType value="variable"></contextType>
+            <element value="id"></element>
+            <variable value="uuid"></variable>
+            <transform value="uuid"></transform>
+         </target>
+         <target>
+            <context value="e"></context>
+            <contextType value="variable"></contextType>
+            <element value="fullUrl"></element>
+            <transform value="append"></transform>
+            <parameter>
+               <valueString value="urn:uuid:"></valueString>
+            </parameter>
+            <parameter>
+               <valueId value="uuid"></valueId>
+            </parameter>
+         </target>
+         <target>
+            <context value="tgt"></context>
+            <contextType value="variable"></contextType>
+            <element value="entry"></element>
+            <variable value="reference"></variable>
+            <transform value="create"></transform>
+            <parameter>
+               <valueString value="Reference"></valueString>
+            </parameter>
+         </target>
+         <target>
+            <context value="reference"></context>
+            <contextType value="variable"></contextType>
+            <element value="type"></element>
+            <transform value="copy"></transform>
+            <parameter>
+               <valueString value="MedicationDispense"></valueString>
+            </parameter>
+         </target>
+         <target>
+            <context value="reference"></context>
+            <contextType value="variable"></contextType>
+            <element value="reference"></element>
+            <transform value="append"></transform>
+            <parameter>
+               <valueString value="urn:uuid:"></valueString>
+            </parameter>
+            <parameter>
+               <valueId value="uuid"></valueId>
+            </parameter>
+         </target>
+         <rule>
+            <name value="supply"></name>
+            <source>
+               <context value="cdaEntry"></context>
+               <element value="supply"></element>
+               <variable value="supply"></variable>
+            </source>
+            <dependent>
+               <name value="DispenseItemEntryContentModule"></name>
+               <variable value="src"></variable>
+               <variable value="supply"></variable>
+               <variable value="patient"></variable>
+               <variable value="medicationdispense"></variable>
+            </dependent>
+         </rule>
+      </rule>
       <rule>
          <name value="PrescriptionSectionContentModule"></name>
          <source>
