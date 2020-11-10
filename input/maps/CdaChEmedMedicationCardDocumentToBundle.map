@@ -71,6 +71,6 @@ group SectionMedicationCardSectionContentModule(source src : Section, source pat
     medicationstatement.id = uuid() as uuid,
     e.fullUrl = append('urn:uuid:',uuid), 
     tgt.entry = create('Reference') as reference, reference.type='MedicationStatement', reference.reference = append('urn:uuid:',uuid) then {
-    cdaEntry.substanceAdministration as substanceAdministration then MedicationTreatmentPlanEntryContentModule(src, substanceAdministration, patient, medicationstatement);
+    cdaEntry.substanceAdministration as substanceAdministration then MedicationTreatmentPlanItemEntryContentModule(src, substanceAdministration, patient, medicationstatement);
   } "cdaEntry";
 }

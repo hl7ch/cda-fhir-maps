@@ -96,7 +96,7 @@ group ManufacturedMaterialEntryContentModule(source src : SubstanceAdministratio
 
 // source: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.4.34
 // target: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefinition-ch-emed-medicationstatement.html
-group MedicationTreatmentPlanEntryContentModule(source section : Section, source src : SubstanceAdministration, source patient : Patient, target medicationStatement : MedicationStatement) {
+group MedicationTreatmentPlanItemEntryContentModule(source section : Section, source src : SubstanceAdministration, source patient : Patient, target medicationStatement : MedicationStatement) {
   // src.templateId as template then TemplateID(template, medicationStatement) "templateId";
   src.id -&gt; medicationStatement.identifier;
   patient -&gt;  medicationStatement.subject = create('Reference') as reference,  reference.type = 'Patient',  reference.reference = ('urn:uuid:' + %patient.id) "patient";
@@ -205,7 +205,7 @@ group MTPReferenceEntryContentModule(source entryrelationship, target ext : Exte
 // source: https://art-decor.org/art-decor/decor-templates--ch-pharm-?section=templates&amp;id=2.16.756.5.30.1.1.10.4.52
 // target: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefinition-ch-emed-dosage-nonstructured.html
 group DosageInstructionsNonStructuredEntryContentModule(source section : Section, source entry : Element, target dosage : Dosage) {
-  // see MedicationTreatmentPlanEntryContentModule
+  // see MedicationTreatmentPlanItemEntryContentModule
   entry.substanceAdministration as observation -&gt; dosage.text = (%section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).substring(%section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).indexOf('&gt;') + 1, %section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).indexOf('&lt;') - %section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).indexOf('&gt;') - 1)) "idRef";
   entry.substanceAdministration as observation then {
     observation.text as text then {
@@ -1084,7 +1084,7 @@ target: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefiniti
       </rule>
    </group>
    <group>
-      <name value="MedicationTreatmentPlanEntryContentModule"></name>
+      <name value="MedicationTreatmentPlanItemEntryContentModule"></name>
       <documentation value="source: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.4.34
 target: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefinition-ch-emed-medicationstatement.html"></documentation>
       <input>
@@ -1970,7 +1970,7 @@ target: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefiniti
                <valueString value="%section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).substring(%section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).indexOf('&gt;') + 1, %section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).indexOf('&lt;') - %section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).indexOf('&gt;') - 1)"></valueString>
             </parameter>
          </target>
-         <documentation value="see MedicationTreatmentPlanEntryContentModule"></documentation>
+         <documentation value="see MedicationTreatmentPlanItemEntryContentModule"></documentation>
       </rule>
       <rule>
          <name value="observation"></name>

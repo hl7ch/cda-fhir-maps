@@ -60,8 +60,8 @@ group ClinicalDocumentChEmedMedicationListDocumentToBundle(source cda : Clinical
 // target:
 group SectionMedicationListSectionContentModule(source src : Section, source patient : Patient, target tgt, target bundle : Bundle) extends ClinicalDocumentSection {
   src.entry as cdaEntry where (substanceAdministration.templateId.where(root = '2.16.756.5.30.1.1.10.4.34')) -&gt;  bundle.entry as e,  e.resource = create('MedicationStatement') as medicationstatement,  medicationstatement.id = uuid() as uuid,  e.fullUrl = append('urn:uuid:', uuid),  tgt.entry = create('Reference') as reference,  reference.type = 'MedicationStatement',  reference.reference = append('urn:uuid:', uuid) then {
-    cdaEntry.substanceAdministration as substanceAdministration then MedicationTreatmentPlanEntryContentModule(src, substanceAdministration, patient, medicationstatement);
-  } "MedicationTreatmentPlanEntryContentModule";
+    cdaEntry.substanceAdministration as substanceAdministration then MedicationTreatmentPlanItemEntryContentModule(src, substanceAdministration, patient, medicationstatement);
+  } "MedicationTreatmentPlanItemEntryContentModule";
   src.entry as cdaEntry where (supply.templateId.where(root = '2.16.756.5.30.1.1.10.4.42')) -&gt;  bundle.entry as e,  e.resource = create('MedicationDispense') as medicationdispense,  medicationdispense.id = uuid() as uuid,  e.fullUrl = append('urn:uuid:', uuid),  tgt.entry = create('Reference') as reference,  reference.type = 'MedicationDispense',  reference.reference = append('urn:uuid:', uuid) then {
     cdaEntry.supply as supply then DispenseItemEntryContentModule(src, supply, patient, medicationdispense);
   } "DispenseItemEntryContentModule";
@@ -380,7 +380,7 @@ target:"></documentation>
          <mode value="target"></mode>
       </input>
       <rule>
-         <name value="MedicationTreatmentPlanEntryContentModule"></name>
+         <name value="MedicationTreatmentPlanItemEntryContentModule"></name>
          <source>
             <context value="src"></context>
             <element value="entry"></element>
@@ -461,7 +461,7 @@ target:"></documentation>
                <variable value="substanceAdministration"></variable>
             </source>
             <dependent>
-               <name value="MedicationTreatmentPlanEntryContentModule"></name>
+               <name value="MedicationTreatmentPlanItemEntryContentModule"></name>
                <variable value="src"></variable>
                <variable value="substanceAdministration"></variable>
                <variable value="patient"></variable>

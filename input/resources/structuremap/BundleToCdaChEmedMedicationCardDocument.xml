@@ -64,7 +64,7 @@ group SectionMedicationCardSectionContentModule(source bundle : Bundle, source s
     section -&gt;  uuid() as uuid,  id.root = (%uuid.upper()) "upper";
   } "extension";
   bundle.entry as entry then {
-    entry.resource as medicationStatement where ('MedicationStatement' + '/' + $this.id) in %section.entry.reference -&gt;  cdasection.entry as entry,  entry.substanceAdministration as substanceAdministration then MedicationTreatmentPlanEntryContentModule(bundle, medicationStatement, substanceAdministration) "MedicationStatement";
+    entry.resource as medicationStatement where ('MedicationStatement' + '/' + $this.id) in %section.entry.reference -&gt;  cdasection.entry as entry,  entry.substanceAdministration as substanceAdministration then MedicationTreatmentPlanItemEntryContentModule(bundle, medicationStatement, substanceAdministration) "MedicationStatement";
   };
 }
 
@@ -149,7 +149,7 @@ group ManufacturedMaterialEntryContentModule(source bundle : Bundle, source medi
 
 // source: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefinition-ch-emed-medicationstatement.html
 // target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.4.34&amp;effectiveDate=2019-12-11T11:31:52&amp;language=en-US
-group MedicationTreatmentPlanEntryContentModule(source bundle : Bundle, source medicationStatement : MedicationStatement, target substanceAdministration : SubstanceAdministration) {
+group MedicationTreatmentPlanItemEntryContentModule(source bundle : Bundle, source medicationStatement : MedicationStatement, target substanceAdministration : SubstanceAdministration) {
   medicationStatement -&gt; substanceAdministration.classCode = 'SBADM' "SBADM";
   medicationStatement -&gt; substanceAdministration.moodCode = 'INT' "INT";
   medicationStatement -&gt;  substanceAdministration.templateId as templateId,  templateId.root = '2.16.756.5.30.1.1.10.4.34' "CH-PHARM-MedicationTreatmentPlanItemEntryContentModule";
@@ -685,7 +685,7 @@ target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=temp
           <variable value="substanceAdministration"></variable>
         </target>
         <dependent>
-          <name value="MedicationTreatmentPlanEntryContentModule"></name>
+          <name value="MedicationTreatmentPlanItemEntryContentModule"></name>
           <variable value="bundle"></variable>
           <variable value="medicationStatement"></variable>
           <variable value="substanceAdministration"></variable>
@@ -1534,7 +1534,7 @@ IHE: Case 2: If the capacityQuantity is given in non-countable units, the unit a
     </rule>
   </group>
   <group>
-    <name value="MedicationTreatmentPlanEntryContentModule"></name>
+    <name value="MedicationTreatmentPlanItemEntryContentModule"></name>
     <documentation value="source: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefinition-ch-emed-medicationstatement.html
 target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.4.34&amp;effectiveDate=2019-12-11T11:31:52&amp;language=en-US"></documentation>
     <input>
