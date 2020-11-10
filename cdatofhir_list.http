@@ -66,9 +66,24 @@ Content-Type: text/fhir-mapping
 
 < ./input/maps/CdaChEmedMedicationListDocumentToBundle.map
 
-### 5. Transform eMedicationService 
+### 5a. Transform eMedicationService 
 POST {{host}}/StructureMap/$transform?source=http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaChEmedMedicationListDocumentToBundle
 Accept: application/fhir+xml;fhirVersion=4.0
 Content-Type: application/fhir+xml;fhirVersion=4.0
 
 < ./input/cda-ch-emed/pml.xml
+
+
+### 5b. Transform eMedicationService 
+POST {{host}}/StructureMap/$transform?source=http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaChEmedMedicationListDocumentToBundle
+Accept: application/fhir+xml;fhirVersion=4.0
+Content-Type: application/fhir+xml;fhirVersion=4.0
+
+< ./input/cda-ch-emed/cda-response-ms.xml
+
+### 5c. Transform eMedicationService 
+POST {{host}}/StructureMap/$transform?source=http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaChEmedMedicationListDocumentToBundle
+Accept: application/fhir+xml;fhirVersion=4.0
+Content-Type: application/fhir+xml;fhirVersion=4.0
+
+< ./input/cda-ch-emed/2-1-MedicationList.xml
