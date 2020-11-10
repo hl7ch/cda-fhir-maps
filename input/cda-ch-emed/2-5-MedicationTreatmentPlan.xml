@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!-- ************************************************************ -->
+<!-- Fallbeispiel -->
+<!-- 2.5 MedicationTreatmentPlan based on IHE MTP -->
+<!-- History: -->
+<!-- 2017.06.29: Oliver Egger, ahdis gmbh (Document Creation) -->
+<!-- 2017.06.29: Oliver Egger, ahdis gmbh (Adaption to IPAG Report June 2017) -->
+<!-- 2018.04.13: Oliver Egger, ahdis gmbh (Adaption to feedback from consultation 
+	of ordonnace) -->
+<!-- 2018.06.16: Tony Schaller, medshare GmbH (Refactoring for better validation results: Schematron using eHealth Connector and 'HL7 - CDA Release 2 (strict)' using IHE EVS Client, Gazelle ObjectsChecker validation) -->
+<!-- 2019.10.15: Oliver Egger, ahdis ag: Update from CDA-CH v2.0 (2017) to CDA-CH v2.1 (2020) -->
+<!-- 2020.02.03: Oliver Egger, ahdis ag: Update to CDA-CH EMED (2020) -->
+<!-- ************************************************************ -->
+<?xml-stylesheet type='text/xsl' href='../../../../stylesheets/HL7.ch/CDA-CH/v2.0/cda-ch.xsl'?>
+<ClinicalDocument xmlns:pharm="urn:ihe:pharm"
+	xmlns="urn:hl7-org:v3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="urn:hl7-org:v3 ../../../../schemas/PHARM/schemas/cda/extendedschemas/CDA_extended_pharmacy.xsd">
+
+	<realmCode code="CHE" />
+
+	<typeId root="2.16.840.1.113883.1.3" extension="POCD_HD000040" />
+
+	<!-- CDA-CH V2 structuredBody -->
+	<templateId root="2.16.756.5.30.1.1.10.1.9" />
+	<!-- HL7 CDA R2 (2005) having a structuredBody. -->
+	<templateId root="2.16.840.1.113883.10.12.2" />
+	<!-- HL7 CDA R2 (2005). -->
+	<templateId root="2.16.840.1.113883.10.12.1" />
+	<!-- Exchange format according to the Swiss EPR -->
+	<templateId root="2.16.756.5.30.1.127.1.4" />
+	<!-- IHE PCC -->
+	<templateId root="1.3.6.1.4.1.19376.1.5.3.1.1.1" />
+	<!-- IHE MTP -->
+	<templateId root="1.3.6.1.4.1.19376.1.9.1.1.6" />
+	<!-- CDA-CH-EMED Medication Treatment Plan document -->
+	<templateId root="2.16.756.5.30.1.1.10.1.7" />
+
+	<!-- id of this MedicationTreatmentPlan -->
+	<id root="5712FFFE-20C6-11E6-B67B-9E71128CAE77" />
+
+
+	<!-- IHE PHRAM MTP defines the document code -->
+	<code code="77603-9" codeSystem="2.16.840.1.113883.6.1"
+		codeSystemName="LOINC" displayName="Medication treatment plan.extended">
+		<!-- Document code mapping to the Swiss EPR XDS.b metadata (DocumentEntry.typeCode	, 2.16.756.5.30.1.127.3.10.1.27). 
+		<translation code="419891008" codeSystem="2.16.840.1.113883.6.96"
+			codeSystemName="SNOMED CT" displayName="Record artifact (record artifact)" /> -->
+	</code>
+	<title>Therapieentscheid Medikation</title>
+
+	<effectiveTime value="20120204140000+0100" />
+	
+	<confidentialityCode code="17621005" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED CT" displayName="Normally accessible"/>
+	
+	<languageCode code="de-CH" />
+
+	<!-- Document setId and versionNumber according to CDA-CH v2.0. -->
+	<setId root="5712FFFE-20C6-11E6-B67B-9E71128CAE77" />
+	<versionNumber value="1" />
+
+	<recordTarget>
+		<templateId root="2.16.756.5.30.1.1.10.2.1" />
+		<patientRole>
+			<!-- The patient's id. -->
+			<id extension="11111111" root="2.999" />
+			<addr>
+				<streetAddressLine>Wiesenstr. 12</streetAddressLine>
+				<postalCode>8003</postalCode>
+				<city>Zürich</city>
+				<country>CH</country>
+			</addr>
+			<patient>
+				<name>
+					<family>Wegmüller</family>
+					<given>Monika</given>
+				</name>
+				<!-- The patient's gender.  -->
+				<administrativeGenderCode code="F"
+					codeSystem="2.16.840.1.113883.5.1" codeSystemName="HL7 AdministrativeGender"
+					displayName="Female" />
+				<birthTime value="19430515" />
+			</patient>
+		</patientRole>
+	</recordTarget>
+
+
+	<author>
+		<templateId root="2.16.756.5.30.1.1.10.9.23" />
+
+		<time value="20120204140000+0100" />
+		<assignedAuthor>
+			<id extension="7601000234438" root="2.51.1.3" />
+
+			<assignedPerson>
+				<name>
+					<given>Familien</given>
+					<family>Hausarzt</family>
+				</name>
+			</assignedPerson>
+			<representedOrganization>
+				<id extension="7601000234438" root="2.51.1.3" />
+				<name>Hausarzt</name>
+				<telecom nullFlavor="NI" />
+				<addr>
+					<streetAddressLine>Krankenstrasse 2</streetAddressLine>
+					<postalCode>8005</postalCode>
+					<city>Zürich</city>
+					<country>CH</country>
+				</addr>
+			</representedOrganization>
+		</assignedAuthor>
+	</author>
+
+	<custodian>
+		<templateId root="2.16.756.5.30.1.1.10.2.3" />
+		<assignedCustodian>
+			<representedCustodianOrganization>
+				<id extension="7601000234438" root="2.51.1.3" />
+				<name>Hausarzt</name>
+			</representedCustodianOrganization>
+		</assignedCustodian>
+	</custodian>
+
+	<informationRecipient typeCode='PRCP'>
+		<templateId root="2.16.756.5.30.1.1.10.2.4" />
+		<intendedRecipient>
+			<addr>
+				<streetAddressLine>Wiesenstr. 12</streetAddressLine>
+				<postalCode>8003</postalCode>
+				<city>Zürich</city>
+				<country>CH</country>
+			</addr>
+			<informationRecipient>
+				<name>
+					<family>Wegmüller</family>
+					<given>Monika</given>
+				</name>
+			</informationRecipient>
+		</intendedRecipient>
+	</informationRecipient>
+
+	<component contextConductionInd='true'>
+		<structuredBody>
+			<component>
+				<section>
+
+					<!-- CH-PHARM MTP -->
+					<templateId root='2.16.756.5.30.1.1.10.3.13' />
+					<!-- IHE PHARM MTP -->
+					<templateId root='1.3.6.1.4.1.19376.1.9.1.2.6' />
+
+					<id root="5712FFFE-20C6-11E6-B67B-9E71128CAE77" />
+
+					<code code="77604-7" codeSystem="2.16.840.1.113883.6.1"
+						codeSystemName="LOINC" displayName="Medication treatment plan.brief" />
+
+					<title>Medikamentöser Behandlungsplan</title>
+
+					<text>
+						<table>
+							<thead>
+								<tr>
+									<th>Präpartename</th>
+									<th>Wirkstoffname</th>
+									<th>Galenische Form</th>
+									<th>Dosis pro Einheit</th>
+									<th>Dosierung</th>
+									<th>Dos.Morgen</th>
+									<th>Dos.Mittag</th>
+									<th>Dos.Abend</th>
+									<th>Dos.Nacht</th>
+									<th>Verabreichungsweg</th>
+									<th>Kommentar</th>
+									<th>Anwendungsdauer</th>
+									<th>Behandlungsgrund</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ID="mtp.1">
+									<td ID="mtp.1.brandedmedication">Norvasc</td>
+									<td ID="mtp.1.ingredient">Amlodipin</td>
+									<td ID="mtp.1.packageform">Tbl</td>
+									<td ID="mtp.1.dosequantity">10 mg</td>
+									<td ID="mtp.1.dosageintakemode">Morgens und abends je 1 Tablette nehmen</td>
+									<td ID="mtp.1.dosagemorning">1</td>
+									<td ID="mtp.1.dosagelunch">0</td>
+									<td ID="mtp.1.dosageevening">1</td>
+									<td ID="mtp.1.dosagenight">0</td>
+									<td ID="mtp.1.routecode">oral</td>
+									<td ID="mtp.1.note"></td>
+									<td ID="mtp.1.datefromto"></td>
+									<td ID="mtp.1.reason">Bluthochdruck</td>
+								</tr>
+							</tbody>
+						</table>
+					</text>
+
+
+
+					<entry>
+						<substanceAdministration classCode="SBADM"
+							moodCode="INT">
+							<!-- IHE PHARM MTP Required element indicating the Medication Treatment 
+								Plan entry content module -->
+							<templateId root="1.3.6.1.4.1.19376.1.9.1.3.7" />
+							<!-- CCD -->
+							<templateId root="2.16.840.1.113883.10.20.1.24" />
+							<!-- PCC Medication Entry Content Module -->
+							<templateId root="1.3.6.1.4.1.19376.1.5.3.1.4.7" />
+							<!-- CH-PHARM Medication Treatment Plan Item Entry Content Module -->
+							<templateId root="2.16.756.5.30.1.1.10.4.34" />
+
+							<!-- A normal substanceAdministration act that may not contain any 
+								subordinate substanceAdministration acts. -->
+							<templateId root="1.3.6.1.4.1.19376.1.5.3.1.4.7.1" />
+
+
+							<!-- ID of mtp item, PCC TF2 6.3.4.16.6 -->
+							<id root="5712FFFE-20C6-11E6-B67B-9E71128CAE77" />
+
+							<text>
+								<reference value="#mtp.1" />
+							</text>
+							<statusCode code="completed" />
+							<effectiveTime xsi:type="IVL_TS">
+								<low value="20120204" />
+							</effectiveTime>
+							<effectiveTime xsi:type="SXPR_TS" operator="A">
+								<comp xsi:type="EIVL_TS">
+									<event code='ACM' />
+								</comp>
+								<comp xsi:type="EIVL_TS" operator="I">
+									<event code='ACV' />
+								</comp>
+							</effectiveTime>
+							<routeCode code="20053000" codeSystem="0.4.0.127.0.16.1.1.2.1"
+								displayName="Oral use" />
+							<consumable>
+
+								<manufacturedProduct classCode="MANU">
+									<templateId root="1.3.6.1.4.1.19376.1.5.3.1.4.7.2" />
+									<templateId root="2.16.840.1.113883.10.20.1.53" />
+									<manufacturedMaterial classCode="MMAT"
+										determinerCode="KIND">
+										<templateId root="2.16.756.5.30.1.1.10.4.33" />
+										<templateId root="1.3.6.1.4.1.19376.1.9.1.3.1" />
+										<code code="7680500440334" codeSystem="2.51.1.1"
+													codeSystemName="GTIN" displayName="NORVASC Tabl 10 mg">
+											<originalText>
+												<reference value="#mtp.1.brandedmedication" />
+											</originalText>
+										</code>
+										<name>NORVASC Tabl 10 mg</name>
+										<pharm:formCode code="10219000" codeSystem="0.4.0.127.0.16.1.1.2.1"
+											displayName="Tablet" />
+										<pharm:asContent classCode="CONT">
+											<pharm:containerPackagedMedicine
+												classCode="CONT" determinerCode="INSTANCE">
+												<pharm:code code="7680500440334" codeSystem="2.51.1.1"
+													codeSystemName="GTIN" displayName="NORVASC Tabl 10 mg" />
+												<pharm:name>NORVASC Tabl 10 mg</pharm:name>
+												<pharm:formCode code="10219000" codeSystem="0.4.0.127.0.16.1.1.2.1"
+													displayName="Tablet" />
+												<pharm:capacityQuantity value="30" />
+											</pharm:containerPackagedMedicine>
+										</pharm:asContent>
+										<pharm:ingredient classCode="ACTI">
+											<pharm:quantity>
+												<numerator unit="mg" value="10"
+													xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+													xsi:type="PQ" />
+												<denominator value="1"
+													xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+													xsi:type="PQ" />
+											</pharm:quantity>
+											<pharm:ingredient classCode="MMAT"
+												determinerCode="KIND">
+											   <pharm:code code="386864001" codeSystem="2.16.840.1.113883.6.96"
+                                                    codeSystemName="SNOMED CT" displayName="Amlodipine (substance)" />
+												<pharm:name>Amlodipine</pharm:name>
+											</pharm:ingredient>
+										</pharm:ingredient>
+									</manufacturedMaterial>
+								</manufacturedProduct>
+
+							</consumable>
+
+							<entryRelationship typeCode="RSON">
+								<observation classCode="OBS" moodCode="EVN">
+									<templateId root="2.16.756.5.30.1.1.10.4.41" />
+									<code code="75326-9" codeSystem="2.16.840.1.113883.6.1"
+										displayName="Problem" codeSystemName='LOINC' />
+									<text>
+										<reference value="#mtp.1.reason" />
+									</text>
+									<statusCode code="completed" />
+								</observation>
+							</entryRelationship>
+
+							<entryRelationship typeCode="COMP">
+								<substanceAdministration moodCode="INT"
+									classCode="SBADM">
+									<templateId root="2.16.756.5.30.1.1.10.4.37" />
+									<text>
+										<reference value="#mtp.1.dosageintakemode" />
+									</text>
+									<consumable>
+										<manufacturedProduct>
+											<manufacturedMaterial nullFlavor="NA" />
+										</manufacturedProduct>
+									</consumable>
+								</substanceAdministration>
+							</entryRelationship>
+							<entryRelationship typeCode="COMP">
+								<act classCode="ACT" moodCode="EVN">
+									<templateId root="2.16.756.5.30.1.1.10.4.2" />
+									<templateId root="2.16.840.1.113883.10.20.1.40" />
+									<templateId root="1.3.6.1.4.1.19376.1.5.3.1.4.2" />
+									<code code="48767-8" codeSystem="2.16.840.1.113883.6.1"
+										codeSystemName="LOINC" displayName="Annotation comment" />
+									<text>
+										<reference value="#mtp.1.note" />
+									</text>
+									<statusCode code="completed" />
+								</act>
+							</entryRelationship>
+
+						</substanceAdministration>
+					</entry>
+				</section>
+			</component>
+		</structuredBody>
+	</component>
+</ClinicalDocument>
