@@ -28,6 +28,7 @@ uses "http://hl7.org/fhir/StructureDefinition/Practitioner" alias Practitioner a
 uses "http://hl7.org/fhir/StructureDefinition/Organization" alias Organization as produced
 uses "http://hl7.org/fhir/StructureDefinition/MedicationStatement" alias MedicationStatement as produced
 uses "http://hl7.org/fhir/StructureDefinition/Dosage" alias Dosage as produced
+uses "http://hl7.org/fhir/StructureDefinition/Observation" alias Observation as produced
 
 imports "http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaToFhirTypes"
 imports "http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaToBundle"
@@ -589,6 +590,33 @@ group DosageInstructionsStartStopFrequency(source src : SubstanceAdministration,
   src as src -> dosage as dosage then EffectiveTimeWhen(src, dosage) "effectiveTimeWhen";
   src.routeCode as routeCode -> dosage.route as route then CECodeableConcept(routeCode, route) "routeCode";
   src as src -> dosage as dosage then DoseQuantity(src, dosage) "doseQuantity";
+}
+
+
+// source: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&id=2.16.756.5.30.1.1.10.4.44
+// target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-observation.html
+group PharmaceuticalAdviceItemEntryContentModule(source section : Section, source src : Observation, source patient : Patient, target observation : Observation) {
+  src.id -> observation.identifier;
+  patient -> observation.subject = create('Reference') as reference, reference.type='Patient', reference.reference = ('urn:uuid:'+%patient.id) "patient";
+  src -> observation.status = 'final' "final";
+  src.text as text then {
+    text.reference as reference then {
+      reference.value as value -> observation.extension as ext then NarrativeLink(value, ext) "narrativeLink";
+    } "reference";
+  } "text";
+
+  //TBD
+  //src.effectiveTime -> observation.effectiveDateTime;
+  //"Failed to call access method: org.hl7.fhir.exceptions.FHIRException: Exception executing transform observation.effectiveDateTime = create() as vvv on Rule &quot;effectiveDateTime&quot;: Attempt to get types for an invalid property 'effectiveDateTime' on type Observation"
+  
+  src.entryRelationship as entry where (typeCode='REFR' and substanceAdministration.templateId.where(root='1.3.6.1.4.1.19376.1.9.1.3.10').exists()) 
+    -> observation.extension as ext then MTPReferenceEntryContentModule(entry, ext) "MTPReferenceEntry";   
+
+  src.entryRelationship as entry where (typeCode='COMP' and act.templateId.where(root='2.16.756.5.30.1.1.10.4.2').exists()) then {
+    entry.act as act -> observation.note as note then AnnotationComment(section, act, note) "annotation";
+  } "entryRelationShip-2.16.756.5.30.1.1.10.4.2";  
+
+  src.code -> observation.code;
 }
 
 // _________________________ Template Type not specified   _________________________ 

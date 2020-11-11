@@ -1,0 +1,52 @@
+### Create and Update CDA maps for converting to FHIR with RESTClient and running matchbox (locally)
+### Note: POST the maps in the following order, if you update one map you need to repost also the maps below
+
+### @host = https://test.ahdis.ch/r4
+@host = http://localhost:8080/r4
+
+
+### 1. POST CdaToFhirTypes.map
+POST {{host}}/StructureMap HTTP/1.1
+Accept: application/fhir+xml;fhirVersion=4.0
+Content-Type: text/fhir-mapping
+
+< ./input/maps/CdaToFhirTypes.map
+
+
+### 2. POST CdaToBundle.map
+POST {{host}}/StructureMap HTTP/1.1
+Accept: application/fhir+xml;fhirVersion=4.0
+Content-Type: text/fhir-mapping
+
+< ./input/maps/CdaToBundle.map
+
+
+### 3a. POST CdaChToBundle.map
+POST {{host}}/StructureMap HTTP/1.1
+Accept: application/fhir+xml;fhirVersion=4.0
+Content-Type: text/fhir-mapping
+
+< ./input/maps/CdaChToBundle.map
+
+### 3b. POST CdaChEmedToBundle.map
+POST {{host}}/StructureMap HTTP/1.1
+Accept: application/fhir+xml;fhirVersion=4.0
+Content-Type: text/fhir-mapping
+
+< ./input/maps/CdaChEmedToBundle.map
+
+
+### 4. POST CdaChEmedPharmaceuticalAdviceDocumentToBundle.map 
+POST {{host}}/StructureMap HTTP/1.1
+Accept: application/fhir+xml;fhirVersion=4.0
+Content-Type: text/fhir-mapping
+
+< ./input/maps/CdaChEmedPharmaceuticalAdviceDocumentToBundle.map
+
+
+### 5. Transform Pharmaceutical Advice document (2-2-PharmaceuticalAdvice.xml) from CDA to FHIR
+POST {{host}}/StructureMap/$transform?source=http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaChEmedPharmaceuticalAdviceDocumentToBundle
+Accept: application/fhir+xml;fhirVersion=4.0
+Content-Type: application/fhir+xml;fhirVersion=4.0
+
+< ./input/cda-ch-emed/2-2-PharmaceuticalAdvice.xml
