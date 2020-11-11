@@ -21,7 +21,7 @@ Content-Type: text/fhir-mapping
 < ./input/maps/CdaToBundle.map
 
 
-### 3. POST CdaChToBundle.map
+### 3a. POST CdaChToBundle.map
 POST {{host}}/StructureMap HTTP/1.1
 Accept: application/fhir+xml;fhirVersion=4.0
 Content-Type: text/fhir-mapping
@@ -34,6 +34,7 @@ Accept: application/fhir+xml;fhirVersion=4.0
 Content-Type: text/fhir-mapping
 
 < ./input/maps/CdaChEmedToBundle.map
+
 
 ### 4. POST CdaChEmedMedicationDispenseDocumentToBundle.map 
 POST {{host}}/StructureMap HTTP/1.1
@@ -49,7 +50,6 @@ Accept: application/fhir+xml;fhirVersion=4.0
 Content-Type: application/fhir+xml;fhirVersion=4.0
 
 < ./input/cda-ch-emed/1-2-MedicationDispense.xml
-
 
 ### 5b. Transform Medication Dispense document (2-4-MedicationDispense.xml) from CDA to FHIR
 POST {{host}}/StructureMap/$transform?source=http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaChEmedMedicationDispenseDocumentToBundle
