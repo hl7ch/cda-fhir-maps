@@ -20,6 +20,7 @@ Document type | CDA examples | FHIR examples | Map CDA to FHIR | Map FHIR to CDA
 **Medication Card document** | input\cda-ch-emed | input\ch-emed | input\maps\CdaChEmed MedicationCardDocumentToBundle.map | input\maps\BundleToCdaChEmed MedicationCardDocument.map
 **Medication Prescription document** | input\cda-ch-emed | input\ch-emed | input\maps\CdaChEmed MedicationPrescriptionDocumentToBundle.map | input\maps\BundleToCdaChEmed MedicationPrescriptionDocument.map
 **Medication Dispense document** | input\cda-ch-emed | input\ch-emed | input\maps\CdaChEmed MedicationDispenseDocumentToBundle.map | input\maps\BundleToCdaCh EmedMedicationDispenseDocument.map
+**Medication List document** | input\cda-ch-emed | input\ch-emed | input\maps\CdaChEmed MedicationListDocumentToBundle.map | -
 
 ***Table 1**: Document types with examples and maps*
 
@@ -41,11 +42,13 @@ eMedication Documents:
    * [Medication Card document (CDA)](https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.1.3&amp;effectiveDate=2016-05-13T00:00:00&amp;language=en-US)
    * [Medication Prescription document (CDA)](https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.1.4&amp;effectiveDate=2016-05-21T00:00:00&amp;language=en-US)
    * [Medication Dispense document (CDA)](https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.1.5&amp;effectiveDate=2016-05-21T00:00:00&amp;language=en-US)   
+   * [Medication Dispense document (CDA)](https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&id=2.16.756.5.30.1.1.10.1.13&effectiveDate=2018-01-22T15:17:26&language=en-US)   
    
 * FHIR Implementation Guide [CH EMED](http://fhir.ch/ig/ch-emed/index.html)
    * [Medication Card document (FHIR)](http://fhir.ch/ig/ch-emed/StructureDefinition-ch-emed-document-medicationcard.html)
    * [Medication Prescription document (FHIR)](http://fhir.ch/ig/ch-emed/StructureDefinition-ch-emed-document-medicationprescription.html)
    * [Medication Dispense document (FHIR)](http://fhir.ch/ig/ch-emed/StructureDefinition-ch-emed-document-medicationdispense.html)
+   * [Medication List document (FHIR)](http://fhir.ch/ig/ch-emed/StructureDefinition-ch-emed-document-medicationlist.html)
 
 
 ## Setup
@@ -63,8 +66,8 @@ To transform the documents from CDA to FHIR and back and maybe add your own maps
 * Download and install [Docker](https://www.docker.com/)
 
 ```
-docker pull eu.gcr.io/fhir-ch/matchbox:v0814
-docker run -d --name matchbox -p 8080:8080 eu.gcr.io/fhir-ch/matchbox:v0814
+docker pull eu.gcr.io/fhir-ch/matchbox:v0815
+docker run -d --name matchbox -p 8080:8080 eu.gcr.io/fhir-ch/matchbox:v0815
 docker logs matchbox
 ```
 
@@ -72,7 +75,6 @@ docker logs matchbox
 
 * Download [GitHub Desktop](https://desktop.github.com/)
 
-https://www.docker.com/
 
 ## Development
 
@@ -95,5 +97,6 @@ Open it with Visual Studio Code (REST Client extension is needed).
    * Medication Card document: cdatofhir_card.http, fhirtocda_card.http
    * Medication Dispense document: cdatofhir_dispense.http, fhirtocda_dispense.http
    * Medication Prescription document: cdatofhir_prescription.http, fhirtocda_prescription.http
+   * Medication List document: cdatofhir_list.http, -
 * Choose @host = http://localhost:8080/r4  
 * Transform your document of the choosen exchange format (Examples shown in Step 5).
