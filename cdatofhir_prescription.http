@@ -21,7 +21,7 @@ Content-Type: text/fhir-mapping
 < ./input/maps/CdaToBundle.map
 
 
-### 3. POST CdaChToBundle.map
+### 3a. POST CdaChToBundle.map
 POST {{host}}/StructureMap HTTP/1.1
 Accept: application/fhir+xml;fhirVersion=4.0
 Content-Type: text/fhir-mapping
