@@ -21,12 +21,19 @@ Content-Type: text/fhir-mapping
 < ./input/maps/BundleToCda.map
 
 
-### 3. POST BundleToCdaCh.map
+### 3a. POST BundleToCdaCh.map
 POST {{host}}/StructureMap HTTP/1.1
 Accept: application/fhir+xml;fhirVersion=4.0
 Content-Type: text/fhir-mapping
 
 < ./input/maps/BundleToCdaCh.map
+
+### 3b. POST BundleToCdaChEmed.map
+POST {{host}}/StructureMap HTTP/1.1
+Accept: application/fhir+xml;fhirVersion=4.0
+Content-Type: text/fhir-mapping
+
+< ./input/maps/BundleToCdaChEmed.map
 
 
 ### 4. POST BundleToCdaChEmedMedicationDispenseDocument.map
