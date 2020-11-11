@@ -26,6 +26,7 @@
                 <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-informationrecipient">
                     <valueReference>
                         <reference value="Patient/MonikaWegmuellerRecipient"/>
+                        <type value="Patient"/>
                     </valueReference>
                 </extension>
                 <identifier>
@@ -42,6 +43,7 @@
                 </type>
                 <subject>
                     <reference value="Patient/MonikaWegmueller"/>
+                    <type value="Patient"/>
                 </subject>
                 <date value="2012-02-04T14:00:00+01:00"/>
                 <author>
@@ -49,9 +51,11 @@
                         <valueDateTime value="2012-02-04T14:00:00+01:00"/>
                     </extension>
                     <reference value="Practitioner/FamilienHausarzt"/>
+                    <type value="Practitioner"/>
                 </author>
                 <author>
                     <reference value="Organization/Hausarzt"/>
+                    <type value="Organization"/>
                 </author>
                 <title value="Abgabe"/>
                 <confidentiality value="N">
@@ -67,6 +71,7 @@
                 </confidentiality>
                 <custodian>
                     <reference value="Organization/Custodian"/>
+                    <type value="Organization"/>
                 </custodian>
                 <section>
                     <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-sectionid">
@@ -132,6 +137,7 @@
                     </text>
                     <entry>
                         <reference value="MedicationDispense/2-4-MedDispBeloczok"/>
+                        <type value="MedicationDispense"/>
                     </entry>
                 </section>
             </Composition>
