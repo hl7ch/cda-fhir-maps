@@ -22,6 +22,7 @@ Document type | CDA examples | FHIR examples | Map CDA to FHIR | Map FHIR to CDA
 **Medication Dispense document** | input\cda-ch-emed | input\ch-emed | input\maps\CdaChEmed MedicationDispenseDocumentToBundle.map | input\maps\BundleToCdaCh EmedMedicationDispenseDocument.map
 **Medication List document** | input\cda-ch-emed | input\ch-emed | input\maps\CdaChEmed MedicationListDocumentToBundle.map | -
 **Pharmaceutical Advice document** | input\cda-ch-emed | input\ch-emed | input\maps\CdaChEmed PharmaceuticalAdviceDocumentToBundle.map | TBD
+**Medication Treatment Plan document** | input\cda-ch-emed | input\ch-emed | input\maps\CdaChEmed MedicationTreatmentPlanDocumentToBundle.map | TBD
 
 ***Table 1**: Document types with examples and maps*
 
@@ -45,6 +46,7 @@ eMedication Documents:
    * [Medication Dispense document (CDA)](https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.1.5&amp;effectiveDate=2016-05-21T00:00:00&amp;language=en-US)   
    * [Medication Dispense document (CDA)](https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&id=2.16.756.5.30.1.1.10.1.13&effectiveDate=2018-01-22T15:17:26&language=en-US) 
    * [Pharmaceutical Advice document (CDA)](https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&id=2.16.756.5.30.1.1.10.1.6&effectiveDate=2016-05-21T00:00:00&language=en-US)   
+   * [Medication Treatment Plan document (CDA)](https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&id=2.16.756.5.30.1.1.10.1.7&effectiveDate=2017-04-12T13:57:31&language=en-US) 
    
 * FHIR Implementation Guide [CH EMED](http://fhir.ch/ig/ch-emed/index.html)
    * [Medication Card document (FHIR)](http://fhir.ch/ig/ch-emed/StructureDefinition-ch-emed-document-medicationcard.html)
@@ -52,6 +54,7 @@ eMedication Documents:
    * [Medication Dispense document (FHIR)](http://fhir.ch/ig/ch-emed/StructureDefinition-ch-emed-document-medicationdispense.html)
    * [Medication List document (FHIR)](http://fhir.ch/ig/ch-emed/StructureDefinition-ch-emed-document-medicationlist.html)
    * [Pharmaceutical Advice document (FHIR)](http://fhir.ch/ig/ch-emed/StructureDefinition-ch-emed-document-pharmaceuticaladvice.html)
+   * [Medication TreatmentPlan document (FHIR)](http://fhir.ch/ig/ch-emed/StructureDefinition-ch-emed-document-medicationtreatmentplan.html)
 
 
 ## Setup
@@ -102,5 +105,6 @@ Open it with Visual Studio Code (REST Client extension is needed).
    * Medication Prescription document: cdatofhir_prescription.http, fhirtocda_prescription.http
    * Medication List document: cdatofhir_list.http, -
    * Pharmaceutical Advice document: cdatofhir_padv.http, TBD
+   * Medication Treatment Plan document: cdatofhir_treatmentplan.http, TBD
 * Choose @host = http://localhost:8080/r4  
 * Transform your document of the choosen exchange format (Examples shown in Step 5).
