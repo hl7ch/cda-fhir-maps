@@ -260,7 +260,9 @@ group DosageInstructionsEntryDosageChange(source src: substanceAdministration, s
         } "valueIdentifier";
   } "extension";
   
+  // FIXME: <sequence v3:value="1"/>
   entry.sequenceNumber as sequenceNumber -> dosage.sequence = sequenceNumber "sequenceNumber";
+
   src as src -> dosage as dosage then EffectiveTimeStartEnd(src, dosage) "effectiveTimeStartEnd";
   entry.substanceAdministration as src -> dosage as dosage then EffectiveTimeWhen(src, dosage) "effectiveTimeWhen";
   src.routeCode as routeCode -> dosage.route as route then CECodeableConcept(routeCode, route) "routeCode";
@@ -561,6 +563,7 @@ group PrescriptionItemEntryContentModule(source section : Section, source src : 
     entry.act as act -> medicationRequest.note as note then AnnotationComment(section, act, note) "annotation";
   } "entryRelationShip-2.16.756.5.30.1.1.10.4.2";  
 
+  // FIXME: <numberOfRepeatsAllowed v3:value="2"/>
   src.repeatNumber as repeatNumber -> medicationRequest.dispenseRequest as dispenseRequest then {
     repeatNumber -> dispenseRequest.numberOfRepeatsAllowed = repeatNumber "repeatNumber";
   } "repeats";
