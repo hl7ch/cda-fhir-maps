@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<Bundle xmlns="http://hl7.org/fhir" xmlns:v3="urn:hl7-org:v3">
+<Bundle xmlns="http://hl7.org/fhir"
+  xmlns:v3="urn:hl7-org:v3">
   <identifier>
     <system value="urn:ietf:rfc:3986"/>
     <value value="urn:uuid:d41d72ba-2100-11e6-b67b-9e71128cae77"/>
@@ -8,7 +9,7 @@
   <type value="document"/>
   <timestamp value="2012-02-04T14:00:00+01:00"/>
   <entry>
-    <fullUrl value="urn:uuid:e62e90e1-9ff5-45d8-aafc-56520a1fed3d"/>
+    <fullUrl value="urn:uuid:b5e66a9b-5306-421b-923f-9199b3f1b637"/>
     <resource>
       <Composition>
         <language value="de-CH"/>
@@ -23,7 +24,7 @@
         </extension>
         <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-informationrecipient">
           <valueReference>
-            <reference value="urn:uuid:b8b4c8a4-8700-4d44-ba85-3e9cdad82c24"/>
+            <reference value="urn:uuid:6ba67712-c7a0-431a-9027-157acbd2fbf5"/>
             <type value="Patient"/>
           </valueReference>
         </extension>
@@ -45,7 +46,7 @@
           </coding>
         </type>
         <subject>
-          <reference value="urn:uuid:3ed8eabf-0281-40e5-80bb-b2d3a1426c0b"/>
+          <reference value="urn:uuid:bc793b7d-be91-465c-ab33-0f2bfd1ae782"/>
           <type value="Patient"/>
         </subject>
         <date value="2012-02-04T14:00:00+01:00"/>
@@ -53,11 +54,11 @@
           <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-time">
             <valueDateTime value="2012-02-04T14:00:00+01:00"/>
           </extension>
-          <reference value="urn:uuid:80e57cdd-b36d-4436-b4ca-a7e90b624c35"/>
+          <reference value="urn:uuid:8e83e510-1ed1-4ac2-a4a3-197eca6d2337"/>
           <type value="Practitioner"/>
         </author>
         <author>
-          <reference value="urn:uuid:d72796d1-5fff-4f35-bf23-fd03edc949c3"/>
+          <reference value="urn:uuid:548f6f66-9a42-4147-9ba5-59afbc916f8c"/>
           <type value="Organization"/>
         </author>
         <title value="Rezept"/>
@@ -73,7 +74,7 @@
           </extension>
         </confidentiality>
         <custodian>
-          <reference value="urn:uuid:9f852c77-0358-4024-9003-4a48118a11f1"/>
+          <reference value="urn:uuid:1a2770eb-e86b-406b-9869-ad7f84b5cc7d"/>
           <type value="Organization"/>
         </custodian>
         <section>
@@ -114,7 +115,7 @@
             <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
               <valueUrl value="pdf1"/>
             </extension>
-            <reference value="urn:uuid:7bc78953-88a8-42f3-a5f5-0ee6a0ad18e3"/>
+            <reference value="urn:uuid:7b0c0435-5fe0-4609-8e32-be84f10c8df1"/>
             <type value="Binary"/>
           </entry>
         </section>
@@ -180,7 +181,7 @@
             </div>
           </text>
           <entry>
-            <reference value="urn:uuid:519a7fd7-f1f8-419c-8549-bccd78165ec4"/>
+            <reference value="urn:uuid:2c37635c-0981-4f0b-b6fa-19133075d7c9"/>
             <type value="MedicationRequest"/>
           </entry>
         </section>
@@ -188,7 +189,7 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:3ed8eabf-0281-40e5-80bb-b2d3a1426c0b"/>
+    <fullUrl value="urn:uuid:bc793b7d-be91-465c-ab33-0f2bfd1ae782"/>
     <resource>
       <Patient>
         <identifier>
@@ -217,7 +218,7 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:80e57cdd-b36d-4436-b4ca-a7e90b624c35"/>
+    <fullUrl value="urn:uuid:8e83e510-1ed1-4ac2-a4a3-197eca6d2337"/>
     <resource>
       <Practitioner>
         <identifier>
@@ -232,7 +233,7 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:d72796d1-5fff-4f35-bf23-fd03edc949c3"/>
+    <fullUrl value="urn:uuid:548f6f66-9a42-4147-9ba5-59afbc916f8c"/>
     <resource>
       <Organization>
         <identifier>
@@ -255,7 +256,7 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:9f852c77-0358-4024-9003-4a48118a11f1"/>
+    <fullUrl value="urn:uuid:1a2770eb-e86b-406b-9869-ad7f84b5cc7d"/>
     <resource>
       <Organization>
         <identifier>
@@ -267,7 +268,7 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:b8b4c8a4-8700-4d44-ba85-3e9cdad82c24"/>
+    <fullUrl value="urn:uuid:6ba67712-c7a0-431a-9027-157acbd2fbf5"/>
     <resource>
       <Patient>
         <name>
@@ -284,7 +285,7 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:7bc78953-88a8-42f3-a5f5-0ee6a0ad18e3"/>
+    <fullUrl value="urn:uuid:7b0c0435-5fe0-4609-8e32-be84f10c8df1"/>
     <resource>
       <Binary>
         <language value="en-US"/>
@@ -294,7 +295,7 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:519a7fd7-f1f8-419c-8549-bccd78165ec4"/>
+    <fullUrl value="urn:uuid:2c37635c-0981-4f0b-b6fa-19133075d7c9"/>
     <resource>
       <MedicationRequest>
         <contained>
@@ -375,7 +376,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:3ed8eabf-0281-40e5-80bb-b2d3a1426c0b"/>
+          <reference value="urn:uuid:bc793b7d-be91-465c-ab33-0f2bfd1ae782"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -428,6 +429,15 @@
             <value value="1"/>
           </quantity>
         </dispenseRequest>
+        <substitution>
+          <allowedCodeableConcept>
+            <coding>
+              <system value="http://terminology.hl7.org/CodeSystem/v3-substanceAdminSubstitution"/>
+              <code value="E"/>
+              <display value="equivalent"/>
+            </coding>
+          </allowedCodeableConcept>
+        </substitution>
       </MedicationRequest>
     </resource>
   </entry>
