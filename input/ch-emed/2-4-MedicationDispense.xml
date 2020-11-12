@@ -398,21 +398,10 @@
                     </route>
                     <doseAndRate>
                         <doseQuantity>
-                            <value value="0.5"/>
+                            <value value="0.5"/> 
                         </doseQuantity>
                     </doseAndRate>
-                </dosageInstruction>
-                <!-- substitution just as test case -->
-                <substitution>
-                    <wasSubstituted value="true"/>
-                    <type>
-                        <coding>
-                            <system value="http://terminology.hl7.org/CodeSystem/v3-substanceAdminSubstitution"/>
-                            <code value="E"/>
-                            <display value="equivalent"/>
-                        </coding>
-                    </type>
-                </substitution>
+                </dosageInstruction> 
             </MedicationDispense>
         </resource>
     </entry>

@@ -324,13 +324,6 @@
                   <statusCode code="completed"/>
                 </act>
               </entryRelationship>
-              <entryRelationship typeCode="COMP">
-                <act classCode="ACT" moodCode="EVN">
-                  <templateId root="1.3.6.1.4.1.19376.1.9.1.3.9.2"/>
-                  <code code="E" codeSystem="2.16.840.1.113883.5.1070" codeSystemName="HL7 Substance Admin Substitution" displayName="equivalent"/>
-                  <statusCode code="completed"/>
-                </act>
-              </entryRelationship>
             </supply>
           </entry>
         </section>
