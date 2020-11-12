@@ -97,6 +97,7 @@
                             <table>
                                 <thead>
                                     <tr>
+                                        <th>Typ des Dokuments</th>
                                         <th>Präpartename</th>
                                         <th>Wirkstoffname</th>
                                         <th>Galenische Form</th>
@@ -114,6 +115,7 @@
                                 </thead>
                                 <tbody>
                                     <tr id="mtp.1">
+                                        <td id="mtp.1.documenttype">Medication Treatment Plan document</td>
                                         <td id="mtp.1.brandedmedication">Triatec</td>
                                         <td id="mtp.1.ingredient">Ramipril</td>
                                         <td id="mtp.1.packageform">Tbl</td>
@@ -133,6 +135,7 @@
                             <table>
                                 <thead>
                                     <tr>
+                                        <th>Typ des Dokuments</th>
                                         <th>Präpartename</th>
                                         <th>Wirkstoffname</th>
                                         <th>Galenische Form</th>
@@ -153,6 +156,7 @@
                                 </thead>
                                 <tbody>
                                     <tr id="dis.1">
+                                        <td id="dis.1.documenttype">Medication Dispense document</td>
                                         <td id="dis.1.brandedmedication">Triatec</td>
                                         <td id="dis.1.ingredient">Ramipril</td>
                                         <td id="dis.1.dosequantity">2.5 mg</td>

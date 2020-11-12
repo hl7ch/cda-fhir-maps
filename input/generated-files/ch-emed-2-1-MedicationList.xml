@@ -8,7 +8,7 @@
   <type value="document"/>
   <timestamp value="2012-02-04T13:55:00+01:00"/>
   <entry>
-    <fullUrl value="urn:uuid:7f35200c-e6a4-4e85-81ed-de1806b7a4de"/>
+    <fullUrl value="urn:uuid:1c379974-349e-48f4-97b4-e0721025509a"/>
     <resource>
       <Composition>
         <language value="de-CH"/>
@@ -23,7 +23,7 @@
         </extension>
         <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-informationrecipient">
           <valueReference>
-            <reference value="urn:uuid:d6bd74c4-a5ef-4210-9e13-bb921c87c670"/>
+            <reference value="urn:uuid:a404f7df-bb9a-4316-8499-876854ca72f9"/>
             <type value="Patient"/>
           </valueReference>
         </extension>
@@ -45,7 +45,7 @@
           </coding>
         </type>
         <subject>
-          <reference value="urn:uuid:caaa8ac9-4cb3-4888-8049-5fc6cbadd2c5"/>
+          <reference value="urn:uuid:f8181b9f-895e-49b0-b0b3-b9726c7c0380"/>
           <type value="Patient"/>
         </subject>
         <date value="2012-02-04T13:55:00+01:00"/>
@@ -53,11 +53,11 @@
           <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-time">
             <valueDateTime value="2012-02-04T13:55:00+01:00"/>
           </extension>
-          <reference value="urn:uuid:751d1e16-1749-45e7-a11c-e5cb03e3e387"/>
+          <reference value="urn:uuid:d477007b-f507-4bb4-8eef-3a43b7825968"/>
           <type value="Practitioner"/>
         </author>
         <author>
-          <reference value="urn:uuid:78937eed-76ab-4a5e-ac8b-a5edcce4506d"/>
+          <reference value="urn:uuid:08dd460f-ec6f-480d-8e91-6c455c4b79d1"/>
           <type value="Organization"/>
         </author>
         <title value="Medikationsliste"/>
@@ -73,7 +73,7 @@
           </extension>
         </confidentiality>
         <custodian>
-          <reference value="urn:uuid:99e45a7b-9440-4dbd-a158-3c15f14fcef4"/>
+          <reference value="urn:uuid:dc48ad4b-6cb0-4f0f-abd8-4d1b7d5a6d95"/>
           <type value="Organization"/>
         </custodian>
         <section>
@@ -97,6 +97,7 @@
               <table>
                 <thead>
                   <tr>
+                    <th>Typ des Dokuments</th>
                     <th>Präpartename</th>
                     <th>Wirkstoffname</th>
                     <th>Galenische Form</th>
@@ -114,6 +115,7 @@
                 </thead>
                 <tbody>
                   <tr id="mtp.1">
+                    <td id="mtp.1.documenttype">Medication Treatment Plan document</td>
                     <td id="mtp.1.brandedmedication">Triatec</td>
                     <td id="mtp.1.ingredient">Ramipril</td>
                     <td id="mtp.1.packageform">Tbl</td>
@@ -133,6 +135,7 @@
               <table>
                 <thead>
                   <tr>
+                    <th>Typ des Dokuments</th>
                     <th>Präpartename</th>
                     <th>Wirkstoffname</th>
                     <th>Galenische Form</th>
@@ -153,6 +156,7 @@
                 </thead>
                 <tbody>
                   <tr id="dis.1">
+                    <td id="dis.1.documenttype">Medication Dispense document</td>
                     <td id="dis.1.brandedmedication">Triatec</td>
                     <td id="dis.1.ingredient">Ramipril</td>
                     <td id="dis.1.dosequantity">2.5 mg</td>
@@ -176,11 +180,11 @@
             </div>
           </text>
           <entry>
-            <reference value="urn:uuid:6e598af8-8a77-4629-9e42-c2a5b2444ba8"/>
+            <reference value="urn:uuid:5878be93-7413-45cb-a1b1-eabd97e12ab4"/>
             <type value="MedicationStatement"/>
           </entry>
           <entry>
-            <reference value="urn:uuid:1c30ac26-be83-491b-84d1-e8040228b809"/>
+            <reference value="urn:uuid:a5c5a55c-ac33-452e-a5ab-1904412dddd6"/>
             <type value="MedicationDispense"/>
           </entry>
         </section>
@@ -188,7 +192,7 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:caaa8ac9-4cb3-4888-8049-5fc6cbadd2c5"/>
+    <fullUrl value="urn:uuid:f8181b9f-895e-49b0-b0b3-b9726c7c0380"/>
     <resource>
       <Patient>
         <identifier>
@@ -217,7 +221,7 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:751d1e16-1749-45e7-a11c-e5cb03e3e387"/>
+    <fullUrl value="urn:uuid:d477007b-f507-4bb4-8eef-3a43b7825968"/>
     <resource>
       <Practitioner>
         <identifier>
@@ -232,7 +236,7 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:78937eed-76ab-4a5e-ac8b-a5edcce4506d"/>
+    <fullUrl value="urn:uuid:08dd460f-ec6f-480d-8e91-6c455c4b79d1"/>
     <resource>
       <Organization>
         <identifier>
@@ -255,7 +259,7 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:99e45a7b-9440-4dbd-a158-3c15f14fcef4"/>
+    <fullUrl value="urn:uuid:dc48ad4b-6cb0-4f0f-abd8-4d1b7d5a6d95"/>
     <resource>
       <Organization>
         <identifier>
@@ -267,7 +271,7 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:d6bd74c4-a5ef-4210-9e13-bb921c87c670"/>
+    <fullUrl value="urn:uuid:a404f7df-bb9a-4316-8499-876854ca72f9"/>
     <resource>
       <Patient>
         <name>
@@ -284,7 +288,7 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:6e598af8-8a77-4629-9e42-c2a5b2444ba8"/>
+    <fullUrl value="urn:uuid:5878be93-7413-45cb-a1b1-eabd97e12ab4"/>
     <resource>
       <MedicationStatement>
         <contained>
@@ -351,7 +355,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:caaa8ac9-4cb3-4888-8049-5fc6cbadd2c5"/>
+          <reference value="urn:uuid:f8181b9f-895e-49b0-b0b3-b9726c7c0380"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -402,7 +406,7 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:1c30ac26-be83-491b-84d1-e8040228b809"/>
+    <fullUrl value="urn:uuid:a5c5a55c-ac33-452e-a5ab-1904412dddd6"/>
     <resource>
       <MedicationDispense>
         <contained>
@@ -482,7 +486,7 @@
           <reference value="#med"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:caaa8ac9-4cb3-4888-8049-5fc6cbadd2c5"/>
+          <reference value="urn:uuid:f8181b9f-895e-49b0-b0b3-b9726c7c0380"/>
           <type value="Patient"/>
         </subject>
         <quantity>
