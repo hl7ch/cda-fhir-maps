@@ -121,9 +121,11 @@
 					<code code="48767-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Annotation comment"/>
 					<title>Kommentar</title>
 					<text>
+
 						<content ID="co1">
 						Kommentar zu Medication Prescription
 						</content>
+						
 					</text>
 					<entry>
 						<act classCode="ACT" moodCode="EVN">
