@@ -1,0 +1,66 @@
+### Create and Update FHIR maps for converting to CDA with RESTClient and running matchbox (locally)
+### Note: POST the maps in the following order, if you update one map you need to repost also the maps below
+
+### @host = https://test.ahdis.ch/r4
+@host = http://localhost:8080/r4
+
+
+### 1. POST FhirToCdaTypes.map
+POST {{host}}/StructureMap HTTP/1.1
+Accept: application/fhir+xml;fhirVersion=4.0
+Content-Type: text/fhir-mapping
+
+< ./input/maps/FhirToCdaTypes.map
+
+
+### 2. POST BundleToCda.map
+POST {{host}}/StructureMap HTTP/1.1
+Accept: application/fhir+xml;fhirVersion=4.0
+Content-Type: text/fhir-mapping
+
+< ./input/maps/BundleToCda.map
+
+
+### 3a. POST BundleToCdaCh.map
+POST {{host}}/StructureMap HTTP/1.1
+Accept: application/fhir+xml;fhirVersion=4.0
+Content-Type: text/fhir-mapping
+
+< ./input/maps/BundleToCdaCh.map
+
+### 3b. POST BundleToCdaChEmed.map
+POST {{host}}/StructureMap HTTP/1.1
+Accept: application/fhir+xml;fhirVersion=4.0
+Content-Type: text/fhir-mapping
+
+< ./input/maps/BundleToCdaChEmed.map
+
+
+### 4. POST BundleToCdaChEmedMedicationTreatmentPlanDocument.map
+POST {{host}}/StructureMap HTTP/1.1
+Accept: application/fhir+xml;fhirVersion=4.0
+Content-Type: text/fhir-mapping
+
+< ./input/maps/BundleToCdaChEmedMedicationTreatmentPlanDocument.map
+
+
+### 5a. Transform Medication Treatment Plan document (1-1-MedicationTreatmentPlan.xml) from FHIR to CDA
+POST {{host}}/StructureMap/$transform?source=http://fhir.ch/ig/cda-fhir-maps/StructureMap/BundleToCdaChEmedMedicationTreatmentPlanDocument
+Accept: application/fhir+xml;fhirVersion=4.0
+Content-Type: application/fhir+xml;fhirVersion=4.0
+
+< ./input/ch-emed/1-1-MedicationTreatmentPlan.xml
+
+### 5b. Transform Medication Treatment Plan document (2-3-MedicationTreatmentPlan.xml) from FHIR to CDA
+POST {{host}}/StructureMap/$transform?source=http://fhir.ch/ig/cda-fhir-maps/StructureMap/BundleToCdaChEmedMedicationTreatmentPlanDocument
+Accept: application/fhir+xml;fhirVersion=4.0
+Content-Type: application/fhir+xml;fhirVersion=4.0
+
+< ./input/ch-emed/2-3-MedicationTreatmentPlan.xml
+
+### 5c. Transform Medication Treatment Plan document (2-5-MedicationTreatmentPlan.xml) from FHIR to CDA
+POST {{host}}/StructureMap/$transform?source=http://fhir.ch/ig/cda-fhir-maps/StructureMap/BundleToCdaChEmedMedicationTreatmentPlanDocument
+Accept: application/fhir+xml;fhirVersion=4.0
+Content-Type: application/fhir+xml;fhirVersion=4.0
+
+< ./input/ch-emed/2-5-MedicationTreatmentPlan.xml
