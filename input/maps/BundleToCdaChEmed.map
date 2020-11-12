@@ -193,7 +193,6 @@ group MedicationTreatmentPlanItemEntryContentModule(source bundle : Bundle, sour
     -> substanceAdministration.entryRelationship as entryRelationship, entryRelationship.typeCode='COMP', 
         entryRelationship.act as act 
           then AnnotationComment(note, act) "AnnotationComment";
-
 }
 
 // TODO: Tapered Dose
@@ -831,4 +830,37 @@ group PrescriptionItemEntryContentModule(source bundle : Bundle, source medicati
     -> substanceAdministration.entryRelationship as entryRelationship, entryRelationship.typeCode='COMP', 
         entryRelationship.act as act
           then SubstitutionPrescription(substitution, act) "Substitution";
+}
+
+
+// source: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-observation.html
+// target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&id=2.16.756.5.30.1.1.10.4.44
+group PharmaceuticalAdviceItemEntryContentModule(source bundle : Bundle, source fhirobservation : Observation, target cdaobservation : Observation) {
+  fhirobservation -> cdaobservation.classCode = 'OBS' "OBS";  
+  fhirobservation -> cdaobservation.moodCode = 'EVN' "EVN";  
+  fhirobservation -> cdaobservation.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.9.1.3.3' "IHE-PHARM-PADV";
+  fhirobservation -> cdaobservation.templateId as templateId, templateId.root = '2.16.756.5.30.1.1.10.4.44' "CH-PHARM-PharmaceuticalAdviceItemEntryContentModule";
+  
+  fhirobservation.identifier as identifier -> cdaobservation.id as id then IdentifierII(identifier, id) "id";
+
+  fhirobservation.code as fhirCode -> cdaobservation.code as cdaCode then CodeableConceptCE(fhirCode, cdaCode) "code";
+  
+  fhirobservation.extension as extension where $this.url='http://hl7.org/fhir/StructureDefinition/narrativeLink' -> cdaobservation.text as text, text.reference as reference then {
+    extension.valueUrl as valueUrl -> reference.value = valueUrl "valueUrl";
+  } "narrativeLink";
+  fhirobservation -> cdaobservation.statusCode as statusCode, statusCode.code = 'completed' "code"; 
+
+  fhirobservation.effectiveDateTime as effectiveDateTime -> cdaobservation.effectiveTime as effectiveTime then {
+    effectiveDateTime -> effectiveTime.value = effectiveDateTime "value";
+  } "effectiveTime"; 
+  
+  fhirobservation.extension as extension where url='http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-treatmentplan' 
+         -> cdaobservation.entryRelationship as entryRelationship, entryRelationship.typeCode='REFR', 
+            entryRelationship.substanceAdministration as substanceAdministration 
+              then MTPReferenceEntryContentModule(extension, substanceAdministration) "MTP-Reference";
+
+  fhirobservation.note as note 
+    -> cdaobservation.entryRelationship as entryRelationship, entryRelationship.typeCode='COMP', 
+        entryRelationship.act as act 
+          then AnnotationComment(note, act) "AnnotationComment";
 }

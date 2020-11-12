@@ -33,6 +33,7 @@ conceptmap "oid2system" {
   prefix t = "http://hl7.org/cda"
 
   s:"urn:oid:2.51.1.1" == t:"GTIN"
+  s:"urn:oid:1.3.6.1.4.1.19376.1.9.2.1" == t: "IHE Pharmaceutical Advice Status List"
 }
 
 conceptmap "addressUse" { 

@@ -21,7 +21,7 @@ Document type | CDA examples | FHIR examples | Map CDA to FHIR | Map FHIR to CDA
 **Medication Prescription document** | input\cda-ch-emed | input\ch-emed | input\maps\CdaChEmed MedicationPrescriptionDocumentToBundle.map | input\maps\BundleToCdaChEmed MedicationPrescriptionDocument.map
 **Medication Dispense document** | input\cda-ch-emed | input\ch-emed | input\maps\CdaChEmed MedicationDispenseDocumentToBundle.map | input\maps\BundleToCdaCh EmedMedicationDispenseDocument.map
 **Medication List document** | input\cda-ch-emed | input\ch-emed | input\maps\CdaChEmed MedicationListDocumentToBundle.map | -
-**Pharmaceutical Advice document** | input\cda-ch-emed | input\ch-emed | input\maps\CdaChEmed PharmaceuticalAdviceDocumentToBundle.map | TBD
+**Pharmaceutical Advice document** | input\cda-ch-emed | input\ch-emed | input\maps\CdaChEmed PharmaceuticalAdviceDocumentToBundle.map | input\maps\BundleToCdaCh EmedPharmaceuticalAdviceDocument.map   
 **Medication Treatment Plan document** | input\cda-ch-emed | input\ch-emed | input\maps\CdaChEmed MedicationTreatmentPlanDocumentToBundle.map | TBD
 
 ***Table 1**: Document types with examples and maps*
@@ -104,7 +104,7 @@ Open it with Visual Studio Code (REST Client extension is needed).
    * Medication Dispense document: cdatofhir_dispense.http, fhirtocda_dispense.http
    * Medication Prescription document: cdatofhir_prescription.http, fhirtocda_prescription.http
    * Medication List document: cdatofhir_list.http, -
-   * Pharmaceutical Advice document: cdatofhir_padv.http, TBD
+   * Pharmaceutical Advice document: cdatofhir_padv.http, fhirtocda_padv.http
    * Medication Treatment Plan document: cdatofhir_treatmentplan.http, TBD
 * Choose @host = http://localhost:8080/r4  
 * Transform your document of the choosen exchange format (Examples shown in Step 5).
