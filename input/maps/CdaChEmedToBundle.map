@@ -605,10 +605,18 @@ group PharmaceuticalAdviceItemEntryContentModule(source section : Section, sourc
     } "reference";
   } "text";
 
-  //TBD
-  //src.effectiveTime -> observation.effectiveDateTime;
-  //"Failed to call access method: org.hl7.fhir.exceptions.FHIRException: Exception executing transform observation.effectiveDateTime = create() as vvv on Rule &quot;effectiveDateTime&quot;: Attempt to get types for an invalid property 'effectiveDateTime' on type Observation"
+  // TBD effectiveTime.value
   
+  //src.effectiveTime: IVL_TS as effectiveTime then {
+  //    effectiveTime.value as value -> observation.effectiveDateTime = value "value";
+  //} "effectiveTime-IVL-TS";
+  // no error, doesn't generate the effectiveDateTime element
+
+  //src.effectiveTime as effectiveTime then {
+  //    effectiveTime.value as value -> observation.effectiveDateTime = value "value";
+  //} "effectiveTime-IVL-TS";
+  // Error: Failed to call access method: java.lang.Error: Cannot set property effectiveDateTime on resource
+ 
   src.entryRelationship as entry where (typeCode='REFR' and substanceAdministration.templateId.where(root='1.3.6.1.4.1.19376.1.9.1.3.10').exists()) 
     -> observation.extension as ext then MTPReferenceEntryContentModule(entry, ext) "MTPReferenceEntry";   
 
