@@ -856,8 +856,6 @@ group PharmaceuticalAdviceItemEntryContentModule(source bundle : Bundle, source 
             entryRelationship.substanceAdministration as substanceAdministration 
               then MTPReferenceEntryContentModule(extension, substanceAdministration) "MTP-Reference";
 
-  fhirobservation.note as note 
-    -> cdaobservation.entryRelationship as entryRelationship, entryRelationship.typeCode='COMP', 
-        entryRelationship.act as act 
-          then AnnotationComment(note, act) "AnnotationComment";
+  // TBD: observation.note -> section.entry.observation.text.reference
+  //      see Issue (https://github.com/hl7ch/cda-fhir-maps/issues/16)
 }

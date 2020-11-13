@@ -643,9 +643,8 @@ group PharmaceuticalAdviceItemEntryContentModule(source section : Section, sourc
   src.entryRelationship as entry where (typeCode='REFR' and substanceAdministration.templateId.where(root='1.3.6.1.4.1.19376.1.9.1.3.10').exists()) 
     -> observation.extension as ext then MTPReferenceEntryContentModule(entry, ext) "MTPReferenceEntry";   
 
-  src.entryRelationship as entry where (typeCode='COMP' and act.templateId.where(root='2.16.756.5.30.1.1.10.4.2').exists()) then {
-    entry.act as act -> observation.note as note then AnnotationComment(section, act, note) "annotation";
-  } "entryRelationShip-2.16.756.5.30.1.1.10.4.2";  
+  // TBD: section.entry.observation.text.reference -> observation.note
+  //      see Issue (https://github.com/hl7ch/cda-fhir-maps/issues/16)
 
   src.code -> observation.code;
 }

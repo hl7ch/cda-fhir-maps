@@ -8,7 +8,7 @@
     <type value="document"/>
     <timestamp value="2012-02-04T14:00:00+01:00"/>
     <entry>
-        <fullUrl value="urn:uuid:fe993fe5-7289-4d14-8942-146a02f243a6"/>
+        <fullUrl value="urn:uuid:9aa62a11-c343-488b-ab04-9a6490b28c4a"/>
         <resource>
             <Composition>
                 <language value="de-CH"/>
@@ -23,7 +23,7 @@
                 </extension>
                 <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-informationrecipient">
                     <valueReference>
-                        <reference value="urn:uuid:215a3f5b-bf3a-4582-8c5d-1a7be1043c37"/>
+                        <reference value="urn:uuid:f45544b1-d82f-4730-8c7f-e33ec7aacd24"/>
                         <type value="Patient"/>
                     </valueReference>
                 </extension>
@@ -40,7 +40,7 @@
                     </coding>
                 </type>
                 <subject>
-                    <reference value="urn:uuid:fc8aa648-0d46-480d-ae01-5174b4850134"/>
+                    <reference value="urn:uuid:40c41313-892b-4ca8-91c9-f8e5361e8417"/>
                     <type value="Patient"/>
                 </subject>
                 <date value="2012-02-04T14:00:00+01:00"/>
@@ -48,11 +48,11 @@
                     <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-time">
                         <valueDateTime value="2012-02-04T14:00:00+01:00"/>
                     </extension>
-                    <reference value="urn:uuid:46e0038b-2e4b-4223-a110-37f0b408403e"/>
+                    <reference value="urn:uuid:bf1a1343-7fe0-4d70-9082-bd7ba402c987"/>
                     <type value="Practitioner"/>
                 </author>
                 <author>
-                    <reference value="urn:uuid:b0cbd792-aab1-449e-99de-06bcd70dd093"/>
+                    <reference value="urn:uuid:9c789362-d7b7-4460-abb7-7662b807470c"/>
                     <type value="Organization"/>
                 </author>
                 <title value="Kommentar zur Medikation"/>
@@ -68,7 +68,7 @@
                     </extension>
                 </confidentiality>
                 <custodian>
-                    <reference value="urn:uuid:4b3ae8bb-f4e6-44b2-b549-a7abe9e5b9d3"/>
+                    <reference value="urn:uuid:c0a8eb9e-53ab-46d3-8f2a-eb417a613a9d"/>
                     <type value="Organization"/>
                 </custodian>
                 <section>
@@ -128,7 +128,7 @@
                         </div>
                     </text>
                     <entry>
-                        <reference value="urn:uuid:0ea22145-52ba-45d8-bf83-ad1e419111ee"/>
+                        <reference value="urn:uuid:378dc6ad-0fa2-4b43-9537-5d1d941f2c0a"/>
                         <type value="Observation"/>
                     </entry>
                 </section>
@@ -136,7 +136,7 @@
         </resource>
     </entry>
     <entry>
-        <fullUrl value="urn:uuid:fc8aa648-0d46-480d-ae01-5174b4850134"/>
+        <fullUrl value="urn:uuid:40c41313-892b-4ca8-91c9-f8e5361e8417"/>
         <resource>
             <Patient>
                 <identifier>
@@ -165,7 +165,7 @@
         </resource>
     </entry>
     <entry>
-        <fullUrl value="urn:uuid:46e0038b-2e4b-4223-a110-37f0b408403e"/>
+        <fullUrl value="urn:uuid:bf1a1343-7fe0-4d70-9082-bd7ba402c987"/>
         <resource>
             <Practitioner>
                 <identifier>
@@ -180,7 +180,7 @@
         </resource>
     </entry>
     <entry>
-        <fullUrl value="urn:uuid:b0cbd792-aab1-449e-99de-06bcd70dd093"/>
+        <fullUrl value="urn:uuid:9c789362-d7b7-4460-abb7-7662b807470c"/>
         <resource>
             <Organization>
                 <identifier>
@@ -203,7 +203,7 @@
         </resource>
     </entry>
     <entry>
-        <fullUrl value="urn:uuid:4b3ae8bb-f4e6-44b2-b549-a7abe9e5b9d3"/>
+        <fullUrl value="urn:uuid:c0a8eb9e-53ab-46d3-8f2a-eb417a613a9d"/>
         <resource>
             <Organization>
                 <identifier>
@@ -215,7 +215,7 @@
         </resource>
     </entry>
     <entry>
-        <fullUrl value="urn:uuid:215a3f5b-bf3a-4582-8c5d-1a7be1043c37"/>
+        <fullUrl value="urn:uuid:f45544b1-d82f-4730-8c7f-e33ec7aacd24"/>
         <resource>
             <Patient>
                 <name>
@@ -232,7 +232,7 @@
         </resource>
     </entry>
     <entry>
-        <fullUrl value="urn:uuid:0ea22145-52ba-45d8-bf83-ad1e419111ee"/>
+        <fullUrl value="urn:uuid:378dc6ad-0fa2-4b43-9537-5d1d941f2c0a"/>
         <resource>
             <Observation>
                 <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
@@ -264,15 +264,9 @@
                     </coding>
                 </code>
                 <subject>
-                    <reference value="urn:uuid:fc8aa648-0d46-480d-ae01-5174b4850134"/>
+                    <reference value="urn:uuid:40c41313-892b-4ca8-91c9-f8e5361e8417"/>
                     <type value="Patient"/>
                 </subject>
-                <note>
-                    <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
-                        <valueUrl value="#padv.1.note"/>
-                    </extension>
-                    <text value="Abgesetzt aufgrund UAW trockener Husten"/>
-                </note>
             </Observation>
         </resource>
     </entry>
