@@ -60,7 +60,7 @@ group ClinicalDocumentChEmedMedicationCardDocumentToBundle(source cda : Clinical
 // target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.3.9
 group SectionMedicationCardSectionContentModule(source src : Section, source patient : Patient, target tgt, target bundle : Bundle) extends ClinicalDocumentSection {
   src.entry as cdaEntry where (substanceAdministration.templateId.where(root = '2.16.756.5.30.1.1.10.4.34')) -&gt;  bundle.entry as e,  e.resource = create('MedicationStatement') as medicationstatement,  medicationstatement.id = uuid() as uuid,  e.fullUrl = append('urn:uuid:', uuid),  tgt.entry = create('Reference') as reference,  reference.type = 'MedicationStatement',  reference.reference = append('urn:uuid:', uuid) then {
-    cdaEntry.substanceAdministration as substanceAdministration then MedicationTreatmentPlanItemEntryContentModule(src, substanceAdministration, patient, medicationstatement);
+    cdaEntry.substanceAdministration as substanceAdministration then MedicationTreatmentPlanEntryContentModule(src, substanceAdministration, patient, medicationstatement);
   } "cdaEntry";
 }
 
@@ -463,7 +463,7 @@ target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=temp
                <variable value="substanceAdministration"></variable>
             </source>
             <dependent>
-               <name value="MedicationTreatmentPlanItemEntryContentModule"></name>
+               <name value="MedicationTreatmentPlanEntryContentModule"></name>
                <variable value="src"></variable>
                <variable value="substanceAdministration"></variable>
                <variable value="patient"></variable>
