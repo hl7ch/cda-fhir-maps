@@ -204,7 +204,7 @@ group MedicationTreatmentPlanItemEntryContentModule(source bundle : Bundle, sour
 group DosageInstructionsStartStopFrequencySubstanceAdministration(source dosage: Dosage, target substanceAdministration : SubstanceAdministration) {
   dosage -> substanceAdministration.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.5.3.1.4.7.1' "normalDose";
   dosage as dosage -> substanceAdministration as substanceAdministration then EffectiveTimeStartEnd(dosage, substanceAdministration) "effectiveTimeStartEnd";
-  dosage as dosage -> substanceAdministration as substanceAdministration then EffectiveTimeWhen(dosage, substanceAdministration) "effectiveTimeWhen";
+  dosage as dosage -> substanceAdministration as substanceAdministration then EffectiveTimeWhenNormal(dosage, substanceAdministration) "effectiveTimeWhen";
   dosage.route as route -> substanceAdministration.routeCode as routeCode then CodeableConceptCE(route, routeCode) "route";
   dosage as dosage -> substanceAdministration as substanceAdministration then DoseQuantity(dosage, substanceAdministration) "doseQuantity";
 }
@@ -237,7 +237,7 @@ group DosageInstructionsEntryDosageChangeSubstanceAdministration(source dosage: 
   dosage -> entry.substanceAdministration as substanceAdministration, 
     substanceAdministration.classCode = 'SBADM',
     substanceAdministration.moodCode = 'INT' then {
-      dosage as dosage -> substanceAdministration as substanceAdministration then EffectiveTimeWhen(dosage, substanceAdministration) "effectiveTimeWhen";
+      dosage as dosage -> substanceAdministration as substanceAdministration then EffectiveTimeWhenSplit(dosage, substanceAdministration) "effectiveTimeWhen";
       dosage as dosage -> substanceAdministration as substanceAdministration then DoseQuantity(dosage, substanceAdministration) "doseQuantity";
       dosage as dosage -> substanceAdministration as substanceAdministration, substanceAdministration.consumable as consumable,
         consumable.manufacturedProduct as manufacturedProduct, manufacturedProduct.manufacturedMaterial as manufacturedMaterial,
@@ -257,24 +257,6 @@ group EffectiveTimeStartEnd(source dosage: Dosage, target substanceAdministratio
   } "timing"; 
 }
 
-// effective time when for dosage (Statement, Prescription)
-group EffectiveTimeWhen(source dosage: Dosage, target substanceAdministration : SubstanceAdministration) {
-  dosage.timing as timing then {
-    timing.repeat as repeat then {
-      repeat where $this.when.count()=1 -> substanceAdministration.effectiveTime = create('EIVL_TS') as effectiveTime then {
-          repeat.when as when -> effectiveTime.event as event, event.code = when "when";
-      } "when";
-      repeat where $this.when.count()>1 -> substanceAdministration.effectiveTime = create('SXPR_TS') as effectiveTime, effectiveTime.operator='A' then {
-        repeat.when first as when -> effectiveTime.comp = create('EIVL_TS') as comp then {
-          when -> comp.event as event, event.code = when "when";
-        } "comp";       
-        repeat.when not_first as when -> effectiveTime.comp = create('EIVL_TS') as comp, comp.operator='I' then {
-          when -> comp.event as event, event.code = when "when";
-        } "compnotfirst";       
-      } "when";
-    } "repeat";
-  } "timing"; 
-}
 
 // dose quantity for dosage (application schema) (Statement)
 group DoseQuantity(source dosage: Dosage, target substanceAdministration : SubstanceAdministration) {
@@ -587,7 +569,7 @@ group DosageInstructionsEntryDosageChangeEntryRelationship(source dosage: Dosage
 }
 
 
-// effective time when for normal dosage (Dispense)
+// effective time when for normal dosage (Dispense, Statement, Prescription)
 group EffectiveTimeWhenNormal(source dosage: Dosage, target substanceAdministration : SubstanceAdministration) {
   dosage.timing as timing then {
     timing.repeat as repeat then {
@@ -607,7 +589,7 @@ group EffectiveTimeWhenNormal(source dosage: Dosage, target substanceAdministrat
 }
 
 
-// effective time when for split dosage (Dispense)
+// effective time when for split dosage (Dispense, Statement, Prescription)
 group EffectiveTimeWhenSplit(source dosage: Dosage, target substanceAdministration : SubstanceAdministration) {
   dosage.timing as timing then {
     timing.repeat as repeat then {

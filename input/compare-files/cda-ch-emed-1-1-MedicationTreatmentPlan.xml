@@ -192,8 +192,7 @@
 							<effectiveTime xsi:type="IVL_TS">
 								<low value="20111129"/>
 							</effectiveTime>
-							<!--TBD: operator=A wird nicht gemappt-->
-							<effectiveTime operator="A" xsi:type="EIVL_TS">
+							<effectiveTime xsi:type="EIVL_TS" operator="A">
 								<event code="ACM"/>
 							</effectiveTime>
 							<routeCode code="20053000" codeSystem="0.4.0.127.0.16.1.1.2.1" displayName="Oral use"/>

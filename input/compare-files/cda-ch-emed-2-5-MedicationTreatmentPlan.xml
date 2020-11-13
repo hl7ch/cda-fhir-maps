@@ -159,7 +159,6 @@
 								<comp xsi:type="EIVL_TS">
 									<event code="ACM"/>
 								</comp>
-								<!-- TBD: Operator I wird nicht gemappt -->
 								<comp xsi:type="EIVL_TS" operator="I">
 									<event code="ACV"/>
 								</comp>
