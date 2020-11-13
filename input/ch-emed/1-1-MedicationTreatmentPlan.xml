@@ -299,6 +299,16 @@
                 <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
                     <valueUrl value="#mtp.1"/>
                 </extension>
+                <!-- substitution just as test case -->
+                <extension url="http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-substitution">
+                    <valueCodeableConcept>
+                        <coding>
+                            <system value="http://terminology.hl7.org/CodeSystem/v3-substanceAdminSubstitution"/>
+                            <code value="E"/>
+                            <display value="equivalent"/>
+                        </coding>
+                    </valueCodeableConcept>
+                </extension>
                 <identifier>
                     <system value="urn:ietf:rfc:3986"/>
                     <value value="urn:uuid:c9f758a1-296c-4710-84d4-e181db8c7478"/>
