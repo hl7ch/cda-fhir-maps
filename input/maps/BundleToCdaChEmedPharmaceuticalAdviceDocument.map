@@ -68,7 +68,9 @@ group SectionPharmaceuticalAdviceSectionContentModule(source bundle : Bundle, so
     } "extension";
 
   bundle.entry as entry then {
-    // FIXME: add fullUrl reference rule which for urn:uuid
+    entry.fullUrl where ($this in %section.entry.reference) and $this.startsWith('urn:uuid') then {
+      entry.resource as fhirobservation where $this.ofType(FHIR.Observation) -> cdasection.entry as entry, entry.observation as cdaobservation then PharmaceuticalAdviceItemEntryContentModule(bundle, fhirobservation, cdaobservation) "Observation";
+    } "fullUrl as urn:uuid";
     entry.resource as fhirobservation where $this.ofType(FHIR.Observation) and (('Observation'+'/'+$this.id) in %section.entry.reference) -> cdasection.entry as entry, entry.observation as cdaobservation then PharmaceuticalAdviceItemEntryContentModule(bundle, fhirobservation, cdaobservation) "Observation";
   } "entry";
 }

@@ -81,9 +81,24 @@ group CompositionClinicalDocument(source bundle : Bundle, source composition : C
   } "confidentialityCode";
   composition.language as language -> cda.languageCode as languageCode, languageCode.code = language  "languageCode";
   bundle.entry as entry then {
+    entry.fullUrl where ($this in %composition.subject.reference) and $this.startsWith('urn:uuid') then {
+      entry.resource as patient then PatientRecordTarget(patient, bundle, recordTarget) "patient";
+    } "fullUrl as urn:uuid";
     entry.resource as patient where ('Patient'+'/'+$this.id) in %composition.subject.reference then PatientRecordTarget(patient, bundle, recordTarget) "patient";
+    
+    entry.fullUrl where ($this in %composition.custodian.reference) and $this.startsWith('urn:uuid') then {
+      entry.resource as organization -> cda.custodian as custodian then OrganizationCustodian(organization, custodian) "custodian";
+    } "fullUrl as urn:uuid";
     entry.resource as organization where ('Organization'+'/'+$this.id) in %composition.custodian.reference -> cda.custodian as custodian then OrganizationCustodian(organization, custodian) "custodian";
+
+    entry.fullUrl where ($this in %composition.author.reference) and $this.startsWith('urn:uuid')  then {
+      entry.resource as practitioner then PractitionerAuthor(bundle, composition, practitioner, author) "author";
+    } "fullUrl as urn:uuid";
     entry.resource as practitioner where ('Practitioner'+'/'+$this.id) in %composition.author.reference then PractitionerAuthor(bundle, composition, practitioner, author) "author";
+
+    entry.fullUrl where ($this in %composition.attester.party.reference) and $this.startsWith('urn:uuid')  then {
+      entry.resource as practitioner -> cda.legalAuthenticator as legalAuthenticator then PractitionerLegalAuthenticator(bundle, composition, practitioner, legalAuthenticator) "legalAuthenticator";
+    } "fullUrl as urn:uuid";
     entry.resource as practitioner where ('Practitioner'+'/'+$this.id) in %composition.attester.party.reference -> cda.legalAuthenticator as legalAuthenticator then PractitionerLegalAuthenticator(bundle, composition, practitioner, legalAuthenticator) "legalAuthenticator";
   } "patient";
   
@@ -117,6 +132,7 @@ group PatientRecordTarget(source src : Patient, source bundle: Bundle, target tg
     src.telecom as telecom -> patientRole.telecom as tel then ContactPointTEL(telecom, tel);
     src.managingOrganization as managingOrganization then {
       bundle.entry as entry then {
+        entry.fullUrl where ($this in %managingOrganization.reference) and $this.startsWith('urn:uuid') -> patientRole.providerOrganization as providerOrganization then Organization2CdaOrganization(organization, providerOrganization) "providerOrganization";
         entry.resource as organization where ('Organization'+'/'+$this.id) in %managingOrganization.reference -> patientRole.providerOrganization as providerOrganization then Organization2CdaOrganization(organization, providerOrganization) "providerOrganization";
       } "entry";
     } "managingOrganization";
@@ -141,7 +157,10 @@ group PractitionerAuthor(source bundle : Bundle, source composition : Compositio
       src.identifier as identifier -> assignedAuthor.id as id then IdentifierII(identifier, id) "id";
       src.name as name -> assignedAuthor.assignedPerson as assignedPerson, assignedPerson.name as en then HumanNameEN(name, en) "name";
       bundle.entry as entry then {
-         entry.resource as organization where ('Organization'+'/'+$this.id) in %composition.author.reference -> assignedAuthor.representedOrganization as cdaorganization then Organization2CdaOrganization(organization, cdaorganization) "organization";
+        entry.fullUrl where ($this in %composition.author.reference) and $this.startsWith('urn:uuid')  then {
+          entry.resource as organization -> assignedAuthor.representedOrganization as cdaorganization then Organization2CdaOrganization(organization, cdaorganization) "organization";
+        } "fullUrl as urn:uuid";
+        entry.resource as organization where ('Organization'+'/'+$this.id) in %composition.author.reference -> assignedAuthor.representedOrganization as cdaorganization then Organization2CdaOrganization(organization, cdaorganization) "organization";
       } "patient";
   } "assignedAuthor";
 } 
