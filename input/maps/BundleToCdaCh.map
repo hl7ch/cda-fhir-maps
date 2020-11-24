@@ -69,7 +69,7 @@ group SectionCdaRemarksCoded(source bundle : Bundle, source section: Section, ta
 }
 
 group SectionCdaOriginalRepresentationObservationMedia(source binary : Binary, source section: Section, target cdasection: CdaSection) {
-    cdasection.entry as entry then {
+    section -> cdasection.entry as entry then {
       binary -> entry.typeCode = 'DRIV' "driv";
       binary -> entry.observationMedia as observationMedia, observationMedia.classCode = 'OBS', observationMedia.moodCode='EVN' then {
       section.entry as entry then {
@@ -95,9 +95,9 @@ group SectionCdaOriginalRepresentation(source bundle : Bundle, source section: S
   section -> cdasection.templateId as templateId, templateId.root='2.16.756.5.30.1.1.10.3.45' "templateId";
   bundle.entry as entry then {
     entry.fullUrl where ($this in %section.entry.reference) and $this.startsWith('urn:uuid')  then {
-        entry.resource as binary then SectionCdaOriginalRepresentationObservationMedia(binary, section, cdaSection) "patient";
+        entry.resource as binary then SectionCdaOriginalRepresentationObservationMedia(binary, section, cdasection) "patient";
     } "fullUrl as urn:uuid";
-    entry.resource as binary where ('Binary'+'/'+$this.id) in %section.entry.reference then SectionCdaOriginalRepresentationObservationMedia(binary, section, cdaSection) "patient";
+    entry.resource as binary where ('Binary'+'/'+$this.id) in %section.entry.reference then SectionCdaOriginalRepresentationObservationMedia(binary, section, cdasection) "patient";
   } "patient";
 }
 
@@ -181,10 +181,10 @@ group CompositionClinicalDocumentCH(source bundle : Bundle, source composition :
   } "dataEnterer";  
   composition.section as section where $this.code.coding.where(system='http://loinc.org' and code='55108-5') -> cda.component as component then {
     section -> component.contextConductionInd = true "contextConductionInd";
-    section -> component.structuredBody as structuredBody, structuredBody.component as component, component.section as cdasection then SectionCdaOriginalRepresentation(bundle, section,cdasection) "cdasection";
+    section -> component.structuredBody as structuredBody, structuredBody.component as component, component.section as cdasection then SectionCdaOriginalRepresentation(bundle, section, cdasection) "cdasection";
   } "SectionCdaOriginalRepresentation";
   composition.section as section where $this.code.coding.where(system='http://loinc.org' and code='48767-8') -> cda.component as component then {
     section -> component.contextConductionInd = true "contextConductionInd";
-    section -> component.structuredBody as structuredBody, structuredBody.component as component, component.section as cdasection then SectionCdaRemarksCoded(bundle, section,cdasection) "cdasection";
-  } "SectionCdaOriginalRepresentation";
+    section -> component.structuredBody as structuredBody, structuredBody.component as component, component.section as cdasection then SectionCdaRemarksCoded(bundle, section, cdasection) "cdasection";
+  } "SectionRemarksCoded";
 }
