@@ -4,30 +4,6 @@
 ### @host = https://test.ahdis.ch/r4
 @host = http://localhost:8080/r4
 
-
-### 0a. Provide CDA Implementation Guide
-POST {{host}}/ImplementationGuide HTTP/1.1
-Accept: application/fhir+json;fhirVersion=4.0
-Content-Type: application/fhir+json;fhirVersion=4.0
-
-{
-    "resourceType" : "ImplementationGuide",
-    "version" : "dev",
-    "packageId": "hl7.fhir.cda"
-}
-
-### 0b. Provide CH EMED Implementation Guide
-POST {{host}}/ImplementationGuide HTTP/1.1
-Accept: application/fhir+json;fhirVersion=4.0
-Content-Type: application/fhir+json;fhirVersion=4.0
-
-{
-    "resourceType" : "ImplementationGuide",
-    "version" : "current",
-    "packageId": "ch.fhir.ig.ch-emed"
-}
-
-
 ### 1. POST CdaToFhirTypes.map
 POST {{host}}/StructureMap HTTP/1.1
 Accept: application/fhir+xml;fhirVersion=4.0
