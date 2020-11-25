@@ -832,6 +832,8 @@ group PrescriptionItemEntryContentModule(source bundle : Bundle, source medicati
 
 // source: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-observation.html
 // target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&id=2.16.756.5.30.1.1.10.4.44
+// Note/Warning: we assume that there is a narrativeLink extension which refers to the text which should be the same as in note.text
+
 group PharmaceuticalAdviceItemEntryContentModule(source bundle : Bundle, source fhirobservation : Observation, target cdaobservation : Observation) {
   fhirobservation -> cdaobservation.classCode = 'OBS' "OBS";  
   fhirobservation -> cdaobservation.moodCode = 'EVN' "EVN";  
@@ -842,9 +844,6 @@ group PharmaceuticalAdviceItemEntryContentModule(source bundle : Bundle, source 
 
   fhirobservation.code as fhirCode -> cdaobservation.code as cdaCode then CodeableConceptCE(fhirCode, cdaCode) "code";
   
-  fhirobservation.extension as extension where $this.url='http://hl7.org/fhir/StructureDefinition/narrativeLink' -> cdaobservation.text as text, text.reference as reference then {
-    extension.valueUrl as valueUrl -> reference.value = valueUrl "valueUrl";
-  } "narrativeLink";
   fhirobservation -> cdaobservation.statusCode as statusCode, statusCode.code = 'completed' "code"; 
 
   fhirobservation.effectiveDateTime as effectiveDateTime -> cdaobservation.effectiveTime as effectiveTime then {
@@ -856,6 +855,9 @@ group PharmaceuticalAdviceItemEntryContentModule(source bundle : Bundle, source 
             entryRelationship.substanceAdministration as substanceAdministration 
               then MTPReferenceEntryContentModule(extension, substanceAdministration) "MTP-Reference";
 
-  // TBD: observation.note -> section.entry.observation.text.reference
-  //      see Issue (https://github.com/hl7ch/cda-fhir-maps/issues/16)
+  fhirobservation.note as note then { 
+    note.extension as extension where $this.url='http://hl7.org/fhir/StructureDefinition/narrativeLink' -> cdaobservation.text as text, text.reference as reference then {
+      extension.valueUrl as valueUrl -> reference.value = valueUrl "valueUrl";
+    } "narrativeLink";
+  } "note";
 }
