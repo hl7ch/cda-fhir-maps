@@ -1,12 +1,12 @@
 <StructureMap xmlns="http://hl7.org/fhir">
-   <id value="BundleToCdaChEmedMedicationDispenseDocument"></id>
+   <id value="BundleToCdaChEmedPharmaceuticalAdviceDocument"></id>
    <text>
       <status value="generated"></status>
       <div xmlns="http://www.w3.org/1999/xhtml">
-         <pre>map "http://fhir.ch/ig/cda-fhir-maps/StructureMap/BundleToCdaChEmedMedicationDispenseDocument" = "BundleToCdaChEmedMedicationDispenseDocument"
+         <pre>map "http://fhir.ch/ig/cda-fhir-maps/StructureMap/BundleToCdaChEmedPharmaceuticalAdviceDocument" = "BundleToCdaChEmedPharmaceuticalAdviceDocument"
 
-// Medication Dispense document, 2.16.756.5.30.1.1.10.1.5
-// 2020-01-09 Oliver Egger, copyright ahdis ag, Apache License
+// Pharmaceutical Advice document, 2.16.756.5.30.1.1.10.1.6
+// 2020-11-12 Michaela Ziegler, copyright ahdis ag, Apache License
 // CDA-CH-EMED:  https://art-decor.org/art-decor/decor-project--cdachemed-
 // FHIR CH-EMED: http://fhir.ch/ig/ch-emed/index.html
 
@@ -28,7 +28,7 @@ uses "http://hl7.org/fhir/StructureDefinition/Composition" alias Composition as 
 uses "http://hl7.org/fhir/StructureDefinition/Patient" alias Patient as source
 uses "http://hl7.org/fhir/StructureDefinition/Practitioner" alias Practitioner as source
 uses "http://hl7.org/fhir/StructureDefinition/Organization" alias Organization as source
-uses "http://hl7.org/fhir/StructureDefinition/MedicationDispense" alias MedicationDispense as source
+uses "http://hl7.org/fhir/StructureDefinition/Observation" alias Observation as source
 uses "http://hl7.org/fhir/StructureDefinition/Dosage" alias Dosage as source
 
 imports "http://fhir.ch/ig/cda-fhir-maps/StructureMap/FhirToCdaTypes"
@@ -36,59 +36,59 @@ imports "http://fhir.ch/ig/cda-fhir-maps/StructureMap/BundleToCda"
 imports "http://fhir.ch/ig/cda-fhir-maps/StructureMap/BundleToCdaCh"
 imports "http://fhir.ch/ig/cda-fhir-maps/StructureMap/BundleToCdaChEmed"
 
-// source: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-composition-medicationdispense.html
-// target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.1.5
-group BundleToCdaChEmedMedicationDispenseDocument(source bundle : Bundle, target cda : ClinicalDocument) {
-  bundle -&gt;  cda.recordTarget as recordTarget,  cda.author as author then BundleToClinicalDocumentEmedMedicationDispenseDocument(bundle, recordTarget, author, cda) "bundle";
+// source: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-composition-pharmaceuticaladvice.html
+// target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.1.6
+group BundleToCdaChEmedPharmaceuticalAdviceDocument(source bundle : Bundle, target cda : ClinicalDocument) {
+  bundle -&gt;  cda.recordTarget as recordTarget,  cda.author as author then BundleToClinicalDocumentEmedPharmaceuticalAdviceDocument(bundle, recordTarget, author, cda) "bundle";
 }
 
-// source: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-composition-medicationdispense.html
-// target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.1.5
-group CompositionClinicalDocumentChEmedMedicationDispenseDocument(source bundle : Bundle, source composition : Composition, target cda : ClinicalDocument) {
-  composition.section as section where $this.code.coding.where((system = 'http://loinc.org') and (code = '60590-7')) -&gt; cda.component as component then {
+// source: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-composition-pharmaceuticaladvice.html
+// target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.1.6
+group CompositionClinicalDocumentChEmedPharmaceuticalAdviceDocument(source bundle : Bundle, source composition : Composition, target cda : ClinicalDocument) {
+  composition.section as section where $this.code.coding.where((system = 'http://loinc.org') and (code = '61357-0')) -&gt; cda.component as component then {
     section -&gt; component.contextConductionInd = true "contextConductionInd";
-    section -&gt;  component.structuredBody as structuredBody,  structuredBody.component as component,  component.section as cdasection then SectionDispenseSectionContentModule(bundle, section, cdasection) "cdasection";
-  } "SectionDispenseSectionContentModule";
+    section -&gt;  component.structuredBody as structuredBody,  structuredBody.component as component,  component.section as cdasection then SectionPharmaceuticalAdviceSectionContentModule(bundle, section, cdasection) "cdasection";
+  } "SectionPharmaceuticalAdviceSectionContentModule";
 }
 
 // _________________________ Section Level Templates _________________________
-// source: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-composition-medicationdispense.html
-// target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.3.11
-group SectionDispenseSectionContentModule(source bundle : Bundle, source section : Section, target cdasection : CdaSection) extends SectionCdaSection {
-  section -&gt;  cdasection.templateId as templateId,  templateId.root = '2.16.756.5.30.1.1.10.3.11' "CH-PHARM-DispenseSectionContentModule";
-  section -&gt;  cdasection.templateId as templateId,  templateId.root = '1.3.6.1.4.1.19376.1.9.1.2.3' "IHE-DispenseSectionContentModule";
+// source: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-composition-pharmaceuticaladvice.html
+// target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.3.12
+group SectionPharmaceuticalAdviceSectionContentModule(source bundle : Bundle, source section : Section, target cdasection : CdaSection) extends SectionCdaSection {
+  section -&gt;  cdasection.templateId as templateId,  templateId.root = '2.16.756.5.30.1.1.10.3.12' "CH-PHARM-PharmaceuticalAdviceSectionContentModule";
+  section -&gt;  cdasection.templateId as templateId,  templateId.root = '1.3.6.1.4.1.19376.1.9.1.2.2' "IHE-PHARM-PADV";
   // create section id if there is none in the fhir bundle (mapping source)
   section as section where $this.extension.where(url = 'http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-sectionid').exists() = false -&gt; cdasection.id as id then {
     section -&gt;  uuid() as uuid,  id.root = (%uuid.upper()) "upper";
   } "extension";
   bundle.entry as entry then {
     entry.fullUrl where ($this in %section.entry.reference) and $this.startsWith('urn:uuid') then {
-      entry.resource as medicationDispense where $this.ofType(FHIR.MedicationDispense) -&gt;  cdasection.entry as entry,  entry.supply as supply then DispenseItemEntryContentModule(bundle, medicationDispense, supply) "MedicationDispense";
+      entry.resource as fhirobservation where $this.ofType(FHIR.Observation) -&gt;  cdasection.entry as entry,  entry.observation as cdaobservation then PharmaceuticalAdviceItemEntryContentModule(bundle, fhirobservation, cdaobservation) "Observation";
     } "fullUrl as urn:uuid";
-    entry.resource as medicationDispense where $this.ofType(FHIR.MedicationDispense) and (('MedicationDispense' + '/' + $this.id) in %section.entry.reference) -&gt;  cdasection.entry as entry,  entry.supply as supply then DispenseItemEntryContentModule(bundle, medicationDispense, supply) "MedicationDispense";
+    entry.resource as fhirobservation where $this.ofType(FHIR.Observation) and (('Observation' + '/' + $this.id) in %section.entry.reference) -&gt;  cdasection.entry as entry,  entry.observation as cdaobservation then PharmaceuticalAdviceItemEntryContentModule(bundle, fhirobservation, cdaobservation) "Observation";
   };
 }
 
 // _________________________ Header Level Templates _________________________
-// source: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-composition-medicationdispense.html
+// source: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-composition-pharmaceuticaladvice.html
 // target: 2.16.756.5.30.1.1.10.9.42
-group BundleToClinicalDocumentEmedMedicationDispenseDocument(source bundle : Bundle, target recordTarget : RecordTarget, target author : Author, target cda : ClinicalDocument) extends BundleToClinicalDocumentCh {
-  bundle -&gt;  cda.templateId as templateId,  templateId.root = '2.16.756.5.30.1.127.1.4' "ExchangeFormatAccordingToTheSwissEPR";
+group BundleToClinicalDocumentEmedPharmaceuticalAdviceDocument(source bundle : Bundle, target recordTarget : RecordTarget, target author : Author, target cda : ClinicalDocument) extends BundleToClinicalDocumentCh {
+  bundle -&gt;  cda.templateId as templateId,  templateId.root = '2.16.756.5.30.1.127.1.4' "exchangeFormatAccordingToTheSwissEPR";
   bundle -&gt;  cda.templateId as templateId,  templateId.root = '1.3.6.1.4.1.19376.1.5.3.1.1.1' "IHE-PCC";
-  bundle -&gt;  cda.templateId as templateId,  templateId.root = '1.3.6.1.4.1.19376.1.9.1.1.3' "IHE-PharmacyDispenseDocumentContentModule";
-  bundle -&gt;  cda.templateId as templateId,  templateId.root = '2.16.756.5.30.1.1.10.1.5' "CDA-CH-EMED-MedicationDispenseDocument";
+  bundle -&gt;  cda.templateId as templateId,  templateId.root = '1.3.6.1.4.1.19376.1.9.1.1.2' "IHE-PHARM-PADV";
+  bundle -&gt;  cda.templateId as templateId,  templateId.root = '2.16.756.5.30.1.1.10.1.6' "CDA-PHARM-PharmaceuticalAdvice";
   bundle.entry as entry then {
-    entry.resource as resource where $this.ofType(FHIR.Composition) then CompositionClinicalDocumentChEmedMedicationDispenseDocument(bundle, resource, cda);
+    entry.resource as resource where $this.ofType(FHIR.Composition) then CompositionClinicalDocumentChEmedPharmaceuticalAdviceDocument(bundle, resource, cda);
   };
 }
 
 </pre>
       </div>
    </text>
-   <url value="http://fhir.ch/ig/cda-fhir-maps/StructureMap/BundleToCdaChEmedMedicationDispenseDocument"></url>
-   <name value="BundleToCdaChEmedMedicationDispenseDocument"></name>
-   <description value="Medication Dispense document, 2.16.756.5.30.1.1.10.1.5
-2020-01-09 Oliver Egger, copyright ahdis ag, Apache License
+   <url value="http://fhir.ch/ig/cda-fhir-maps/StructureMap/BundleToCdaChEmedPharmaceuticalAdviceDocument"></url>
+   <name value="BundleToCdaChEmedPharmaceuticalAdviceDocument"></name>
+   <description value="Pharmaceutical Advice document, 2.16.756.5.30.1.1.10.1.6
+2020-11-12 Michaela Ziegler, copyright ahdis ag, Apache License
 CDA-CH-EMED:  https://art-decor.org/art-decor/decor-project--cdachemed-
 FHIR CH-EMED: http://fhir.ch/ig/ch-emed/index.html"></description>
    <structure>
@@ -182,9 +182,9 @@ FHIR CH-EMED: http://fhir.ch/ig/ch-emed/index.html"></description>
       <alias value="Organization"></alias>
    </structure>
    <structure>
-      <url value="http://hl7.org/fhir/StructureDefinition/MedicationDispense"></url>
+      <url value="http://hl7.org/fhir/StructureDefinition/Observation"></url>
       <mode value="source"></mode>
-      <alias value="MedicationDispense"></alias>
+      <alias value="Observation"></alias>
    </structure>
    <structure>
       <url value="http://hl7.org/fhir/StructureDefinition/Dosage"></url>
@@ -196,9 +196,9 @@ FHIR CH-EMED: http://fhir.ch/ig/ch-emed/index.html"></description>
    <import value="http://fhir.ch/ig/cda-fhir-maps/StructureMap/BundleToCdaCh"></import>
    <import value="http://fhir.ch/ig/cda-fhir-maps/StructureMap/BundleToCdaChEmed"></import>
    <group>
-      <name value="BundleToCdaChEmedMedicationDispenseDocument"></name>
-      <documentation value="source: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-composition-medicationdispense.html
-target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.1.5"></documentation>
+      <name value="BundleToCdaChEmedPharmaceuticalAdviceDocument"></name>
+      <documentation value="source: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-composition-pharmaceuticaladvice.html
+target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.1.6"></documentation>
       <input>
          <name value="bundle"></name>
          <type value="Bundle"></type>
@@ -227,7 +227,7 @@ target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=temp
             <variable value="author"></variable>
          </target>
          <dependent>
-            <name value="BundleToClinicalDocumentEmedMedicationDispenseDocument"></name>
+            <name value="BundleToClinicalDocumentEmedPharmaceuticalAdviceDocument"></name>
             <variable value="bundle"></variable>
             <variable value="recordTarget"></variable>
             <variable value="author"></variable>
@@ -236,9 +236,9 @@ target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=temp
       </rule>
    </group>
    <group>
-      <name value="CompositionClinicalDocumentChEmedMedicationDispenseDocument"></name>
-      <documentation value="source: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-composition-medicationdispense.html
-target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.1.5"></documentation>
+      <name value="CompositionClinicalDocumentChEmedPharmaceuticalAdviceDocument"></name>
+      <documentation value="source: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-composition-pharmaceuticaladvice.html
+target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.1.6"></documentation>
       <input>
          <name value="bundle"></name>
          <type value="Bundle"></type>
@@ -255,12 +255,12 @@ target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=temp
          <mode value="target"></mode>
       </input>
       <rule>
-         <name value="SectionDispenseSectionContentModule"></name>
+         <name value="SectionPharmaceuticalAdviceSectionContentModule"></name>
          <source>
             <context value="composition"></context>
             <element value="section"></element>
             <variable value="section"></variable>
-            <condition value="$this.code.coding.where((system = 'http://loinc.org') and (code = '60590-7'))"></condition>
+            <condition value="$this.code.coding.where((system = 'http://loinc.org') and (code = '61357-0'))"></condition>
          </source>
          <target>
             <context value="cda"></context>
@@ -307,7 +307,7 @@ target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=temp
                <variable value="cdasection"></variable>
             </target>
             <dependent>
-               <name value="SectionDispenseSectionContentModule"></name>
+               <name value="SectionPharmaceuticalAdviceSectionContentModule"></name>
                <variable value="bundle"></variable>
                <variable value="section"></variable>
                <variable value="cdasection"></variable>
@@ -316,11 +316,11 @@ target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=temp
       </rule>
    </group>
    <group>
-      <name value="SectionDispenseSectionContentModule"></name>
+      <name value="SectionPharmaceuticalAdviceSectionContentModule"></name>
       <extends value="SectionCdaSection"></extends>
       <documentation value="_________________________ Section Level Templates _________________________
-source: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-composition-medicationdispense.html
-target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.3.11"></documentation>
+source: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-composition-pharmaceuticaladvice.html
+target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.3.12"></documentation>
       <input>
          <name value="bundle"></name>
          <type value="Bundle"></type>
@@ -337,7 +337,7 @@ target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=temp
          <mode value="target"></mode>
       </input>
       <rule>
-         <name value="CH-PHARM-DispenseSectionContentModule"></name>
+         <name value="CH-PHARM-PharmaceuticalAdviceSectionContentModule"></name>
          <source>
             <context value="section"></context>
          </source>
@@ -353,12 +353,12 @@ target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=temp
             <element value="root"></element>
             <transform value="copy"></transform>
             <parameter>
-               <valueString value="2.16.756.5.30.1.1.10.3.11"></valueString>
+               <valueString value="2.16.756.5.30.1.1.10.3.12"></valueString>
             </parameter>
          </target>
       </rule>
       <rule>
-         <name value="IHE-DispenseSectionContentModule"></name>
+         <name value="IHE-PHARM-PADV"></name>
          <source>
             <context value="section"></context>
          </source>
@@ -374,7 +374,7 @@ target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=temp
             <element value="root"></element>
             <transform value="copy"></transform>
             <parameter>
-               <valueString value="1.3.6.1.4.1.19376.1.9.1.2.3"></valueString>
+               <valueString value="1.3.6.1.4.1.19376.1.9.1.2.2"></valueString>
             </parameter>
          </target>
       </rule>
@@ -427,12 +427,12 @@ target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=temp
                <condition value="($this in %section.entry.reference) and $this.startsWith('urn:uuid')"></condition>
             </source>
             <rule>
-               <name value="MedicationDispense"></name>
+               <name value="Observation"></name>
                <source>
                   <context value="entry"></context>
                   <element value="resource"></element>
-                  <variable value="medicationDispense"></variable>
-                  <condition value="$this.ofType(FHIR.MedicationDispense)"></condition>
+                  <variable value="fhirobservation"></variable>
+                  <condition value="$this.ofType(FHIR.Observation)"></condition>
                </source>
                <target>
                   <context value="cdasection"></context>
@@ -443,24 +443,24 @@ target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=temp
                <target>
                   <context value="entry"></context>
                   <contextType value="variable"></contextType>
-                  <element value="supply"></element>
-                  <variable value="supply"></variable>
+                  <element value="observation"></element>
+                  <variable value="cdaobservation"></variable>
                </target>
                <dependent>
-                  <name value="DispenseItemEntryContentModule"></name>
+                  <name value="PharmaceuticalAdviceItemEntryContentModule"></name>
                   <variable value="bundle"></variable>
-                  <variable value="medicationDispense"></variable>
-                  <variable value="supply"></variable>
+                  <variable value="fhirobservation"></variable>
+                  <variable value="cdaobservation"></variable>
                </dependent>
             </rule>
          </rule>
          <rule>
-            <name value="MedicationDispense"></name>
+            <name value="Observation"></name>
             <source>
                <context value="entry"></context>
                <element value="resource"></element>
-               <variable value="medicationDispense"></variable>
-               <condition value="$this.ofType(FHIR.MedicationDispense) and (('MedicationDispense' + '/' + $this.id) in %section.entry.reference)"></condition>
+               <variable value="fhirobservation"></variable>
+               <condition value="$this.ofType(FHIR.Observation) and (('Observation' + '/' + $this.id) in %section.entry.reference)"></condition>
             </source>
             <target>
                <context value="cdasection"></context>
@@ -471,23 +471,23 @@ target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=temp
             <target>
                <context value="entry"></context>
                <contextType value="variable"></contextType>
-               <element value="supply"></element>
-               <variable value="supply"></variable>
+               <element value="observation"></element>
+               <variable value="cdaobservation"></variable>
             </target>
             <dependent>
-               <name value="DispenseItemEntryContentModule"></name>
+               <name value="PharmaceuticalAdviceItemEntryContentModule"></name>
                <variable value="bundle"></variable>
-               <variable value="medicationDispense"></variable>
-               <variable value="supply"></variable>
+               <variable value="fhirobservation"></variable>
+               <variable value="cdaobservation"></variable>
             </dependent>
          </rule>
       </rule>
    </group>
    <group>
-      <name value="BundleToClinicalDocumentEmedMedicationDispenseDocument"></name>
+      <name value="BundleToClinicalDocumentEmedPharmaceuticalAdviceDocument"></name>
       <extends value="BundleToClinicalDocumentCh"></extends>
       <documentation value="_________________________ Header Level Templates _________________________
-source: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-composition-medicationdispense.html
+source: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-composition-pharmaceuticaladvice.html
 target: 2.16.756.5.30.1.1.10.9.42"></documentation>
       <input>
          <name value="bundle"></name>
@@ -510,7 +510,7 @@ target: 2.16.756.5.30.1.1.10.9.42"></documentation>
          <mode value="target"></mode>
       </input>
       <rule>
-         <name value="ExchangeFormatAccordingToTheSwissEPR"></name>
+         <name value="exchangeFormatAccordingToTheSwissEPR"></name>
          <source>
             <context value="bundle"></context>
          </source>
@@ -552,7 +552,7 @@ target: 2.16.756.5.30.1.1.10.9.42"></documentation>
          </target>
       </rule>
       <rule>
-         <name value="IHE-PharmacyDispenseDocumentContentModule"></name>
+         <name value="IHE-PHARM-PADV"></name>
          <source>
             <context value="bundle"></context>
          </source>
@@ -568,12 +568,12 @@ target: 2.16.756.5.30.1.1.10.9.42"></documentation>
             <element value="root"></element>
             <transform value="copy"></transform>
             <parameter>
-               <valueString value="1.3.6.1.4.1.19376.1.9.1.1.3"></valueString>
+               <valueString value="1.3.6.1.4.1.19376.1.9.1.1.2"></valueString>
             </parameter>
          </target>
       </rule>
       <rule>
-         <name value="CDA-CH-EMED-MedicationDispenseDocument"></name>
+         <name value="CDA-PHARM-PharmaceuticalAdvice"></name>
          <source>
             <context value="bundle"></context>
          </source>
@@ -589,7 +589,7 @@ target: 2.16.756.5.30.1.1.10.9.42"></documentation>
             <element value="root"></element>
             <transform value="copy"></transform>
             <parameter>
-               <valueString value="2.16.756.5.30.1.1.10.1.5"></valueString>
+               <valueString value="2.16.756.5.30.1.1.10.1.6"></valueString>
             </parameter>
          </target>
       </rule>
@@ -609,7 +609,7 @@ target: 2.16.756.5.30.1.1.10.9.42"></documentation>
                <condition value="$this.ofType(FHIR.Composition)"></condition>
             </source>
             <dependent>
-               <name value="CompositionClinicalDocumentChEmedMedicationDispenseDocument"></name>
+               <name value="CompositionClinicalDocumentChEmedPharmaceuticalAdviceDocument"></name>
                <variable value="bundle"></variable>
                <variable value="resource"></variable>
                <variable value="cda"></variable>

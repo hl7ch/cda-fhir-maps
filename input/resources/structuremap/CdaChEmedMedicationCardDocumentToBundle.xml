@@ -36,7 +36,6 @@ imports "http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaToBundle"
 imports "http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaChToBundle"
 imports "http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaChEmedToBundle"
 
-// _________________________ Document Level Template  _________________________
 // source: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.1.3
 // target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-composition-medicationcard.html
 group CdaChEmedMedicationCardDocumentToBundle(source cda : ClinicalDocument, target bundle : Bundle) {
@@ -60,7 +59,7 @@ group ClinicalDocumentChEmedMedicationCardDocumentToBundle(source cda : Clinical
 // target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.3.9
 group SectionMedicationCardSectionContentModule(source src : Section, source patient : Patient, target tgt, target bundle : Bundle) extends ClinicalDocumentSection {
   src.entry as cdaEntry where (substanceAdministration.templateId.where(root = '2.16.756.5.30.1.1.10.4.34')) -&gt;  bundle.entry as e,  e.resource = create('MedicationStatement') as medicationstatement,  medicationstatement.id = uuid() as uuid,  e.fullUrl = append('urn:uuid:', uuid),  tgt.entry = create('Reference') as reference,  reference.type = 'MedicationStatement',  reference.reference = append('urn:uuid:', uuid) then {
-    cdaEntry.substanceAdministration as substanceAdministration then MedicationTreatmentPlanEntryContentModule(src, substanceAdministration, patient, medicationstatement);
+    cdaEntry.substanceAdministration as substanceAdministration then MedicationTreatmentPlanItemEntryContentModule(src, substanceAdministration, patient, medicationstatement);
   } "cdaEntry";
 }
 
@@ -179,8 +178,7 @@ FHIR CH-EMED: http://fhir.ch/ig/ch-emed/index.html"></description>
    <import value="http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaChEmedToBundle"></import>
    <group>
       <name value="CdaChEmedMedicationCardDocumentToBundle"></name>
-      <documentation value="_________________________ Document Level Template  _________________________
-source: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.1.3
+      <documentation value="source: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.1.3
 target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-composition-medicationcard.html"></documentation>
       <input>
          <name value="cda"></name>
@@ -463,7 +461,7 @@ target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=temp
                <variable value="substanceAdministration"></variable>
             </source>
             <dependent>
-               <name value="MedicationTreatmentPlanEntryContentModule"></name>
+               <name value="MedicationTreatmentPlanItemEntryContentModule"></name>
                <variable value="src"></variable>
                <variable value="substanceAdministration"></variable>
                <variable value="patient"></variable>

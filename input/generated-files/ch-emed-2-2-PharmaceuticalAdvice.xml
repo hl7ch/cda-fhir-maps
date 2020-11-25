@@ -267,6 +267,13 @@
                     <reference value="urn:uuid:40c41313-892b-4ca8-91c9-f8e5361e8417"/>
                     <type value="Patient"/>
                 </subject>
+                <effectiveDateTime value="2012-02-04T14:00:00+01:00"/>
+                <note>
+                    <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
+                        <valueUrl value="#padv.1.note"/>
+                      </extension>
+                   <text value="Abgesetzt aufgrund UAW trockener Husten"/>
+                </note>                
             </Observation>
         </resource>
     </entry>

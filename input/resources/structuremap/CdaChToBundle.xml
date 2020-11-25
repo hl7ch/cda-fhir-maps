@@ -24,7 +24,6 @@ uses "http://hl7.org/fhir/StructureDefinition/Organization" alias Organization a
 imports "http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaToFhirTypes"
 imports "http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaToBundle"
 
-// _________________________ Document Level Template  _________________________
 // source: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5.30.1.1.10.1.14
 // target: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefinition-ch-core-document.html
 group CdaChToBundle(source cda : ClinicalDocument, target bundle : Bundle) {
@@ -201,8 +200,7 @@ FHIR CH-Core: http://fhir.ch/ig/ch-core/index.html"></description>
    <import value="http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaToBundle"></import>
    <group>
       <name value="CdaChToBundle"></name>
-      <documentation value="_________________________ Document Level Template  _________________________
-source: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5.30.1.1.10.1.14
+      <documentation value="source: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5.30.1.1.10.1.14
 target: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefinition-ch-core-document.html"></documentation>
       <input>
          <name value="cda"></name>
