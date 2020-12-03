@@ -1,1 +1,4 @@
 == Suppressed Messages ==
+
+# The ConceptMap has no name, the name is not required
+cmd-0: Name should be usable as an identifier for the module by machine processing applications such as code generation [name.matches('[A-Z]([A-Za-z0-9_]){0,254}')]
