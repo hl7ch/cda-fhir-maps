@@ -43,21 +43,21 @@ Content-Type: text/fhir-mapping
 
 < ./input/maps/CdaChEmedMedicationTreatmentPlanDocumentToBundle.map
 
-### 5a. Transform Medication Treatment Plan document (1-1-MedicationCard.xml) from CDA to FHIR
+### 5a. Transform Medication Treatment Plan document (1-1-MedicationTreatmentPlan.xml) from CDA to FHIR
 POST {{host}}/StructureMap/$transform?source=http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaChEmedMedicationTreatmentPlanDocumentToBundle
 Accept: application/fhir+xml;fhirVersion=4.0
 Content-Type: application/fhir+xml;fhirVersion=4.0
 
 < ./input/cda-ch-emed/1-1-MedicationTreatmentPlan.xml
 
-### 5b. Transform Medication Treatment Plan document (2-3-MedicationCard.xml) from CDA to FHIR
+### 5b. Transform Medication Treatment Plan document (2-3-MedicationTreatmentPlan.xml) from CDA to FHIR
 POST {{host}}/StructureMap/$transform?source=http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaChEmedMedicationTreatmentPlanDocumentToBundle
 Accept: application/fhir+xml;fhirVersion=4.0
 Content-Type: application/fhir+xml;fhirVersion=4.0
 
 < ./input/cda-ch-emed/2-3-MedicationTreatmentPlan.xml
 
-### 5c. Transform Medication Treatment Plan document (2-5-MedicationCard.xml) from CDA to FHIR
+### 5c. Transform Medication Treatment Plan document (2-5-MedicationTreatmentPlan.xml) from CDA to FHIR
 POST {{host}}/StructureMap/$transform?source=http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaChEmedMedicationTreatmentPlanDocumentToBundle
 Accept: application/fhir+xml;fhirVersion=4.0
 Content-Type: application/fhir+xml;fhirVersion=4.0

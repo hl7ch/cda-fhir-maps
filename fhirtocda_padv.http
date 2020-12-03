@@ -44,17 +44,9 @@ Content-Type: text/fhir-mapping
 < ./input/maps/BundleToCdaChEmedPharmaceuticalAdviceDocument.map
 
 
-### 5a. Transform Pharmaceutical Advice document (2-2-PharmaceuticalAdvice.xml) from FHIR to CDA
+### 5. Transform Pharmaceutical Advice document (2-2-PharmaceuticalAdvice.xml) from FHIR to CDA
 POST {{host}}/StructureMap/$transform?source=http://fhir.ch/ig/cda-fhir-maps/StructureMap/BundleToCdaChEmedPharmaceuticalAdviceDocument
 Accept: application/fhir+xml;fhirVersion=4.0
 Content-Type: application/fhir+xml;fhirVersion=4.0
 
 < ./input/ch-emed/2-2-PharmaceuticalAdvice.xml
-
-
-### 5b. Transform Pharmaceutical Advice document (2-2-PharmaceuticalAdvice.xml) from FHIR to CDA
-POST {{host}}/StructureMap/$transform?source=http://fhir.ch/ig/cda-fhir-maps/StructureMap/BundleToCdaChEmedPharmaceuticalAdviceDocument
-Accept: application/fhir+xml;fhirVersion=4.0
-Content-Type: application/fhir+xml;fhirVersion=4.0
-
-< ./input/generated-files/ch-emed-2-2-PharmaceuticalAdvice.xml

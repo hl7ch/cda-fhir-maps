@@ -51,10 +51,9 @@ Content-Type: application/fhir+xml;fhirVersion=4.0
 
 < ./input/ch-emed/1-2-MedicationDispense.xml
 
-
 ### 5b. Transform Medication Dispense document (2-4-MedicationDispense.xml) from FHIR to CDA
 POST {{host}}/StructureMap/$transform?source=http://fhir.ch/ig/cda-fhir-maps/StructureMap/BundleToCdaChEmedMedicationDispenseDocument
 Accept: application/fhir+xml;fhirVersion=4.0
 Content-Type: application/fhir+xml;fhirVersion=4.0
 
-< ./input/generated-files/ch-emed-2-4-MedicationDispense.xml
+< ./input/ch-emed/2-4-MedicationDispense.xml

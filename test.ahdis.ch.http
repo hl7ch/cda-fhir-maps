@@ -1,0 +1,170 @@
+@host = https://test.ahdis.ch/r4
+
+
+############################### CDA to FHIR ###############################
+
+### 5a. Transform 1-ZuweisungZurRadiologischenDiagnostik.xml from CDA to FHIR
+POST {{host}}/StructureMap/$transform?source=http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaChToBundle
+Accept: application/fhir+xml;fhirVersion=4.0
+Content-Type: application/fhir+xml;fhirVersion=4.0
+
+< ./input/cda-ch/1-ZuweisungZurRadiologischenDiagnostik.xml
+
+### 5b. Transform CdaContainingOriginalRepresentationAsPdfA.xml from CDA to FHIR
+POST {{host}}/StructureMap/$transform?source=http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaChToBundle
+Accept: application/fhir+xml;fhirVersion=4.0
+Content-Type: application/fhir+xml;fhirVersion=4.0
+
+< ./input/cda-ch/CdaContainingOriginalRepresentationAsPdfA.xml
+
+### 5a. Transform Medication Treatment Plan document (1-1-MedicationTreatmentPlan.xml) from CDA to FHIR
+POST {{host}}/StructureMap/$transform?source=http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaChEmedMedicationTreatmentPlanDocumentToBundle
+Accept: application/fhir+xml;fhirVersion=4.0
+Content-Type: application/fhir+xml;fhirVersion=4.0
+
+< ./input/cda-ch-emed/1-1-MedicationTreatmentPlan.xml
+
+### 5b. Transform Medication Treatment Plan document (2-3-MedicationTreatmentPlan.xml) from CDA to FHIR
+POST {{host}}/StructureMap/$transform?source=http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaChEmedMedicationTreatmentPlanDocumentToBundle
+Accept: application/fhir+xml;fhirVersion=4.0
+Content-Type: application/fhir+xml;fhirVersion=4.0
+
+< ./input/cda-ch-emed/2-3-MedicationTreatmentPlan.xml
+
+### 5c. Transform Medication Treatment Plan document (2-5-MedicationTreatmentPlan.xml) from CDA to FHIR
+POST {{host}}/StructureMap/$transform?source=http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaChEmedMedicationTreatmentPlanDocumentToBundle
+Accept: application/fhir+xml;fhirVersion=4.0
+Content-Type: application/fhir+xml;fhirVersion=4.0
+
+< ./input/cda-ch-emed/2-5-MedicationTreatmentPlan.xml
+
+### 5. Transform Medication Prescription document (2-6-MedicationPrescription.xml) from CDA to FHIR
+POST {{host}}/StructureMap/$transform?source=http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaChEmedMedicationPrescriptionDocumentToBundle
+Accept: application/fhir+xml;fhirVersion=4.0
+Content-Type: application/fhir+xml;fhirVersion=4.0
+
+< ./input/cda-ch-emed/2-6-MedicationPrescription.xml
+
+
+### 5a. Transform Medication Dispense document (1-2-MedicationDispense.xml) from CDA to FHIR
+POST {{host}}/StructureMap/$transform?source=http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaChEmedMedicationDispenseDocumentToBundle
+Accept: application/fhir+xml;fhirVersion=4.0
+Content-Type: application/fhir+xml;fhirVersion=4.0
+
+< ./input/cda-ch-emed/1-2-MedicationDispense.xml
+
+### 5b. Transform Medication Dispense document (2-4-MedicationDispense.xml) from CDA to FHIR
+POST {{host}}/StructureMap/$transform?source=http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaChEmedMedicationDispenseDocumentToBundle
+Accept: application/fhir+xml;fhirVersion=4.0
+Content-Type: application/fhir+xml;fhirVersion=4.0
+
+< ./input/cda-ch-emed/2-4-MedicationDispense.xml
+
+### 5. Transform Pharmaceutical Advice document (2-2-PharmaceuticalAdvice.xml) from CDA to FHIR
+POST {{host}}/StructureMap/$transform?source=http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaChEmedPharmaceuticalAdviceDocumentToBundle
+Accept: application/fhir+xml;fhirVersion=4.0
+Content-Type: application/fhir+xml;fhirVersion=4.0
+
+< ./input/cda-ch-emed/2-2-PharmaceuticalAdvice.xml
+
+### 5a. Transform eMedicationService 
+POST {{host}}/StructureMap/$transform?source=http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaChEmedMedicationListDocumentToBundle
+Accept: application/fhir+xml;fhirVersion=4.0
+Content-Type: application/fhir+xml;fhirVersion=4.0
+
+< ./input/cda-ch-emed/pml.xml
+
+### 5b. Transform eMedicationService 
+POST {{host}}/StructureMap/$transform?source=http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaChEmedMedicationListDocumentToBundle
+Accept: application/fhir+xml;fhirVersion=4.0
+Content-Type: application/fhir+xml;fhirVersion=4.0
+
+< ./input/cda-ch-emed/cda-response-ms.xml
+
+### 5c. Transform Medication List document (2-1-MedicationList.xml) from CDA to FHIR
+POST {{host}}/StructureMap/$transform?source=http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaChEmedMedicationListDocumentToBundle
+Accept: application/fhir+xml;fhirVersion=4.0
+Content-Type: application/fhir+xml;fhirVersion=4.0
+
+< ./input/cda-ch-emed/2-1-MedicationList.xml
+
+### 5. Transform Medication Card document (2-7-MedicationCard.xml) from CDA to FHIR
+POST {{host}}/StructureMap/$transform?source=http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaChEmedMedicationCardDocumentToBundle
+Accept: application/fhir+xml;fhirVersion=4.0
+Content-Type: application/fhir+xml;fhirVersion=4.0
+
+< ./input/cda-ch-emed/2-7-MedicationCard.xml
+
+
+############################### FHIR to CDA ###############################
+
+### 5a. Transform 1-ZuweisungZurRadiologischenDiagnostik.xml from FHIR to CDA
+### See issue: https://github.com/hl7ch/cda-fhir-maps/issues/17
+POST {{host}}/StructureMap/$transform?source=http://fhir.ch/ig/cda-fhir-maps/StructureMap/BundleToCdaCh
+Accept: application/fhir+xml;fhirVersion=4.0
+Content-Type: application/fhir+xml;fhirVersion=4.0
+
+< ./input/ch-core/1-ZuweisungZurRadiologischenDiagnostik.xml
+
+### 5b. CdaContainingOriginalRepresentationAsPdfA.xml from FHIR to CDA
+POST {{host}}/StructureMap/$transform?source=http://fhir.ch/ig/cda-fhir-maps/StructureMap/BundleToCdaCh
+Accept: application/fhir+xml;fhirVersion=4.0
+Content-Type: application/fhir+xml;fhirVersion=4.0
+
+< ./input/ch-core/CdaContainingOriginalRepresentationAsPdfA.xml
+
+### 5a. Transform Medication Treatment Plan document (1-1-MedicationTreatmentPlan.xml) from FHIR to CDA
+POST {{host}}/StructureMap/$transform?source=http://fhir.ch/ig/cda-fhir-maps/StructureMap/BundleToCdaChEmedMedicationTreatmentPlanDocument
+Accept: application/fhir+xml;fhirVersion=4.0
+Content-Type: application/fhir+xml;fhirVersion=4.0
+
+< ./input/ch-emed/1-1-MedicationTreatmentPlan.xml
+
+### 5b. Transform Medication Treatment Plan document (2-3-MedicationTreatmentPlan.xml) from FHIR to CDA
+POST {{host}}/StructureMap/$transform?source=http://fhir.ch/ig/cda-fhir-maps/StructureMap/BundleToCdaChEmedMedicationTreatmentPlanDocument
+Accept: application/fhir+xml;fhirVersion=4.0
+Content-Type: application/fhir+xml;fhirVersion=4.0
+
+< ./input/ch-emed/2-3-MedicationTreatmentPlan.xml
+
+### 5c. Transform Medication Treatment Plan document (2-5-MedicationTreatmentPlan.xml) from FHIR to CDA
+POST {{host}}/StructureMap/$transform?source=http://fhir.ch/ig/cda-fhir-maps/StructureMap/BundleToCdaChEmedMedicationTreatmentPlanDocument
+Accept: application/fhir+xml;fhirVersion=4.0
+Content-Type: application/fhir+xml;fhirVersion=4.0
+
+< ./input/ch-emed/2-5-MedicationTreatmentPlan.xml
+
+### 5. Transform Medication Prescription document (2-6-MedicationPrescription.xml) from FHIR to CDA
+POST {{host}}/StructureMap/$transform?source=http://fhir.ch/ig/cda-fhir-maps/StructureMap/BundleToCdaChEmedMedicationPrescriptionDocument
+Accept: application/fhir+xml;fhirVersion=4.0
+Content-Type: application/fhir+xml;fhirVersion=4.0
+
+< ./input/ch-emed/2-6-MedicationPrescription.xml
+
+### 5a. Transform Medication Dispense document (1-2-MedicationDispense.xml) from FHIR to CDA
+POST {{host}}/StructureMap/$transform?source=http://fhir.ch/ig/cda-fhir-maps/StructureMap/BundleToCdaChEmedMedicationDispenseDocument
+Accept: application/fhir+xml;fhirVersion=4.0
+Content-Type: application/fhir+xml;fhirVersion=4.0
+
+< ./input/ch-emed/1-2-MedicationDispense.xml
+
+### 5b. Transform Medication Dispense document (2-4-MedicationDispense.xml) from FHIR to CDA
+POST {{host}}/StructureMap/$transform?source=http://fhir.ch/ig/cda-fhir-maps/StructureMap/BundleToCdaChEmedMedicationDispenseDocument
+Accept: application/fhir+xml;fhirVersion=4.0
+Content-Type: application/fhir+xml;fhirVersion=4.0
+
+< ./input/ch-emed/2-4-MedicationDispense.xml
+
+### 5. Transform Pharmaceutical Advice document (2-2-PharmaceuticalAdvice.xml) from FHIR to CDA
+POST {{host}}/StructureMap/$transform?source=http://fhir.ch/ig/cda-fhir-maps/StructureMap/BundleToCdaChEmedPharmaceuticalAdviceDocument
+Accept: application/fhir+xml;fhirVersion=4.0
+Content-Type: application/fhir+xml;fhirVersion=4.0
+
+< ./input/ch-emed/2-2-PharmaceuticalAdvice.xml
+
+### 5. Transform Medication Card document (2-7-MedicationCard.xml) from FHIR to CDA
+POST {{host}}/StructureMap/$transform?source=http://fhir.ch/ig/cda-fhir-maps/StructureMap/BundleToCdaChEmedMedicationCardDocument
+Accept: application/fhir+xml;fhirVersion=4.0
+Content-Type: application/fhir+xml;fhirVersion=4.0
+
+< ./input/ch-emed/2-7-MedicationCard.xml

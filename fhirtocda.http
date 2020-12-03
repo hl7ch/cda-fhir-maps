@@ -31,6 +31,7 @@ Content-Type: text/fhir-mapping
 
 
 ### 5a. Transform 1-ZuweisungZurRadiologischenDiagnostik.xml from FHIR to CDA
+### See issue: https://github.com/hl7ch/cda-fhir-maps/issues/17
 POST {{host}}/StructureMap/$transform?source=http://fhir.ch/ig/cda-fhir-maps/StructureMap/BundleToCdaCh
 Accept: application/fhir+xml;fhirVersion=4.0
 Content-Type: application/fhir+xml;fhirVersion=4.0
