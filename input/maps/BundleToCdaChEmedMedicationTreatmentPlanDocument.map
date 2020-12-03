@@ -70,7 +70,7 @@ group SectionMedicationTreatmentPlanSectionContentModule(source bundle : Bundle,
   bundle.entry as entry then {
     entry.fullUrl where ($this in %section.entry.reference) and $this.startsWith('urn:uuid') then {
       entry.resource as medicationStatement where $this.ofType(FHIR.MedicationStatement)  -> cdasection.entry as entry, entry.substanceAdministration as substanceAdministration then MedicationTreatmentPlanItemEntryContentModule(bundle, medicationStatement, substanceAdministration) "MedicationStatement";
-    } "fullUrl as urn:uuid";
+    } "fullUrlAsUuid";
     entry.resource as medicationStatement where $this.ofType(FHIR.MedicationStatement) and (('MedicationStatement'+'/'+$this.id) in %section.entry.reference) -> cdasection.entry as entry, entry.substanceAdministration as substanceAdministration then MedicationTreatmentPlanItemEntryContentModule(bundle, medicationStatement, substanceAdministration) "MedicationStatement";
   } "entry";
 }

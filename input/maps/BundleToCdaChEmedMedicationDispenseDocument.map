@@ -74,7 +74,7 @@ group SectionDispenseSectionContentModule(source bundle : Bundle, source section
   bundle.entry as entry then {
     entry.fullUrl where ($this in %section.entry.reference) and $this.startsWith('urn:uuid') then {
       entry.resource as medicationDispense where $this.ofType(FHIR.MedicationDispense)  -> cdasection.entry as entry, entry.supply as supply then DispenseItemEntryContentModule(bundle, medicationDispense, supply) "MedicationDispense";
-    } "fullUrl as urn:uuid";
+    } "fullUrlAsUuid";
     entry.resource as medicationDispense where $this.ofType(FHIR.MedicationDispense) and (('MedicationDispense'+'/'+$this.id) in %section.entry.reference) -> cdasection.entry as entry, entry.supply as supply then DispenseItemEntryContentModule(bundle, medicationDispense, supply) "MedicationDispense";
   } "entry";
 }

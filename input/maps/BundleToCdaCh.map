@@ -96,7 +96,7 @@ group SectionCdaOriginalRepresentation(source bundle : Bundle, source section: S
   bundle.entry as entry then {
     entry.fullUrl where ($this in %section.entry.reference) and $this.startsWith('urn:uuid')  then {
         entry.resource as binary then SectionCdaOriginalRepresentationObservationMedia(binary, section, cdasection) "patient";
-    } "fullUrl as urn:uuid";
+    } "fullUrlAsUuid";
     entry.resource as binary where ('Binary'+'/'+$this.id) in %section.entry.reference then SectionCdaOriginalRepresentationObservationMedia(binary, section, cdasection) "patient";
   } "patient";
 }

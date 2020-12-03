@@ -64,7 +64,7 @@ group SectionPharmaceuticalAdviceSectionContentModule(source bundle : Bundle, so
   bundle.entry as entry then {
     entry.fullUrl where ($this in %section.entry.reference) and $this.startsWith('urn:uuid') then {
       entry.resource as fhirobservation where $this.ofType(FHIR.Observation) -&gt;  cdasection.entry as entry,  entry.observation as cdaobservation then PharmaceuticalAdviceItemEntryContentModule(bundle, fhirobservation, cdaobservation) "Observation";
-    } "fullUrl as urn:uuid";
+    } "fullUrlAsUuid";
     entry.resource as fhirobservation where $this.ofType(FHIR.Observation) and (('Observation' + '/' + $this.id) in %section.entry.reference) -&gt;  cdasection.entry as entry,  entry.observation as cdaobservation then PharmaceuticalAdviceItemEntryContentModule(bundle, fhirobservation, cdaobservation) "Observation";
   };
 }
@@ -420,7 +420,7 @@ target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=temp
             <variable value="entry"></variable>
          </source>
          <rule>
-            <name value="fullUrl as urn:uuid"></name>
+            <name value="fullUrlAsUuid"></name>
             <source>
                <context value="entry"></context>
                <element value="fullUrl"></element>

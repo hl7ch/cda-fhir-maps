@@ -94,7 +94,7 @@ group SectionCdaOriginalRepresentation(source bundle : Bundle, source section : 
   bundle.entry as entry then {
     entry.fullUrl where ($this in %section.entry.reference) and $this.startsWith('urn:uuid') then {
       entry.resource as binary then SectionCdaOriginalRepresentationObservationMedia(binary, section, cdasection) "patient";
-    } "fullUrl as urn:uuid";
+    } "fullUrlAsUuid";
     entry.resource as binary where ('Binary' + '/' + $this.id) in %section.entry.reference then SectionCdaOriginalRepresentationObservationMedia(binary, section, cdasection) "patient";
   } "patient";
 }
@@ -1004,7 +1004,7 @@ target: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5
             <variable value="entry"></variable>
          </source>
          <rule>
-            <name value="fullUrl as urn:uuid"></name>
+            <name value="fullUrlAsUuid"></name>
             <source>
                <context value="entry"></context>
                <element value="fullUrl"></element>

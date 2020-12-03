@@ -76,19 +76,19 @@ group CompositionClinicalDocument(source bundle : Bundle, source composition : C
   bundle.entry as entry then {
     entry.fullUrl where ($this in %composition.subject.reference) and $this.startsWith('urn:uuid') then {
       entry.resource as patient then PatientRecordTarget(patient, bundle, recordTarget) "patient";
-    } "fullUrl as urn:uuid";
+    } "fullUrlAsUuid";
     entry.resource as patient where ('Patient' + '/' + $this.id) in %composition.subject.reference then PatientRecordTarget(patient, bundle, recordTarget) "patient";
     entry.fullUrl where ($this in %composition.custodian.reference) and $this.startsWith('urn:uuid') then {
       entry.resource as organization -&gt; cda.custodian as custodian then OrganizationCustodian(organization, custodian) "custodian";
-    } "fullUrl as urn:uuid";
+    } "fullUrlAsUuid";
     entry.resource as organization where ('Organization' + '/' + $this.id) in %composition.custodian.reference -&gt; cda.custodian as custodian then OrganizationCustodian(organization, custodian) "custodian";
     entry.fullUrl where ($this in %composition.author.reference) and $this.startsWith('urn:uuid') then {
       entry.resource as practitioner then PractitionerAuthor(bundle, composition, practitioner, author) "author";
-    } "fullUrl as urn:uuid";
+    } "fullUrlAsUuid";
     entry.resource as practitioner where ('Practitioner' + '/' + $this.id) in %composition.author.reference then PractitionerAuthor(bundle, composition, practitioner, author) "author";
     entry.fullUrl where ($this in %composition.attester.party.reference) and $this.startsWith('urn:uuid') then {
       entry.resource as practitioner -&gt; cda.legalAuthenticator as legalAuthenticator then PractitionerLegalAuthenticator(bundle, composition, practitioner, legalAuthenticator) "legalAuthenticator";
-    } "fullUrl as urn:uuid";
+    } "fullUrlAsUuid";
     entry.resource as practitioner where ('Practitioner' + '/' + $this.id) in %composition.attester.party.reference -&gt; cda.legalAuthenticator as legalAuthenticator then PractitionerLegalAuthenticator(bundle, composition, practitioner, legalAuthenticator) "legalAuthenticator";
   } "patient";
   // source.date -&gt; tgt.effectiveTime "effectiveTime";
@@ -136,7 +136,7 @@ group PractitionerAuthor(source bundle : Bundle, source composition : Compositio
     bundle.entry as entry then {
       entry.fullUrl where ($this in %composition.author.reference) and $this.startsWith('urn:uuid') then {
         entry.resource as organization -&gt; assignedAuthor.representedOrganization as cdaorganization then Organization2CdaOrganization(organization, cdaorganization) "organization";
-      } "fullUrl as urn:uuid";
+      } "fullUrlAsUuid";
       entry.resource as organization where ('Organization' + '/' + $this.id) in %composition.author.reference -&gt; assignedAuthor.representedOrganization as cdaorganization then Organization2CdaOrganization(organization, cdaorganization) "organization";
     } "patient";
   } "assignedAuthor";
@@ -722,7 +722,7 @@ _________________________ Header Level Templates _________________________"></do
             <variable value="entry"></variable>
          </source>
          <rule>
-            <name value="fullUrl as urn:uuid"></name>
+            <name value="fullUrlAsUuid"></name>
             <source>
                <context value="entry"></context>
                <element value="fullUrl"></element>
@@ -759,7 +759,7 @@ _________________________ Header Level Templates _________________________"></do
             </dependent>
          </rule>
          <rule>
-            <name value="fullUrl as urn:uuid"></name>
+            <name value="fullUrlAsUuid"></name>
             <source>
                <context value="entry"></context>
                <element value="fullUrl"></element>
@@ -806,7 +806,7 @@ _________________________ Header Level Templates _________________________"></do
             </dependent>
          </rule>
          <rule>
-            <name value="fullUrl as urn:uuid"></name>
+            <name value="fullUrlAsUuid"></name>
             <source>
                <context value="entry"></context>
                <element value="fullUrl"></element>
@@ -845,7 +845,7 @@ _________________________ Header Level Templates _________________________"></do
             </dependent>
          </rule>
          <rule>
-            <name value="fullUrl as urn:uuid"></name>
+            <name value="fullUrlAsUuid"></name>
             <source>
                <context value="entry"></context>
                <element value="fullUrl"></element>
@@ -1388,7 +1388,7 @@ _________________________ Header Level Templates _________________________"></do
                <variable value="entry"></variable>
             </source>
             <rule>
-               <name value="fullUrl as urn:uuid"></name>
+               <name value="fullUrlAsUuid"></name>
                <source>
                   <context value="entry"></context>
                   <element value="fullUrl"></element>
