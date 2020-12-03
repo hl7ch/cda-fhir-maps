@@ -41,73 +41,10 @@
     <!-- References to structure maps -->
     <resource>
       <reference>
-        <reference value="StructureMap/FhirToCdaTypes"/>
-      </reference>
-      <name value="FHIR to CDA types"/>
-      <description value="Transform for FHIR types to CDA types"/>
-    </resource>
-    <resource>
-      <reference>
-        <reference value="StructureMap/BundleToCda"/>
-      </reference>
-      <name value="Bundle to CDA"/>
-      <description value="FHIR Bundle to CDA Document"/>
-    </resource>
-    <resource>
-      <reference>
-        <reference value="StructureMap/BundleToCdaCh"/>
-      </reference>
-      <name value="Bundle to CDA-CH"/>
-      <description value="FHIR Bundle to CDA-CH Document"/>
-    </resource>
-    <resource>
-      <reference>
-        <reference value="StructureMap/BundleToCdaChEmed"/>
-      </reference>
-      <name value="Bundle to CDA-CH Emed"/>
-      <description value="FHIR Bundle to CDA-CH Document"/>
-    </resource>    
-    <resource>
-      <reference>
-        <reference value="StructureMap/BundleToCdaChEmedMedicationCardDocument"/>
-      </reference>
-      <name value="Bundle to CDA-CH-EMED Medication Card document"/>
-      <description value="FHIR Bundle to CDA-CH-EMED Medication Card document"/>
-    </resource>
-    <resource>
-      <reference>
-        <reference value="StructureMap/BundleToCdaChEmedMedicationTreatmentPlanDocument"/>
-      </reference>
-      <name value="Bundle to CDA-CH-EMED MedicationTreatmentPlan document"/>
-      <description value="FHIR Bundle to CDA-CH-EMED MedicationTreatmentPlan document"/>
-    </resource>
-    <resource>
-      <reference>
-        <reference value="StructureMap/BundleToCdaChEmedMedicationDispenseDocument"/>
-      </reference>
-      <name value="Bundle to CDA-CH-EMED Medication Dispense document"/>
-      <description value="FHIR Bundle to CDA-CH-EMED Medication Dispense document"/>
-    </resource>
-    <resource>
-      <reference>
-        <reference value="StructureMap/BundleToCdaChEmedMedicationPrescriptionDocument"/>
-      </reference>
-      <name value="Bundle to CDA-CH-EMED Medication Prescription document"/>
-      <description value="FHIR Bundle to CDA-CH-EMED Medication Prescription document"/>
-    </resource>
-    <resource>
-      <reference>
-        <reference value="StructureMap/BundleToCdaChEmedPharmaceuticalAdviceDocument"/>
-      </reference>
-      <name value="Bundle to CDA-CH-EMED PharmaceuticalAdvice document"/>
-      <description value="FHIR Bundle to CDA-CH-EMED PharmaceuticalAdvice document"/>
-    </resource>
-    <resource>
-      <reference>
         <reference value="StructureMap/CdaToFhirTypes"/>
       </reference>
       <name value="CDA to FHIR types"/>
-      <description value="Transform for CDA types to FHIR types"/>
+      <description value="CDA types to FHIR types"/>
     </resource>
     <resource>
       <reference>
@@ -127,8 +64,37 @@
       <reference>
         <reference value="StructureMap/CdaChEmedToBundle"/>
       </reference>
-      <name value="CDA-CH to Bundle"/>
-      <description value="CDA-CH EMed to FHIR Bundle"/>
+      <name value="CDA-CH-EMED to Bundle"/>
+      <description value="CDA-CH-EMED Document to FHIR Bundle"/>
+    </resource>
+    <resource>
+      <reference>
+        <reference value="StructureMap/CdaChEmedMedicationTreatmentPlanDocumentToBundle"/>
+      </reference>
+      <name value="CDA-CH-EMED Medication Treatment Plan document to Bundle"/>
+      <description value="CDA-CH-EMED Medication Treatment Plan document to FHIR Bundle"/>
+    </resource>
+    <resource>
+      <reference>
+        <reference value="StructureMap/CdaChEmedMedicationPrescriptionDocumentToBundle"/>
+      </reference>
+      <name value="CDA-CH-EMED Medication Prescription document to Bundle"/>
+      <description value="CDA-CH-EMED Medication Prescription document to FHIR Bundle"/>
+    </resource>
+    <resource>
+      <reference>
+        <reference value="StructureMap/CdaChEmedMedicationDispenseDocumentToBundle"/>
+      </reference>
+      <name value="CDA-CH-EMED Medication Dispense document to Bundle"/>
+      <description value="CDA-CH-EMED Medication Dispense document to FHIR Bundle"/>
+    </resource>
+    
+    <resource>
+      <reference>
+        <reference value="StructureMap/CdaChEmedPharmaceuticalAdviceDocumentToBundle"/>
+      </reference>
+      <name value="CDA-CH-EMED Pharmaceutical Advice document to Bundle"/>
+      <description value="CDA-CH-EMED Pharmaceutical Advice document to FHIR Bundle"/>
     </resource>
     <resource>
       <reference>
@@ -144,33 +110,69 @@
       <name value="CDA-CH-EMED Medication Card document to Bundle"/>
       <description value="CDA-CH-EMED Medication Card document to FHIR Bundle"/>
     </resource>
+
     <resource>
       <reference>
-        <reference value="StructureMap/CdaChEmedMedicationDispenseDocumentToBundle"/>
+        <reference value="StructureMap/FhirToCdaTypes"/>
       </reference>
-      <name value="CDA-CH-EMED Medication Dispense document to Bundle"/>
-      <description value="CDA-CH-EMED Medication Dispense document to FHIR Bundle"/>
+      <name value="FHIR to CDA types"/>
+      <description value="FHIR types to CDA types"/>
     </resource>
     <resource>
       <reference>
-        <reference value="StructureMap/CdaChEmedMedicationPrescriptionDocumentToBundle"/>
+        <reference value="StructureMap/BundleToCda"/>
       </reference>
-      <name value="CDA-CH-EMED Medication Prescription document to Bundle"/>
-      <description value="CDA-CH-EMED Medication Prescription document to FHIR Bundle"/>
+      <name value="Bundle to CDA"/>
+      <description value="FHIR Bundle to CDA Document"/>
     </resource>
     <resource>
       <reference>
-        <reference value="StructureMap/CdaChEmedMedicationTreatmentPlanDocumentToBundle"/>
+        <reference value="StructureMap/BundleToCdaCh"/>
       </reference>
-      <name value="CDA-CH-EMED MedicationTreatmentPlanDocument to Bundle"/>
-      <description value="CDA-CH-EMED MedicationTreatmentPlanDocument to FHIR Bundle"/>
+      <name value="Bundle to CDA-CH"/>
+      <description value="FHIR Bundle to CDA-CH Document"/>
     </resource>
     <resource>
       <reference>
-        <reference value="StructureMap/CdaChEmedPharmaceuticalAdviceDocumentToBundle"/>
+        <reference value="StructureMap/BundleToCdaChEmed"/>
       </reference>
-      <name value="CDA-CH-EMED PharmaceuticalAdviceDocument to Bundle"/>
-      <description value="CDA-CH-EMED PharmaceuticalAdviceDocument to FHIR Bundle"/>
+      <name value="Bundle to CDA-CH-EMED"/>
+      <description value="FHIR Bundle to CDA-CH-EMED Document"/>
+    </resource>  
+    <resource>
+      <reference>
+        <reference value="StructureMap/BundleToCdaChEmedMedicationTreatmentPlanDocument"/>
+      </reference>
+      <name value="Bundle to CDA-CH-EMED Medication Treatment Plan document"/>
+      <description value="FHIR Bundle to CDA-CH-EMED Medication Treatment Plan document"/>
+    </resource>
+    <resource>
+      <reference>
+        <reference value="StructureMap/BundleToCdaChEmedMedicationPrescriptionDocument"/>
+      </reference>
+      <name value="Bundle to CDA-CH-EMED Medication Prescription document"/>
+      <description value="FHIR Bundle to CDA-CH-EMED Medication Prescription document"/>
+    </resource>
+    <resource>
+      <reference>
+        <reference value="StructureMap/BundleToCdaChEmedMedicationDispenseDocument"/>
+      </reference>
+      <name value="Bundle to CDA-CH-EMED Medication Dispense document"/>
+      <description value="FHIR Bundle to CDA-CH-EMED Medication Dispense document"/>
+    </resource>
+    <resource>
+      <reference>
+        <reference value="StructureMap/BundleToCdaChEmedPharmaceuticalAdviceDocument"/>
+      </reference>
+      <name value="Bundle to CDA-CH-EMED Pharmaceutical Advice document"/>
+      <description value="FHIR Bundle to CDA-CH-EMED Pharmaceutical Advice document"/>
+    </resource>
+    <resource>
+      <reference>
+        <reference value="StructureMap/BundleToCdaChEmedMedicationCardDocument"/>
+      </reference>
+      <name value="Bundle to CDA-CH-EMED Medication Card document"/>
+      <description value="FHIR Bundle to CDA-CH-EMED Medication Card document"/>
     </resource>
 
     <!-- pages -->
