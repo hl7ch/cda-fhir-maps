@@ -182,7 +182,7 @@
               <id root="8ED02D0A-2971-11E6-B67B-9E71128CAE77"/>
               <code xsi:type="CD" code="CANCEL" codeSystem="1.3.6.1.4.1.19376.1.9.2.1" codeSystemName="IHE Pharmaceutical Advice Status List"/>
               <text xsi:type="ED">
-                <reference value="#padv.1"/>
+                <reference value="#padv.1.note"/>
               </text>
               <statusCode code="completed"/>
               <effectiveTime value="20120204140000+0100"/>

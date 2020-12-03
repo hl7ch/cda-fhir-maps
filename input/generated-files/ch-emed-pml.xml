@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<Bundle xmlns="http://hl7.org/fhir" xmlns:v3="urn:hl7-org:v3">
-  <id value="9f6f1b8e-0208-42fe-9569-32344b9058d2"/>
+<Bundle xmlns="http://hl7.org/fhir">
   <identifier>
     <system value="urn:ietf:rfc:3986"/>
     <value value="urn:uuid:4e875be5-a466-4025-9bea-563418087985"/>
@@ -9,10 +8,9 @@
   <type value="document"/>
   <timestamp value="2020-10-29T15:04:26+00:00"/>
   <entry>
-    <fullUrl value="urn:uuid:4ef3fcc8-20c6-47c8-a253-35e9410b58b8"/>
+    <fullUrl value="urn:uuid:8d886b4a-b015-4218-9c3a-bab31fd95040"/>
     <resource>
       <Composition>
-        <id value="4ef3fcc8-20c6-47c8-a253-35e9410b58b8"/>
         <language value="fr-CH"/>
         <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-setid">
           <valueIdentifier>
@@ -25,61 +23,61 @@
         </extension>
         <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-informationrecipient">
           <valueReference>
-            <reference value="urn:uuid:8606f848-b754-4283-83b0-963955cf903f"/>
+            <reference value="urn:uuid:323acd9b-e066-4be2-b9ec-8f6b9b933ce5"/>
             <type value="Patient"/>
           </valueReference>
         </extension>
         <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-informationrecipient">
           <valueReference>
-            <reference value="urn:uuid:e711cd19-bbb1-4b52-bb22-f4e5d4d41b6d"/>
+            <reference value="urn:uuid:f2d3c601-db88-4798-a427-5b4cc2cfb0f7"/>
             <type value="Patient"/>
           </valueReference>
         </extension>
         <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-informationrecipient">
           <valueReference>
-            <reference value="urn:uuid:e27f7cb4-3359-4b4e-ab22-972a3125e2f9"/>
+            <reference value="urn:uuid:f3839705-dd57-4ab9-b8df-6feaf45d539a"/>
             <type value="Patient"/>
           </valueReference>
         </extension>
         <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-informationrecipient">
           <valueReference>
-            <reference value="urn:uuid:5d6f4c8b-7257-4c37-98b3-1c566db985b2"/>
+            <reference value="urn:uuid:a5fc4e64-ce2a-41cd-bb9b-bb6de7511d5f"/>
             <type value="Patient"/>
           </valueReference>
         </extension>
         <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-informationrecipient">
           <valueReference>
-            <reference value="urn:uuid:edc75b62-75e3-4aa9-a5eb-e4c4b177af80"/>
+            <reference value="urn:uuid:4f23aa9d-a22c-4899-9433-f322e84ad996"/>
             <type value="Patient"/>
           </valueReference>
         </extension>
         <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-informationrecipient">
           <valueReference>
-            <reference value="urn:uuid:d189f017-f4b5-4b60-9576-71d73ffed703"/>
+            <reference value="urn:uuid:b241ec79-24ce-4c7e-bf9d-a7f722d2ef20"/>
             <type value="Patient"/>
           </valueReference>
         </extension>
         <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-informationrecipient">
           <valueReference>
-            <reference value="urn:uuid:630e9af6-cd30-4d04-bcb9-9756b1003f12"/>
+            <reference value="urn:uuid:34fc2be7-ac38-45e3-91e7-811bbcbd5847"/>
             <type value="Patient"/>
           </valueReference>
         </extension>
         <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-informationrecipient">
           <valueReference>
-            <reference value="urn:uuid:45ebb0d6-9a6f-4652-8fa0-07573d17d329"/>
+            <reference value="urn:uuid:08e30f0c-b64e-4026-b1a6-45fc1acb4ad3"/>
             <type value="Patient"/>
           </valueReference>
         </extension>
         <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-informationrecipient">
           <valueReference>
-            <reference value="urn:uuid:9846309e-0ddf-4af8-b4a2-6a97802700f7"/>
+            <reference value="urn:uuid:fbb54ac1-e0dc-4b6a-9bcb-85a28cd0b2b1"/>
             <type value="Patient"/>
           </valueReference>
         </extension>
         <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-informationrecipient">
           <valueReference>
-            <reference value="urn:uuid:03bad034-6e84-4ef8-8a22-6c6913f95ec5"/>
+            <reference value="urn:uuid:16621e77-c22b-4dc1-a769-d9b44fd5a074"/>
             <type value="Patient"/>
           </valueReference>
         </extension>
@@ -101,7 +99,7 @@
           </coding>
         </type>
         <subject>
-          <reference value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+          <reference value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
           <type value="Patient"/>
         </subject>
         <date value="2020-10-29T15:04:26+00:00"/>
@@ -109,7 +107,7 @@
           <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-time">
             <valueDateTime value="2020-10-22T09:42:41+00:00"/>
           </extension>
-          <reference value="urn:uuid:aa0f1871-4dc6-4ab9-a3f8-bbbcef3090c2"/>
+          <reference value="urn:uuid:a00f74ee-bdde-4ad6-bf15-c68240418429"/>
           <type value="Practitioner"/>
         </author>
         <title value="Liste de m&#xE9;dication"/>
@@ -125,7 +123,7 @@
           </extension>
         </confidentiality>
         <custodian>
-          <reference value="urn:uuid:0788c1fb-805f-4686-9ae4-0447bdb8761b"/>
+          <reference value="urn:uuid:5101d821-b93c-45c2-913d-8553a8d9b8e1"/>
           <type value="Organization"/>
         </custodian>
         <section>
@@ -138,326 +136,327 @@
             </coding>
           </code>
           <text>
-            <status value="generated"/><div xmlns="http://www.w3.org/1999/xhtml">Not implemented yet</div>
+            <status value="generated"/>
+            <div xmlns="http://www.w3.org/1999/xhtml">Not implemented yet</div>
           </text>
           <entry>
-            <reference value="urn:uuid:4a31a658-ddcd-46d5-8363-67bd2ec35824"/>
+            <reference value="urn:uuid:e440c59c-c37e-428b-af97-b571087682bc"/>
             <type value="MedicationStatement"/>
           </entry>
           <entry>
-            <reference value="urn:uuid:dcad0829-b6f4-4fc4-819f-835d59bfd455"/>
+            <reference value="urn:uuid:ba686242-6ae0-43b2-93bf-64a5a09b7ae7"/>
             <type value="MedicationStatement"/>
           </entry>
           <entry>
-            <reference value="urn:uuid:f1a46c2a-a52a-4640-ac27-6568f5db8736"/>
+            <reference value="urn:uuid:3155f1fd-7265-4ec6-9e82-680f25a7fad7"/>
             <type value="MedicationStatement"/>
           </entry>
           <entry>
-            <reference value="urn:uuid:b46aef25-2de4-4f87-862c-35ac55e5e3fc"/>
+            <reference value="urn:uuid:e720cb3a-38f0-4d89-855b-65214280c599"/>
             <type value="MedicationStatement"/>
           </entry>
           <entry>
-            <reference value="urn:uuid:4237129a-c63b-40bc-a17b-46443557384a"/>
+            <reference value="urn:uuid:1759be32-92b7-4c76-86db-763db57cfc8a"/>
             <type value="MedicationStatement"/>
           </entry>
           <entry>
-            <reference value="urn:uuid:9b8e7093-61da-4223-97c5-3d9cb2a977f2"/>
+            <reference value="urn:uuid:d0a8d3b6-4fae-49ec-a428-4102fa48790b"/>
             <type value="MedicationStatement"/>
           </entry>
           <entry>
-            <reference value="urn:uuid:b5a59196-ff4d-481b-915d-8647daa02ef5"/>
+            <reference value="urn:uuid:e90a7c5a-e655-4a3b-b804-2d23af03a33c"/>
             <type value="MedicationStatement"/>
           </entry>
           <entry>
-            <reference value="urn:uuid:3da1cfbd-d228-4c42-8031-bc6a3b7c7407"/>
+            <reference value="urn:uuid:b10e560c-51fd-4d56-94a1-d544d2eb2990"/>
             <type value="MedicationStatement"/>
           </entry>
           <entry>
-            <reference value="urn:uuid:20fc18e4-d158-42ac-aa94-e75492197a64"/>
+            <reference value="urn:uuid:459b4620-ae20-41e2-9b05-4881eb9529a8"/>
             <type value="MedicationStatement"/>
           </entry>
           <entry>
-            <reference value="urn:uuid:60234949-ddee-47af-bb06-701c446223f1"/>
+            <reference value="urn:uuid:8457f4f8-63e7-43ac-9883-66ed7f7233df"/>
             <type value="MedicationStatement"/>
           </entry>
           <entry>
-            <reference value="urn:uuid:3fa03540-ca5c-4b05-9439-95d30a4f1681"/>
+            <reference value="urn:uuid:352e743a-e2a0-4cdf-a416-a7679c80c32f"/>
             <type value="MedicationStatement"/>
           </entry>
           <entry>
-            <reference value="urn:uuid:0de7b0b1-ac51-4d72-afbc-5d828da4ce4d"/>
+            <reference value="urn:uuid:a047b1f0-714f-4828-a81c-fa3ca7ac4b04"/>
             <type value="MedicationStatement"/>
           </entry>
           <entry>
-            <reference value="urn:uuid:cd50951b-e433-4379-8752-c6b984e4d4f2"/>
+            <reference value="urn:uuid:fd561a3b-ab2c-4176-b5a5-e5dc3fb700d6"/>
             <type value="MedicationStatement"/>
           </entry>
           <entry>
-            <reference value="urn:uuid:424e2bb0-5dcb-4391-84a0-bab257ee1036"/>
+            <reference value="urn:uuid:82cc28bd-e22d-470a-a0a8-88c1fa3a8086"/>
             <type value="MedicationStatement"/>
           </entry>
           <entry>
-            <reference value="urn:uuid:ec8399c7-ed10-4e58-8ca8-d478341c1526"/>
+            <reference value="urn:uuid:ed46898c-a4f1-4c3c-b815-201f3936e018"/>
             <type value="MedicationStatement"/>
           </entry>
           <entry>
-            <reference value="urn:uuid:f5c2495f-bec9-4f2e-b3e2-1a1a717fed52"/>
+            <reference value="urn:uuid:9c7279c7-f690-486d-8e79-174bf26f5abb"/>
             <type value="MedicationStatement"/>
           </entry>
           <entry>
-            <reference value="urn:uuid:792221d1-ddaf-40f1-87b0-6c1bea919ffc"/>
+            <reference value="urn:uuid:9c9e0431-3f81-473e-b3b4-1dd3c020c0f4"/>
             <type value="MedicationStatement"/>
           </entry>
           <entry>
-            <reference value="urn:uuid:ef6e7878-cbfd-4822-96d5-0ff7de60b478"/>
+            <reference value="urn:uuid:f829e3cf-334e-465d-bf14-711b95c5b413"/>
             <type value="MedicationStatement"/>
           </entry>
           <entry>
-            <reference value="urn:uuid:c9f617dc-bbca-4c65-be96-a0b5291b87a5"/>
+            <reference value="urn:uuid:6d8f1a34-26c8-449c-a1f7-f2f96cdc8fd7"/>
             <type value="MedicationStatement"/>
           </entry>
           <entry>
-            <reference value="urn:uuid:117341cb-29c3-4494-8c8a-a13887bad8ed"/>
+            <reference value="urn:uuid:72e9b9ac-27f2-4611-9eee-2e64eb7c95c9"/>
             <type value="MedicationStatement"/>
           </entry>
           <entry>
-            <reference value="urn:uuid:5a895c1d-17c6-410b-8758-7b8702a94ae7"/>
+            <reference value="urn:uuid:9ab96afd-9e39-44c4-b6a1-c31de6d36b6b"/>
             <type value="MedicationStatement"/>
           </entry>
           <entry>
-            <reference value="urn:uuid:043e5fbc-e9b7-4b71-844b-916a891ae130"/>
+            <reference value="urn:uuid:fb460b8a-1ce4-48eb-acca-31a3d83e901f"/>
             <type value="MedicationStatement"/>
           </entry>
           <entry>
-            <reference value="urn:uuid:755f5b39-05f9-43ef-a524-d397c7ec6e7a"/>
+            <reference value="urn:uuid:fc6b27d7-a3e8-433c-a90e-731aa4e35430"/>
             <type value="MedicationStatement"/>
           </entry>
           <entry>
-            <reference value="urn:uuid:35dc3d8c-5323-4385-940d-672011932fe4"/>
+            <reference value="urn:uuid:c4897aa0-225f-4dac-94f7-f9084a46851c"/>
             <type value="MedicationStatement"/>
           </entry>
           <entry>
-            <reference value="urn:uuid:16f4e232-b8f6-45ec-b417-21bc625559c5"/>
+            <reference value="urn:uuid:960d8efc-fedd-4bc6-b285-4820dacfcabf"/>
             <type value="MedicationStatement"/>
           </entry>
           <entry>
-            <reference value="urn:uuid:2edd502c-3cb5-47a6-95a6-7c44fc37f419"/>
+            <reference value="urn:uuid:205a794d-bd8d-4a76-8191-b4bda48ba6ff"/>
             <type value="MedicationStatement"/>
           </entry>
           <entry>
-            <reference value="urn:uuid:48246e0e-512c-4baf-80ee-e6cafdb1c6bf"/>
+            <reference value="urn:uuid:969c5aa6-4f93-4ebc-b81b-a92f205daf31"/>
             <type value="MedicationStatement"/>
           </entry>
           <entry>
-            <reference value="urn:uuid:0f64fc21-eead-4247-9943-50232c5ca08b"/>
+            <reference value="urn:uuid:012899a2-2548-43ad-82be-fdb70c8b438a"/>
             <type value="MedicationStatement"/>
           </entry>
           <entry>
-            <reference value="urn:uuid:500a9af9-8ff6-455d-bb65-ed29f4d20ce8"/>
+            <reference value="urn:uuid:6dd4cf40-44c2-48de-8fda-3f3e7a97f37d"/>
             <type value="MedicationStatement"/>
           </entry>
           <entry>
-            <reference value="urn:uuid:a52db618-ff9a-4383-84e7-b9be0d90e905"/>
+            <reference value="urn:uuid:94b5436e-66bd-45e1-91a3-eddde5cee2e8"/>
             <type value="MedicationStatement"/>
           </entry>
           <entry>
-            <reference value="urn:uuid:80c5a4db-daa3-4b4a-9b9a-675a3a0fddce"/>
+            <reference value="urn:uuid:36014cdc-b608-418d-9eeb-c64134860123"/>
             <type value="MedicationStatement"/>
           </entry>
           <entry>
-            <reference value="urn:uuid:b6f340c4-585b-41b4-927b-2dce9c32cfa6"/>
+            <reference value="urn:uuid:70a91916-001b-49aa-9d7d-9f8c7959b3bd"/>
             <type value="MedicationStatement"/>
           </entry>
           <entry>
-            <reference value="urn:uuid:630951f8-fc2b-4fed-828b-7b7452770989"/>
+            <reference value="urn:uuid:7d182c41-3b00-4cb4-85d0-c004189a9457"/>
             <type value="MedicationStatement"/>
           </entry>
           <entry>
-            <reference value="urn:uuid:78b1ccc2-cb05-4204-bfad-738d9adeff94"/>
+            <reference value="urn:uuid:8aed5cb7-3a59-43e2-a46b-e75964d08249"/>
             <type value="MedicationStatement"/>
           </entry>
           <entry>
-            <reference value="urn:uuid:7962e530-701e-4ac0-8042-095afa5e788d"/>
+            <reference value="urn:uuid:8df533c0-2f10-417f-9ab2-360d24559a83"/>
             <type value="MedicationStatement"/>
           </entry>
           <entry>
-            <reference value="urn:uuid:2022acc0-e1d6-4cb6-b2c5-9522fd9d8751"/>
+            <reference value="urn:uuid:f2bd75e2-7818-4aee-b278-830a527419f3"/>
             <type value="MedicationStatement"/>
           </entry>
           <entry>
-            <reference value="urn:uuid:1f03ac91-9176-4169-9267-292f86716f14"/>
+            <reference value="urn:uuid:192a094f-eb04-45bb-a2e8-107365ea82ca"/>
             <type value="MedicationStatement"/>
           </entry>
           <entry>
-            <reference value="urn:uuid:533cab23-28cf-4cd6-a554-abe71f22d38e"/>
+            <reference value="urn:uuid:8ed0a675-8a81-426b-b7af-073948007f38"/>
             <type value="MedicationStatement"/>
           </entry>
           <entry>
-            <reference value="urn:uuid:ac1e61d2-d43a-44e1-aa1f-5e9015005434"/>
+            <reference value="urn:uuid:991a629f-2a13-4e31-8391-fd592d8850bc"/>
             <type value="MedicationStatement"/>
           </entry>
           <entry>
-            <reference value="urn:uuid:0cc0857e-627c-4c02-bb03-0be745f4611c"/>
+            <reference value="urn:uuid:7e62d852-76dc-449e-b0a4-d7ee787ff051"/>
             <type value="MedicationStatement"/>
           </entry>
           <entry>
-            <reference value="urn:uuid:6b7d6562-e9a2-4ebb-bb02-85cb5febf561"/>
+            <reference value="urn:uuid:e851e28a-271b-43d5-9992-5665cd138486"/>
             <type value="MedicationRequest"/>
           </entry>
           <entry>
-            <reference value="urn:uuid:df4605f1-b2c4-4651-a451-ed3c07233f76"/>
+            <reference value="urn:uuid:6f6ba671-610b-43b0-a290-a7fea6eedff1"/>
             <type value="MedicationRequest"/>
           </entry>
           <entry>
-            <reference value="urn:uuid:ae0c99f1-6910-4821-ba6c-802f8e9f385f"/>
+            <reference value="urn:uuid:e71cb025-fb22-4424-ac73-9a6699f7c6f8"/>
             <type value="MedicationRequest"/>
           </entry>
           <entry>
-            <reference value="urn:uuid:0d2a3629-2172-49f1-9e6a-b414cc4729da"/>
+            <reference value="urn:uuid:f6e6671b-8136-4b3c-8c4a-87787ce35b73"/>
             <type value="MedicationRequest"/>
           </entry>
           <entry>
-            <reference value="urn:uuid:9f04fc97-c283-4a5f-becb-120944f40691"/>
+            <reference value="urn:uuid:3d81a1a5-d93c-4476-8f14-82c9225b7dd0"/>
             <type value="MedicationRequest"/>
           </entry>
           <entry>
-            <reference value="urn:uuid:463a8f9c-34d8-4b5b-97d5-621201ea5525"/>
+            <reference value="urn:uuid:d5061024-51fd-4b50-9807-f3adbde96fa0"/>
             <type value="MedicationRequest"/>
           </entry>
           <entry>
-            <reference value="urn:uuid:d65e8143-5d6a-46ba-9c37-5b1aedb3a813"/>
+            <reference value="urn:uuid:1a0f7959-756d-4f30-88ac-25312fc54139"/>
             <type value="MedicationRequest"/>
           </entry>
           <entry>
-            <reference value="urn:uuid:1384f4e2-0426-4a79-a160-38a527572b71"/>
+            <reference value="urn:uuid:d282d3be-ba9d-495c-8d2d-dbb81b4dad3b"/>
             <type value="MedicationRequest"/>
           </entry>
           <entry>
-            <reference value="urn:uuid:e0357026-4d68-4c24-ae1c-6de551a841ac"/>
+            <reference value="urn:uuid:2d97cb8e-1f67-4c86-93aa-674b44ca30f6"/>
             <type value="MedicationRequest"/>
           </entry>
           <entry>
-            <reference value="urn:uuid:e7744146-a142-4498-a0e8-c17772abadf1"/>
+            <reference value="urn:uuid:db8c5fad-76e7-46f7-85d1-fcbd210886f5"/>
             <type value="MedicationRequest"/>
           </entry>
           <entry>
-            <reference value="urn:uuid:2569dabf-cbd5-432b-92ee-bcc927572f48"/>
+            <reference value="urn:uuid:65039f46-e31c-4131-849b-83d4e9e1a654"/>
             <type value="MedicationRequest"/>
           </entry>
           <entry>
-            <reference value="urn:uuid:7f0e1af2-e810-4dee-8516-7db0d617d141"/>
+            <reference value="urn:uuid:7c30e057-f6de-4943-8a02-94a4a28bcb42"/>
             <type value="MedicationRequest"/>
           </entry>
           <entry>
-            <reference value="urn:uuid:7c7b749c-f893-44fc-8fb6-7a76bd24a32e"/>
+            <reference value="urn:uuid:b27776e8-2ecd-41bf-8aa8-9f0e31604df0"/>
             <type value="MedicationRequest"/>
           </entry>
           <entry>
-            <reference value="urn:uuid:a0f74d3e-c561-4ede-b801-33d69ebe35e7"/>
+            <reference value="urn:uuid:d546a1ad-e921-49a2-9180-3ae6b27fa17e"/>
             <type value="MedicationRequest"/>
           </entry>
           <entry>
-            <reference value="urn:uuid:970cd6db-0763-485a-9637-a6492862fe0d"/>
+            <reference value="urn:uuid:a85e66d8-6e5b-4cd9-b069-616ccfd8c62f"/>
             <type value="MedicationRequest"/>
           </entry>
           <entry>
-            <reference value="urn:uuid:47908a21-108d-4ad3-afb0-c1f3be0bda1f"/>
+            <reference value="urn:uuid:7d635e21-2145-4234-98b4-70df3374a240"/>
             <type value="MedicationRequest"/>
           </entry>
           <entry>
-            <reference value="urn:uuid:4f96153c-86eb-4443-adef-4d40717f5bb1"/>
+            <reference value="urn:uuid:9a5e16e3-25e2-4aea-8301-1cacedd25bf6"/>
             <type value="MedicationRequest"/>
           </entry>
           <entry>
-            <reference value="urn:uuid:97a46bcb-5e05-45b9-93ca-f660a6d262a7"/>
+            <reference value="urn:uuid:c046866e-5a4e-4dfc-86d9-f019541c2e2f"/>
             <type value="MedicationRequest"/>
           </entry>
           <entry>
-            <reference value="urn:uuid:ecc317aa-84b1-498b-8714-4029c87e1d5a"/>
+            <reference value="urn:uuid:4b47a224-c704-4a96-b751-5cd965d36107"/>
             <type value="MedicationRequest"/>
           </entry>
           <entry>
-            <reference value="urn:uuid:4b6e4c5a-2dc8-4eee-bda8-efb1aba4ede2"/>
+            <reference value="urn:uuid:142eb831-7c92-4385-97cd-33d1e55c3576"/>
             <type value="MedicationRequest"/>
           </entry>
           <entry>
-            <reference value="urn:uuid:d4a320cd-ea28-4e48-922e-8d624e5c72fe"/>
+            <reference value="urn:uuid:0eb7d38f-85cb-4a1e-8dd6-ecc168e7bf11"/>
             <type value="MedicationRequest"/>
           </entry>
           <entry>
-            <reference value="urn:uuid:4f690454-f753-411a-b2cd-8987cb57a108"/>
+            <reference value="urn:uuid:8d83607a-7e04-40c0-a2ea-aa1c908de874"/>
             <type value="MedicationRequest"/>
           </entry>
           <entry>
-            <reference value="urn:uuid:ecf3f6c9-4623-457f-938c-1f6e32afdcf4"/>
+            <reference value="urn:uuid:e4b5eade-b4e2-4e51-bfbf-fe2f47c4364e"/>
             <type value="MedicationRequest"/>
           </entry>
           <entry>
-            <reference value="urn:uuid:441fe139-cc30-457b-8ea5-b2876c1b95b4"/>
+            <reference value="urn:uuid:ff98a27a-8607-4e12-a69f-64b815c41230"/>
             <type value="MedicationRequest"/>
           </entry>
           <entry>
-            <reference value="urn:uuid:a66705d4-a539-401b-930d-084f6bb9d9fd"/>
+            <reference value="urn:uuid:0694d132-c54c-4721-bd2b-8ce9afe70f9d"/>
             <type value="MedicationRequest"/>
           </entry>
           <entry>
-            <reference value="urn:uuid:020df17d-aff5-4dd8-a189-8dc2b712a57b"/>
+            <reference value="urn:uuid:61f20559-70ce-458f-9668-70f8cdca3e2b"/>
             <type value="MedicationRequest"/>
           </entry>
           <entry>
-            <reference value="urn:uuid:b6f7c098-0c9f-4120-bbb2-0dd7a4772f4c"/>
+            <reference value="urn:uuid:793f2d6f-15bb-48f5-84ae-5f9a4eb6b5e9"/>
             <type value="MedicationRequest"/>
           </entry>
           <entry>
-            <reference value="urn:uuid:6919af3d-499c-4d99-9875-53a4a969e3da"/>
+            <reference value="urn:uuid:5b68a5e3-29c2-460e-9fb2-c8cf8ebb8a0d"/>
             <type value="MedicationRequest"/>
           </entry>
           <entry>
-            <reference value="urn:uuid:c40a63f4-c81a-4b87-921a-bc149314a838"/>
+            <reference value="urn:uuid:860d2105-5a78-4674-b415-05ffff70ea11"/>
             <type value="MedicationRequest"/>
           </entry>
           <entry>
-            <reference value="urn:uuid:cd582e6a-20d4-4749-a33f-d298e19efcde"/>
+            <reference value="urn:uuid:8b9aee93-813e-4cb5-9167-55ac847b559b"/>
             <type value="MedicationRequest"/>
           </entry>
           <entry>
-            <reference value="urn:uuid:cd2737d2-a854-436d-ba55-843847d18fcf"/>
+            <reference value="urn:uuid:61909669-a738-4ee2-aa88-47346c1772ba"/>
             <type value="MedicationRequest"/>
           </entry>
           <entry>
-            <reference value="urn:uuid:ce935609-8635-4d65-b993-ddfd26ca0987"/>
+            <reference value="urn:uuid:617cd2ee-2546-4b45-a3ba-83f47f2acc3e"/>
             <type value="MedicationRequest"/>
           </entry>
           <entry>
-            <reference value="urn:uuid:b93acf6f-9723-49dd-a513-acbde3cbaf08"/>
+            <reference value="urn:uuid:1195c405-b9cb-46e6-a8ff-a2b1baf87c41"/>
             <type value="MedicationRequest"/>
           </entry>
           <entry>
-            <reference value="urn:uuid:0ce31ecd-ac39-42b0-89b4-c0a78dc06bd6"/>
+            <reference value="urn:uuid:2de8ae3d-f841-40f3-9a33-9d4b93282f81"/>
             <type value="MedicationRequest"/>
           </entry>
           <entry>
-            <reference value="urn:uuid:691b9851-73e6-4b2e-84cd-fb4cbe81678b"/>
+            <reference value="urn:uuid:797a6e1d-49bf-4f5b-be2c-9e552fa61669"/>
             <type value="MedicationRequest"/>
           </entry>
           <entry>
-            <reference value="urn:uuid:2b94143b-9f4c-4223-9207-25507dc9f0fd"/>
+            <reference value="urn:uuid:dd74cca0-bc4e-463b-bc7c-3b57ff04a644"/>
             <type value="MedicationRequest"/>
           </entry>
           <entry>
-            <reference value="urn:uuid:3f9689f0-fae9-450f-b93e-e012d608ef92"/>
+            <reference value="urn:uuid:54b3bce2-2c7f-4667-9672-752cb1f6a10e"/>
             <type value="MedicationRequest"/>
           </entry>
           <entry>
-            <reference value="urn:uuid:cf25b1ab-6f43-4066-9e4f-b2f17c594127"/>
+            <reference value="urn:uuid:780aab04-fbf4-4f88-a1df-27136f4e808a"/>
             <type value="MedicationRequest"/>
           </entry>
           <entry>
-            <reference value="urn:uuid:68d50bb3-21bc-49c3-a239-b8945bbe0c4b"/>
+            <reference value="urn:uuid:8fbda000-555d-4744-b582-8d9d0aea9826"/>
             <type value="MedicationRequest"/>
           </entry>
           <entry>
-            <reference value="urn:uuid:de5c9d86-223b-4d32-bda8-5ba4749ea79c"/>
+            <reference value="urn:uuid:434225e4-07a5-4d75-b948-3309d1850c5b"/>
             <type value="MedicationRequest"/>
           </entry>
         </section>
@@ -465,10 +464,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+    <fullUrl value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
     <resource>
       <Patient>
-        <id value="f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
         <identifier>
           <type>
             <coding>
@@ -489,10 +487,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:aa0f1871-4dc6-4ab9-a3f8-bbbcef3090c2"/>
+    <fullUrl value="urn:uuid:a00f74ee-bdde-4ad6-bf15-c68240418429"/>
     <resource>
       <Practitioner>
-        <id value="aa0f1871-4dc6-4ab9-a3f8-bbbcef3090c2"/>
         <identifier>
           <system value="urn:oid:2.51.1.3"/>
           <value value="7601007886685"/>
@@ -501,10 +498,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:0788c1fb-805f-4686-9ae4-0447bdb8761b"/>
+    <fullUrl value="urn:uuid:5101d821-b93c-45c2-913d-8553a8d9b8e1"/>
     <resource>
       <Organization>
-        <id value="0788c1fb-805f-4686-9ae4-0447bdb8761b"/>
         <identifier>
           <system value="urn:oid:2.51.1.3"/>
           <value value="7601000234438"/>
@@ -514,90 +510,49 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:8606f848-b754-4283-83b0-963955cf903f"/>
-    <resource>
-      <Patient>
-        <id value="8606f848-b754-4283-83b0-963955cf903f"/>
-      </Patient>
-    </resource>
+    <fullUrl value="urn:uuid:323acd9b-e066-4be2-b9ec-8f6b9b933ce5"/>
+    <resource/>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:e711cd19-bbb1-4b52-bb22-f4e5d4d41b6d"/>
-    <resource>
-      <Patient>
-        <id value="e711cd19-bbb1-4b52-bb22-f4e5d4d41b6d"/>
-      </Patient>
-    </resource>
+    <fullUrl value="urn:uuid:f2d3c601-db88-4798-a427-5b4cc2cfb0f7"/>
+    <resource/>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:e27f7cb4-3359-4b4e-ab22-972a3125e2f9"/>
-    <resource>
-      <Patient>
-        <id value="e27f7cb4-3359-4b4e-ab22-972a3125e2f9"/>
-      </Patient>
-    </resource>
+    <fullUrl value="urn:uuid:f3839705-dd57-4ab9-b8df-6feaf45d539a"/>
+    <resource/>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:5d6f4c8b-7257-4c37-98b3-1c566db985b2"/>
-    <resource>
-      <Patient>
-        <id value="5d6f4c8b-7257-4c37-98b3-1c566db985b2"/>
-      </Patient>
-    </resource>
+    <fullUrl value="urn:uuid:a5fc4e64-ce2a-41cd-bb9b-bb6de7511d5f"/>
+    <resource/>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:edc75b62-75e3-4aa9-a5eb-e4c4b177af80"/>
-    <resource>
-      <Patient>
-        <id value="edc75b62-75e3-4aa9-a5eb-e4c4b177af80"/>
-      </Patient>
-    </resource>
+    <fullUrl value="urn:uuid:4f23aa9d-a22c-4899-9433-f322e84ad996"/>
+    <resource/>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:d189f017-f4b5-4b60-9576-71d73ffed703"/>
-    <resource>
-      <Patient>
-        <id value="d189f017-f4b5-4b60-9576-71d73ffed703"/>
-      </Patient>
-    </resource>
+    <fullUrl value="urn:uuid:b241ec79-24ce-4c7e-bf9d-a7f722d2ef20"/>
+    <resource/>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:630e9af6-cd30-4d04-bcb9-9756b1003f12"/>
-    <resource>
-      <Patient>
-        <id value="630e9af6-cd30-4d04-bcb9-9756b1003f12"/>
-      </Patient>
-    </resource>
+    <fullUrl value="urn:uuid:34fc2be7-ac38-45e3-91e7-811bbcbd5847"/>
+    <resource/>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:45ebb0d6-9a6f-4652-8fa0-07573d17d329"/>
-    <resource>
-      <Patient>
-        <id value="45ebb0d6-9a6f-4652-8fa0-07573d17d329"/>
-      </Patient>
-    </resource>
+    <fullUrl value="urn:uuid:08e30f0c-b64e-4026-b1a6-45fc1acb4ad3"/>
+    <resource/>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:9846309e-0ddf-4af8-b4a2-6a97802700f7"/>
-    <resource>
-      <Patient>
-        <id value="9846309e-0ddf-4af8-b4a2-6a97802700f7"/>
-      </Patient>
-    </resource>
+    <fullUrl value="urn:uuid:fbb54ac1-e0dc-4b6a-9bcb-85a28cd0b2b1"/>
+    <resource/>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:03bad034-6e84-4ef8-8a22-6c6913f95ec5"/>
-    <resource>
-      <Patient>
-        <id value="03bad034-6e84-4ef8-8a22-6c6913f95ec5"/>
-      </Patient>
-    </resource>
+    <fullUrl value="urn:uuid:16621e77-c22b-4dc1-a769-d9b44fd5a074"/>
+    <resource/>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:4a31a658-ddcd-46d5-8363-67bd2ec35824"/>
+    <fullUrl value="urn:uuid:e440c59c-c37e-428b-af97-b571087682bc"/>
     <resource>
       <MedicationStatement>
-        <id value="4a31a658-ddcd-46d5-8363-67bd2ec35824"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -647,6 +602,15 @@
         <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
           <valueUrl value="section0013"/>
         </extension>
+        <extension url="http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-substitution">
+          <valueCodeableConcept>
+            <coding>
+              <system value="http://terminology.hl7.org/CodeSystem/v3-substanceAdminSubstitution"/>
+              <code value="E"/>
+              <display value="equivalent"/>
+            </coding>
+          </valueCodeableConcept>
+        </extension>
         <identifier>
           <system value="urn:ietf:rfc:3986"/>
           <value value="urn:uuid:7fba28a4-f518-11e9-802a-5aa538984bd8"/>
@@ -657,7 +621,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+          <reference value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -708,10 +672,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:dcad0829-b6f4-4fc4-819f-835d59bfd455"/>
+    <fullUrl value="urn:uuid:ba686242-6ae0-43b2-93bf-64a5a09b7ae7"/>
     <resource>
       <MedicationStatement>
-        <id value="dcad0829-b6f4-4fc4-819f-835d59bfd455"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -761,6 +724,15 @@
         <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
           <valueUrl value="section0011"/>
         </extension>
+        <extension url="http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-substitution">
+          <valueCodeableConcept>
+            <coding>
+              <system value="http://terminology.hl7.org/CodeSystem/v3-substanceAdminSubstitution"/>
+              <code value="E"/>
+              <display value="equivalent"/>
+            </coding>
+          </valueCodeableConcept>
+        </extension>
         <identifier>
           <system value="urn:ietf:rfc:3986"/>
           <value value="urn:uuid:7fba261a-f518-11e9-802a-5aa538984bd8"/>
@@ -771,7 +743,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+          <reference value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -815,10 +787,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:f1a46c2a-a52a-4640-ac27-6568f5db8736"/>
+    <fullUrl value="urn:uuid:3155f1fd-7265-4ec6-9e82-680f25a7fad7"/>
     <resource>
       <MedicationStatement>
-        <id value="f1a46c2a-a52a-4640-ac27-6568f5db8736"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -868,6 +839,15 @@
         <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
           <valueUrl value="section0012"/>
         </extension>
+        <extension url="http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-substitution">
+          <valueCodeableConcept>
+            <coding>
+              <system value="http://terminology.hl7.org/CodeSystem/v3-substanceAdminSubstitution"/>
+              <code value="E"/>
+              <display value="equivalent"/>
+            </coding>
+          </valueCodeableConcept>
+        </extension>
         <identifier>
           <system value="urn:ietf:rfc:3986"/>
           <value value="urn:uuid:7fba276e-f518-11e9-802a-5aa538984bd8"/>
@@ -878,7 +858,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+          <reference value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -922,10 +902,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:b46aef25-2de4-4f87-862c-35ac55e5e3fc"/>
+    <fullUrl value="urn:uuid:e720cb3a-38f0-4d89-855b-65214280c599"/>
     <resource>
       <MedicationStatement>
-        <id value="b46aef25-2de4-4f87-862c-35ac55e5e3fc"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -975,6 +954,15 @@
         <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
           <valueUrl value="section0010"/>
         </extension>
+        <extension url="http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-substitution">
+          <valueCodeableConcept>
+            <coding>
+              <system value="http://terminology.hl7.org/CodeSystem/v3-substanceAdminSubstitution"/>
+              <code value="E"/>
+              <display value="equivalent"/>
+            </coding>
+          </valueCodeableConcept>
+        </extension>
         <identifier>
           <system value="urn:ietf:rfc:3986"/>
           <value value="urn:uuid:7fba239a-f518-11e9-802a-5aa538984bd8"/>
@@ -985,7 +973,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+          <reference value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -1004,7 +992,7 @@
               <value value="1.3.6.1.4.1.19376.1.5.3.1.4.9"/>
             </valueIdentifier>
           </extension>
-          <sequence v3:value="1"/>
+          <sequence value="1"/>
           <timing>
             <repeat>
               <boundsPeriod>
@@ -1032,7 +1020,7 @@
               <value value="1.3.6.1.4.1.19376.1.5.3.1.4.9"/>
             </valueIdentifier>
           </extension>
-          <sequence v3:value="2"/>
+          <sequence value="2"/>
           <timing>
             <repeat>
               <boundsPeriod>
@@ -1058,10 +1046,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:4237129a-c63b-40bc-a17b-46443557384a"/>
+    <fullUrl value="urn:uuid:1759be32-92b7-4c76-86db-763db57cfc8a"/>
     <resource>
       <MedicationStatement>
-        <id value="4237129a-c63b-40bc-a17b-46443557384a"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -1111,6 +1098,15 @@
         <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
           <valueUrl value="section0013"/>
         </extension>
+        <extension url="http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-substitution">
+          <valueCodeableConcept>
+            <coding>
+              <system value="http://terminology.hl7.org/CodeSystem/v3-substanceAdminSubstitution"/>
+              <code value="E"/>
+              <display value="equivalent"/>
+            </coding>
+          </valueCodeableConcept>
+        </extension>
         <identifier>
           <system value="urn:ietf:rfc:3986"/>
           <value value="urn:uuid:7fba28a4-f518-11e9-802a-5aa538984bd8"/>
@@ -1121,7 +1117,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+          <reference value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -1172,10 +1168,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:9b8e7093-61da-4223-97c5-3d9cb2a977f2"/>
+    <fullUrl value="urn:uuid:d0a8d3b6-4fae-49ec-a428-4102fa48790b"/>
     <resource>
       <MedicationStatement>
-        <id value="9b8e7093-61da-4223-97c5-3d9cb2a977f2"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -1225,6 +1220,15 @@
         <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
           <valueUrl value="section0011"/>
         </extension>
+        <extension url="http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-substitution">
+          <valueCodeableConcept>
+            <coding>
+              <system value="http://terminology.hl7.org/CodeSystem/v3-substanceAdminSubstitution"/>
+              <code value="E"/>
+              <display value="equivalent"/>
+            </coding>
+          </valueCodeableConcept>
+        </extension>
         <identifier>
           <system value="urn:ietf:rfc:3986"/>
           <value value="urn:uuid:7fba261a-f518-11e9-802a-5aa538984bd8"/>
@@ -1235,7 +1239,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+          <reference value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -1279,10 +1283,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:b5a59196-ff4d-481b-915d-8647daa02ef5"/>
+    <fullUrl value="urn:uuid:e90a7c5a-e655-4a3b-b804-2d23af03a33c"/>
     <resource>
       <MedicationStatement>
-        <id value="b5a59196-ff4d-481b-915d-8647daa02ef5"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -1332,6 +1335,15 @@
         <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
           <valueUrl value="section0012"/>
         </extension>
+        <extension url="http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-substitution">
+          <valueCodeableConcept>
+            <coding>
+              <system value="http://terminology.hl7.org/CodeSystem/v3-substanceAdminSubstitution"/>
+              <code value="E"/>
+              <display value="equivalent"/>
+            </coding>
+          </valueCodeableConcept>
+        </extension>
         <identifier>
           <system value="urn:ietf:rfc:3986"/>
           <value value="urn:uuid:7fba276e-f518-11e9-802a-5aa538984bd8"/>
@@ -1342,7 +1354,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+          <reference value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -1386,10 +1398,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:3da1cfbd-d228-4c42-8031-bc6a3b7c7407"/>
+    <fullUrl value="urn:uuid:b10e560c-51fd-4d56-94a1-d544d2eb2990"/>
     <resource>
       <MedicationStatement>
-        <id value="3da1cfbd-d228-4c42-8031-bc6a3b7c7407"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -1439,6 +1450,15 @@
         <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
           <valueUrl value="section0010"/>
         </extension>
+        <extension url="http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-substitution">
+          <valueCodeableConcept>
+            <coding>
+              <system value="http://terminology.hl7.org/CodeSystem/v3-substanceAdminSubstitution"/>
+              <code value="E"/>
+              <display value="equivalent"/>
+            </coding>
+          </valueCodeableConcept>
+        </extension>
         <identifier>
           <system value="urn:ietf:rfc:3986"/>
           <value value="urn:uuid:7fba239a-f518-11e9-802a-5aa538984bd8"/>
@@ -1449,7 +1469,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+          <reference value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -1468,7 +1488,7 @@
               <value value="1.3.6.1.4.1.19376.1.5.3.1.4.9"/>
             </valueIdentifier>
           </extension>
-          <sequence v3:value="1"/>
+          <sequence value="1"/>
           <timing>
             <repeat>
               <boundsPeriod>
@@ -1496,7 +1516,7 @@
               <value value="1.3.6.1.4.1.19376.1.5.3.1.4.9"/>
             </valueIdentifier>
           </extension>
-          <sequence v3:value="2"/>
+          <sequence value="2"/>
           <timing>
             <repeat>
               <boundsPeriod>
@@ -1522,10 +1542,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:20fc18e4-d158-42ac-aa94-e75492197a64"/>
+    <fullUrl value="urn:uuid:459b4620-ae20-41e2-9b05-4881eb9529a8"/>
     <resource>
       <MedicationStatement>
-        <id value="20fc18e4-d158-42ac-aa94-e75492197a64"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -1575,6 +1594,15 @@
         <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
           <valueUrl value="section0013"/>
         </extension>
+        <extension url="http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-substitution">
+          <valueCodeableConcept>
+            <coding>
+              <system value="http://terminology.hl7.org/CodeSystem/v3-substanceAdminSubstitution"/>
+              <code value="E"/>
+              <display value="equivalent"/>
+            </coding>
+          </valueCodeableConcept>
+        </extension>
         <identifier>
           <system value="urn:ietf:rfc:3986"/>
           <value value="urn:uuid:7fba28a4-f518-11e9-802a-5aa538984bd8"/>
@@ -1585,7 +1613,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+          <reference value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -1636,10 +1664,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:60234949-ddee-47af-bb06-701c446223f1"/>
+    <fullUrl value="urn:uuid:8457f4f8-63e7-43ac-9883-66ed7f7233df"/>
     <resource>
       <MedicationStatement>
-        <id value="60234949-ddee-47af-bb06-701c446223f1"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -1689,6 +1716,15 @@
         <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
           <valueUrl value="section0011"/>
         </extension>
+        <extension url="http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-substitution">
+          <valueCodeableConcept>
+            <coding>
+              <system value="http://terminology.hl7.org/CodeSystem/v3-substanceAdminSubstitution"/>
+              <code value="E"/>
+              <display value="equivalent"/>
+            </coding>
+          </valueCodeableConcept>
+        </extension>
         <identifier>
           <system value="urn:ietf:rfc:3986"/>
           <value value="urn:uuid:7fba261a-f518-11e9-802a-5aa538984bd8"/>
@@ -1699,7 +1735,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+          <reference value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -1743,10 +1779,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:3fa03540-ca5c-4b05-9439-95d30a4f1681"/>
+    <fullUrl value="urn:uuid:352e743a-e2a0-4cdf-a416-a7679c80c32f"/>
     <resource>
       <MedicationStatement>
-        <id value="3fa03540-ca5c-4b05-9439-95d30a4f1681"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -1796,6 +1831,15 @@
         <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
           <valueUrl value="section0012"/>
         </extension>
+        <extension url="http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-substitution">
+          <valueCodeableConcept>
+            <coding>
+              <system value="http://terminology.hl7.org/CodeSystem/v3-substanceAdminSubstitution"/>
+              <code value="E"/>
+              <display value="equivalent"/>
+            </coding>
+          </valueCodeableConcept>
+        </extension>
         <identifier>
           <system value="urn:ietf:rfc:3986"/>
           <value value="urn:uuid:7fba276e-f518-11e9-802a-5aa538984bd8"/>
@@ -1806,7 +1850,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+          <reference value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -1850,10 +1894,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:0de7b0b1-ac51-4d72-afbc-5d828da4ce4d"/>
+    <fullUrl value="urn:uuid:a047b1f0-714f-4828-a81c-fa3ca7ac4b04"/>
     <resource>
       <MedicationStatement>
-        <id value="0de7b0b1-ac51-4d72-afbc-5d828da4ce4d"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -1903,6 +1946,15 @@
         <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
           <valueUrl value="section0010"/>
         </extension>
+        <extension url="http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-substitution">
+          <valueCodeableConcept>
+            <coding>
+              <system value="http://terminology.hl7.org/CodeSystem/v3-substanceAdminSubstitution"/>
+              <code value="E"/>
+              <display value="equivalent"/>
+            </coding>
+          </valueCodeableConcept>
+        </extension>
         <identifier>
           <system value="urn:ietf:rfc:3986"/>
           <value value="urn:uuid:7fba239a-f518-11e9-802a-5aa538984bd8"/>
@@ -1913,7 +1965,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+          <reference value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -1932,7 +1984,7 @@
               <value value="1.3.6.1.4.1.19376.1.5.3.1.4.9"/>
             </valueIdentifier>
           </extension>
-          <sequence v3:value="1"/>
+          <sequence value="1"/>
           <timing>
             <repeat>
               <boundsPeriod>
@@ -1960,7 +2012,7 @@
               <value value="1.3.6.1.4.1.19376.1.5.3.1.4.9"/>
             </valueIdentifier>
           </extension>
-          <sequence v3:value="2"/>
+          <sequence value="2"/>
           <timing>
             <repeat>
               <boundsPeriod>
@@ -1986,10 +2038,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:cd50951b-e433-4379-8752-c6b984e4d4f2"/>
+    <fullUrl value="urn:uuid:fd561a3b-ab2c-4176-b5a5-e5dc3fb700d6"/>
     <resource>
       <MedicationStatement>
-        <id value="cd50951b-e433-4379-8752-c6b984e4d4f2"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -2039,6 +2090,15 @@
         <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
           <valueUrl value="section0013"/>
         </extension>
+        <extension url="http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-substitution">
+          <valueCodeableConcept>
+            <coding>
+              <system value="http://terminology.hl7.org/CodeSystem/v3-substanceAdminSubstitution"/>
+              <code value="E"/>
+              <display value="equivalent"/>
+            </coding>
+          </valueCodeableConcept>
+        </extension>
         <identifier>
           <system value="urn:ietf:rfc:3986"/>
           <value value="urn:uuid:7fba28a4-f518-11e9-802a-5aa538984bd8"/>
@@ -2049,7 +2109,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+          <reference value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -2100,10 +2160,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:424e2bb0-5dcb-4391-84a0-bab257ee1036"/>
+    <fullUrl value="urn:uuid:82cc28bd-e22d-470a-a0a8-88c1fa3a8086"/>
     <resource>
       <MedicationStatement>
-        <id value="424e2bb0-5dcb-4391-84a0-bab257ee1036"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -2153,6 +2212,15 @@
         <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
           <valueUrl value="section0011"/>
         </extension>
+        <extension url="http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-substitution">
+          <valueCodeableConcept>
+            <coding>
+              <system value="http://terminology.hl7.org/CodeSystem/v3-substanceAdminSubstitution"/>
+              <code value="E"/>
+              <display value="equivalent"/>
+            </coding>
+          </valueCodeableConcept>
+        </extension>
         <identifier>
           <system value="urn:ietf:rfc:3986"/>
           <value value="urn:uuid:7fba261a-f518-11e9-802a-5aa538984bd8"/>
@@ -2163,7 +2231,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+          <reference value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -2207,10 +2275,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:ec8399c7-ed10-4e58-8ca8-d478341c1526"/>
+    <fullUrl value="urn:uuid:ed46898c-a4f1-4c3c-b815-201f3936e018"/>
     <resource>
       <MedicationStatement>
-        <id value="ec8399c7-ed10-4e58-8ca8-d478341c1526"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -2260,6 +2327,15 @@
         <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
           <valueUrl value="section0012"/>
         </extension>
+        <extension url="http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-substitution">
+          <valueCodeableConcept>
+            <coding>
+              <system value="http://terminology.hl7.org/CodeSystem/v3-substanceAdminSubstitution"/>
+              <code value="E"/>
+              <display value="equivalent"/>
+            </coding>
+          </valueCodeableConcept>
+        </extension>
         <identifier>
           <system value="urn:ietf:rfc:3986"/>
           <value value="urn:uuid:7fba276e-f518-11e9-802a-5aa538984bd8"/>
@@ -2270,7 +2346,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+          <reference value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -2314,10 +2390,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:f5c2495f-bec9-4f2e-b3e2-1a1a717fed52"/>
+    <fullUrl value="urn:uuid:9c7279c7-f690-486d-8e79-174bf26f5abb"/>
     <resource>
       <MedicationStatement>
-        <id value="f5c2495f-bec9-4f2e-b3e2-1a1a717fed52"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -2367,6 +2442,15 @@
         <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
           <valueUrl value="section0010"/>
         </extension>
+        <extension url="http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-substitution">
+          <valueCodeableConcept>
+            <coding>
+              <system value="http://terminology.hl7.org/CodeSystem/v3-substanceAdminSubstitution"/>
+              <code value="E"/>
+              <display value="equivalent"/>
+            </coding>
+          </valueCodeableConcept>
+        </extension>
         <identifier>
           <system value="urn:ietf:rfc:3986"/>
           <value value="urn:uuid:7fba239a-f518-11e9-802a-5aa538984bd8"/>
@@ -2377,7 +2461,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+          <reference value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -2396,7 +2480,7 @@
               <value value="1.3.6.1.4.1.19376.1.5.3.1.4.9"/>
             </valueIdentifier>
           </extension>
-          <sequence v3:value="1"/>
+          <sequence value="1"/>
           <timing>
             <repeat>
               <boundsPeriod>
@@ -2424,7 +2508,7 @@
               <value value="1.3.6.1.4.1.19376.1.5.3.1.4.9"/>
             </valueIdentifier>
           </extension>
-          <sequence v3:value="2"/>
+          <sequence value="2"/>
           <timing>
             <repeat>
               <boundsPeriod>
@@ -2450,10 +2534,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:792221d1-ddaf-40f1-87b0-6c1bea919ffc"/>
+    <fullUrl value="urn:uuid:9c9e0431-3f81-473e-b3b4-1dd3c020c0f4"/>
     <resource>
       <MedicationStatement>
-        <id value="792221d1-ddaf-40f1-87b0-6c1bea919ffc"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -2503,6 +2586,15 @@
         <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
           <valueUrl value="section0013"/>
         </extension>
+        <extension url="http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-substitution">
+          <valueCodeableConcept>
+            <coding>
+              <system value="http://terminology.hl7.org/CodeSystem/v3-substanceAdminSubstitution"/>
+              <code value="E"/>
+              <display value="equivalent"/>
+            </coding>
+          </valueCodeableConcept>
+        </extension>
         <identifier>
           <system value="urn:ietf:rfc:3986"/>
           <value value="urn:uuid:7fba28a4-f518-11e9-802a-5aa538984bd8"/>
@@ -2513,7 +2605,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+          <reference value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -2564,10 +2656,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:ef6e7878-cbfd-4822-96d5-0ff7de60b478"/>
+    <fullUrl value="urn:uuid:f829e3cf-334e-465d-bf14-711b95c5b413"/>
     <resource>
       <MedicationStatement>
-        <id value="ef6e7878-cbfd-4822-96d5-0ff7de60b478"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -2617,6 +2708,15 @@
         <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
           <valueUrl value="section0011"/>
         </extension>
+        <extension url="http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-substitution">
+          <valueCodeableConcept>
+            <coding>
+              <system value="http://terminology.hl7.org/CodeSystem/v3-substanceAdminSubstitution"/>
+              <code value="E"/>
+              <display value="equivalent"/>
+            </coding>
+          </valueCodeableConcept>
+        </extension>
         <identifier>
           <system value="urn:ietf:rfc:3986"/>
           <value value="urn:uuid:7fba261a-f518-11e9-802a-5aa538984bd8"/>
@@ -2627,7 +2727,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+          <reference value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -2671,10 +2771,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:c9f617dc-bbca-4c65-be96-a0b5291b87a5"/>
+    <fullUrl value="urn:uuid:6d8f1a34-26c8-449c-a1f7-f2f96cdc8fd7"/>
     <resource>
       <MedicationStatement>
-        <id value="c9f617dc-bbca-4c65-be96-a0b5291b87a5"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -2724,6 +2823,15 @@
         <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
           <valueUrl value="section0012"/>
         </extension>
+        <extension url="http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-substitution">
+          <valueCodeableConcept>
+            <coding>
+              <system value="http://terminology.hl7.org/CodeSystem/v3-substanceAdminSubstitution"/>
+              <code value="E"/>
+              <display value="equivalent"/>
+            </coding>
+          </valueCodeableConcept>
+        </extension>
         <identifier>
           <system value="urn:ietf:rfc:3986"/>
           <value value="urn:uuid:7fba276e-f518-11e9-802a-5aa538984bd8"/>
@@ -2734,7 +2842,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+          <reference value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -2778,10 +2886,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:117341cb-29c3-4494-8c8a-a13887bad8ed"/>
+    <fullUrl value="urn:uuid:72e9b9ac-27f2-4611-9eee-2e64eb7c95c9"/>
     <resource>
       <MedicationStatement>
-        <id value="117341cb-29c3-4494-8c8a-a13887bad8ed"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -2831,6 +2938,15 @@
         <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
           <valueUrl value="section0010"/>
         </extension>
+        <extension url="http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-substitution">
+          <valueCodeableConcept>
+            <coding>
+              <system value="http://terminology.hl7.org/CodeSystem/v3-substanceAdminSubstitution"/>
+              <code value="E"/>
+              <display value="equivalent"/>
+            </coding>
+          </valueCodeableConcept>
+        </extension>
         <identifier>
           <system value="urn:ietf:rfc:3986"/>
           <value value="urn:uuid:7fba239a-f518-11e9-802a-5aa538984bd8"/>
@@ -2841,7 +2957,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+          <reference value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -2860,7 +2976,7 @@
               <value value="1.3.6.1.4.1.19376.1.5.3.1.4.9"/>
             </valueIdentifier>
           </extension>
-          <sequence v3:value="1"/>
+          <sequence value="1"/>
           <timing>
             <repeat>
               <boundsPeriod>
@@ -2888,7 +3004,7 @@
               <value value="1.3.6.1.4.1.19376.1.5.3.1.4.9"/>
             </valueIdentifier>
           </extension>
-          <sequence v3:value="2"/>
+          <sequence value="2"/>
           <timing>
             <repeat>
               <boundsPeriod>
@@ -2914,10 +3030,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:5a895c1d-17c6-410b-8758-7b8702a94ae7"/>
+    <fullUrl value="urn:uuid:9ab96afd-9e39-44c4-b6a1-c31de6d36b6b"/>
     <resource>
       <MedicationStatement>
-        <id value="5a895c1d-17c6-410b-8758-7b8702a94ae7"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -2967,6 +3082,15 @@
         <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
           <valueUrl value="section0013"/>
         </extension>
+        <extension url="http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-substitution">
+          <valueCodeableConcept>
+            <coding>
+              <system value="http://terminology.hl7.org/CodeSystem/v3-substanceAdminSubstitution"/>
+              <code value="E"/>
+              <display value="equivalent"/>
+            </coding>
+          </valueCodeableConcept>
+        </extension>
         <identifier>
           <system value="urn:ietf:rfc:3986"/>
           <value value="urn:uuid:7fba28a4-f518-11e9-802a-5aa538984bd8"/>
@@ -2977,7 +3101,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+          <reference value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -3028,10 +3152,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:043e5fbc-e9b7-4b71-844b-916a891ae130"/>
+    <fullUrl value="urn:uuid:fb460b8a-1ce4-48eb-acca-31a3d83e901f"/>
     <resource>
       <MedicationStatement>
-        <id value="043e5fbc-e9b7-4b71-844b-916a891ae130"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -3081,6 +3204,15 @@
         <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
           <valueUrl value="section0011"/>
         </extension>
+        <extension url="http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-substitution">
+          <valueCodeableConcept>
+            <coding>
+              <system value="http://terminology.hl7.org/CodeSystem/v3-substanceAdminSubstitution"/>
+              <code value="E"/>
+              <display value="equivalent"/>
+            </coding>
+          </valueCodeableConcept>
+        </extension>
         <identifier>
           <system value="urn:ietf:rfc:3986"/>
           <value value="urn:uuid:7fba261a-f518-11e9-802a-5aa538984bd8"/>
@@ -3091,7 +3223,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+          <reference value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -3135,10 +3267,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:755f5b39-05f9-43ef-a524-d397c7ec6e7a"/>
+    <fullUrl value="urn:uuid:fc6b27d7-a3e8-433c-a90e-731aa4e35430"/>
     <resource>
       <MedicationStatement>
-        <id value="755f5b39-05f9-43ef-a524-d397c7ec6e7a"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -3188,6 +3319,15 @@
         <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
           <valueUrl value="section0012"/>
         </extension>
+        <extension url="http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-substitution">
+          <valueCodeableConcept>
+            <coding>
+              <system value="http://terminology.hl7.org/CodeSystem/v3-substanceAdminSubstitution"/>
+              <code value="E"/>
+              <display value="equivalent"/>
+            </coding>
+          </valueCodeableConcept>
+        </extension>
         <identifier>
           <system value="urn:ietf:rfc:3986"/>
           <value value="urn:uuid:7fba276e-f518-11e9-802a-5aa538984bd8"/>
@@ -3198,7 +3338,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+          <reference value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -3242,10 +3382,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:35dc3d8c-5323-4385-940d-672011932fe4"/>
+    <fullUrl value="urn:uuid:c4897aa0-225f-4dac-94f7-f9084a46851c"/>
     <resource>
       <MedicationStatement>
-        <id value="35dc3d8c-5323-4385-940d-672011932fe4"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -3295,6 +3434,15 @@
         <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
           <valueUrl value="section0010"/>
         </extension>
+        <extension url="http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-substitution">
+          <valueCodeableConcept>
+            <coding>
+              <system value="http://terminology.hl7.org/CodeSystem/v3-substanceAdminSubstitution"/>
+              <code value="E"/>
+              <display value="equivalent"/>
+            </coding>
+          </valueCodeableConcept>
+        </extension>
         <identifier>
           <system value="urn:ietf:rfc:3986"/>
           <value value="urn:uuid:7fba239a-f518-11e9-802a-5aa538984bd8"/>
@@ -3305,7 +3453,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+          <reference value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -3324,7 +3472,7 @@
               <value value="1.3.6.1.4.1.19376.1.5.3.1.4.9"/>
             </valueIdentifier>
           </extension>
-          <sequence v3:value="1"/>
+          <sequence value="1"/>
           <timing>
             <repeat>
               <boundsPeriod>
@@ -3352,7 +3500,7 @@
               <value value="1.3.6.1.4.1.19376.1.5.3.1.4.9"/>
             </valueIdentifier>
           </extension>
-          <sequence v3:value="2"/>
+          <sequence value="2"/>
           <timing>
             <repeat>
               <boundsPeriod>
@@ -3378,10 +3526,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:16f4e232-b8f6-45ec-b417-21bc625559c5"/>
+    <fullUrl value="urn:uuid:960d8efc-fedd-4bc6-b285-4820dacfcabf"/>
     <resource>
       <MedicationStatement>
-        <id value="16f4e232-b8f6-45ec-b417-21bc625559c5"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -3431,6 +3578,15 @@
         <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
           <valueUrl value="section0013"/>
         </extension>
+        <extension url="http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-substitution">
+          <valueCodeableConcept>
+            <coding>
+              <system value="http://terminology.hl7.org/CodeSystem/v3-substanceAdminSubstitution"/>
+              <code value="E"/>
+              <display value="equivalent"/>
+            </coding>
+          </valueCodeableConcept>
+        </extension>
         <identifier>
           <system value="urn:ietf:rfc:3986"/>
           <value value="urn:uuid:7fba28a4-f518-11e9-802a-5aa538984bd8"/>
@@ -3441,7 +3597,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+          <reference value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -3492,10 +3648,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:2edd502c-3cb5-47a6-95a6-7c44fc37f419"/>
+    <fullUrl value="urn:uuid:205a794d-bd8d-4a76-8191-b4bda48ba6ff"/>
     <resource>
       <MedicationStatement>
-        <id value="2edd502c-3cb5-47a6-95a6-7c44fc37f419"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -3545,6 +3700,15 @@
         <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
           <valueUrl value="section0011"/>
         </extension>
+        <extension url="http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-substitution">
+          <valueCodeableConcept>
+            <coding>
+              <system value="http://terminology.hl7.org/CodeSystem/v3-substanceAdminSubstitution"/>
+              <code value="E"/>
+              <display value="equivalent"/>
+            </coding>
+          </valueCodeableConcept>
+        </extension>
         <identifier>
           <system value="urn:ietf:rfc:3986"/>
           <value value="urn:uuid:7fba261a-f518-11e9-802a-5aa538984bd8"/>
@@ -3555,7 +3719,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+          <reference value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -3599,10 +3763,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:48246e0e-512c-4baf-80ee-e6cafdb1c6bf"/>
+    <fullUrl value="urn:uuid:969c5aa6-4f93-4ebc-b81b-a92f205daf31"/>
     <resource>
       <MedicationStatement>
-        <id value="48246e0e-512c-4baf-80ee-e6cafdb1c6bf"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -3652,6 +3815,15 @@
         <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
           <valueUrl value="section0012"/>
         </extension>
+        <extension url="http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-substitution">
+          <valueCodeableConcept>
+            <coding>
+              <system value="http://terminology.hl7.org/CodeSystem/v3-substanceAdminSubstitution"/>
+              <code value="E"/>
+              <display value="equivalent"/>
+            </coding>
+          </valueCodeableConcept>
+        </extension>
         <identifier>
           <system value="urn:ietf:rfc:3986"/>
           <value value="urn:uuid:7fba276e-f518-11e9-802a-5aa538984bd8"/>
@@ -3662,7 +3834,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+          <reference value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -3706,10 +3878,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:0f64fc21-eead-4247-9943-50232c5ca08b"/>
+    <fullUrl value="urn:uuid:012899a2-2548-43ad-82be-fdb70c8b438a"/>
     <resource>
       <MedicationStatement>
-        <id value="0f64fc21-eead-4247-9943-50232c5ca08b"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -3759,6 +3930,15 @@
         <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
           <valueUrl value="section0010"/>
         </extension>
+        <extension url="http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-substitution">
+          <valueCodeableConcept>
+            <coding>
+              <system value="http://terminology.hl7.org/CodeSystem/v3-substanceAdminSubstitution"/>
+              <code value="E"/>
+              <display value="equivalent"/>
+            </coding>
+          </valueCodeableConcept>
+        </extension>
         <identifier>
           <system value="urn:ietf:rfc:3986"/>
           <value value="urn:uuid:7fba239a-f518-11e9-802a-5aa538984bd8"/>
@@ -3769,7 +3949,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+          <reference value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -3788,7 +3968,7 @@
               <value value="1.3.6.1.4.1.19376.1.5.3.1.4.9"/>
             </valueIdentifier>
           </extension>
-          <sequence v3:value="1"/>
+          <sequence value="1"/>
           <timing>
             <repeat>
               <boundsPeriod>
@@ -3816,7 +3996,7 @@
               <value value="1.3.6.1.4.1.19376.1.5.3.1.4.9"/>
             </valueIdentifier>
           </extension>
-          <sequence v3:value="2"/>
+          <sequence value="2"/>
           <timing>
             <repeat>
               <boundsPeriod>
@@ -3842,10 +4022,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:500a9af9-8ff6-455d-bb65-ed29f4d20ce8"/>
+    <fullUrl value="urn:uuid:6dd4cf40-44c2-48de-8fda-3f3e7a97f37d"/>
     <resource>
       <MedicationStatement>
-        <id value="500a9af9-8ff6-455d-bb65-ed29f4d20ce8"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -3895,6 +4074,15 @@
         <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
           <valueUrl value="section0013"/>
         </extension>
+        <extension url="http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-substitution">
+          <valueCodeableConcept>
+            <coding>
+              <system value="http://terminology.hl7.org/CodeSystem/v3-substanceAdminSubstitution"/>
+              <code value="E"/>
+              <display value="equivalent"/>
+            </coding>
+          </valueCodeableConcept>
+        </extension>
         <identifier>
           <system value="urn:ietf:rfc:3986"/>
           <value value="urn:uuid:7fba28a4-f518-11e9-802a-5aa538984bd8"/>
@@ -3905,7 +4093,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+          <reference value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -3956,10 +4144,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:a52db618-ff9a-4383-84e7-b9be0d90e905"/>
+    <fullUrl value="urn:uuid:94b5436e-66bd-45e1-91a3-eddde5cee2e8"/>
     <resource>
       <MedicationStatement>
-        <id value="a52db618-ff9a-4383-84e7-b9be0d90e905"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -4009,6 +4196,15 @@
         <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
           <valueUrl value="section0011"/>
         </extension>
+        <extension url="http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-substitution">
+          <valueCodeableConcept>
+            <coding>
+              <system value="http://terminology.hl7.org/CodeSystem/v3-substanceAdminSubstitution"/>
+              <code value="E"/>
+              <display value="equivalent"/>
+            </coding>
+          </valueCodeableConcept>
+        </extension>
         <identifier>
           <system value="urn:ietf:rfc:3986"/>
           <value value="urn:uuid:7fba261a-f518-11e9-802a-5aa538984bd8"/>
@@ -4019,7 +4215,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+          <reference value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -4063,10 +4259,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:80c5a4db-daa3-4b4a-9b9a-675a3a0fddce"/>
+    <fullUrl value="urn:uuid:36014cdc-b608-418d-9eeb-c64134860123"/>
     <resource>
       <MedicationStatement>
-        <id value="80c5a4db-daa3-4b4a-9b9a-675a3a0fddce"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -4116,6 +4311,15 @@
         <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
           <valueUrl value="section0012"/>
         </extension>
+        <extension url="http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-substitution">
+          <valueCodeableConcept>
+            <coding>
+              <system value="http://terminology.hl7.org/CodeSystem/v3-substanceAdminSubstitution"/>
+              <code value="E"/>
+              <display value="equivalent"/>
+            </coding>
+          </valueCodeableConcept>
+        </extension>
         <identifier>
           <system value="urn:ietf:rfc:3986"/>
           <value value="urn:uuid:7fba276e-f518-11e9-802a-5aa538984bd8"/>
@@ -4126,7 +4330,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+          <reference value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -4170,10 +4374,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:b6f340c4-585b-41b4-927b-2dce9c32cfa6"/>
+    <fullUrl value="urn:uuid:70a91916-001b-49aa-9d7d-9f8c7959b3bd"/>
     <resource>
       <MedicationStatement>
-        <id value="b6f340c4-585b-41b4-927b-2dce9c32cfa6"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -4223,6 +4426,15 @@
         <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
           <valueUrl value="section0010"/>
         </extension>
+        <extension url="http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-substitution">
+          <valueCodeableConcept>
+            <coding>
+              <system value="http://terminology.hl7.org/CodeSystem/v3-substanceAdminSubstitution"/>
+              <code value="E"/>
+              <display value="equivalent"/>
+            </coding>
+          </valueCodeableConcept>
+        </extension>
         <identifier>
           <system value="urn:ietf:rfc:3986"/>
           <value value="urn:uuid:7fba239a-f518-11e9-802a-5aa538984bd8"/>
@@ -4233,7 +4445,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+          <reference value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -4252,7 +4464,7 @@
               <value value="1.3.6.1.4.1.19376.1.5.3.1.4.9"/>
             </valueIdentifier>
           </extension>
-          <sequence v3:value="1"/>
+          <sequence value="1"/>
           <timing>
             <repeat>
               <boundsPeriod>
@@ -4280,7 +4492,7 @@
               <value value="1.3.6.1.4.1.19376.1.5.3.1.4.9"/>
             </valueIdentifier>
           </extension>
-          <sequence v3:value="2"/>
+          <sequence value="2"/>
           <timing>
             <repeat>
               <boundsPeriod>
@@ -4306,10 +4518,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:630951f8-fc2b-4fed-828b-7b7452770989"/>
+    <fullUrl value="urn:uuid:7d182c41-3b00-4cb4-85d0-c004189a9457"/>
     <resource>
       <MedicationStatement>
-        <id value="630951f8-fc2b-4fed-828b-7b7452770989"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -4359,6 +4570,15 @@
         <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
           <valueUrl value="section0013"/>
         </extension>
+        <extension url="http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-substitution">
+          <valueCodeableConcept>
+            <coding>
+              <system value="http://terminology.hl7.org/CodeSystem/v3-substanceAdminSubstitution"/>
+              <code value="E"/>
+              <display value="equivalent"/>
+            </coding>
+          </valueCodeableConcept>
+        </extension>
         <identifier>
           <system value="urn:ietf:rfc:3986"/>
           <value value="urn:uuid:7fba28a4-f518-11e9-802a-5aa538984bd8"/>
@@ -4369,7 +4589,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+          <reference value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -4420,10 +4640,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:78b1ccc2-cb05-4204-bfad-738d9adeff94"/>
+    <fullUrl value="urn:uuid:8aed5cb7-3a59-43e2-a46b-e75964d08249"/>
     <resource>
       <MedicationStatement>
-        <id value="78b1ccc2-cb05-4204-bfad-738d9adeff94"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -4473,6 +4692,15 @@
         <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
           <valueUrl value="section0011"/>
         </extension>
+        <extension url="http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-substitution">
+          <valueCodeableConcept>
+            <coding>
+              <system value="http://terminology.hl7.org/CodeSystem/v3-substanceAdminSubstitution"/>
+              <code value="E"/>
+              <display value="equivalent"/>
+            </coding>
+          </valueCodeableConcept>
+        </extension>
         <identifier>
           <system value="urn:ietf:rfc:3986"/>
           <value value="urn:uuid:7fba261a-f518-11e9-802a-5aa538984bd8"/>
@@ -4483,7 +4711,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+          <reference value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -4527,10 +4755,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:7962e530-701e-4ac0-8042-095afa5e788d"/>
+    <fullUrl value="urn:uuid:8df533c0-2f10-417f-9ab2-360d24559a83"/>
     <resource>
       <MedicationStatement>
-        <id value="7962e530-701e-4ac0-8042-095afa5e788d"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -4580,6 +4807,15 @@
         <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
           <valueUrl value="section0012"/>
         </extension>
+        <extension url="http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-substitution">
+          <valueCodeableConcept>
+            <coding>
+              <system value="http://terminology.hl7.org/CodeSystem/v3-substanceAdminSubstitution"/>
+              <code value="E"/>
+              <display value="equivalent"/>
+            </coding>
+          </valueCodeableConcept>
+        </extension>
         <identifier>
           <system value="urn:ietf:rfc:3986"/>
           <value value="urn:uuid:7fba276e-f518-11e9-802a-5aa538984bd8"/>
@@ -4590,7 +4826,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+          <reference value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -4634,10 +4870,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:2022acc0-e1d6-4cb6-b2c5-9522fd9d8751"/>
+    <fullUrl value="urn:uuid:f2bd75e2-7818-4aee-b278-830a527419f3"/>
     <resource>
       <MedicationStatement>
-        <id value="2022acc0-e1d6-4cb6-b2c5-9522fd9d8751"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -4687,6 +4922,15 @@
         <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
           <valueUrl value="section0010"/>
         </extension>
+        <extension url="http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-substitution">
+          <valueCodeableConcept>
+            <coding>
+              <system value="http://terminology.hl7.org/CodeSystem/v3-substanceAdminSubstitution"/>
+              <code value="E"/>
+              <display value="equivalent"/>
+            </coding>
+          </valueCodeableConcept>
+        </extension>
         <identifier>
           <system value="urn:ietf:rfc:3986"/>
           <value value="urn:uuid:7fba239a-f518-11e9-802a-5aa538984bd8"/>
@@ -4697,7 +4941,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+          <reference value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -4716,7 +4960,7 @@
               <value value="1.3.6.1.4.1.19376.1.5.3.1.4.9"/>
             </valueIdentifier>
           </extension>
-          <sequence v3:value="1"/>
+          <sequence value="1"/>
           <timing>
             <repeat>
               <boundsPeriod>
@@ -4744,7 +4988,7 @@
               <value value="1.3.6.1.4.1.19376.1.5.3.1.4.9"/>
             </valueIdentifier>
           </extension>
-          <sequence v3:value="2"/>
+          <sequence value="2"/>
           <timing>
             <repeat>
               <boundsPeriod>
@@ -4770,10 +5014,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:1f03ac91-9176-4169-9267-292f86716f14"/>
+    <fullUrl value="urn:uuid:192a094f-eb04-45bb-a2e8-107365ea82ca"/>
     <resource>
       <MedicationStatement>
-        <id value="1f03ac91-9176-4169-9267-292f86716f14"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -4823,6 +5066,15 @@
         <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
           <valueUrl value="section0013"/>
         </extension>
+        <extension url="http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-substitution">
+          <valueCodeableConcept>
+            <coding>
+              <system value="http://terminology.hl7.org/CodeSystem/v3-substanceAdminSubstitution"/>
+              <code value="E"/>
+              <display value="equivalent"/>
+            </coding>
+          </valueCodeableConcept>
+        </extension>
         <identifier>
           <system value="urn:ietf:rfc:3986"/>
           <value value="urn:uuid:7fba28a4-f518-11e9-802a-5aa538984bd8"/>
@@ -4833,7 +5085,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+          <reference value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -4884,10 +5136,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:533cab23-28cf-4cd6-a554-abe71f22d38e"/>
+    <fullUrl value="urn:uuid:8ed0a675-8a81-426b-b7af-073948007f38"/>
     <resource>
       <MedicationStatement>
-        <id value="533cab23-28cf-4cd6-a554-abe71f22d38e"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -4937,6 +5188,15 @@
         <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
           <valueUrl value="section0011"/>
         </extension>
+        <extension url="http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-substitution">
+          <valueCodeableConcept>
+            <coding>
+              <system value="http://terminology.hl7.org/CodeSystem/v3-substanceAdminSubstitution"/>
+              <code value="E"/>
+              <display value="equivalent"/>
+            </coding>
+          </valueCodeableConcept>
+        </extension>
         <identifier>
           <system value="urn:ietf:rfc:3986"/>
           <value value="urn:uuid:7fba261a-f518-11e9-802a-5aa538984bd8"/>
@@ -4947,7 +5207,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+          <reference value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -4991,10 +5251,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:ac1e61d2-d43a-44e1-aa1f-5e9015005434"/>
+    <fullUrl value="urn:uuid:991a629f-2a13-4e31-8391-fd592d8850bc"/>
     <resource>
       <MedicationStatement>
-        <id value="ac1e61d2-d43a-44e1-aa1f-5e9015005434"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -5044,6 +5303,15 @@
         <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
           <valueUrl value="section0012"/>
         </extension>
+        <extension url="http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-substitution">
+          <valueCodeableConcept>
+            <coding>
+              <system value="http://terminology.hl7.org/CodeSystem/v3-substanceAdminSubstitution"/>
+              <code value="E"/>
+              <display value="equivalent"/>
+            </coding>
+          </valueCodeableConcept>
+        </extension>
         <identifier>
           <system value="urn:ietf:rfc:3986"/>
           <value value="urn:uuid:7fba276e-f518-11e9-802a-5aa538984bd8"/>
@@ -5054,7 +5322,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+          <reference value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -5098,10 +5366,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:0cc0857e-627c-4c02-bb03-0be745f4611c"/>
+    <fullUrl value="urn:uuid:7e62d852-76dc-449e-b0a4-d7ee787ff051"/>
     <resource>
       <MedicationStatement>
-        <id value="0cc0857e-627c-4c02-bb03-0be745f4611c"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -5151,6 +5418,15 @@
         <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
           <valueUrl value="section0010"/>
         </extension>
+        <extension url="http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-substitution">
+          <valueCodeableConcept>
+            <coding>
+              <system value="http://terminology.hl7.org/CodeSystem/v3-substanceAdminSubstitution"/>
+              <code value="E"/>
+              <display value="equivalent"/>
+            </coding>
+          </valueCodeableConcept>
+        </extension>
         <identifier>
           <system value="urn:ietf:rfc:3986"/>
           <value value="urn:uuid:7fba239a-f518-11e9-802a-5aa538984bd8"/>
@@ -5161,7 +5437,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+          <reference value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -5180,7 +5456,7 @@
               <value value="1.3.6.1.4.1.19376.1.5.3.1.4.9"/>
             </valueIdentifier>
           </extension>
-          <sequence v3:value="1"/>
+          <sequence value="1"/>
           <timing>
             <repeat>
               <boundsPeriod>
@@ -5208,7 +5484,7 @@
               <value value="1.3.6.1.4.1.19376.1.5.3.1.4.9"/>
             </valueIdentifier>
           </extension>
-          <sequence v3:value="2"/>
+          <sequence value="2"/>
           <timing>
             <repeat>
               <boundsPeriod>
@@ -5234,10 +5510,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:6b7d6562-e9a2-4ebb-bb02-85cb5febf561"/>
+    <fullUrl value="urn:uuid:e851e28a-271b-43d5-9992-5665cd138486"/>
     <resource>
       <MedicationRequest>
-        <id value="6b7d6562-e9a2-4ebb-bb02-85cb5febf561"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -5312,7 +5587,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+          <reference value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -5345,10 +5620,6 @@
           </extension>
         </dosageInstruction>
         <dispenseRequest>
-          <numberOfRepeatsAllowed>
-            <v3:low v3:value="1"/>
-            <v3:high v3:nullFlavor="UNK"/>
-          </numberOfRepeatsAllowed>
           <quantity>
             <value value="2"/>
             <unit value="1"/>
@@ -5360,10 +5631,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:df4605f1-b2c4-4651-a451-ed3c07233f76"/>
+    <fullUrl value="urn:uuid:6f6ba671-610b-43b0-a290-a7fea6eedff1"/>
     <resource>
       <MedicationRequest>
-        <id value="df4605f1-b2c4-4651-a451-ed3c07233f76"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -5438,7 +5708,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+          <reference value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -5471,10 +5741,6 @@
           </extension>
         </dosageInstruction>
         <dispenseRequest>
-          <numberOfRepeatsAllowed>
-            <v3:low v3:value="1"/>
-            <v3:high v3:nullFlavor="UNK"/>
-          </numberOfRepeatsAllowed>
           <quantity>
             <value value="2"/>
             <unit value="1"/>
@@ -5486,10 +5752,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:ae0c99f1-6910-4821-ba6c-802f8e9f385f"/>
+    <fullUrl value="urn:uuid:e71cb025-fb22-4424-ac73-9a6699f7c6f8"/>
     <resource>
       <MedicationRequest>
-        <id value="ae0c99f1-6910-4821-ba6c-802f8e9f385f"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -5564,7 +5829,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+          <reference value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -5597,10 +5862,6 @@
           </extension>
         </dosageInstruction>
         <dispenseRequest>
-          <numberOfRepeatsAllowed>
-            <v3:low v3:value="1"/>
-            <v3:high v3:nullFlavor="UNK"/>
-          </numberOfRepeatsAllowed>
           <quantity>
             <value value="2"/>
             <unit value="1"/>
@@ -5612,10 +5873,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:0d2a3629-2172-49f1-9e6a-b414cc4729da"/>
+    <fullUrl value="urn:uuid:f6e6671b-8136-4b3c-8c4a-87787ce35b73"/>
     <resource>
       <MedicationRequest>
-        <id value="0d2a3629-2172-49f1-9e6a-b414cc4729da"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -5690,7 +5950,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+          <reference value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -5709,7 +5969,7 @@
               <value value="1.3.6.1.4.1.19376.1.5.3.1.4.9"/>
             </valueIdentifier>
           </extension>
-          <sequence v3:value="1"/>
+          <sequence value="1"/>
           <timing>
             <repeat>
               <boundsPeriod>
@@ -5738,7 +5998,7 @@
               <value value="1.3.6.1.4.1.19376.1.5.3.1.4.9"/>
             </valueIdentifier>
           </extension>
-          <sequence v3:value="2"/>
+          <sequence value="2"/>
           <timing>
             <repeat>
               <boundsPeriod>
@@ -5762,10 +6022,6 @@
           </doseAndRate>
         </dosageInstruction>
         <dispenseRequest>
-          <numberOfRepeatsAllowed>
-            <v3:low v3:value="1"/>
-            <v3:high v3:nullFlavor="UNK"/>
-          </numberOfRepeatsAllowed>
           <quantity>
             <value value="2"/>
             <unit value="1"/>
@@ -5786,10 +6042,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:9f04fc97-c283-4a5f-becb-120944f40691"/>
+    <fullUrl value="urn:uuid:3d81a1a5-d93c-4476-8f14-82c9225b7dd0"/>
     <resource>
       <MedicationRequest>
-        <id value="9f04fc97-c283-4a5f-becb-120944f40691"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -5864,7 +6119,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+          <reference value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -5897,10 +6152,6 @@
           </extension>
         </dosageInstruction>
         <dispenseRequest>
-          <numberOfRepeatsAllowed>
-            <v3:low v3:value="1"/>
-            <v3:high v3:nullFlavor="UNK"/>
-          </numberOfRepeatsAllowed>
           <quantity>
             <value value="2"/>
             <unit value="1"/>
@@ -5912,10 +6163,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:463a8f9c-34d8-4b5b-97d5-621201ea5525"/>
+    <fullUrl value="urn:uuid:d5061024-51fd-4b50-9807-f3adbde96fa0"/>
     <resource>
       <MedicationRequest>
-        <id value="463a8f9c-34d8-4b5b-97d5-621201ea5525"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -5990,7 +6240,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+          <reference value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -6023,10 +6273,6 @@
           </extension>
         </dosageInstruction>
         <dispenseRequest>
-          <numberOfRepeatsAllowed>
-            <v3:low v3:value="1"/>
-            <v3:high v3:nullFlavor="UNK"/>
-          </numberOfRepeatsAllowed>
           <quantity>
             <value value="2"/>
             <unit value="1"/>
@@ -6038,10 +6284,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:d65e8143-5d6a-46ba-9c37-5b1aedb3a813"/>
+    <fullUrl value="urn:uuid:1a0f7959-756d-4f30-88ac-25312fc54139"/>
     <resource>
       <MedicationRequest>
-        <id value="d65e8143-5d6a-46ba-9c37-5b1aedb3a813"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -6116,7 +6361,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+          <reference value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -6149,10 +6394,6 @@
           </extension>
         </dosageInstruction>
         <dispenseRequest>
-          <numberOfRepeatsAllowed>
-            <v3:low v3:value="1"/>
-            <v3:high v3:nullFlavor="UNK"/>
-          </numberOfRepeatsAllowed>
           <quantity>
             <value value="2"/>
             <unit value="1"/>
@@ -6164,10 +6405,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:1384f4e2-0426-4a79-a160-38a527572b71"/>
+    <fullUrl value="urn:uuid:d282d3be-ba9d-495c-8d2d-dbb81b4dad3b"/>
     <resource>
       <MedicationRequest>
-        <id value="1384f4e2-0426-4a79-a160-38a527572b71"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -6242,7 +6482,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+          <reference value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -6261,7 +6501,7 @@
               <value value="1.3.6.1.4.1.19376.1.5.3.1.4.9"/>
             </valueIdentifier>
           </extension>
-          <sequence v3:value="1"/>
+          <sequence value="1"/>
           <timing>
             <repeat>
               <boundsPeriod>
@@ -6290,7 +6530,7 @@
               <value value="1.3.6.1.4.1.19376.1.5.3.1.4.9"/>
             </valueIdentifier>
           </extension>
-          <sequence v3:value="2"/>
+          <sequence value="2"/>
           <timing>
             <repeat>
               <boundsPeriod>
@@ -6314,10 +6554,6 @@
           </doseAndRate>
         </dosageInstruction>
         <dispenseRequest>
-          <numberOfRepeatsAllowed>
-            <v3:low v3:value="1"/>
-            <v3:high v3:nullFlavor="UNK"/>
-          </numberOfRepeatsAllowed>
           <quantity>
             <value value="2"/>
             <unit value="1"/>
@@ -6338,10 +6574,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:e0357026-4d68-4c24-ae1c-6de551a841ac"/>
+    <fullUrl value="urn:uuid:2d97cb8e-1f67-4c86-93aa-674b44ca30f6"/>
     <resource>
       <MedicationRequest>
-        <id value="e0357026-4d68-4c24-ae1c-6de551a841ac"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -6416,7 +6651,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+          <reference value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -6449,10 +6684,6 @@
           </extension>
         </dosageInstruction>
         <dispenseRequest>
-          <numberOfRepeatsAllowed>
-            <v3:low v3:value="1"/>
-            <v3:high v3:nullFlavor="UNK"/>
-          </numberOfRepeatsAllowed>
           <quantity>
             <value value="2"/>
             <unit value="1"/>
@@ -6464,10 +6695,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:e7744146-a142-4498-a0e8-c17772abadf1"/>
+    <fullUrl value="urn:uuid:db8c5fad-76e7-46f7-85d1-fcbd210886f5"/>
     <resource>
       <MedicationRequest>
-        <id value="e7744146-a142-4498-a0e8-c17772abadf1"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -6542,7 +6772,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+          <reference value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -6575,10 +6805,6 @@
           </extension>
         </dosageInstruction>
         <dispenseRequest>
-          <numberOfRepeatsAllowed>
-            <v3:low v3:value="1"/>
-            <v3:high v3:nullFlavor="UNK"/>
-          </numberOfRepeatsAllowed>
           <quantity>
             <value value="2"/>
             <unit value="1"/>
@@ -6590,10 +6816,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:2569dabf-cbd5-432b-92ee-bcc927572f48"/>
+    <fullUrl value="urn:uuid:65039f46-e31c-4131-849b-83d4e9e1a654"/>
     <resource>
       <MedicationRequest>
-        <id value="2569dabf-cbd5-432b-92ee-bcc927572f48"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -6668,7 +6893,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+          <reference value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -6701,10 +6926,6 @@
           </extension>
         </dosageInstruction>
         <dispenseRequest>
-          <numberOfRepeatsAllowed>
-            <v3:low v3:value="1"/>
-            <v3:high v3:nullFlavor="UNK"/>
-          </numberOfRepeatsAllowed>
           <quantity>
             <value value="2"/>
             <unit value="1"/>
@@ -6716,10 +6937,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:7f0e1af2-e810-4dee-8516-7db0d617d141"/>
+    <fullUrl value="urn:uuid:7c30e057-f6de-4943-8a02-94a4a28bcb42"/>
     <resource>
       <MedicationRequest>
-        <id value="7f0e1af2-e810-4dee-8516-7db0d617d141"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -6794,7 +7014,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+          <reference value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -6813,7 +7033,7 @@
               <value value="1.3.6.1.4.1.19376.1.5.3.1.4.9"/>
             </valueIdentifier>
           </extension>
-          <sequence v3:value="1"/>
+          <sequence value="1"/>
           <timing>
             <repeat>
               <boundsPeriod>
@@ -6842,7 +7062,7 @@
               <value value="1.3.6.1.4.1.19376.1.5.3.1.4.9"/>
             </valueIdentifier>
           </extension>
-          <sequence v3:value="2"/>
+          <sequence value="2"/>
           <timing>
             <repeat>
               <boundsPeriod>
@@ -6866,10 +7086,6 @@
           </doseAndRate>
         </dosageInstruction>
         <dispenseRequest>
-          <numberOfRepeatsAllowed>
-            <v3:low v3:value="1"/>
-            <v3:high v3:nullFlavor="UNK"/>
-          </numberOfRepeatsAllowed>
           <quantity>
             <value value="2"/>
             <unit value="1"/>
@@ -6890,10 +7106,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:7c7b749c-f893-44fc-8fb6-7a76bd24a32e"/>
+    <fullUrl value="urn:uuid:b27776e8-2ecd-41bf-8aa8-9f0e31604df0"/>
     <resource>
       <MedicationRequest>
-        <id value="7c7b749c-f893-44fc-8fb6-7a76bd24a32e"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -6968,7 +7183,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+          <reference value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -7001,10 +7216,6 @@
           </extension>
         </dosageInstruction>
         <dispenseRequest>
-          <numberOfRepeatsAllowed>
-            <v3:low v3:value="1"/>
-            <v3:high v3:nullFlavor="UNK"/>
-          </numberOfRepeatsAllowed>
           <quantity>
             <value value="2"/>
             <unit value="1"/>
@@ -7016,10 +7227,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:a0f74d3e-c561-4ede-b801-33d69ebe35e7"/>
+    <fullUrl value="urn:uuid:d546a1ad-e921-49a2-9180-3ae6b27fa17e"/>
     <resource>
       <MedicationRequest>
-        <id value="a0f74d3e-c561-4ede-b801-33d69ebe35e7"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -7094,7 +7304,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+          <reference value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -7127,10 +7337,6 @@
           </extension>
         </dosageInstruction>
         <dispenseRequest>
-          <numberOfRepeatsAllowed>
-            <v3:low v3:value="1"/>
-            <v3:high v3:nullFlavor="UNK"/>
-          </numberOfRepeatsAllowed>
           <quantity>
             <value value="2"/>
             <unit value="1"/>
@@ -7142,10 +7348,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:970cd6db-0763-485a-9637-a6492862fe0d"/>
+    <fullUrl value="urn:uuid:a85e66d8-6e5b-4cd9-b069-616ccfd8c62f"/>
     <resource>
       <MedicationRequest>
-        <id value="970cd6db-0763-485a-9637-a6492862fe0d"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -7220,7 +7425,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+          <reference value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -7253,10 +7458,6 @@
           </extension>
         </dosageInstruction>
         <dispenseRequest>
-          <numberOfRepeatsAllowed>
-            <v3:low v3:value="1"/>
-            <v3:high v3:nullFlavor="UNK"/>
-          </numberOfRepeatsAllowed>
           <quantity>
             <value value="2"/>
             <unit value="1"/>
@@ -7268,10 +7469,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:47908a21-108d-4ad3-afb0-c1f3be0bda1f"/>
+    <fullUrl value="urn:uuid:7d635e21-2145-4234-98b4-70df3374a240"/>
     <resource>
       <MedicationRequest>
-        <id value="47908a21-108d-4ad3-afb0-c1f3be0bda1f"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -7346,7 +7546,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+          <reference value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -7365,7 +7565,7 @@
               <value value="1.3.6.1.4.1.19376.1.5.3.1.4.9"/>
             </valueIdentifier>
           </extension>
-          <sequence v3:value="1"/>
+          <sequence value="1"/>
           <timing>
             <repeat>
               <boundsPeriod>
@@ -7394,7 +7594,7 @@
               <value value="1.3.6.1.4.1.19376.1.5.3.1.4.9"/>
             </valueIdentifier>
           </extension>
-          <sequence v3:value="2"/>
+          <sequence value="2"/>
           <timing>
             <repeat>
               <boundsPeriod>
@@ -7418,10 +7618,6 @@
           </doseAndRate>
         </dosageInstruction>
         <dispenseRequest>
-          <numberOfRepeatsAllowed>
-            <v3:low v3:value="1"/>
-            <v3:high v3:nullFlavor="UNK"/>
-          </numberOfRepeatsAllowed>
           <quantity>
             <value value="2"/>
             <unit value="1"/>
@@ -7442,10 +7638,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:4f96153c-86eb-4443-adef-4d40717f5bb1"/>
+    <fullUrl value="urn:uuid:9a5e16e3-25e2-4aea-8301-1cacedd25bf6"/>
     <resource>
       <MedicationRequest>
-        <id value="4f96153c-86eb-4443-adef-4d40717f5bb1"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -7520,7 +7715,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+          <reference value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -7553,10 +7748,6 @@
           </extension>
         </dosageInstruction>
         <dispenseRequest>
-          <numberOfRepeatsAllowed>
-            <v3:low v3:value="1"/>
-            <v3:high v3:nullFlavor="UNK"/>
-          </numberOfRepeatsAllowed>
           <quantity>
             <value value="2"/>
             <unit value="1"/>
@@ -7568,10 +7759,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:97a46bcb-5e05-45b9-93ca-f660a6d262a7"/>
+    <fullUrl value="urn:uuid:c046866e-5a4e-4dfc-86d9-f019541c2e2f"/>
     <resource>
       <MedicationRequest>
-        <id value="97a46bcb-5e05-45b9-93ca-f660a6d262a7"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -7646,7 +7836,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+          <reference value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -7679,10 +7869,6 @@
           </extension>
         </dosageInstruction>
         <dispenseRequest>
-          <numberOfRepeatsAllowed>
-            <v3:low v3:value="1"/>
-            <v3:high v3:nullFlavor="UNK"/>
-          </numberOfRepeatsAllowed>
           <quantity>
             <value value="2"/>
             <unit value="1"/>
@@ -7694,10 +7880,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:ecc317aa-84b1-498b-8714-4029c87e1d5a"/>
+    <fullUrl value="urn:uuid:4b47a224-c704-4a96-b751-5cd965d36107"/>
     <resource>
       <MedicationRequest>
-        <id value="ecc317aa-84b1-498b-8714-4029c87e1d5a"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -7772,7 +7957,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+          <reference value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -7805,10 +7990,6 @@
           </extension>
         </dosageInstruction>
         <dispenseRequest>
-          <numberOfRepeatsAllowed>
-            <v3:low v3:value="1"/>
-            <v3:high v3:nullFlavor="UNK"/>
-          </numberOfRepeatsAllowed>
           <quantity>
             <value value="2"/>
             <unit value="1"/>
@@ -7820,10 +8001,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:4b6e4c5a-2dc8-4eee-bda8-efb1aba4ede2"/>
+    <fullUrl value="urn:uuid:142eb831-7c92-4385-97cd-33d1e55c3576"/>
     <resource>
       <MedicationRequest>
-        <id value="4b6e4c5a-2dc8-4eee-bda8-efb1aba4ede2"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -7898,7 +8078,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+          <reference value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -7917,7 +8097,7 @@
               <value value="1.3.6.1.4.1.19376.1.5.3.1.4.9"/>
             </valueIdentifier>
           </extension>
-          <sequence v3:value="1"/>
+          <sequence value="1"/>
           <timing>
             <repeat>
               <boundsPeriod>
@@ -7946,7 +8126,7 @@
               <value value="1.3.6.1.4.1.19376.1.5.3.1.4.9"/>
             </valueIdentifier>
           </extension>
-          <sequence v3:value="2"/>
+          <sequence value="2"/>
           <timing>
             <repeat>
               <boundsPeriod>
@@ -7970,10 +8150,6 @@
           </doseAndRate>
         </dosageInstruction>
         <dispenseRequest>
-          <numberOfRepeatsAllowed>
-            <v3:low v3:value="1"/>
-            <v3:high v3:nullFlavor="UNK"/>
-          </numberOfRepeatsAllowed>
           <quantity>
             <value value="2"/>
             <unit value="1"/>
@@ -7994,10 +8170,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:d4a320cd-ea28-4e48-922e-8d624e5c72fe"/>
+    <fullUrl value="urn:uuid:0eb7d38f-85cb-4a1e-8dd6-ecc168e7bf11"/>
     <resource>
       <MedicationRequest>
-        <id value="d4a320cd-ea28-4e48-922e-8d624e5c72fe"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -8072,7 +8247,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+          <reference value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -8105,10 +8280,6 @@
           </extension>
         </dosageInstruction>
         <dispenseRequest>
-          <numberOfRepeatsAllowed>
-            <v3:low v3:value="1"/>
-            <v3:high v3:nullFlavor="UNK"/>
-          </numberOfRepeatsAllowed>
           <quantity>
             <value value="2"/>
             <unit value="1"/>
@@ -8120,10 +8291,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:4f690454-f753-411a-b2cd-8987cb57a108"/>
+    <fullUrl value="urn:uuid:8d83607a-7e04-40c0-a2ea-aa1c908de874"/>
     <resource>
       <MedicationRequest>
-        <id value="4f690454-f753-411a-b2cd-8987cb57a108"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -8198,7 +8368,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+          <reference value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -8231,10 +8401,6 @@
           </extension>
         </dosageInstruction>
         <dispenseRequest>
-          <numberOfRepeatsAllowed>
-            <v3:low v3:value="1"/>
-            <v3:high v3:nullFlavor="UNK"/>
-          </numberOfRepeatsAllowed>
           <quantity>
             <value value="2"/>
             <unit value="1"/>
@@ -8246,10 +8412,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:ecf3f6c9-4623-457f-938c-1f6e32afdcf4"/>
+    <fullUrl value="urn:uuid:e4b5eade-b4e2-4e51-bfbf-fe2f47c4364e"/>
     <resource>
       <MedicationRequest>
-        <id value="ecf3f6c9-4623-457f-938c-1f6e32afdcf4"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -8324,7 +8489,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+          <reference value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -8357,10 +8522,6 @@
           </extension>
         </dosageInstruction>
         <dispenseRequest>
-          <numberOfRepeatsAllowed>
-            <v3:low v3:value="1"/>
-            <v3:high v3:nullFlavor="UNK"/>
-          </numberOfRepeatsAllowed>
           <quantity>
             <value value="2"/>
             <unit value="1"/>
@@ -8372,10 +8533,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:441fe139-cc30-457b-8ea5-b2876c1b95b4"/>
+    <fullUrl value="urn:uuid:ff98a27a-8607-4e12-a69f-64b815c41230"/>
     <resource>
       <MedicationRequest>
-        <id value="441fe139-cc30-457b-8ea5-b2876c1b95b4"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -8450,7 +8610,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+          <reference value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -8469,7 +8629,7 @@
               <value value="1.3.6.1.4.1.19376.1.5.3.1.4.9"/>
             </valueIdentifier>
           </extension>
-          <sequence v3:value="1"/>
+          <sequence value="1"/>
           <timing>
             <repeat>
               <boundsPeriod>
@@ -8498,7 +8658,7 @@
               <value value="1.3.6.1.4.1.19376.1.5.3.1.4.9"/>
             </valueIdentifier>
           </extension>
-          <sequence v3:value="2"/>
+          <sequence value="2"/>
           <timing>
             <repeat>
               <boundsPeriod>
@@ -8522,10 +8682,6 @@
           </doseAndRate>
         </dosageInstruction>
         <dispenseRequest>
-          <numberOfRepeatsAllowed>
-            <v3:low v3:value="1"/>
-            <v3:high v3:nullFlavor="UNK"/>
-          </numberOfRepeatsAllowed>
           <quantity>
             <value value="2"/>
             <unit value="1"/>
@@ -8546,10 +8702,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:a66705d4-a539-401b-930d-084f6bb9d9fd"/>
+    <fullUrl value="urn:uuid:0694d132-c54c-4721-bd2b-8ce9afe70f9d"/>
     <resource>
       <MedicationRequest>
-        <id value="a66705d4-a539-401b-930d-084f6bb9d9fd"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -8624,7 +8779,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+          <reference value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -8657,10 +8812,6 @@
           </extension>
         </dosageInstruction>
         <dispenseRequest>
-          <numberOfRepeatsAllowed>
-            <v3:low v3:value="1"/>
-            <v3:high v3:nullFlavor="UNK"/>
-          </numberOfRepeatsAllowed>
           <quantity>
             <value value="2"/>
             <unit value="1"/>
@@ -8672,10 +8823,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:020df17d-aff5-4dd8-a189-8dc2b712a57b"/>
+    <fullUrl value="urn:uuid:61f20559-70ce-458f-9668-70f8cdca3e2b"/>
     <resource>
       <MedicationRequest>
-        <id value="020df17d-aff5-4dd8-a189-8dc2b712a57b"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -8750,7 +8900,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+          <reference value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -8783,10 +8933,6 @@
           </extension>
         </dosageInstruction>
         <dispenseRequest>
-          <numberOfRepeatsAllowed>
-            <v3:low v3:value="1"/>
-            <v3:high v3:nullFlavor="UNK"/>
-          </numberOfRepeatsAllowed>
           <quantity>
             <value value="2"/>
             <unit value="1"/>
@@ -8798,10 +8944,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:b6f7c098-0c9f-4120-bbb2-0dd7a4772f4c"/>
+    <fullUrl value="urn:uuid:793f2d6f-15bb-48f5-84ae-5f9a4eb6b5e9"/>
     <resource>
       <MedicationRequest>
-        <id value="b6f7c098-0c9f-4120-bbb2-0dd7a4772f4c"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -8876,7 +9021,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+          <reference value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -8909,10 +9054,6 @@
           </extension>
         </dosageInstruction>
         <dispenseRequest>
-          <numberOfRepeatsAllowed>
-            <v3:low v3:value="1"/>
-            <v3:high v3:nullFlavor="UNK"/>
-          </numberOfRepeatsAllowed>
           <quantity>
             <value value="2"/>
             <unit value="1"/>
@@ -8924,10 +9065,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:6919af3d-499c-4d99-9875-53a4a969e3da"/>
+    <fullUrl value="urn:uuid:5b68a5e3-29c2-460e-9fb2-c8cf8ebb8a0d"/>
     <resource>
       <MedicationRequest>
-        <id value="6919af3d-499c-4d99-9875-53a4a969e3da"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -9002,7 +9142,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+          <reference value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -9021,7 +9161,7 @@
               <value value="1.3.6.1.4.1.19376.1.5.3.1.4.9"/>
             </valueIdentifier>
           </extension>
-          <sequence v3:value="1"/>
+          <sequence value="1"/>
           <timing>
             <repeat>
               <boundsPeriod>
@@ -9050,7 +9190,7 @@
               <value value="1.3.6.1.4.1.19376.1.5.3.1.4.9"/>
             </valueIdentifier>
           </extension>
-          <sequence v3:value="2"/>
+          <sequence value="2"/>
           <timing>
             <repeat>
               <boundsPeriod>
@@ -9074,10 +9214,6 @@
           </doseAndRate>
         </dosageInstruction>
         <dispenseRequest>
-          <numberOfRepeatsAllowed>
-            <v3:low v3:value="1"/>
-            <v3:high v3:nullFlavor="UNK"/>
-          </numberOfRepeatsAllowed>
           <quantity>
             <value value="2"/>
             <unit value="1"/>
@@ -9098,10 +9234,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:c40a63f4-c81a-4b87-921a-bc149314a838"/>
+    <fullUrl value="urn:uuid:860d2105-5a78-4674-b415-05ffff70ea11"/>
     <resource>
       <MedicationRequest>
-        <id value="c40a63f4-c81a-4b87-921a-bc149314a838"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -9176,7 +9311,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+          <reference value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -9209,10 +9344,6 @@
           </extension>
         </dosageInstruction>
         <dispenseRequest>
-          <numberOfRepeatsAllowed>
-            <v3:low v3:value="1"/>
-            <v3:high v3:nullFlavor="UNK"/>
-          </numberOfRepeatsAllowed>
           <quantity>
             <value value="2"/>
             <unit value="1"/>
@@ -9224,10 +9355,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:cd582e6a-20d4-4749-a33f-d298e19efcde"/>
+    <fullUrl value="urn:uuid:8b9aee93-813e-4cb5-9167-55ac847b559b"/>
     <resource>
       <MedicationRequest>
-        <id value="cd582e6a-20d4-4749-a33f-d298e19efcde"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -9302,7 +9432,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+          <reference value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -9335,10 +9465,6 @@
           </extension>
         </dosageInstruction>
         <dispenseRequest>
-          <numberOfRepeatsAllowed>
-            <v3:low v3:value="1"/>
-            <v3:high v3:nullFlavor="UNK"/>
-          </numberOfRepeatsAllowed>
           <quantity>
             <value value="2"/>
             <unit value="1"/>
@@ -9350,10 +9476,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:cd2737d2-a854-436d-ba55-843847d18fcf"/>
+    <fullUrl value="urn:uuid:61909669-a738-4ee2-aa88-47346c1772ba"/>
     <resource>
       <MedicationRequest>
-        <id value="cd2737d2-a854-436d-ba55-843847d18fcf"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -9428,7 +9553,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+          <reference value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -9461,10 +9586,6 @@
           </extension>
         </dosageInstruction>
         <dispenseRequest>
-          <numberOfRepeatsAllowed>
-            <v3:low v3:value="1"/>
-            <v3:high v3:nullFlavor="UNK"/>
-          </numberOfRepeatsAllowed>
           <quantity>
             <value value="2"/>
             <unit value="1"/>
@@ -9476,10 +9597,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:ce935609-8635-4d65-b993-ddfd26ca0987"/>
+    <fullUrl value="urn:uuid:617cd2ee-2546-4b45-a3ba-83f47f2acc3e"/>
     <resource>
       <MedicationRequest>
-        <id value="ce935609-8635-4d65-b993-ddfd26ca0987"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -9554,7 +9674,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+          <reference value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -9573,7 +9693,7 @@
               <value value="1.3.6.1.4.1.19376.1.5.3.1.4.9"/>
             </valueIdentifier>
           </extension>
-          <sequence v3:value="1"/>
+          <sequence value="1"/>
           <timing>
             <repeat>
               <boundsPeriod>
@@ -9602,7 +9722,7 @@
               <value value="1.3.6.1.4.1.19376.1.5.3.1.4.9"/>
             </valueIdentifier>
           </extension>
-          <sequence v3:value="2"/>
+          <sequence value="2"/>
           <timing>
             <repeat>
               <boundsPeriod>
@@ -9626,10 +9746,6 @@
           </doseAndRate>
         </dosageInstruction>
         <dispenseRequest>
-          <numberOfRepeatsAllowed>
-            <v3:low v3:value="1"/>
-            <v3:high v3:nullFlavor="UNK"/>
-          </numberOfRepeatsAllowed>
           <quantity>
             <value value="2"/>
             <unit value="1"/>
@@ -9650,10 +9766,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:b93acf6f-9723-49dd-a513-acbde3cbaf08"/>
+    <fullUrl value="urn:uuid:1195c405-b9cb-46e6-a8ff-a2b1baf87c41"/>
     <resource>
       <MedicationRequest>
-        <id value="b93acf6f-9723-49dd-a513-acbde3cbaf08"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -9728,7 +9843,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+          <reference value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -9761,10 +9876,6 @@
           </extension>
         </dosageInstruction>
         <dispenseRequest>
-          <numberOfRepeatsAllowed>
-            <v3:low v3:value="1"/>
-            <v3:high v3:nullFlavor="UNK"/>
-          </numberOfRepeatsAllowed>
           <quantity>
             <value value="2"/>
             <unit value="1"/>
@@ -9776,10 +9887,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:0ce31ecd-ac39-42b0-89b4-c0a78dc06bd6"/>
+    <fullUrl value="urn:uuid:2de8ae3d-f841-40f3-9a33-9d4b93282f81"/>
     <resource>
       <MedicationRequest>
-        <id value="0ce31ecd-ac39-42b0-89b4-c0a78dc06bd6"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -9854,7 +9964,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+          <reference value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -9887,10 +9997,6 @@
           </extension>
         </dosageInstruction>
         <dispenseRequest>
-          <numberOfRepeatsAllowed>
-            <v3:low v3:value="1"/>
-            <v3:high v3:nullFlavor="UNK"/>
-          </numberOfRepeatsAllowed>
           <quantity>
             <value value="2"/>
             <unit value="1"/>
@@ -9902,10 +10008,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:691b9851-73e6-4b2e-84cd-fb4cbe81678b"/>
+    <fullUrl value="urn:uuid:797a6e1d-49bf-4f5b-be2c-9e552fa61669"/>
     <resource>
       <MedicationRequest>
-        <id value="691b9851-73e6-4b2e-84cd-fb4cbe81678b"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -9980,7 +10085,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+          <reference value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -10013,10 +10118,6 @@
           </extension>
         </dosageInstruction>
         <dispenseRequest>
-          <numberOfRepeatsAllowed>
-            <v3:low v3:value="1"/>
-            <v3:high v3:nullFlavor="UNK"/>
-          </numberOfRepeatsAllowed>
           <quantity>
             <value value="2"/>
             <unit value="1"/>
@@ -10028,10 +10129,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:2b94143b-9f4c-4223-9207-25507dc9f0fd"/>
+    <fullUrl value="urn:uuid:dd74cca0-bc4e-463b-bc7c-3b57ff04a644"/>
     <resource>
       <MedicationRequest>
-        <id value="2b94143b-9f4c-4223-9207-25507dc9f0fd"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -10106,7 +10206,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+          <reference value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -10125,7 +10225,7 @@
               <value value="1.3.6.1.4.1.19376.1.5.3.1.4.9"/>
             </valueIdentifier>
           </extension>
-          <sequence v3:value="1"/>
+          <sequence value="1"/>
           <timing>
             <repeat>
               <boundsPeriod>
@@ -10154,7 +10254,7 @@
               <value value="1.3.6.1.4.1.19376.1.5.3.1.4.9"/>
             </valueIdentifier>
           </extension>
-          <sequence v3:value="2"/>
+          <sequence value="2"/>
           <timing>
             <repeat>
               <boundsPeriod>
@@ -10178,10 +10278,6 @@
           </doseAndRate>
         </dosageInstruction>
         <dispenseRequest>
-          <numberOfRepeatsAllowed>
-            <v3:low v3:value="1"/>
-            <v3:high v3:nullFlavor="UNK"/>
-          </numberOfRepeatsAllowed>
           <quantity>
             <value value="2"/>
             <unit value="1"/>
@@ -10202,10 +10298,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:3f9689f0-fae9-450f-b93e-e012d608ef92"/>
+    <fullUrl value="urn:uuid:54b3bce2-2c7f-4667-9672-752cb1f6a10e"/>
     <resource>
       <MedicationRequest>
-        <id value="3f9689f0-fae9-450f-b93e-e012d608ef92"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -10280,7 +10375,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+          <reference value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -10313,10 +10408,6 @@
           </extension>
         </dosageInstruction>
         <dispenseRequest>
-          <numberOfRepeatsAllowed>
-            <v3:low v3:value="1"/>
-            <v3:high v3:nullFlavor="UNK"/>
-          </numberOfRepeatsAllowed>
           <quantity>
             <value value="2"/>
             <unit value="1"/>
@@ -10328,10 +10419,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:cf25b1ab-6f43-4066-9e4f-b2f17c594127"/>
+    <fullUrl value="urn:uuid:780aab04-fbf4-4f88-a1df-27136f4e808a"/>
     <resource>
       <MedicationRequest>
-        <id value="cf25b1ab-6f43-4066-9e4f-b2f17c594127"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -10406,7 +10496,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+          <reference value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -10439,10 +10529,6 @@
           </extension>
         </dosageInstruction>
         <dispenseRequest>
-          <numberOfRepeatsAllowed>
-            <v3:low v3:value="1"/>
-            <v3:high v3:nullFlavor="UNK"/>
-          </numberOfRepeatsAllowed>
           <quantity>
             <value value="2"/>
             <unit value="1"/>
@@ -10454,10 +10540,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:68d50bb3-21bc-49c3-a239-b8945bbe0c4b"/>
+    <fullUrl value="urn:uuid:8fbda000-555d-4744-b582-8d9d0aea9826"/>
     <resource>
       <MedicationRequest>
-        <id value="68d50bb3-21bc-49c3-a239-b8945bbe0c4b"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -10532,7 +10617,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+          <reference value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -10565,10 +10650,6 @@
           </extension>
         </dosageInstruction>
         <dispenseRequest>
-          <numberOfRepeatsAllowed>
-            <v3:low v3:value="1"/>
-            <v3:high v3:nullFlavor="UNK"/>
-          </numberOfRepeatsAllowed>
           <quantity>
             <value value="2"/>
             <unit value="1"/>
@@ -10580,10 +10661,9 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:de5c9d86-223b-4d32-bda8-5ba4749ea79c"/>
+    <fullUrl value="urn:uuid:434225e4-07a5-4d75-b948-3309d1850c5b"/>
     <resource>
       <MedicationRequest>
-        <id value="de5c9d86-223b-4d32-bda8-5ba4749ea79c"/>
         <contained>
           <Medication>
             <id value="med"/>
@@ -10658,7 +10738,7 @@
           <type value="Medication"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:f07e7ab2-372b-4dc7-8289-e18db18d0ee0"/>
+          <reference value="urn:uuid:cb4ea822-2271-41d7-af76-1d044e9430ef"/>
           <type value="Patient"/>
         </subject>
         <reasonCode>
@@ -10677,7 +10757,7 @@
               <value value="1.3.6.1.4.1.19376.1.5.3.1.4.9"/>
             </valueIdentifier>
           </extension>
-          <sequence v3:value="1"/>
+          <sequence value="1"/>
           <timing>
             <repeat>
               <boundsPeriod>
@@ -10706,7 +10786,7 @@
               <value value="1.3.6.1.4.1.19376.1.5.3.1.4.9"/>
             </valueIdentifier>
           </extension>
-          <sequence v3:value="2"/>
+          <sequence value="2"/>
           <timing>
             <repeat>
               <boundsPeriod>
@@ -10730,10 +10810,6 @@
           </doseAndRate>
         </dosageInstruction>
         <dispenseRequest>
-          <numberOfRepeatsAllowed>
-            <v3:low v3:value="1"/>
-            <v3:high v3:nullFlavor="UNK"/>
-          </numberOfRepeatsAllowed>
           <quantity>
             <value value="2"/>
             <unit value="1"/>

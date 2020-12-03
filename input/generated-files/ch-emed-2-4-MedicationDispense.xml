@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<Bundle xmlns="http://hl7.org/fhir" xmlns:v3="urn:hl7-org:v3">
+<Bundle xmlns="http://hl7.org/fhir">
   <identifier>
     <system value="urn:ietf:rfc:3986"/>
     <value value="urn:uuid:d8143fea-4778-11e6-beb8-9e71128cae77"/>
@@ -8,7 +8,7 @@
   <type value="document"/>
   <timestamp value="2012-02-04T14:00:00+01:00"/>
   <entry>
-    <fullUrl value="urn:uuid:99051396-69e5-4cbe-bf6a-1787bd58e05e"/>
+    <fullUrl value="urn:uuid:67410efa-262e-4ac8-b1ce-a1b0d3248f77"/>
     <resource>
       <Composition>
         <language value="de-CH"/>
@@ -23,7 +23,7 @@
         </extension>
         <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-informationrecipient">
           <valueReference>
-            <reference value="urn:uuid:dbd0a607-29b3-4051-a24d-db3f3e15878c"/>
+            <reference value="urn:uuid:7e88068c-ee4a-4566-a554-c9efa79d264b"/>
             <type value="Patient"/>
           </valueReference>
         </extension>
@@ -40,7 +40,7 @@
           </coding>
         </type>
         <subject>
-          <reference value="urn:uuid:5bfeafa2-7099-4761-ae22-dcd01936e330"/>
+          <reference value="urn:uuid:bbaf527d-65be-46d1-a372-87f8f6845c6e"/>
           <type value="Patient"/>
         </subject>
         <date value="2012-02-04T14:00:00+01:00"/>
@@ -48,11 +48,11 @@
           <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-time">
             <valueDateTime value="2012-02-04T14:00:00+01:00"/>
           </extension>
-          <reference value="urn:uuid:98e012bc-6fe8-4b1a-922d-b31214b829c3"/>
+          <reference value="urn:uuid:8df85e16-08cc-4d2d-b69d-8872af4070c6"/>
           <type value="Practitioner"/>
         </author>
         <author>
-          <reference value="urn:uuid:45a7f469-ed27-4575-8707-3070f0792e3b"/>
+          <reference value="urn:uuid:e2246209-8a78-4a92-aee6-c4c22d8f38b2"/>
           <type value="Organization"/>
         </author>
         <title value="Abgabe"/>
@@ -68,7 +68,7 @@
           </extension>
         </confidentiality>
         <custodian>
-          <reference value="urn:uuid:331aace5-32e8-4656-8083-0f21c42f8d8c"/>
+          <reference value="urn:uuid:512f9830-f88c-4eba-a8cc-28d509f375dd"/>
           <type value="Organization"/>
         </custodian>
         <section>
@@ -134,7 +134,7 @@
             </div>
           </text>
           <entry>
-            <reference value="urn:uuid:4f1318bc-88d5-4099-a375-526bf5ca76aa"/>
+            <reference value="urn:uuid:a46d9c2b-6ac9-4e2b-aff5-cddb45e30d0a"/>
             <type value="MedicationDispense"/>
           </entry>
         </section>
@@ -142,7 +142,7 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:5bfeafa2-7099-4761-ae22-dcd01936e330"/>
+    <fullUrl value="urn:uuid:bbaf527d-65be-46d1-a372-87f8f6845c6e"/>
     <resource>
       <Patient>
         <identifier>
@@ -171,7 +171,7 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:98e012bc-6fe8-4b1a-922d-b31214b829c3"/>
+    <fullUrl value="urn:uuid:8df85e16-08cc-4d2d-b69d-8872af4070c6"/>
     <resource>
       <Practitioner>
         <identifier>
@@ -186,7 +186,7 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:45a7f469-ed27-4575-8707-3070f0792e3b"/>
+    <fullUrl value="urn:uuid:e2246209-8a78-4a92-aee6-c4c22d8f38b2"/>
     <resource>
       <Organization>
         <identifier>
@@ -209,7 +209,7 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:331aace5-32e8-4656-8083-0f21c42f8d8c"/>
+    <fullUrl value="urn:uuid:512f9830-f88c-4eba-a8cc-28d509f375dd"/>
     <resource>
       <Organization>
         <identifier>
@@ -221,7 +221,7 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:dbd0a607-29b3-4051-a24d-db3f3e15878c"/>
+    <fullUrl value="urn:uuid:7e88068c-ee4a-4566-a554-c9efa79d264b"/>
     <resource>
       <Patient>
         <name>
@@ -238,7 +238,7 @@
     </resource>
   </entry>
   <entry>
-    <fullUrl value="urn:uuid:4f1318bc-88d5-4099-a375-526bf5ca76aa"/>
+    <fullUrl value="urn:uuid:a46d9c2b-6ac9-4e2b-aff5-cddb45e30d0a"/>
     <resource>
       <MedicationDispense>
         <contained>
@@ -317,7 +317,7 @@
           <reference value="#med"/>
         </medicationReference>
         <subject>
-          <reference value="urn:uuid:5bfeafa2-7099-4761-ae22-dcd01936e330"/>
+          <reference value="urn:uuid:bbaf527d-65be-46d1-a372-87f8f6845c6e"/>
           <type value="Patient"/>
         </subject>
         <quantity>
@@ -340,7 +340,7 @@
               <value value="1.3.6.1.4.1.19376.1.5.3.1.4.9"/>
             </valueIdentifier>
           </extension>
-          <sequence v3:value="1"/>
+          <sequence value="1"/>
           <timing>
             <repeat>
               <boundsPeriod>
@@ -368,7 +368,7 @@
               <value value="1.3.6.1.4.1.19376.1.5.3.1.4.9"/>
             </valueIdentifier>
           </extension>
-          <sequence v3:value="2"/>
+          <sequence value="2"/>
           <timing>
             <repeat>
               <boundsPeriod>
