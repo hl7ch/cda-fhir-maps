@@ -14,7 +14,7 @@
   <title value="CDA-FHIR-Maps (R4)"/>
   <status value="active"/>
   <experimental value="false"/>
-  <date value="2020-01-16"/>
+  <date value="2020-12-09"/>
   <publisher value="ahdis"/>
   <contact>
     <name value="ahdis"/>
@@ -195,8 +195,8 @@
     <!-- parameters -->
     <parameter>
       <code value="releaselabel"/>
-      <value value="CI build"/>
-      <!--<value value="Draft Standard for Trial Use"/>-->
+      <!--<value value="CI build"/>-->
+      <value value="Draft Standard for Trial Use"/>
     </parameter>
     <parameter>
       <code value="path-pages" />
