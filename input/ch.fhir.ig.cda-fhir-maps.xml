@@ -35,7 +35,7 @@
    <dependsOn id="chemed">
       <uri value="http://fhir.ch/ig/ch-emed/ImplementationGuide/ch.fhir.ig.ch-emed"/>
       <packageId value="ch.fhir.ig.ch-emed"/>
-      <version value="current"/>
+      <version value="0.1.1"/>
    </dependsOn>
   <definition>
     <!-- References to structure maps -->
