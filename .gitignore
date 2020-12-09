@@ -1,7 +1,7 @@
-input-cache/org.hl7.fhir.publisher.jar
 input-cache/**
 output/**
 temp/**
 template/**
 .vscode/**
 matchbox-0.4.0-SNAPSHOT.jar
+**.jar
