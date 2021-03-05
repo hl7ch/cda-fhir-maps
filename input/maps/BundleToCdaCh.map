@@ -107,10 +107,10 @@ group SectionCdaOriginalRepresentation(source bundle : Bundle, source section: S
   
 // source: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefinition-ch-core-composition-epr.html
 // target: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5.30.1.1.10.9.12
-group PersonAssignedEntityWithId(source person: Person, target assignedEntity: AssignedEntity) {
-  person.identifier as identifier ->  assignedEntity.id as id then IdentifierII(identifier, id) "identifier";
-  person.address as address ->  assignedEntity.addr as addr then AddressAD(address, addr) "address";
-  person.name as humanname -> assignedEntity.assignedPerson as assignedPerson, assignedPerson.name as en then HumanNameEN(humanname, en) "name";
+group PersonAssignedEntityWithId(source practitioner: Practitioner, target assignedEntity: AssignedEntity) {
+  practitioner.identifier as identifier ->  assignedEntity.id as id then IdentifierII(identifier, id) "identifier";
+  practitioner.address as address ->  assignedEntity.addr as addr then AddressAD(address, addr) "address";
+  practitioner.name as humanname -> assignedEntity.assignedPerson as assignedPerson, assignedPerson.name as en then HumanNameEN(humanname, en) "name";
 }
 
 // _________________________ Template Type not specified  ___________________ 
@@ -155,15 +155,23 @@ group CompositionClinicalDocumentCH(source bundle : Bundle, source composition :
     extension -> informationRecipient.typeCode = 'PRCP' "PRCP";
     extension -> informationRecipient.templateId as templateId, templateId.root='2.16.756.5.30.1.1.10.2.4' "templateId";
     extension.valueReference as valueReference then {
-      bundle.entry as entry then {
-         entry.resource as patient where (($this.id=%valueReference.reference.substring(8)) or ($this.id=%valueReference.reference.substring(9))) -> informationRecipient.intendedRecipient as intendedRecipient then {
+        bundle.entry as entry then {
+          entry.fullUrl where ($this in %valueReference.reference) and $this.startsWith('urn:uuid')  then {
+            entry.resource: Patient as patient -> informationRecipient.intendedRecipient as intendedRecipient share intendedRecipient then {
+              patient.address as address ->  intendedRecipient.addr as addr then AddressAD(address, addr) "address";
+              patient.name as humanname -> intendedRecipient.informationRecipient as informationRecipient2, informationRecipient2.name as en then HumanNameEN(humanname, en) "name";        
+            } "fullUrl patient";
+            entry.resource: Organization as organization -> informationRecipient.intendedRecipient as intendedRecipient share intendedRecipient,
+             intendedRecipient.receivedOrganization as receivedOrganization then Organization2CdaOrganization(organization, receivedOrganization) "organization";	
+          } "fullUrl as urn:uuid";
+         entry.resource:Patient as patient where (($this.id=%valueReference.reference.substring(8)) or ($this.id=%valueReference.reference.substring(9))) -> informationRecipient.intendedRecipient as intendedRecipient share intendedRecipient  then {
             patient.address as address ->  intendedRecipient.addr as addr then AddressAD(address, addr) "address";
             patient.name as humanname -> intendedRecipient.informationRecipient as informationRecipient2, informationRecipient2.name as en then HumanNameEN(humanname, en) "name";
          } "intendedRecipient";
-         entry.resource as organization where (($this.id=%valueReference.reference.substring(13)) or ($this.id=%valueReference.reference.substring(9))) -> 
-           informationRecipient.intendedRecipient as intendedRecipient, intendedRecipient.receivedOrganization as receivedOrganization then Organization2CdaOrganization(organization, receivedOrganization) "organization";	
-      } "patient";
-    } "valueReference";
+         entry.resource:Organization as organization where (($this.id=%valueReference.reference.substring(13)) or ($this.id=%valueReference.reference.substring(9))) -> informationRecipient.intendedRecipient as intendedRecipient share intendedRecipient,
+             intendedRecipient.receivedOrganization as receivedOrganization then Organization2CdaOrganization(organization, receivedOrganization) "organization";	
+        } "entry";
+      } "valueReference";
   } "informationRecipient";  
   composition.extension as extension where $this.url='http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-dataenterer' -> cda.dataEnterer as dataEnterer then {
     extension -> dataEnterer.templateId as templateId, templateId.root='2.16.756.5.30.1.1.10.2.7' "templateId";
@@ -173,9 +181,11 @@ group CompositionClinicalDocumentCH(source bundle : Bundle, source composition :
     extension.extension as extensionPerson where $this.url='enterer' then {
       extensionPerson.valueReference as valueReference then {
         bundle.entry as entry then {
-          // Person/ or urn:uuid:
-          entry.resource as person where (($this.id=%valueReference.reference.substring(7)) or ($this.id=%valueReference.reference.substring(9))) -> dataEnterer.assignedEntity as assignedEntity then PersonAssignedEntityWithId(person,assignedEntity) "AssignedEntityWithId";
-        } "person";
+          entry.fullUrl where ($this in %valueReference.reference) and $this.startsWith('urn:uuid')  then {
+            entry.resource: Practitioner as practitioner -> dataEnterer.assignedEntity as assignedEntity then PersonAssignedEntityWithId(practitioner,assignedEntity) "AssignedEntityWithId";
+          } "fullUrl as urn:uuid";
+          entry.resource: Practitioner as practitioner where ('Practitioner'+'/'+$this.id) in %valueReference.reference ->  dataEnterer.assignedEntity as assignedEntity then PersonAssignedEntityWithId(practitioner,assignedEntity) "AssignedEntityWithId";
+        } "practitioner";
       } "valueReference";
     } "extensionPerson";  
   } "dataEnterer";  

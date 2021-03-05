@@ -159,15 +159,6 @@ group ClinicalDocumentComposition(source src : ClinicalDocument, target tgt : Co
   } "relatedDoc";
 }
 
-group ClinicalDocumentEntityPerson(source src : AssignedEntity, target tgt : Person) {
-  src.id -> tgt.identifier;
-  src.addr -> tgt.address;
-  src.telecom -> tgt.telecom;
-  src.assignedPerson as person then {
-    person.name -> tgt.name;
-  } "name";
-}
-
 group ClinicalDocumentEntityPractitioner(source src : AssignedEntity, target tgt : Practitioner) {
   src.id -> tgt.identifier;
   src.addr -> tgt.address;

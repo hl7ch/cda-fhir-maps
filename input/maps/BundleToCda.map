@@ -82,23 +82,23 @@ group CompositionClinicalDocument(source bundle : Bundle, source composition : C
   composition.language as language -> cda.languageCode as languageCode, languageCode.code = language  "languageCode";
   bundle.entry as entry then {
     entry.fullUrl where ($this in %composition.subject.reference) and $this.startsWith('urn:uuid') then {
-      entry.resource as patient then PatientRecordTarget(patient, bundle, recordTarget) "patient";
-    } "fullUrlAsUuid";
+      entry.resource: Patient as patient then PatientRecordTarget(patient, bundle, recordTarget) "patient";
+    } "fullUrl as urn:uuid";
     entry.resource as patient where ('Patient'+'/'+$this.id) in %composition.subject.reference then PatientRecordTarget(patient, bundle, recordTarget) "patient";
     
     entry.fullUrl where ($this in %composition.custodian.reference) and $this.startsWith('urn:uuid') then {
-      entry.resource as organization -> cda.custodian as custodian then OrganizationCustodian(organization, custodian) "custodian";
-    } "fullUrlAsUuid";
+      entry.resource: Organization as organization -> cda.custodian as custodian then OrganizationCustodian(organization, custodian) "custodian";
+    } "fullUrl as urn:uuid";
     entry.resource as organization where ('Organization'+'/'+$this.id) in %composition.custodian.reference -> cda.custodian as custodian then OrganizationCustodian(organization, custodian) "custodian";
 
     entry.fullUrl where ($this in %composition.author.reference) and $this.startsWith('urn:uuid')  then {
-      entry.resource as practitioner then PractitionerAuthor(bundle, composition, practitioner, author) "author";
-    } "fullUrlAsUuid";
+      entry.resource: Practitioner as practitioner then PractitionerAuthor(bundle, composition, practitioner, author) "author";
+    } "fullUrl as urn:uuid";
     entry.resource as practitioner where ('Practitioner'+'/'+$this.id) in %composition.author.reference then PractitionerAuthor(bundle, composition, practitioner, author) "author";
 
     entry.fullUrl where ($this in %composition.attester.party.reference) and $this.startsWith('urn:uuid')  then {
-      entry.resource as practitioner -> cda.legalAuthenticator as legalAuthenticator then PractitionerLegalAuthenticator(bundle, composition, practitioner, legalAuthenticator) "legalAuthenticator";
-    } "fullUrlAsUuid";
+      entry.resource: Practitioner as practitioner -> cda.legalAuthenticator as legalAuthenticator then PractitionerLegalAuthenticator(bundle, composition, practitioner, legalAuthenticator) "legalAuthenticator";
+    } "fullUrl as urn:uuid";
     entry.resource as practitioner where ('Practitioner'+'/'+$this.id) in %composition.attester.party.reference -> cda.legalAuthenticator as legalAuthenticator then PractitionerLegalAuthenticator(bundle, composition, practitioner, legalAuthenticator) "legalAuthenticator";
   } "patient";
   
@@ -132,8 +132,8 @@ group PatientRecordTarget(source src : Patient, source bundle: Bundle, target tg
     src.telecom as telecom -> patientRole.telecom as tel then ContactPointTEL(telecom, tel);
     src.managingOrganization as managingOrganization then {
       bundle.entry as entry then {
-        entry.fullUrl where ($this in %managingOrganization.reference) and $this.startsWith('urn:uuid') -> patientRole.providerOrganization as providerOrganization then Organization2CdaOrganization(organization, providerOrganization) "providerOrganization";
-        entry.resource as organization where ('Organization'+'/'+$this.id) in %managingOrganization.reference -> patientRole.providerOrganization as providerOrganization then Organization2CdaOrganization(organization, providerOrganization) "providerOrganization";
+        entry.fullUrl where ($this in %managingOrganization.reference) and $this.startsWith('urn:uuid') -> patientRole.providerOrganization as providerOrganization then Organization2CdaOrganization(managingOrganization, providerOrganization) "providerOrganization";
+        entry.resource as organization where ('Organization'+'/'+$this.id) in %managingOrganization.reference -> patientRole.providerOrganization as providerOrganization then Organization2CdaOrganization(managingOrganization, providerOrganization) "providerOrganization";
       } "entry";
     } "managingOrganization";
   } "patientRole";
@@ -158,8 +158,8 @@ group PractitionerAuthor(source bundle : Bundle, source composition : Compositio
       src.name as name -> assignedAuthor.assignedPerson as assignedPerson, assignedPerson.name as en then HumanNameEN(name, en) "name";
       bundle.entry as entry then {
         entry.fullUrl where ($this in %composition.author.reference) and $this.startsWith('urn:uuid')  then {
-          entry.resource as organization -> assignedAuthor.representedOrganization as cdaorganization then Organization2CdaOrganization(organization, cdaorganization) "organization";
-        } "fullUrlAsUuid";
+          entry.resource: Organization as organization -> assignedAuthor.representedOrganization as cdaorganization then Organization2CdaOrganization(organization, cdaorganization) "organization";
+        } "fullUrl as urn:uuid";
         entry.resource as organization where ('Organization'+'/'+$this.id) in %composition.author.reference -> assignedAuthor.representedOrganization as cdaorganization then Organization2CdaOrganization(organization, cdaorganization) "organization";
       } "patient";
   } "assignedAuthor";
@@ -167,8 +167,16 @@ group PractitionerAuthor(source bundle : Bundle, source composition : Compositio
 
 group OrganizationCustodian(source src : Organization, target tgt : Custodian) {
   src -> tgt.assignedCustodian as assignedCustodian then {
-    src -> assignedCustodian.representedCustodianOrganization as representedCustodianOrganization then Organization2CdaOrganization(src, representedCustodianOrganization) "representedCustodianOrganization";
+    src -> assignedCustodian.representedCustodianOrganization as representedCustodianOrganization then Organization2CdaOrganizationCustodian(src, representedCustodianOrganization) "representedCustodianOrganization";
   } "assignedCustodian";
+}
+
+group Organization2CdaOrganizationCustodian(source src : Organization, target tgt : CdaOrganization) {
+  src.identifier as identifier -> tgt.id as id then IdentifierII(identifier, id) "id";
+  src.name as name -> tgt.name as orgname, orgname.other = name "name";
+  src.address as address -> tgt.addr as ad then AddressAD(address, ad) "address";
+  // target telecom is 0..1
+  src.telecom first as telecom -> tgt.telecom as tel then ContactPointTEL(telecom, tel);
 }
 
 group Organization2CdaOrganization(source src : Organization, target tgt : CdaOrganization) {

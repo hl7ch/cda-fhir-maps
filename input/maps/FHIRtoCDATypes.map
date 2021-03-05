@@ -165,12 +165,10 @@ group AddressAD(source src : Address, target tgt : AD) extends Any <<types>> {
 group ContactPointTEL(source src : ContactPoint, target tgt : TEL) extends Any <<types>> {
     src.value as value -> tgt.value = (iif (%src.system='phone','tel:','') + iif(%src.system='fax','fax:','') + iif (%src.system='email','mailto:','') +iif (%src.system='url','http:','') +value) "value";
     src.use as use where $this = 'home' -> tgt.use = 'HP';
-    src.use as use where $this = 'work' -> tgt.use = 'WP';  // not complete see below
-    // src.use where ((src.use = 'WP') or (src.use = 'DIR') or (src.use = 'PUB')) -> tgt.use = 'work' "usework";
+    src.use as use where $this = 'work' -> tgt.use = 'WP';  
     src.use as use where $this = 'old' -> tgt.use = 'BAD';  
     src.use as use where $this = 'temp' -> tgt.use = 'TMP';  
     src.use as use where $this = 'mobile' -> tgt.use = 'MC';  
-    // src.useablePeriod -> tgt.period; // use: for src.use as c make tgt.use = translate(c, 'http://hl7.org/fhir/ConceptMap/cm-telecom-use-v3', 'code')
 }
 
 group HumanNameEN(source src : HumanName, target tgt : EN) extends Any <<types>> {
