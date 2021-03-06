@@ -11,6 +11,7 @@
 <!-- 2018.06.16: Tony Schaller, medshare GmbH (Refactoring for better validation results: Schematron using eHealth Connector and 'HL7 - CDA Release 2 (strict)' using IHE EVS Client, Gazelle ObjectsChecker validation) -->
 <!-- 2019.10.15: Oliver Egger, ahdis ag: Update from CDA-CH v2.0 (2017) to CDA-CH v2.1 (2020) -->
 <!-- 2020.02.03: Oliver Egger, ahdis ag: Update to CDA-CH EMED (2020) -->
+<!-- 2021.03.01: Annatina Foppa, eHealth Suisse: Update to CDA-CH EMED v0.97. Some issues remained unresolved, concerning repeatNumber and doseQuantity, see https://art-decor.org/art-decor/decor-issues%2D%2Dch-pharm --->
 <!-- ************************************************************ -->
 <?xml-stylesheet type='text/xsl' href='../../../../stylesheets/HL7.ch/CDA-CH/v2.0/cda-ch.xsl'?>
 <ClinicalDocument xmlns:pharm="urn:ihe:pharm"
@@ -45,9 +46,9 @@
 	<!-- IHE PHARM DIS -->
 	<code code='60593-1' displayName='Medication dispensed.extended'
 		codeSystem='2.16.840.1.113883.6.1' codeSystemName='LOINC'>
-		<!-- Document code mapping to the Swiss EPR XDS.b metadata (DocumentEntry.typeCode	, 2.16.756.5.30.1.127.3.10.1.27). 
+		<!-- Document code mapping to the Swiss EPR XDS.b metadata (DocumentEntry.typeCode	, 2.16.756.5.30.1.127.3.10.1.27). -->
 		<translation code="419891008" codeSystem="2.16.840.1.113883.6.96"
-			codeSystemName="SNOMED CT" displayName="Record artifact (record artifact)" /> -->
+			codeSystemName="SNOMED CT" displayName="Record artifact (record artifact)" /> 
 	</code>
 	<title>Abgabe</title>
 
@@ -259,7 +260,7 @@
 												<numerator unit="mg" value="50"
 													xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 													xsi:type="PQ" />
-												<denominator value="1"
+												<denominator unit="732936001" value="1"
 													xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 													xsi:type="PQ" />
 											</pharm:quantity>
@@ -305,6 +306,7 @@
 									<effectiveTime xsi:type="IVL_TS">
 										<low value="20120204" />
 									</effectiveTime>
+									<repeatNumber value="7" />
 									<routeCode code="20053000" codeSystem="0.4.0.127.0.16.1.1.2.1"
 										displayName="Oral use" />
 									<consumable>
@@ -322,9 +324,7 @@
 											<effectiveTime xsi:type='EIVL_TS'>
 												<event code='ACM' />
 											</effectiveTime>
-											<doseQuantity>
-												<center value="1" />
-											</doseQuantity>
+											<doseQuantity unit="732936001" value="1"/>
                                             <consumable>
                                               <manufacturedProduct>
                                                 <manufacturedMaterial nullFlavor="NA" />
@@ -340,9 +340,7 @@
 											<effectiveTime xsi:type='EIVL_TS'>
 												<event code='ACV' />
 											</effectiveTime>
-											<doseQuantity>
-												<center value="0.5" />
-											</doseQuantity>
+											<doseQuantity unit="732936001" value="0.5"/>
                                             <consumable>
                                               <manufacturedProduct>
                                                 <manufacturedMaterial nullFlavor="NA" />
@@ -380,6 +378,24 @@
 								</act>
 							</entryRelationship>
 						</supply>
+					</entry>
+				</section>
+			</component>
+			<component>
+				<section>
+					<templateId root="2.16.756.5.30.1.1.10.3.45" />
+					<code code="55108-5" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Clinical presentation" />
+					<title>Original representation</title>
+					<text>
+						Representation of the original view:
+						<renderMultiMedia referencedObject="pdf1" />
+					</text>
+					<entry typeCode='DRIV'>
+						<observationMedia classCode="OBS" moodCode="EVN" ID="pdf1">
+							<templateId root="2.16.756.5.30.1.1.10.4.83" />
+							<languageCode code="en-US" />
+							<value xsi:type='ED' mediaType="application/pdf" representation="B64">c25pcA==</value>
+						</observationMedia>
 					</entry>
 				</section>
 			</component>

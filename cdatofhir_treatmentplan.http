@@ -1,8 +1,8 @@
 ### Create and Update CDA maps for converting to FHIR with RESTClient and running matchbox (locally)
 ### Note: POST the maps in the following order, if you update one map you need to repost also the maps below
 
-### @host = https://test.ahdis.ch/r4
-@host = http://localhost:8080/r4
+@host = https://test.ahdis.ch/r4
+### @host = http://localhost:8080/r4
 
 
 ### 1. POST CdaToFhirTypes.map
