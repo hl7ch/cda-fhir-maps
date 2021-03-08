@@ -119,7 +119,7 @@ group ManufacturedMaterialEntryContentModuleDispense(source src : Supply, target
           } "containerPackagedMedicine";
         } "asContent";       
         manufacturedMaterial.ingredient as ingredient -> medication.ingredient as ing then {
-          ingredient.quantity as quantity -> ing.strength = create('Ratio') as strength then RTOPQPQRatio(quantity, strength) "strength";
+          ingredient.quantity as quantity -> ing.strength = create('Ratio') as strength then EmedRTOPQPQRatio(quantity, strength) "strength";
           ingredient.ingredient as medingredient then {
               medingredient.code as code -> ing.item = create('CodeableConcept') as ingcode, ingcode.text = (%medingredient.name.other) then CECodeableConcept(code, ingcode) "ingredientCode";
           } "ingredient.ingredient";
@@ -138,6 +138,17 @@ group ManufacturedMaterialEntryContentModuleDispense(source src : Supply, target
   } "product";
 }
 
+group EmedPQQuantity(source src : PQ, target tgt : Quantity) {
+  src.unit as unit -> tgt.code = unit;
+  src.value as value -> tgt.value = value;
+  src.unit where $this.length()=9 and $this.startsWith('73') -> tgt.system = 'http://snomed.info/sct' "snomedct";
+  src.unit as unit where $this.length()!=9 -> tgt.system = 'http://unitsofmeasure.org', tgt.unit = unit "ucum";
+}
+  
+group EmedRTOPQPQRatio(source src : RTO_PQ_PQ, target tgt : Ratio) {
+  src.numerator as numerator -> tgt.numerator as targetNumerator then EmedPQQuantity(numerator, targetNumerator) "numerator";
+  src.denominator as denominator -> tgt.denominator as targetDenominator then EmedPQQuantity(denominator, targetDenominator) "denominator"; 
+}
 
 // source: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&id=2.16.756.5.30.1.1.10.4.33
 // target: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefinition-ch-emed-medicationstatement.html
@@ -196,7 +207,7 @@ group ManufacturedMaterialEntryContentModuleStatement(source src : SubstanceAdmi
         } "asContent";       
         
         manufacturedMaterial.ingredient as ingredient -> medication.ingredient as ing then {
-          ingredient.quantity as quantity -> ing.strength = create('Ratio') as strength then RTOPQPQRatio(quantity, strength) "strength";
+          ingredient.quantity as quantity -> ing.strength = create('Ratio') as strength then EmedRTOPQPQRatio(quantity, strength) "strength";
           ingredient.ingredient as medingredient then {
               medingredient.code as code -> ing.item = create('CodeableConcept') as ingcode, ingcode.text = (%medingredient.name.other) then CECodeableConcept(code, ingcode) "ingredientCode";
           } "ingredient.ingredient";
@@ -417,10 +428,15 @@ group DispenseItemEntryContentModule(source section : Section, source src : Supp
 // dose quantity for dosage (application schema)
 group DoseQuantity (source src: substanceAdministration, target dosage: Dosage) {
   src.doseQuantity as doseQuantity -> dosage.doseAndRate as doseAndRate then {
-    doseQuantity.center as center -> doseAndRate.dose = create('Quantity') as quantity then {
-      center.value as value -> quantity.value = value "value";
+    doseQuantity.value as value -> doseAndRate.dose = create('Quantity') as quantity then {
+      value -> quantity.value = value "value";
+      doseQuantity.unit as unit -> quantity.code = unit;
+//      doseQuantity.unit as unit -> quantity.unit = translate(unit, 'http://fhir.ch/ig/ch-emed/ValueSet/UnitsOfPresentation', 'display') "unit";
+//      FIXME needs extension maybe with read() ot lookup() to translate from code to display
+      doseQuantity.unit where $this.length()=9 and $this.startsWith('73') -> quantity.system = 'http://snomed.info/sct' "snomedct";
+      doseQuantity.unit where $this.length()!=9 or $this.startsWith('73').not() as unit -> quantity.system = 'http://unitsofmeasure.org', quantity.unit = unit "ucum";
     } "quantity";
-  } "doseQuantity";
+   } "doseQuantity";
 }
 
 // source: Substitution permission Contains 1.3.6.1.4.1.19376.1.9.1.3.9.1 IHE Substitution Permission Content Module (DYNAMIC)

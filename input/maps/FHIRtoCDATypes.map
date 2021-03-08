@@ -181,8 +181,7 @@ group HumanNameEN(source src : HumanName, target tgt : EN) extends Any <<types>>
 }
 
 group QuantityPQ(source src : Quantity, target tgt : PQ) extends Any <<types>> {
-  // src.code as code -> tgt.unit = code;
-  src.unit as unit -> tgt.unit = unit;
+  src.code as code -> tgt.unit = code;
   src.value as value -> tgt.value = value;
 }
 
