@@ -113,9 +113,9 @@ group ChExtEprInformationRecipientOrganization(source src : IntendedRecipient, t
 
 // source: https://art-decor.org/art-decor/decor-templates--hl7chcda-?section=templates&amp;id=2.16.756.5.30.1.1.10.2.7
 // target: http://build.fhir.org/ig/hl7ch/ch-core/StructureDefinition-ch-ext-epr-dataenterer.html
-group ChExtEprDataEnterer(source src : DataEnterer, target person : Person, target ext : Extension) {
+group ChExtEprDataEnterer(source src : DataEnterer, target practitioner : Practitioner, target ext : Extension) {
   src -&gt; ext.url = 'http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-dataenterer' "url";
-  src.assignedEntity as assignedEntity -&gt;  ext.extension as ext,  ext.url = 'enterer',  ext.value = create('Reference') as reference,  reference.type = 'Person',  reference.reference = ('urn:uuid:' + %person.id) then ClinicalDocumentEntityPerson(assignedEntity, person) "person";
+  src.assignedEntity as assignedEntity -&gt;  ext.extension as ext,  ext.url = 'enterer',  ext.value = create('Reference') as reference,  reference.type = 'Practitioner',  reference.reference = ('urn:uuid:' + %practitioner.id) then ClinicalDocumentEntityPractitioner(assignedEntity, practitioner) "practitioner";
   src.time as time -&gt; ext.extension as exttime then ChExtEprTime(time, exttime);
 }
 
@@ -134,7 +134,7 @@ group ClinicalDocumentCompositionCh(source src : ClinicalDocument, target tgt : 
       intendedRecipient.receivedOrganization -&gt;  e.resource = create('Organization') as recipient,  recipient.id = uuid() as uuid2,  e.fullUrl = append('urn:uuid:', uuid2),  tgt.extension as ext then ChExtEprInformationRecipientOrganization(intendedRecipient, recipient, ext) "informationRecipientOrganization";
     } "intendedRecipientAsOrganization";
   } "entry";
-  src.dataEnterer as dataEnterer -&gt;  bundle.entry as e,  e.resource = create('Person') as person,  person.id = uuid() as uuid,  e.fullUrl = append('urn:uuid:', uuid),  tgt.extension as ext then ChExtEprDataEnterer(dataEnterer, person, ext);
+  src.dataEnterer as dataEnterer -&gt;  bundle.entry as e,  e.resource = create('Practitioner') as practitioner,  practitioner.id = uuid() as uuid,  e.fullUrl = append('urn:uuid:', uuid),  tgt.extension as ext then ChExtEprDataEnterer(dataEnterer, practitioner, ext);
 }
 
 </pre>
@@ -200,6 +200,7 @@ FHIR CH-Core: http://fhir.ch/ig/ch-core/index.html"></description>
    <import value="http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaToBundle"></import>
    <group>
       <name value="CdaChToBundle"></name>
+      <typeMode value="none"></typeMode>
       <documentation value="source: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5.30.1.1.10.1.14
 target: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefinition-ch-core-document.html"></documentation>
       <input>
@@ -299,6 +300,7 @@ target: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefiniti
    <group>
       <name value="ClinicalDocumentChToBundle"></name>
       <extends value="ClinicalDocumentToBundle"></extends>
+      <typeMode value="none"></typeMode>
       <documentation value="source: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5.30.1.1.10.1.14
 target: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefinition-ch-core-document.html"></documentation>
       <input>
@@ -406,6 +408,7 @@ target: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefiniti
    <group>
       <name value="SectionOriginalRepresentation"></name>
       <extends value="ClinicalDocumentSection"></extends>
+      <typeMode value="none"></typeMode>
       <documentation value="_________________________ Section Level Templates _________________________
 source: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5.30.1.1.10.1.14
 target: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefinition-ch-core-composition-definitions.html#Composition.section
@@ -542,6 +545,7 @@ TODO: not excplicitly modeled in CH-Core"></documentation>
    </group>
    <group>
       <name value="ObservationMedia"></name>
+      <typeMode value="none"></typeMode>
       <documentation value="_________________________ Entry Level Templates   ________________________
 source: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5.30.1.1.10.4.83
 TODO: not excplicitly modeled in CH-Core"></documentation>
@@ -622,6 +626,7 @@ TODO: not excplicitly modeled in CH-Core"></documentation>
    </group>
    <group>
       <name value="ChExtEprConfidentialityCode"></name>
+      <typeMode value="none"></typeMode>
       <documentation value="_________________________ Header Level Templates _________________________
 source: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5.30.1.1.10.9.36
 target: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefinition-ch-ext-epr-confidentialitycode.html"></documentation>
@@ -674,6 +679,7 @@ target: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefiniti
    </group>
    <group>
       <name value="ChExtEprSetId"></name>
+      <typeMode value="none"></typeMode>
       <documentation value="source: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5.30.1.1.10.9.36
 target: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefinition-ch-ext-epr-setid.html"></documentation>
       <input>
@@ -725,6 +731,7 @@ target: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefiniti
    </group>
    <group>
       <name value="ChExtEprVersionNumber"></name>
+      <typeMode value="none"></typeMode>
       <documentation value="source: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5.30.1.1.10.9.36
 target: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefinition-ch-ext-epr-versionnumber.html"></documentation>
       <input>
@@ -776,6 +783,7 @@ target: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefiniti
    </group>
    <group>
       <name value="ChExtEprInformationRecipient"></name>
+      <typeMode value="none"></typeMode>
       <documentation value="source: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5.30.1.1.10.9.36
 target: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefinition-ch-ext-epr-informationrecipient.html"></documentation>
       <input>
@@ -891,6 +899,7 @@ target: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefiniti
    </group>
    <group>
       <name value="ChExtEprInformationRecipientOrganization"></name>
+      <typeMode value="none"></typeMode>
       <documentation value="source: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5.30.1.1.10.9.36
 target: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefinition-ch-ext-epr-informationrecipient.html"></documentation>
       <input>
@@ -973,6 +982,7 @@ target: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefiniti
    </group>
    <group>
       <name value="ChExtEprDataEnterer"></name>
+      <typeMode value="none"></typeMode>
       <documentation value="source: https://art-decor.org/art-decor/decor-templates--hl7chcda-?section=templates&amp;id=2.16.756.5.30.1.1.10.2.7
 target: http://build.fhir.org/ig/hl7ch/ch-core/StructureDefinition-ch-ext-epr-dataenterer.html"></documentation>
       <input>
@@ -981,8 +991,8 @@ target: http://build.fhir.org/ig/hl7ch/ch-core/StructureDefinition-ch-ext-epr-da
          <mode value="source"></mode>
       </input>
       <input>
-         <name value="person"></name>
-         <type value="Person"></type>
+         <name value="practitioner"></name>
+         <type value="Practitioner"></type>
          <mode value="target"></mode>
       </input>
       <input>
@@ -1006,7 +1016,7 @@ target: http://build.fhir.org/ig/hl7ch/ch-core/StructureDefinition-ch-ext-epr-da
          </target>
       </rule>
       <rule>
-         <name value="person"></name>
+         <name value="practitioner"></name>
          <source>
             <context value="src"></context>
             <element value="assignedEntity"></element>
@@ -1043,7 +1053,7 @@ target: http://build.fhir.org/ig/hl7ch/ch-core/StructureDefinition-ch-ext-epr-da
             <element value="type"></element>
             <transform value="copy"></transform>
             <parameter>
-               <valueString value="Person"></valueString>
+               <valueString value="Practitioner"></valueString>
             </parameter>
          </target>
          <target>
@@ -1052,13 +1062,13 @@ target: http://build.fhir.org/ig/hl7ch/ch-core/StructureDefinition-ch-ext-epr-da
             <element value="reference"></element>
             <transform value="evaluate"></transform>
             <parameter>
-               <valueString value="'urn:uuid:' + %person.id"></valueString>
+               <valueString value="'urn:uuid:' + %practitioner.id"></valueString>
             </parameter>
          </target>
          <dependent>
-            <name value="ClinicalDocumentEntityPerson"></name>
+            <name value="ClinicalDocumentEntityPractitioner"></name>
             <variable value="assignedEntity"></variable>
-            <variable value="person"></variable>
+            <variable value="practitioner"></variable>
          </dependent>
       </rule>
       <rule>
@@ -1083,6 +1093,7 @@ target: http://build.fhir.org/ig/hl7ch/ch-core/StructureDefinition-ch-ext-epr-da
    </group>
    <group>
       <name value="ClinicalDocumentCompositionCh"></name>
+      <typeMode value="none"></typeMode>
       <documentation value="_________________________ Template Type not specified  ___________________
 source: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5.30.1.1.10.9.36
 target: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefinition-ch-core-composition-epr.html"></documentation>
@@ -1324,14 +1335,14 @@ target: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefiniti
             <context value="e"></context>
             <contextType value="variable"></contextType>
             <element value="resource"></element>
-            <variable value="person"></variable>
+            <variable value="practitioner"></variable>
             <transform value="create"></transform>
             <parameter>
-               <valueString value="Person"></valueString>
+               <valueString value="Practitioner"></valueString>
             </parameter>
          </target>
          <target>
-            <context value="person"></context>
+            <context value="practitioner"></context>
             <contextType value="variable"></contextType>
             <element value="id"></element>
             <variable value="uuid"></variable>
@@ -1358,7 +1369,7 @@ target: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefiniti
          <dependent>
             <name value="ChExtEprDataEnterer"></name>
             <variable value="dataEnterer"></variable>
-            <variable value="person"></variable>
+            <variable value="practitioner"></variable>
             <variable value="ext"></variable>
          </dependent>
       </rule>

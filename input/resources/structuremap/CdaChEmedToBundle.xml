@@ -93,7 +93,7 @@ group ManufacturedMaterialEntryContentModuleDispense(source src : Supply, target
           };
         };
         manufacturedMaterial.ingredient as ingredient -&gt; medication.ingredient as ing then {
-          ingredient.quantity as quantity -&gt; ing.strength = create('Ratio') as strength then RTOPQPQRatio(quantity, strength) "strength";
+          ingredient.quantity as quantity -&gt; ing.strength = create('Ratio') as strength then EmedRTOPQPQRatio(quantity, strength) "strength";
           ingredient.ingredient as medingredient then {
             medingredient.code as code -&gt;  ing.item = create('CodeableConcept') as ingcode,  ingcode.text = (%medingredient.name.other) then CECodeableConcept(code, ingcode) "ingredientCode";
           };
@@ -107,6 +107,18 @@ group ManufacturedMaterialEntryContentModuleDispense(source src : Supply, target
       };
     } "entry";
   };
+}
+
+group EmedPQQuantity(source src : PQ, target tgt : Quantity) {
+  src.unit as unit -&gt; tgt.code = unit;
+  src.value as value -&gt; tgt.value = value;
+  src.unit where ($this.length() = 9) and $this.startsWith('73') -&gt; tgt.system = 'http://snomed.info/sct' "snomedct";
+  src.unit as unit where $this.length() != 9 -&gt;  tgt.system = 'http://unitsofmeasure.org',  tgt.unit = unit "ucum";
+}
+
+group EmedRTOPQPQRatio(source src : RTO_PQ_PQ, target tgt : Ratio) {
+  src.numerator as numerator -&gt; tgt.numerator as targetNumerator then EmedPQQuantity(numerator, targetNumerator);
+  src.denominator as denominator -&gt; tgt.denominator as targetDenominator then EmedPQQuantity(denominator, targetDenominator);
 }
 
 // source: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.4.33
@@ -144,7 +156,7 @@ group ManufacturedMaterialEntryContentModuleStatement(source src : SubstanceAdmi
           };
         };
         manufacturedMaterial.ingredient as ingredient -&gt; medication.ingredient as ing then {
-          ingredient.quantity as quantity -&gt; ing.strength = create('Ratio') as strength then RTOPQPQRatio(quantity, strength) "strength";
+          ingredient.quantity as quantity -&gt; ing.strength = create('Ratio') as strength then EmedRTOPQPQRatio(quantity, strength) "strength";
           ingredient.ingredient as medingredient then {
             medingredient.code as code -&gt;  ing.item = create('CodeableConcept') as ingcode,  ingcode.text = (%medingredient.name.other) then CECodeableConcept(code, ingcode) "ingredientCode";
           };
@@ -324,8 +336,12 @@ group DispenseItemEntryContentModule(source section : Section, source src : Supp
 // dose quantity for dosage (application schema)
 group DoseQuantity(source src : substanceAdministration, target dosage : Dosage) {
   src.doseQuantity as doseQuantity -&gt; dosage.doseAndRate as doseAndRate then {
-    doseQuantity.center as center -&gt; doseAndRate.dose = create('Quantity') as quantity then {
-      center.value as value -&gt; quantity.value = value;
+    doseQuantity.value as value -&gt; doseAndRate.dose = create('Quantity') as quantity then {
+      value -&gt; quantity.value = value "value";
+      doseQuantity.unit as unit -&gt; quantity.code = unit;
+      // doseQuantity.unit as unit -&gt; quantity.unit = translate(unit, 'http://fhir.ch/ig/ch-emed/ValueSet/UnitsOfPresentation', 'display') "unit";
+      doseQuantity.unit where ($this.length() = 9) and $this.startsWith('73') -&gt; quantity.system = 'http://snomed.info/sct' "snomedct";
+      doseQuantity.unit where (($this.length() != 9) or $this.startsWith('73').not()) as unit -&gt;  quantity.system = 'http://unitsofmeasure.org',  quantity.unit = unit "ucum";
     } "quantity";
   };
 }
@@ -627,6 +643,7 @@ FHIR CH-EMED: http://fhir.ch/ig/ch-emed/index.html"></description>
    <import value="http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaChToBundle"></import>
    <group>
       <name value="AnnotationComment"></name>
+      <typeMode value="none"></typeMode>
       <documentation value="source: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.4.2
 target: Annotation note (e.g. http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefinition-ch-emed-medicationstatement.html)"></documentation>
       <input>
@@ -697,6 +714,7 @@ target: Annotation note (e.g. http://build.fhir.org/ig/hl7ch/ch-emed/branches/ma
    </group>
    <group>
       <name value="ManufacturedMaterialEntryContentModuleDispense"></name>
+      <typeMode value="none"></typeMode>
       <documentation value="source: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.4.33
 target: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefinition-ch-emed-medicationdispense.html"></documentation>
       <input>
@@ -1190,7 +1208,7 @@ target: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefiniti
                         </parameter>
                      </target>
                      <dependent>
-                        <name value="RTOPQPQRatio"></name>
+                        <name value="EmedRTOPQPQRatio"></name>
                         <variable value="quantity"></variable>
                         <variable value="strength"></variable>
                      </dependent>
@@ -1276,7 +1294,152 @@ target: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefiniti
       </rule>
    </group>
    <group>
+      <name value="EmedPQQuantity"></name>
+      <typeMode value="none"></typeMode>
+      <input>
+         <name value="src"></name>
+         <type value="PQ"></type>
+         <mode value="source"></mode>
+      </input>
+      <input>
+         <name value="tgt"></name>
+         <type value="Quantity"></type>
+         <mode value="target"></mode>
+      </input>
+      <rule>
+         <name value="unit"></name>
+         <source>
+            <context value="src"></context>
+            <element value="unit"></element>
+            <variable value="unit"></variable>
+         </source>
+         <target>
+            <context value="tgt"></context>
+            <contextType value="variable"></contextType>
+            <element value="code"></element>
+            <transform value="copy"></transform>
+            <parameter>
+               <valueId value="unit"></valueId>
+            </parameter>
+         </target>
+      </rule>
+      <rule>
+         <name value="value"></name>
+         <source>
+            <context value="src"></context>
+            <element value="value"></element>
+            <variable value="value"></variable>
+         </source>
+         <target>
+            <context value="tgt"></context>
+            <contextType value="variable"></contextType>
+            <element value="value"></element>
+            <transform value="copy"></transform>
+            <parameter>
+               <valueId value="value"></valueId>
+            </parameter>
+         </target>
+      </rule>
+      <rule>
+         <name value="snomedct"></name>
+         <source>
+            <context value="src"></context>
+            <element value="unit"></element>
+            <condition value="($this.length() = 9) and $this.startsWith('73')"></condition>
+         </source>
+         <target>
+            <context value="tgt"></context>
+            <contextType value="variable"></contextType>
+            <element value="system"></element>
+            <transform value="copy"></transform>
+            <parameter>
+               <valueString value="http://snomed.info/sct"></valueString>
+            </parameter>
+         </target>
+      </rule>
+      <rule>
+         <name value="ucum"></name>
+         <source>
+            <context value="src"></context>
+            <element value="unit"></element>
+            <variable value="unit"></variable>
+            <condition value="$this.length() != 9"></condition>
+         </source>
+         <target>
+            <context value="tgt"></context>
+            <contextType value="variable"></contextType>
+            <element value="system"></element>
+            <transform value="copy"></transform>
+            <parameter>
+               <valueString value="http://unitsofmeasure.org"></valueString>
+            </parameter>
+         </target>
+         <target>
+            <context value="tgt"></context>
+            <contextType value="variable"></contextType>
+            <element value="unit"></element>
+            <transform value="copy"></transform>
+            <parameter>
+               <valueId value="unit"></valueId>
+            </parameter>
+         </target>
+      </rule>
+   </group>
+   <group>
+      <name value="EmedRTOPQPQRatio"></name>
+      <typeMode value="none"></typeMode>
+      <input>
+         <name value="src"></name>
+         <type value="RTO_PQ_PQ"></type>
+         <mode value="source"></mode>
+      </input>
+      <input>
+         <name value="tgt"></name>
+         <type value="Ratio"></type>
+         <mode value="target"></mode>
+      </input>
+      <rule>
+         <name value="numerator"></name>
+         <source>
+            <context value="src"></context>
+            <element value="numerator"></element>
+            <variable value="numerator"></variable>
+         </source>
+         <target>
+            <context value="tgt"></context>
+            <contextType value="variable"></contextType>
+            <element value="numerator"></element>
+            <variable value="targetNumerator"></variable>
+         </target>
+         <dependent>
+            <name value="EmedPQQuantity"></name>
+            <variable value="numerator"></variable>
+            <variable value="targetNumerator"></variable>
+         </dependent>
+      </rule>
+      <rule>
+         <name value="denominator"></name>
+         <source>
+            <context value="src"></context>
+            <element value="denominator"></element>
+            <variable value="denominator"></variable>
+         </source>
+         <target>
+            <context value="tgt"></context>
+            <contextType value="variable"></contextType>
+            <element value="denominator"></element>
+            <variable value="targetDenominator"></variable>
+         </target>
+         <dependent>
+            <name value="EmedPQQuantity"></name>
+            <variable value="denominator"></variable>
+            <variable value="targetDenominator"></variable>
+         </dependent>
+      </rule>
+   </group>
+   <group>
       <name value="ManufacturedMaterialEntryContentModuleStatement"></name>
+      <typeMode value="none"></typeMode>
       <documentation value="source: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.4.33
 target: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefinition-ch-emed-medicationstatement.html"></documentation>
       <input>
@@ -1692,7 +1855,7 @@ target: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefiniti
                         </parameter>
                      </target>
                      <dependent>
-                        <name value="RTOPQPQRatio"></name>
+                        <name value="EmedRTOPQPQRatio"></name>
                         <variable value="quantity"></variable>
                         <variable value="strength"></variable>
                      </dependent>
@@ -1763,6 +1926,7 @@ target: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefiniti
    </group>
    <group>
       <name value="MedicationTreatmentPlanItemEntryContentModule"></name>
+      <typeMode value="none"></typeMode>
       <documentation value="source: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.4.34
 target: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefinition-ch-emed-medicationstatement.html"></documentation>
       <input>
@@ -2059,6 +2223,7 @@ target: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefiniti
    </group>
    <group>
       <name value="DosageInstructionsEntryDosageChange"></name>
+      <typeMode value="none"></typeMode>
       <documentation value="source https://art-decor.org/art-decor/decor-templates--ch-pharm-?id=2.16.756.5.30.1.1.10.4.36
 target: http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured
 dosage for split dosing, with sequences"></documentation>
@@ -2246,6 +2411,7 @@ dosage for split dosing, with sequences"></documentation>
    </group>
    <group>
       <name value="EffectiveTimeStartEnd"></name>
+      <typeMode value="none"></typeMode>
       <documentation value="effective time start &amp; end for dosage"></documentation>
       <input>
          <name value="src"></name>
@@ -2355,6 +2521,7 @@ dosage for split dosing, with sequences"></documentation>
    </group>
    <group>
       <name value="EffectiveTimeWhen"></name>
+      <typeMode value="none"></typeMode>
       <documentation value="effective time when for dosage"></documentation>
       <input>
          <name value="src"></name>
@@ -2485,6 +2652,7 @@ dosage for split dosing, with sequences"></documentation>
    </group>
    <group>
       <name value="TreatmentReasonEntryContentModule"></name>
+      <typeMode value="none"></typeMode>
       <documentation value="source: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.4.41
 target: reasonCode Coding (e.g. http://build.fhir.org/ig/hl7ch/ig/ch-emed/StructureDefinition/ch-emed-medicationstatement)"></documentation>
       <input>
@@ -2556,6 +2724,7 @@ target: reasonCode Coding (e.g. http://build.fhir.org/ig/hl7ch/ig/ch-emed/Struct
    </group>
    <group>
       <name value="MTPReferenceEntryContentModule"></name>
+      <typeMode value="none"></typeMode>
       <documentation value="source: https://art-decor.org/art-decor/decor-templates--ch-pharm-?section=templates&amp;id=2.16.756.5.30.1.1.10.4.45
 target: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefinition-ch-emed-ext-treatmentplan.html"></documentation>
       <input>
@@ -2647,6 +2816,7 @@ target: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefiniti
    </group>
    <group>
       <name value="DosageInstructionsNonStructuredEntryContentModule"></name>
+      <typeMode value="none"></typeMode>
       <documentation value="source: https://art-decor.org/art-decor/decor-templates--ch-pharm-?section=templates&amp;id=2.16.756.5.30.1.1.10.4.52
 target: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefinition-ch-emed-dosage-nonstructured.html"></documentation>
       <input>
@@ -2728,6 +2898,7 @@ target: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefiniti
    </group>
    <group>
       <name value="SubstitutionDispense"></name>
+      <typeMode value="none"></typeMode>
       <documentation value="source: Substitution act Contains 1.3.6.1.4.1.19376.1.9.1.3.9.2 IHE Substitution Act Content Module
 target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-medicationdispense.html"></documentation>
       <input>
@@ -2864,6 +3035,7 @@ target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-medic
    </group>
    <group>
       <name value="DispenseItemEntryContentModule"></name>
+      <typeMode value="none"></typeMode>
       <documentation value="source: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.4.42
 target: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefinition-ch-emed-medicationdispense.html"></documentation>
       <input>
@@ -3148,6 +3320,7 @@ target: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefiniti
    </group>
    <group>
       <name value="DoseQuantity"></name>
+      <typeMode value="none"></typeMode>
       <documentation value="dose quantity for dosage (application schema)"></documentation>
       <input>
          <name value="src"></name>
@@ -3176,8 +3349,8 @@ target: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefiniti
             <name value="quantity"></name>
             <source>
                <context value="doseQuantity"></context>
-               <element value="center"></element>
-               <variable value="center"></variable>
+               <element value="value"></element>
+               <variable value="value"></variable>
             </source>
             <target>
                <context value="doseAndRate"></context>
@@ -3192,9 +3365,7 @@ target: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefiniti
             <rule>
                <name value="value"></name>
                <source>
-                  <context value="center"></context>
-                  <element value="value"></element>
-                  <variable value="value"></variable>
+                  <context value="value"></context>
                </source>
                <target>
                   <context value="quantity"></context>
@@ -3206,11 +3377,73 @@ target: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefiniti
                   </parameter>
                </target>
             </rule>
+            <rule>
+               <name value="unit"></name>
+               <source>
+                  <context value="doseQuantity"></context>
+                  <element value="unit"></element>
+                  <variable value="unit"></variable>
+               </source>
+               <target>
+                  <context value="quantity"></context>
+                  <contextType value="variable"></contextType>
+                  <element value="code"></element>
+                  <transform value="copy"></transform>
+                  <parameter>
+                     <valueId value="unit"></valueId>
+                  </parameter>
+               </target>
+            </rule>
+            <rule>
+               <name value="snomedct"></name>
+               <source>
+                  <context value="doseQuantity"></context>
+                  <element value="unit"></element>
+                  <condition value="($this.length() = 9) and $this.startsWith('73')"></condition>
+               </source>
+               <target>
+                  <context value="quantity"></context>
+                  <contextType value="variable"></contextType>
+                  <element value="system"></element>
+                  <transform value="copy"></transform>
+                  <parameter>
+                     <valueString value="http://snomed.info/sct"></valueString>
+                  </parameter>
+               </target>
+               <documentation value="doseQuantity.unit as unit -&gt; quantity.unit = translate(unit, 'http://fhir.ch/ig/ch-emed/ValueSet/UnitsOfPresentation', 'display') &quot;unit&quot;;"></documentation>
+            </rule>
+            <rule>
+               <name value="ucum"></name>
+               <source>
+                  <context value="doseQuantity"></context>
+                  <element value="unit"></element>
+                  <condition value="(($this.length() != 9) or $this.startsWith('73').not()) as unit"></condition>
+               </source>
+               <target>
+                  <context value="quantity"></context>
+                  <contextType value="variable"></contextType>
+                  <element value="system"></element>
+                  <transform value="copy"></transform>
+                  <parameter>
+                     <valueString value="http://unitsofmeasure.org"></valueString>
+                  </parameter>
+               </target>
+               <target>
+                  <context value="quantity"></context>
+                  <contextType value="variable"></contextType>
+                  <element value="unit"></element>
+                  <transform value="copy"></transform>
+                  <parameter>
+                     <valueId value="unit"></valueId>
+                  </parameter>
+               </target>
+            </rule>
          </rule>
       </rule>
    </group>
    <group>
       <name value="SubstitutionRequest"></name>
+      <typeMode value="none"></typeMode>
       <documentation value="source: Substitution permission Contains 1.3.6.1.4.1.19376.1.9.1.3.9.1 IHE Substitution Permission Content Module (DYNAMIC)
 target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-medicationrequest.html"></documentation>
       <input>
@@ -3330,6 +3563,7 @@ target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-medic
    </group>
    <group>
       <name value="SubstitutionStatement"></name>
+      <typeMode value="none"></typeMode>
       <documentation value="source: Substitution permission Contains 1.3.6.1.4.1.19376.1.9.1.3.9.1 IHE Substitution Permission Content Module (DYNAMIC)
 target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-medicationstatement.html"></documentation>
       <input>
@@ -3464,6 +3698,7 @@ target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-medic
    </group>
    <group>
       <name value="PrescribedQuantity"></name>
+      <typeMode value="none"></typeMode>
       <documentation value="Number of packages
 source: https://art-decor.org/art-decor/decor-templates--cdachemed-?id=2.16.756.5.30.1.1.10.4.38
 target: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefinition-ch-emed-medicationrequest.html"></documentation>
@@ -3572,6 +3807,7 @@ target: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefiniti
    </group>
    <group>
       <name value="ManufacturedMaterialEntryContentModuleRequest"></name>
+      <typeMode value="none"></typeMode>
       <documentation value="source: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.4.33
 target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-medicationrequest.html"></documentation>
       <input>
@@ -4058,6 +4294,7 @@ target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-medic
    </group>
    <group>
       <name value="PrescriptionItemEntryContentModule"></name>
+      <typeMode value="none"></typeMode>
       <documentation value="source: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.4.43
 target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-medicationrequest.html"></documentation>
       <input>
@@ -4429,6 +4666,7 @@ target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-medic
    </group>
    <group>
       <name value="DosageInstructionsStartStopFrequency"></name>
+      <typeMode value="none"></typeMode>
       <documentation value="source: https://art-decor.org/art-decor/decor-templates--ch-pharm-?id=2.16.756.5.30.1.1.10.4.35
 target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition/ch-emed-dosage-structured
 dosage for normal dosing, without sequences"></documentation>
@@ -4584,6 +4822,7 @@ dosage for normal dosing, without sequences"></documentation>
    </group>
    <group>
       <name value="PharmaceuticalAdviceItemEntryContentModule"></name>
+      <typeMode value="none"></typeMode>
       <documentation value="source: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.4.44
 target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-observation.html"></documentation>
       <input>
@@ -4793,6 +5032,7 @@ target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-obser
    </group>
    <group>
       <name value="NarrativeLink"></name>
+      <typeMode value="none"></typeMode>
       <documentation value="_________________________ Template Type not specified   _________________________"></documentation>
       <input>
          <name value="url"></name>
@@ -4846,6 +5086,7 @@ target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-obser
    </group>
    <group>
       <name value="InnerExtensionExternalDocumentId"></name>
+      <typeMode value="none"></typeMode>
       <documentation value="target: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefinition-ch-emed-ext-treatmentplan.html"></documentation>
       <input>
          <name value="src"></name>
@@ -4895,6 +5136,7 @@ target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-obser
    </group>
    <group>
       <name value="InnerExtensionId"></name>
+      <typeMode value="none"></typeMode>
       <documentation value="target: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefinition-ch-emed-ext-treatmentplan.html"></documentation>
       <input>
          <name value="src"></name>

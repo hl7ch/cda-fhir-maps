@@ -197,6 +197,7 @@ FHIR CH-EMED: http://fhir.ch/ig/ch-emed/index.html"></description>
    <import value="http://fhir.ch/ig/cda-fhir-maps/StructureMap/BundleToCdaChEmed"></import>
    <group>
       <name value="BundleToCdaChEmedMedicationTreatmentPlanDocument"></name>
+      <typeMode value="none"></typeMode>
       <documentation value="source: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-composition-medicationtreatmentplan.html
 target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.1.7"></documentation>
       <input>
@@ -237,6 +238,7 @@ target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=temp
    </group>
    <group>
       <name value="CompositionClinicalDocumentChEmedMedicationTreatmentPlanDocument"></name>
+      <typeMode value="none"></typeMode>
       <documentation value="source: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-composition-medicationtreatmentplan.html
 target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.1.7"></documentation>
       <input>
@@ -318,6 +320,7 @@ target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=temp
    <group>
       <name value="SectionMedicationTreatmentPlanSectionContentModule"></name>
       <extends value="SectionCdaSection"></extends>
+      <typeMode value="none"></typeMode>
       <documentation value="_________________________ Section Level Templates _________________________
 source: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-composition-medicationtreatmentplan.html
 target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.3.13"></documentation>
@@ -486,6 +489,7 @@ target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=temp
    <group>
       <name value="BundleToClinicalDocumentEmedMedicationTreatmentPlanDocument"></name>
       <extends value="BundleToClinicalDocumentCh"></extends>
+      <typeMode value="none"></typeMode>
       <documentation value="_________________________ Header Level Templates _________________________
 source: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-composition-medicationtreatmentplan.html
 target: 2.16.756.5.30.1.1.10.9.44"></documentation>

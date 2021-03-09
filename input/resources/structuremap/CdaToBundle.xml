@@ -33,7 +33,6 @@ uses "http://hl7.org/fhir/StructureDefinition/Organization" alias Organization a
 
 imports "http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaToFhirTypes"
 
-// _________________________ Document Level Template  _________________________
 group CdaToBundle(source cda : ClinicalDocument, target bundle : Bundle) {
   cda -&gt;  bundle.entry as e,  e.resource = create('Composition') as composition,  composition.id = uuid() as uuid,  e.fullUrl = append('urn:uuid:', uuid),  bundle.entry as e2,  e2.resource = create('Patient') as patient,  patient.id = uuid() as uuid2,  e2.fullUrl = append('urn:uuid:', uuid2) then {
     cda then ClinicalDocumentToBundle(cda, patient, composition, bundle) "cdatobundle";
@@ -128,15 +127,6 @@ group ClinicalDocumentComposition(source src : ClinicalDocument, target tgt : Co
   } "relatedDoc";
 }
 
-group ClinicalDocumentEntityPerson(source src : AssignedEntity, target tgt : Person) {
-  src.id -&gt; tgt.identifier;
-  src.addr -&gt; tgt.address;
-  src.telecom -&gt; tgt.telecom;
-  src.assignedPerson as person then {
-    person.name -&gt; tgt.name;
-  } "name";
-}
-
 group ClinicalDocumentEntityPractitioner(source src : AssignedEntity, target tgt : Practitioner) {
   src.id -&gt; tgt.identifier;
   src.addr -&gt; tgt.address;
@@ -155,7 +145,6 @@ group ClinicalDocumentOrganization(source src : CustodianOrganization, target tg
 
 group ClinicalDocumentPatientRole(source src : PatientRole, target tgt : Patient, target bundle : Bundle) {
   // src.id -&gt; tgt.identifier;
-  // Patient.identifier.type for EPR context, because there is only the identifier "LocalPid" allowed, LocalPid requires an type -&gt; http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefinition-ch-core-composition-patient-epr.html
   src -&gt; tgt.identifier as identifier then {
     src.id as id -&gt;  identifier.type as type,  type.coding as coding,  coding.system as system,  coding.code as code then {
       src -&gt; system.value = 'http://terminology.hl7.org/CodeSystem/v2-0203' "system";
@@ -344,7 +333,7 @@ FHIR: http://hl7.org/fhir/r4/"></description>
    <import value="http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaToFhirTypes"></import>
    <group>
       <name value="CdaToBundle"></name>
-      <documentation value="_________________________ Document Level Template  _________________________"></documentation>
+      <typeMode value="none"></typeMode>
       <input>
          <name value="cda"></name>
          <type value="ClinicalDocument"></type>
@@ -447,6 +436,7 @@ FHIR: http://hl7.org/fhir/r4/"></description>
    </group>
    <group>
       <name value="ClinicalDocumentToBundle"></name>
+      <typeMode value="none"></typeMode>
       <input>
          <name value="cda"></name>
          <type value="ClinicalDocument"></type>
@@ -587,6 +577,7 @@ FHIR: http://hl7.org/fhir/r4/"></description>
    </group>
    <group>
       <name value="ClinicalDocumentSection"></name>
+      <typeMode value="none"></typeMode>
       <documentation value="_________________________ Section Level Templates _________________________"></documentation>
       <input>
          <name value="src"></name>
@@ -727,6 +718,7 @@ FHIR: http://hl7.org/fhir/r4/"></description>
    </group>
    <group>
       <name value="ClinicalDocumentComposition"></name>
+      <typeMode value="none"></typeMode>
       <documentation value="_________________________ Entry Level Templates   ________________________
 _________________________ Header Level Templates _________________________"></documentation>
       <input>
@@ -1683,88 +1675,8 @@ _________________________ Header Level Templates _________________________"></do
       </rule>
    </group>
    <group>
-      <name value="ClinicalDocumentEntityPerson"></name>
-      <input>
-         <name value="src"></name>
-         <type value="AssignedEntity"></type>
-         <mode value="source"></mode>
-      </input>
-      <input>
-         <name value="tgt"></name>
-         <type value="Person"></type>
-         <mode value="target"></mode>
-      </input>
-      <rule>
-         <name value="id"></name>
-         <source>
-            <context value="src"></context>
-            <element value="id"></element>
-            <variable value="vvv"></variable>
-         </source>
-         <target>
-            <context value="tgt"></context>
-            <contextType value="variable"></contextType>
-            <element value="identifier"></element>
-            <variable value="vvv"></variable>
-            <transform value="create"></transform>
-         </target>
-      </rule>
-      <rule>
-         <name value="addr"></name>
-         <source>
-            <context value="src"></context>
-            <element value="addr"></element>
-            <variable value="vvv"></variable>
-         </source>
-         <target>
-            <context value="tgt"></context>
-            <contextType value="variable"></contextType>
-            <element value="address"></element>
-            <variable value="vvv"></variable>
-            <transform value="create"></transform>
-         </target>
-      </rule>
-      <rule>
-         <name value="telecom"></name>
-         <source>
-            <context value="src"></context>
-            <element value="telecom"></element>
-            <variable value="vvv"></variable>
-         </source>
-         <target>
-            <context value="tgt"></context>
-            <contextType value="variable"></contextType>
-            <element value="telecom"></element>
-            <variable value="vvv"></variable>
-            <transform value="create"></transform>
-         </target>
-      </rule>
-      <rule>
-         <name value="name"></name>
-         <source>
-            <context value="src"></context>
-            <element value="assignedPerson"></element>
-            <variable value="person"></variable>
-         </source>
-         <rule>
-            <name value="name"></name>
-            <source>
-               <context value="person"></context>
-               <element value="name"></element>
-               <variable value="vvv"></variable>
-            </source>
-            <target>
-               <context value="tgt"></context>
-               <contextType value="variable"></contextType>
-               <element value="name"></element>
-               <variable value="vvv"></variable>
-               <transform value="create"></transform>
-            </target>
-         </rule>
-      </rule>
-   </group>
-   <group>
       <name value="ClinicalDocumentEntityPractitioner"></name>
+      <typeMode value="none"></typeMode>
       <input>
          <name value="src"></name>
          <type value="AssignedEntity"></type>
@@ -1846,6 +1758,7 @@ _________________________ Header Level Templates _________________________"></do
    </group>
    <group>
       <name value="ClinicalDocumentOrganization"></name>
+      <typeMode value="none"></typeMode>
       <input>
          <name value="src"></name>
          <type value="CustodianOrganization"></type>
@@ -1921,6 +1834,7 @@ _________________________ Header Level Templates _________________________"></do
    </group>
    <group>
       <name value="ClinicalDocumentPatientRole"></name>
+      <typeMode value="none"></typeMode>
       <input>
          <name value="src"></name>
          <type value="PatientRole"></type>
@@ -2058,8 +1972,7 @@ _________________________ Header Level Templates _________________________"></do
                </target>
             </rule>
          </rule>
-         <documentation value="src.id -&gt; tgt.identifier;
-Patient.identifier.type for EPR context, because there is only the identifier &quot;LocalPid&quot; allowed, LocalPid requires an type -&gt; http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefinition-ch-core-composition-patient-epr.html"></documentation>
+         <documentation value="src.id -&gt; tgt.identifier;"></documentation>
       </rule>
       <rule>
          <name value="addr"></name>
@@ -2385,6 +2298,7 @@ Patient.identifier.type for EPR context, because there is only the identifier &q
    </group>
    <group>
       <name value="ClinicalDocumentEncounter"></name>
+      <typeMode value="none"></typeMode>
       <input>
          <name value="src"></name>
          <type value="EncompassingEncounter"></type>
@@ -2719,6 +2633,7 @@ Patient.identifier.type for EPR context, because there is only the identifier &q
    </group>
    <group>
       <name value="ClinicalDocumentLocation"></name>
+      <typeMode value="none"></typeMode>
       <input>
          <name value="src"></name>
          <type value="HealthCareFacility"></type>
@@ -2873,6 +2788,7 @@ Patient.identifier.type for EPR context, because there is only the identifier &q
    </group>
    <group>
       <name value="ChExtEprTime"></name>
+      <typeMode value="none"></typeMode>
       <documentation value="source dataEnterer: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5.30.1.1.10.2.7
 source author: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.840.1.113883.10.12.102
 target: https://build.fhir.org/ig/hl7ch/ch-core//StructureDefinition-ch-ext-epr-time.html"></documentation>
@@ -2925,6 +2841,7 @@ target: https://build.fhir.org/ig/hl7ch/ch-core//StructureDefinition-ch-ext-epr-
    </group>
    <group>
       <name value="ChExtEprSectionId"></name>
+      <typeMode value="none"></typeMode>
       <documentation value="https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5.30.1.1.10.3.45
 target: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefinition-ch-ext-epr-sectionid.html"></documentation>
       <input>
@@ -2976,6 +2893,7 @@ target: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefiniti
    </group>
    <group>
       <name value="NarrativeLink"></name>
+      <typeMode value="none"></typeMode>
       <documentation value="_________________________ Template Type not specified  ___________________"></documentation>
       <input>
          <name value="url"></name>

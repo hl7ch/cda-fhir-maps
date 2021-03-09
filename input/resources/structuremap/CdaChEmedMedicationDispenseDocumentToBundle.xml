@@ -184,6 +184,7 @@ FHIR CH-EMED: http://fhir.ch/ig/ch-emed/index.html"></description>
    <import value="http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaChEmedToBundle"></import>
    <group>
       <name value="CdaChEmedMedicationDispenseDocumentToBundle"></name>
+      <typeMode value="none"></typeMode>
       <documentation value="source: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.1.5
 target: http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-composition-medicationdispense.html"></documentation>
       <input>
@@ -283,6 +284,7 @@ target: http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-composition-medica
    <group>
       <name value="ClinicalDocumentChEmedMedicationDispenseDocumentToBundle"></name>
       <extends value="ClinicalDocumentChToBundle"></extends>
+      <typeMode value="none"></typeMode>
       <documentation value="source: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.1.5
 target: http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-composition-medicationdispense.html"></documentation>
       <input>
@@ -355,6 +357,7 @@ target: http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-composition-medica
    <group>
       <name value="SectionDispenseSectionContentModule"></name>
       <extends value="ClinicalDocumentSection"></extends>
+      <typeMode value="none"></typeMode>
       <documentation value="_________________________ Section Level Templates _________________________
 source: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.3.11
 target: http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-composition-medicationdispense.html"></documentation>

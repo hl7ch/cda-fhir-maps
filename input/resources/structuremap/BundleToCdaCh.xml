@@ -103,10 +103,10 @@ group SectionCdaOriginalRepresentation(source bundle : Bundle, source section : 
 // _________________________ Header Level Templates _________________________
 // source: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefinition-ch-core-composition-epr.html
 // target: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5.30.1.1.10.9.12
-group PersonAssignedEntityWithId(source person : Person, target assignedEntity : AssignedEntity) {
-  person.identifier as identifier -&gt; assignedEntity.id as id then IdentifierII(identifier, id);
-  person.address as address -&gt; assignedEntity.addr as addr then AddressAD(address, addr);
-  person.name as humanname -&gt;  assignedEntity.assignedPerson as assignedPerson,  assignedPerson.name as en then HumanNameEN(humanname, en);
+group PersonAssignedEntityWithId(source practitioner : Practitioner, target assignedEntity : AssignedEntity) {
+  practitioner.identifier as identifier -&gt; assignedEntity.id as id then IdentifierII(identifier, id);
+  practitioner.address as address -&gt; assignedEntity.addr as addr then AddressAD(address, addr);
+  practitioner.name as humanname -&gt;  assignedEntity.assignedPerson as assignedPerson,  assignedPerson.name as en then HumanNameEN(humanname, en);
 }
 
 // _________________________ Template Type not specified  ___________________
@@ -144,12 +144,19 @@ group CompositionClinicalDocumentCH(source bundle : Bundle, source composition :
     extension -&gt;  informationRecipient.templateId as templateId,  templateId.root = '2.16.756.5.30.1.1.10.2.4' "templateId";
     extension.valueReference as valueReference then {
       bundle.entry as entry then {
-        entry.resource as patient where (($this.id = %valueReference.reference.substring(8)) or ($this.id = %valueReference.reference.substring(9))) -&gt; informationRecipient.intendedRecipient as intendedRecipient then {
+        entry.fullUrl where ($this in %valueReference.reference) and $this.startsWith('urn:uuid') then {
+          entry.resource : Patient as patient -&gt; informationRecipient.intendedRecipient as intendedRecipient share intendedRecipient then {
+            patient.address as address -&gt; intendedRecipient.addr as addr then AddressAD(address, addr);
+            patient.name as humanname -&gt;  intendedRecipient.informationRecipient as informationRecipient2,  informationRecipient2.name as en then HumanNameEN(humanname, en);
+          } "fullUrl patient";
+          entry.resource : Organization as organization -&gt;  informationRecipient.intendedRecipient as intendedRecipient share intendedRecipient,  intendedRecipient.receivedOrganization as receivedOrganization then Organization2CdaOrganization(organization, receivedOrganization) "organization";
+        } "fullUrl as urn:uuid";
+        entry.resource : Patient as patient where (($this.id = %valueReference.reference.substring(8)) or ($this.id = %valueReference.reference.substring(9))) -&gt; informationRecipient.intendedRecipient as intendedRecipient share intendedRecipient then {
           patient.address as address -&gt; intendedRecipient.addr as addr then AddressAD(address, addr);
           patient.name as humanname -&gt;  intendedRecipient.informationRecipient as informationRecipient2,  informationRecipient2.name as en then HumanNameEN(humanname, en);
         } "intendedRecipient";
-        entry.resource as organization where (($this.id = %valueReference.reference.substring(13)) or ($this.id = %valueReference.reference.substring(9))) -&gt;  informationRecipient.intendedRecipient as intendedRecipient,  intendedRecipient.receivedOrganization as receivedOrganization then Organization2CdaOrganization(organization, receivedOrganization) "organization";
-      } "patient";
+        entry.resource : Organization as organization where (($this.id = %valueReference.reference.substring(13)) or ($this.id = %valueReference.reference.substring(9))) -&gt;  informationRecipient.intendedRecipient as intendedRecipient share intendedRecipient,  intendedRecipient.receivedOrganization as receivedOrganization then Organization2CdaOrganization(organization, receivedOrganization) "organization";
+      };
     };
   } "informationRecipient";
   composition.extension as extension where $this.url = 'http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-dataenterer' -&gt; cda.dataEnterer as dataEnterer then {
@@ -160,9 +167,11 @@ group CompositionClinicalDocumentCH(source bundle : Bundle, source composition :
     extension.extension as extensionPerson where $this.url = 'enterer' then {
       extensionPerson.valueReference as valueReference then {
         bundle.entry as entry then {
-          // Person/ or urn:uuid:
-          entry.resource as person where (($this.id = %valueReference.reference.substring(7)) or ($this.id = %valueReference.reference.substring(9))) -&gt; dataEnterer.assignedEntity as assignedEntity then PersonAssignedEntityWithId(person, assignedEntity) "AssignedEntityWithId";
-        } "person";
+          entry.fullUrl where ($this in %valueReference.reference) and $this.startsWith('urn:uuid') then {
+            entry.resource : Practitioner as practitioner -&gt; dataEnterer.assignedEntity as assignedEntity then PersonAssignedEntityWithId(practitioner, assignedEntity) "AssignedEntityWithId";
+          } "fullUrl as urn:uuid";
+          entry.resource : Practitioner as practitioner where ('Practitioner' + '/' + $this.id) in %valueReference.reference -&gt; dataEnterer.assignedEntity as assignedEntity then PersonAssignedEntityWithId(practitioner, assignedEntity) "AssignedEntityWithId";
+        } "practitioner";
       };
     } "extensionPerson";
   } "dataEnterer";
@@ -229,6 +238,7 @@ FHIR CH-Core: http://fhir.ch/ig/ch-core/index.html"></description>
    <import value="http://fhir.ch/ig/cda-fhir-maps/StructureMap/BundleToCda"></import>
    <group>
       <name value="BundleToCdaCh"></name>
+      <typeMode value="none"></typeMode>
       <documentation value="source: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefinition-ch-core-document.html
 target: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5.30.1.1.10.1.14"></documentation>
       <input>
@@ -270,6 +280,7 @@ target: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5
    <group>
       <name value="BundleToClinicalDocumentCh"></name>
       <extends value="BundleToClinicalDocument"></extends>
+      <typeMode value="none"></typeMode>
       <documentation value="source: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefinition-ch-core-document.html
 target: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5.30.1.1.10.1.14"></documentation>
       <input>
@@ -469,6 +480,7 @@ target: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5
    <group>
       <name value="SectionCdaRemarksCoded"></name>
       <extends value="SectionCdaSection"></extends>
+      <typeMode value="none"></typeMode>
       <documentation value="_________________________ Section Level Templates _________________________
 source: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefinition-ch-core-composition-definitions.html#Composition.section
 target: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5.30.1.1.10.3.2"></documentation>
@@ -717,6 +729,7 @@ target: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5
    </group>
    <group>
       <name value="SectionCdaOriginalRepresentationObservationMedia"></name>
+      <typeMode value="none"></typeMode>
       <input>
          <name value="binary"></name>
          <type value="Binary"></type>
@@ -957,6 +970,7 @@ target: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5
    <group>
       <name value="SectionCdaOriginalRepresentation"></name>
       <extends value="SectionCdaSection"></extends>
+      <typeMode value="none"></typeMode>
       <documentation value="source: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefinition-ch-core-composition-definitions.html#Composition.section
 target: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5.30.1.1.10.1.14
 target: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5.30.1.1.10.4.83"></documentation>
@@ -1044,13 +1058,14 @@ target: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5
    </group>
    <group>
       <name value="PersonAssignedEntityWithId"></name>
+      <typeMode value="none"></typeMode>
       <documentation value="_________________________ Entry Level Templates   ________________________
 _________________________ Header Level Templates _________________________
 source: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefinition-ch-core-composition-epr.html
 target: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5.30.1.1.10.9.12"></documentation>
       <input>
-         <name value="person"></name>
-         <type value="Person"></type>
+         <name value="practitioner"></name>
+         <type value="Practitioner"></type>
          <mode value="source"></mode>
       </input>
       <input>
@@ -1061,7 +1076,7 @@ target: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5
       <rule>
          <name value="identifier"></name>
          <source>
-            <context value="person"></context>
+            <context value="practitioner"></context>
             <element value="identifier"></element>
             <variable value="identifier"></variable>
          </source>
@@ -1080,7 +1095,7 @@ target: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5
       <rule>
          <name value="address"></name>
          <source>
-            <context value="person"></context>
+            <context value="practitioner"></context>
             <element value="address"></element>
             <variable value="address"></variable>
          </source>
@@ -1099,7 +1114,7 @@ target: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5
       <rule>
          <name value="name"></name>
          <source>
-            <context value="person"></context>
+            <context value="practitioner"></context>
             <element value="name"></element>
             <variable value="humanname"></variable>
          </source>
@@ -1124,6 +1139,7 @@ target: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5
    </group>
    <group>
       <name value="CompositionClinicalDocumentCH"></name>
+      <typeMode value="none"></typeMode>
       <documentation value="_________________________ Template Type not specified  ___________________
 source: http://hl7.org/fhir/R4/person.html
 target: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5.30.1.1.10.9.36"></documentation>
@@ -1400,16 +1416,114 @@ target: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5
                <variable value="valueReference"></variable>
             </source>
             <rule>
-               <name value="patient"></name>
+               <name value="entry"></name>
                <source>
                   <context value="bundle"></context>
                   <element value="entry"></element>
                   <variable value="entry"></variable>
                </source>
                <rule>
+                  <name value="fullUrl as urn:uuid"></name>
+                  <source>
+                     <context value="entry"></context>
+                     <element value="fullUrl"></element>
+                     <condition value="($this in %valueReference.reference) and $this.startsWith('urn:uuid')"></condition>
+                  </source>
+                  <rule>
+                     <name value="fullUrl patient"></name>
+                     <source>
+                        <context value="entry"></context>
+                        <type value="Patient"></type>
+                        <element value="resource"></element>
+                        <variable value="patient"></variable>
+                     </source>
+                     <target>
+                        <context value="informationRecipient"></context>
+                        <contextType value="variable"></contextType>
+                        <element value="intendedRecipient"></element>
+                        <variable value="intendedRecipient"></variable>
+                        <listMode value="share"></listMode>
+                        <listRuleId value="intendedRecipient"></listRuleId>
+                     </target>
+                     <rule>
+                        <name value="address"></name>
+                        <source>
+                           <context value="patient"></context>
+                           <element value="address"></element>
+                           <variable value="address"></variable>
+                        </source>
+                        <target>
+                           <context value="intendedRecipient"></context>
+                           <contextType value="variable"></contextType>
+                           <element value="addr"></element>
+                           <variable value="addr"></variable>
+                        </target>
+                        <dependent>
+                           <name value="AddressAD"></name>
+                           <variable value="address"></variable>
+                           <variable value="addr"></variable>
+                        </dependent>
+                     </rule>
+                     <rule>
+                        <name value="name"></name>
+                        <source>
+                           <context value="patient"></context>
+                           <element value="name"></element>
+                           <variable value="humanname"></variable>
+                        </source>
+                        <target>
+                           <context value="intendedRecipient"></context>
+                           <contextType value="variable"></contextType>
+                           <element value="informationRecipient"></element>
+                           <variable value="informationRecipient2"></variable>
+                        </target>
+                        <target>
+                           <context value="informationRecipient2"></context>
+                           <contextType value="variable"></contextType>
+                           <element value="name"></element>
+                           <variable value="en"></variable>
+                        </target>
+                        <dependent>
+                           <name value="HumanNameEN"></name>
+                           <variable value="humanname"></variable>
+                           <variable value="en"></variable>
+                        </dependent>
+                     </rule>
+                  </rule>
+                  <rule>
+                     <name value="organization"></name>
+                     <source>
+                        <context value="entry"></context>
+                        <type value="Organization"></type>
+                        <element value="resource"></element>
+                        <variable value="organization"></variable>
+                     </source>
+                     <target>
+                        <context value="informationRecipient"></context>
+                        <contextType value="variable"></contextType>
+                        <element value="intendedRecipient"></element>
+                        <variable value="intendedRecipient"></variable>
+                        <listMode value="share"></listMode>
+                        <listRuleId value="intendedRecipient"></listRuleId>
+                     </target>
+                     <target>
+                        <context value="intendedRecipient"></context>
+                        <contextType value="variable"></contextType>
+                        <element value="receivedOrganization"></element>
+                        <variable value="receivedOrganization"></variable>
+                     </target>
+                     <dependent>
+                        <name value="Organization2CdaOrganization"></name>
+                        <variable value="organization"></variable>
+                        <variable value="receivedOrganization"></variable>
+                     </dependent>
+                  </rule>
+               </rule>
+               <rule>
                   <name value="intendedRecipient"></name>
                   <source>
                      <context value="entry"></context>
+                     <type value="Patient"></type>
                      <element value="resource"></element>
                      <variable value="patient"></variable>
                      <condition value="(($this.id = %valueReference.reference.substring(8)) or ($this.id = %valueReference.reference.substring(9)))"></condition>
@@ -1419,6 +1533,8 @@ target: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5
                      <contextType value="variable"></contextType>
                      <element value="intendedRecipient"></element>
                      <variable value="intendedRecipient"></variable>
+                     <listMode value="share"></listMode>
+                     <listRuleId value="intendedRecipient"></listRuleId>
                   </target>
                   <rule>
                      <name value="address"></name>
@@ -1469,6 +1585,7 @@ target: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5
                   <name value="organization"></name>
                   <source>
                      <context value="entry"></context>
+                     <type value="Organization"></type>
                      <element value="resource"></element>
                      <variable value="organization"></variable>
                      <condition value="(($this.id = %valueReference.reference.substring(13)) or ($this.id = %valueReference.reference.substring(9)))"></condition>
@@ -1478,6 +1595,8 @@ target: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5
                      <contextType value="variable"></contextType>
                      <element value="intendedRecipient"></element>
                      <variable value="intendedRecipient"></variable>
+                     <listMode value="share"></listMode>
+                     <listRuleId value="intendedRecipient"></listRuleId>
                   </target>
                   <target>
                      <context value="intendedRecipient"></context>
@@ -1573,19 +1692,48 @@ target: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5
                   <variable value="valueReference"></variable>
                </source>
                <rule>
-                  <name value="person"></name>
+                  <name value="practitioner"></name>
                   <source>
                      <context value="bundle"></context>
                      <element value="entry"></element>
                      <variable value="entry"></variable>
                   </source>
                   <rule>
+                     <name value="fullUrl as urn:uuid"></name>
+                     <source>
+                        <context value="entry"></context>
+                        <element value="fullUrl"></element>
+                        <condition value="($this in %valueReference.reference) and $this.startsWith('urn:uuid')"></condition>
+                     </source>
+                     <rule>
+                        <name value="AssignedEntityWithId"></name>
+                        <source>
+                           <context value="entry"></context>
+                           <type value="Practitioner"></type>
+                           <element value="resource"></element>
+                           <variable value="practitioner"></variable>
+                        </source>
+                        <target>
+                           <context value="dataEnterer"></context>
+                           <contextType value="variable"></contextType>
+                           <element value="assignedEntity"></element>
+                           <variable value="assignedEntity"></variable>
+                        </target>
+                        <dependent>
+                           <name value="PersonAssignedEntityWithId"></name>
+                           <variable value="practitioner"></variable>
+                           <variable value="assignedEntity"></variable>
+                        </dependent>
+                     </rule>
+                  </rule>
+                  <rule>
                      <name value="AssignedEntityWithId"></name>
                      <source>
                         <context value="entry"></context>
+                        <type value="Practitioner"></type>
                         <element value="resource"></element>
-                        <variable value="person"></variable>
-                        <condition value="(($this.id = %valueReference.reference.substring(7)) or ($this.id = %valueReference.reference.substring(9)))"></condition>
+                        <variable value="practitioner"></variable>
+                        <condition value="('Practitioner' + '/' + $this.id) in %valueReference.reference"></condition>
                      </source>
                      <target>
                         <context value="dataEnterer"></context>
@@ -1595,10 +1743,9 @@ target: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5
                      </target>
                      <dependent>
                         <name value="PersonAssignedEntityWithId"></name>
-                        <variable value="person"></variable>
+                        <variable value="practitioner"></variable>
                         <variable value="assignedEntity"></variable>
                      </dependent>
-                     <documentation value="Person/ or urn:uuid:"></documentation>
                   </rule>
                </rule>
             </rule>

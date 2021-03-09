@@ -75,20 +75,20 @@ group CompositionClinicalDocument(source bundle : Bundle, source composition : C
   composition.language as language -&gt;  cda.languageCode as languageCode,  languageCode.code = language "languageCode";
   bundle.entry as entry then {
     entry.fullUrl where ($this in %composition.subject.reference) and $this.startsWith('urn:uuid') then {
-      entry.resource as patient then PatientRecordTarget(patient, bundle, recordTarget) "patient";
-    } "fullUrlAsUuid";
+      entry.resource : Patient as patient then PatientRecordTarget(patient, bundle, recordTarget) "patient";
+    } "fullUrl as urn:uuid";
     entry.resource as patient where ('Patient' + '/' + $this.id) in %composition.subject.reference then PatientRecordTarget(patient, bundle, recordTarget) "patient";
     entry.fullUrl where ($this in %composition.custodian.reference) and $this.startsWith('urn:uuid') then {
-      entry.resource as organization -&gt; cda.custodian as custodian then OrganizationCustodian(organization, custodian) "custodian";
-    } "fullUrlAsUuid";
+      entry.resource : Organization as organization -&gt; cda.custodian as custodian then OrganizationCustodian(organization, custodian) "custodian";
+    } "fullUrl as urn:uuid";
     entry.resource as organization where ('Organization' + '/' + $this.id) in %composition.custodian.reference -&gt; cda.custodian as custodian then OrganizationCustodian(organization, custodian) "custodian";
     entry.fullUrl where ($this in %composition.author.reference) and $this.startsWith('urn:uuid') then {
-      entry.resource as practitioner then PractitionerAuthor(bundle, composition, practitioner, author) "author";
-    } "fullUrlAsUuid";
+      entry.resource : Practitioner as practitioner then PractitionerAuthor(bundle, composition, practitioner, author) "author";
+    } "fullUrl as urn:uuid";
     entry.resource as practitioner where ('Practitioner' + '/' + $this.id) in %composition.author.reference then PractitionerAuthor(bundle, composition, practitioner, author) "author";
     entry.fullUrl where ($this in %composition.attester.party.reference) and $this.startsWith('urn:uuid') then {
-      entry.resource as practitioner -&gt; cda.legalAuthenticator as legalAuthenticator then PractitionerLegalAuthenticator(bundle, composition, practitioner, legalAuthenticator) "legalAuthenticator";
-    } "fullUrlAsUuid";
+      entry.resource : Practitioner as practitioner -&gt; cda.legalAuthenticator as legalAuthenticator then PractitionerLegalAuthenticator(bundle, composition, practitioner, legalAuthenticator) "legalAuthenticator";
+    } "fullUrl as urn:uuid";
     entry.resource as practitioner where ('Practitioner' + '/' + $this.id) in %composition.attester.party.reference -&gt; cda.legalAuthenticator as legalAuthenticator then PractitionerLegalAuthenticator(bundle, composition, practitioner, legalAuthenticator) "legalAuthenticator";
   } "patient";
   // source.date -&gt; tgt.effectiveTime "effectiveTime";
@@ -117,8 +117,8 @@ group PatientRecordTarget(source src : Patient, source bundle : Bundle, target t
     src.telecom as telecom -&gt; patientRole.telecom as tel then ContactPointTEL(telecom, tel);
     src.managingOrganization as managingOrganization then {
       bundle.entry as entry then {
-        entry.fullUrl where ($this in %managingOrganization.reference) and $this.startsWith('urn:uuid') -&gt; patientRole.providerOrganization as providerOrganization then Organization2CdaOrganization(organization, providerOrganization) "providerOrganization";
-        entry.resource as organization where ('Organization' + '/' + $this.id) in %managingOrganization.reference -&gt; patientRole.providerOrganization as providerOrganization then Organization2CdaOrganization(organization, providerOrganization) "providerOrganization";
+        entry.fullUrl where ($this in %managingOrganization.reference) and $this.startsWith('urn:uuid') -&gt; patientRole.providerOrganization as providerOrganization then Organization2CdaOrganization(managingOrganization, providerOrganization) "providerOrganization";
+        entry.resource as organization where ('Organization' + '/' + $this.id) in %managingOrganization.reference -&gt; patientRole.providerOrganization as providerOrganization then Organization2CdaOrganization(managingOrganization, providerOrganization) "providerOrganization";
       };
     };
   } "patientRole";
@@ -129,14 +129,15 @@ group PractitionerAuthor(source bundle : Bundle, source composition : Compositio
     srcauthor.extension as extensionTime where $this.url = 'http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-time' then {
       extensionTime.valueDateTime as valueDateTime -&gt; tgt.time as time then DateTimeTS(valueDateTime, time) "DateTime";
     } "extensionTime";
+    bundle.timestamp as valueDateTime where %srcauthor.extension.empty() or %srcauthor.extension.where(url = 'http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-time').empty() -&gt; tgt.time as time then DateTimeTS(valueDateTime, time) "DateTimeBundle";
   } "srcAuthor";
   src -&gt; tgt.assignedAuthor as assignedAuthor then {
     src.identifier as identifier -&gt; assignedAuthor.id as id then IdentifierII(identifier, id) "id";
     src.name as name -&gt;  assignedAuthor.assignedPerson as assignedPerson,  assignedPerson.name as en then HumanNameEN(name, en);
     bundle.entry as entry then {
       entry.fullUrl where ($this in %composition.author.reference) and $this.startsWith('urn:uuid') then {
-        entry.resource as organization -&gt; assignedAuthor.representedOrganization as cdaorganization then Organization2CdaOrganization(organization, cdaorganization) "organization";
-      } "fullUrlAsUuid";
+        entry.resource : Organization as organization -&gt; assignedAuthor.representedOrganization as cdaorganization then Organization2CdaOrganization(organization, cdaorganization) "organization";
+      } "fullUrl as urn:uuid";
       entry.resource as organization where ('Organization' + '/' + $this.id) in %composition.author.reference -&gt; assignedAuthor.representedOrganization as cdaorganization then Organization2CdaOrganization(organization, cdaorganization) "organization";
     } "patient";
   } "assignedAuthor";
@@ -144,8 +145,16 @@ group PractitionerAuthor(source bundle : Bundle, source composition : Compositio
 
 group OrganizationCustodian(source src : Organization, target tgt : Custodian) {
   src -&gt; tgt.assignedCustodian as assignedCustodian then {
-    src -&gt; assignedCustodian.representedCustodianOrganization as representedCustodianOrganization then Organization2CdaOrganization(src, representedCustodianOrganization) "representedCustodianOrganization";
+    src -&gt; assignedCustodian.representedCustodianOrganization as representedCustodianOrganization then Organization2CdaOrganizationCustodian(src, representedCustodianOrganization) "representedCustodianOrganization";
   } "assignedCustodian";
+}
+
+group Organization2CdaOrganizationCustodian(source src : Organization, target tgt : CdaOrganization) {
+  src.identifier as identifier -&gt; tgt.id as id then IdentifierII(identifier, id) "id";
+  src.name as name -&gt;  tgt.name as orgname,  orgname.other = name;
+  src.address as address -&gt; tgt.addr as ad then AddressAD(address, ad);
+  // target telecom is 0..1
+  src.telecom first as telecom -&gt; tgt.telecom as tel then ContactPointTEL(telecom, tel);
 }
 
 group Organization2CdaOrganization(source src : Organization, target tgt : CdaOrganization) {
@@ -245,6 +254,7 @@ FHIR: http://hl7.org/fhir/r4/"></description>
    <import value="http://fhir.ch/ig/cda-fhir-maps/StructureMap/FhirToCdaTypes"></import>
    <group>
       <name value="BundleToCda"></name>
+      <typeMode value="none"></typeMode>
       <input>
          <name value="bundle"></name>
          <type value="Bundle"></type>
@@ -283,6 +293,7 @@ FHIR: http://hl7.org/fhir/r4/"></description>
    </group>
    <group>
       <name value="BundleToClinicalDocument"></name>
+      <typeMode value="none"></typeMode>
       <input>
          <name value="bundle"></name>
          <type value="Bundle"></type>
@@ -438,6 +449,7 @@ FHIR: http://hl7.org/fhir/r4/"></description>
    </group>
    <group>
       <name value="SectionCdaSection"></name>
+      <typeMode value="none"></typeMode>
       <documentation value="_________________________ Section Level Templates _________________________"></documentation>
       <input>
          <name value="bundle"></name>
@@ -561,6 +573,7 @@ FHIR: http://hl7.org/fhir/r4/"></description>
    </group>
    <group>
       <name value="CompositionClinicalDocument"></name>
+      <typeMode value="none"></typeMode>
       <documentation value="_________________________ Entry Level Templates   ________________________
 _________________________ Header Level Templates _________________________"></documentation>
       <input>
@@ -722,7 +735,7 @@ _________________________ Header Level Templates _________________________"></do
             <variable value="entry"></variable>
          </source>
          <rule>
-            <name value="fullUrlAsUuid"></name>
+            <name value="fullUrl as urn:uuid"></name>
             <source>
                <context value="entry"></context>
                <element value="fullUrl"></element>
@@ -732,6 +745,7 @@ _________________________ Header Level Templates _________________________"></do
                <name value="patient"></name>
                <source>
                   <context value="entry"></context>
+                  <type value="Patient"></type>
                   <element value="resource"></element>
                   <variable value="patient"></variable>
                </source>
@@ -759,7 +773,7 @@ _________________________ Header Level Templates _________________________"></do
             </dependent>
          </rule>
          <rule>
-            <name value="fullUrlAsUuid"></name>
+            <name value="fullUrl as urn:uuid"></name>
             <source>
                <context value="entry"></context>
                <element value="fullUrl"></element>
@@ -769,6 +783,7 @@ _________________________ Header Level Templates _________________________"></do
                <name value="custodian"></name>
                <source>
                   <context value="entry"></context>
+                  <type value="Organization"></type>
                   <element value="resource"></element>
                   <variable value="organization"></variable>
                </source>
@@ -806,7 +821,7 @@ _________________________ Header Level Templates _________________________"></do
             </dependent>
          </rule>
          <rule>
-            <name value="fullUrlAsUuid"></name>
+            <name value="fullUrl as urn:uuid"></name>
             <source>
                <context value="entry"></context>
                <element value="fullUrl"></element>
@@ -816,6 +831,7 @@ _________________________ Header Level Templates _________________________"></do
                <name value="author"></name>
                <source>
                   <context value="entry"></context>
+                  <type value="Practitioner"></type>
                   <element value="resource"></element>
                   <variable value="practitioner"></variable>
                </source>
@@ -845,7 +861,7 @@ _________________________ Header Level Templates _________________________"></do
             </dependent>
          </rule>
          <rule>
-            <name value="fullUrlAsUuid"></name>
+            <name value="fullUrl as urn:uuid"></name>
             <source>
                <context value="entry"></context>
                <element value="fullUrl"></element>
@@ -855,6 +871,7 @@ _________________________ Header Level Templates _________________________"></do
                <name value="legalAuthenticator"></name>
                <source>
                   <context value="entry"></context>
+                  <type value="Practitioner"></type>
                   <element value="resource"></element>
                   <variable value="practitioner"></variable>
                </source>
@@ -960,6 +977,7 @@ _________________________ Header Level Templates _________________________"></do
    </group>
    <group>
       <name value="PatientRecordTarget"></name>
+      <typeMode value="none"></typeMode>
       <input>
          <name value="src"></name>
          <type value="Patient"></type>
@@ -1239,7 +1257,7 @@ _________________________ Header Level Templates _________________________"></do
                   </target>
                   <dependent>
                      <name value="Organization2CdaOrganization"></name>
-                     <variable value="organization"></variable>
+                     <variable value="managingOrganization"></variable>
                      <variable value="providerOrganization"></variable>
                   </dependent>
                </rule>
@@ -1259,7 +1277,7 @@ _________________________ Header Level Templates _________________________"></do
                   </target>
                   <dependent>
                      <name value="Organization2CdaOrganization"></name>
-                     <variable value="organization"></variable>
+                     <variable value="managingOrganization"></variable>
                      <variable value="providerOrganization"></variable>
                   </dependent>
                </rule>
@@ -1269,6 +1287,7 @@ _________________________ Header Level Templates _________________________"></do
    </group>
    <group>
       <name value="PractitionerAuthor"></name>
+      <typeMode value="none"></typeMode>
       <input>
          <name value="bundle"></name>
          <type value="Bundle"></type>
@@ -1323,6 +1342,26 @@ _________________________ Header Level Templates _________________________"></do
                   <variable value="time"></variable>
                </dependent>
             </rule>
+         </rule>
+         <rule>
+            <name value="DateTimeBundle"></name>
+            <source>
+               <context value="bundle"></context>
+               <element value="timestamp"></element>
+               <variable value="valueDateTime"></variable>
+               <condition value="%srcauthor.extension.empty() or %srcauthor.extension.where(url = 'http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-time').empty()"></condition>
+            </source>
+            <target>
+               <context value="tgt"></context>
+               <contextType value="variable"></contextType>
+               <element value="time"></element>
+               <variable value="time"></variable>
+            </target>
+            <dependent>
+               <name value="DateTimeTS"></name>
+               <variable value="valueDateTime"></variable>
+               <variable value="time"></variable>
+            </dependent>
          </rule>
       </rule>
       <rule>
@@ -1388,7 +1427,7 @@ _________________________ Header Level Templates _________________________"></do
                <variable value="entry"></variable>
             </source>
             <rule>
-               <name value="fullUrlAsUuid"></name>
+               <name value="fullUrl as urn:uuid"></name>
                <source>
                   <context value="entry"></context>
                   <element value="fullUrl"></element>
@@ -1398,6 +1437,7 @@ _________________________ Header Level Templates _________________________"></do
                   <name value="organization"></name>
                   <source>
                      <context value="entry"></context>
+                     <type value="Organization"></type>
                      <element value="resource"></element>
                      <variable value="organization"></variable>
                   </source>
@@ -1439,6 +1479,7 @@ _________________________ Header Level Templates _________________________"></do
    </group>
    <group>
       <name value="OrganizationCustodian"></name>
+      <typeMode value="none"></typeMode>
       <input>
          <name value="src"></name>
          <type value="Organization"></type>
@@ -1472,7 +1513,7 @@ _________________________ Header Level Templates _________________________"></do
                <variable value="representedCustodianOrganization"></variable>
             </target>
             <dependent>
-               <name value="Organization2CdaOrganization"></name>
+               <name value="Organization2CdaOrganizationCustodian"></name>
                <variable value="src"></variable>
                <variable value="representedCustodianOrganization"></variable>
             </dependent>
@@ -1480,7 +1521,104 @@ _________________________ Header Level Templates _________________________"></do
       </rule>
    </group>
    <group>
+      <name value="Organization2CdaOrganizationCustodian"></name>
+      <typeMode value="none"></typeMode>
+      <input>
+         <name value="src"></name>
+         <type value="Organization"></type>
+         <mode value="source"></mode>
+      </input>
+      <input>
+         <name value="tgt"></name>
+         <type value="CdaOrganization"></type>
+         <mode value="target"></mode>
+      </input>
+      <rule>
+         <name value="id"></name>
+         <source>
+            <context value="src"></context>
+            <element value="identifier"></element>
+            <variable value="identifier"></variable>
+         </source>
+         <target>
+            <context value="tgt"></context>
+            <contextType value="variable"></contextType>
+            <element value="id"></element>
+            <variable value="id"></variable>
+         </target>
+         <dependent>
+            <name value="IdentifierII"></name>
+            <variable value="identifier"></variable>
+            <variable value="id"></variable>
+         </dependent>
+      </rule>
+      <rule>
+         <name value="name"></name>
+         <source>
+            <context value="src"></context>
+            <element value="name"></element>
+            <variable value="name"></variable>
+         </source>
+         <target>
+            <context value="tgt"></context>
+            <contextType value="variable"></contextType>
+            <element value="name"></element>
+            <variable value="orgname"></variable>
+         </target>
+         <target>
+            <context value="orgname"></context>
+            <contextType value="variable"></contextType>
+            <element value="other"></element>
+            <transform value="copy"></transform>
+            <parameter>
+               <valueId value="name"></valueId>
+            </parameter>
+         </target>
+      </rule>
+      <rule>
+         <name value="address"></name>
+         <source>
+            <context value="src"></context>
+            <element value="address"></element>
+            <variable value="address"></variable>
+         </source>
+         <target>
+            <context value="tgt"></context>
+            <contextType value="variable"></contextType>
+            <element value="addr"></element>
+            <variable value="ad"></variable>
+         </target>
+         <dependent>
+            <name value="AddressAD"></name>
+            <variable value="address"></variable>
+            <variable value="ad"></variable>
+         </dependent>
+      </rule>
+      <rule>
+         <name value="telecom"></name>
+         <source>
+            <context value="src"></context>
+            <element value="telecom"></element>
+            <listMode value="first"></listMode>
+            <variable value="telecom"></variable>
+         </source>
+         <target>
+            <context value="tgt"></context>
+            <contextType value="variable"></contextType>
+            <element value="telecom"></element>
+            <variable value="tel"></variable>
+         </target>
+         <dependent>
+            <name value="ContactPointTEL"></name>
+            <variable value="telecom"></variable>
+            <variable value="tel"></variable>
+         </dependent>
+         <documentation value="target telecom is 0..1"></documentation>
+      </rule>
+   </group>
+   <group>
       <name value="Organization2CdaOrganization"></name>
+      <typeMode value="none"></typeMode>
       <input>
          <name value="src"></name>
          <type value="Organization"></type>
@@ -1574,6 +1712,7 @@ _________________________ Header Level Templates _________________________"></do
    </group>
    <group>
       <name value="PractitionerLegalAuthenticator"></name>
+      <typeMode value="none"></typeMode>
       <input>
          <name value="bundle"></name>
          <type value="Bundle"></type>

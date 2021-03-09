@@ -160,7 +160,6 @@ group ContactPointTEL(source src : ContactPoint, target tgt : TEL) extends Any &
   src.value as value -&gt; tgt.value = (iif(%src.system = 'phone', 'tel:', '') + iif(%src.system = 'fax', 'fax:', '') + iif(%src.system = 'email', 'mailto:', '') + iif(%src.system = 'url', 'http:', '') + value);
   src.use as use where $this = 'home' -&gt; tgt.use = 'HP';
   src.use as use where $this = 'work' -&gt; tgt.use = 'WP';
-  // not complete see below
   src.use as use where $this = 'old' -&gt; tgt.use = 'BAD';
   src.use as use where $this = 'temp' -&gt; tgt.use = 'TMP';
   src.use as use where $this = 'mobile' -&gt; tgt.use = 'MC';
@@ -174,8 +173,7 @@ group HumanNameEN(source src : HumanName, target tgt : EN) extends Any &lt;&lt;t
 }
 
 group QuantityPQ(source src : Quantity, target tgt : PQ) extends Any &lt;&lt;types&gt;&gt; {
-  // src.code as code -&gt; tgt.unit = code;
-  src.unit as unit -&gt; tgt.unit = unit;
+  src.code as code -&gt; tgt.unit = code;
   src.value as value -&gt; tgt.value = value;
 }
 
@@ -380,6 +378,7 @@ FHIR: http://hl7.org/fhir/r4/"></description>
    </structure>
    <group>
       <name value="Any"></name>
+      <typeMode value="none"></typeMode>
       <input>
          <name value="src"></name>
          <mode value="source"></mode>
@@ -1193,7 +1192,6 @@ group CDCodeableConcept(source src : CD, target tgt : CodeableConcept) extends C
                <valueString value="BAD"></valueString>
             </parameter>
          </target>
-         <documentation value="not complete see below"></documentation>
       </rule>
       <rule>
          <name value="use"></name>
@@ -1354,11 +1352,11 @@ group CDCodeableConcept(source src : CD, target tgt : CodeableConcept) extends C
          <mode value="target"></mode>
       </input>
       <rule>
-         <name value="unit"></name>
+         <name value="code"></name>
          <source>
             <context value="src"></context>
-            <element value="unit"></element>
-            <variable value="unit"></variable>
+            <element value="code"></element>
+            <variable value="code"></variable>
          </source>
          <target>
             <context value="tgt"></context>
@@ -1366,10 +1364,9 @@ group CDCodeableConcept(source src : CD, target tgt : CodeableConcept) extends C
             <element value="unit"></element>
             <transform value="copy"></transform>
             <parameter>
-               <valueId value="unit"></valueId>
+               <valueId value="code"></valueId>
             </parameter>
          </target>
-         <documentation value="src.code as code -&gt; tgt.unit = code;"></documentation>
       </rule>
       <rule>
          <name value="value"></name>

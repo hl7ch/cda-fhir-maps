@@ -373,6 +373,7 @@ FHIR: http://hl7.org/fhir/r4/"></description>
    </structure>
    <group>
       <name value="Any"></name>
+      <typeMode value="none"></typeMode>
       <input>
          <name value="src"></name>
          <mode value="source"></mode>
@@ -664,6 +665,7 @@ FHIR: http://hl7.org/fhir/r4/"></description>
    </group>
    <group>
       <name value="TemplateID"></name>
+      <typeMode value="none"></typeMode>
       <input>
          <name value="template"></name>
          <type value="II"></type>
@@ -724,6 +726,7 @@ FHIR: http://hl7.org/fhir/r4/"></description>
    </group>
    <group>
       <name value="Negation"></name>
+      <typeMode value="none"></typeMode>
       <input>
          <name value="negation"></name>
          <type value="BL"></type>

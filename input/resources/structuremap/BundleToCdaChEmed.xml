@@ -746,6 +746,7 @@ FHIR CH-EMED: http://fhir.ch/ig/ch-emed/index.html"></description>
    <import value="http://fhir.ch/ig/cda-fhir-maps/StructureMap/BundleToCdaCh"></import>
    <group>
       <name value="AnnotationComment"></name>
+      <typeMode value="none"></typeMode>
       <documentation value="source: Annotation note (e.g. http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefinition-ch-emed-medicationstatement.html)
 target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.4.2
 Note/Warning: we assume that there is a narrativeLink extension which refers to the text which should be the same as in note.text"></documentation>
@@ -962,6 +963,7 @@ Note/Warning: we assume that there is a narrativeLink extension which refers to 
    </group>
    <group>
       <name value="ManufacturedMaterialEntryContentModuleStatement"></name>
+      <typeMode value="none"></typeMode>
       <documentation value="source: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefinition-ch-emed-medicationstatement.html
 target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.4.33&amp;effectiveDate=2019-12-11T11:34:24&amp;language=en-US"></documentation>
       <input>
@@ -1583,6 +1585,7 @@ target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=temp
    </group>
    <group>
       <name value="MedicationTreatmentPlanItemEntryContentModule"></name>
+      <typeMode value="none"></typeMode>
       <documentation value="source: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefinition-ch-emed-medicationstatement.html
 target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.4.34&amp;effectiveDate=2019-12-11T11:31:52&amp;language=en-US"></documentation>
       <input>
@@ -2130,6 +2133,7 @@ target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=temp
    </group>
    <group>
       <name value="DosageInstructionsStartStopFrequencySubstanceAdministration"></name>
+      <typeMode value="none"></typeMode>
       <documentation value="TODO: Tapered Dose
 medicationStatement -&gt; substanceAdministration.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.5.3.1.4.8' &quot;taperedDose&quot;;
 source: http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured
@@ -2245,6 +2249,7 @@ dosage for normal dosing (without sequences) (Statement, Prescription)"></docume
    </group>
    <group>
       <name value="DosageInstructionsEntryStartStopRoute"></name>
+      <typeMode value="none"></typeMode>
       <documentation value="source: http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured
 target: https://art-decor.org/art-decor/decor-templates--ch-pharm-?id=2.16.756.5.30.1.1.10.4.36
 dosage for split dosing: effectiveTime (start/stop) &amp; routeCode (Statement, Prescription)"></documentation>
@@ -2375,6 +2380,7 @@ dosage for split dosing: effectiveTime (start/stop) &amp; routeCode (Statement, 
    </group>
    <group>
       <name value="DosageInstructionsEntryDosageChangeSubstanceAdministration"></name>
+      <typeMode value="none"></typeMode>
       <documentation value="source: http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured
 target: https://art-decor.org/art-decor/decor-templates--ch-pharm-?id=2.16.756.5.30.1.1.10.4.36
 dosage for split dosing: sequence number, effectiveTime (when), dose quantity, consumable (Statement, Prescription)"></documentation>
@@ -2528,6 +2534,7 @@ dosage for split dosing: sequence number, effectiveTime (when), dose quantity, c
    </group>
    <group>
       <name value="EffectiveTimeStartEnd"></name>
+      <typeMode value="none"></typeMode>
       <documentation value="effective time low and high for dosage (Statement, Prescription)"></documentation>
       <input>
          <name value="dosage"></name>
@@ -2615,6 +2622,7 @@ dosage for split dosing: sequence number, effectiveTime (when), dose quantity, c
    </group>
    <group>
       <name value="DoseQuantity"></name>
+      <typeMode value="none"></typeMode>
       <documentation value="dose quantity for dosage (application schema) (Statement)"></documentation>
       <input>
          <name value="dosage"></name>
@@ -2675,6 +2683,7 @@ dosage for split dosing: sequence number, effectiveTime (when), dose quantity, c
    </group>
    <group>
       <name value="TreatmentReasonEntryContentModule"></name>
+      <typeMode value="none"></typeMode>
       <documentation value="source: reasonCode Coding (e.g. http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-medicationstatement)
 target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.4.41
 Treatment Reason (Statement, Prescription)
@@ -2850,6 +2859,7 @@ Note/Warning: we assume that there is a narrativeLink extension which refers to 
    </group>
    <group>
       <name value="MTPReferenceEntryContentModule"></name>
+      <typeMode value="none"></typeMode>
       <documentation value="source: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefinition-ch-emed-ext-treatmentplan.html
 target: https://art-decor.org/art-decor/decor-templates--ch-pharm-?section=templates&amp;id=2.16.756.5.30.1.1.10.4.45&amp;effectiveDate=2017-01-10T15:34:25&amp;language=en-US"></documentation>
       <input>
@@ -3095,6 +3105,7 @@ target: https://art-decor.org/art-decor/decor-templates--ch-pharm-?section=templ
    </group>
    <group>
       <name value="DosageInstructionsNonStructuredEntryContentModule"></name>
+      <typeMode value="none"></typeMode>
       <documentation value="source: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefinition-ch-emed-dosage-nonstructured.html
 target: https://art-decor.org/art-decor/decor-templates--ch-pharm-?section=templates&amp;id=2.16.756.5.30.1.1.10.4.52
 target: https://art-decor.org/art-decor/decor-templates--ch-pharm-?section=templates&amp;id=2.16.756.5.30.1.1.10.4.37
@@ -3235,6 +3246,7 @@ Note/Warning: we assume that there is a narrativeLink extension which refers to 
    </group>
    <group>
       <name value="SubstitutionDispense"></name>
+      <typeMode value="none"></typeMode>
       <documentation value="source: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefinition-ch-emed-medicationdispense.html
 target: Substitution act Contains 1.3.6.1.4.1.19376.1.9.1.3.9.2 IHE Substitution Act Content Module
 Substitution (Dispense)"></documentation>
@@ -3342,6 +3354,7 @@ Substitution (Dispense)"></documentation>
    </group>
    <group>
       <name value="ManufacturedMaterialEntryContentModuleDispense"></name>
+      <typeMode value="none"></typeMode>
       <documentation value="source: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefinition-ch-emed-medicationdispense.html
 target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.4.33&amp;effectiveDate=2019-12-11T11:34:24&amp;language=en-US"></documentation>
       <input>
@@ -3963,6 +3976,7 @@ target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=temp
    </group>
    <group>
       <name value="DispenseItemEntryContentModule"></name>
+      <typeMode value="none"></typeMode>
       <documentation value="source: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefinition-ch-emed-medicationdispense.html
 target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.4.42"></documentation>
       <input>
@@ -4509,6 +4523,7 @@ target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=temp
    </group>
    <group>
       <name value="DosageInstructionsStartStopFrequencySupply"></name>
+      <typeMode value="none"></typeMode>
       <documentation value="source: http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured
 target: https://art-decor.org/art-decor/decor-templates--ch-pharm-?id=2.16.756.5.30.1.1.10.4.35
 dosage for normal dosing (without sequences) (Dispense)"></documentation>
@@ -4749,6 +4764,7 @@ dosage for normal dosing (without sequences) (Dispense)"></documentation>
    </group>
    <group>
       <name value="DosageInstructionsEntryStartStopRouteConsumable"></name>
+      <typeMode value="none"></typeMode>
       <documentation value="source: http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured
 target: https://art-decor.org/art-decor/decor-templates--ch-pharm-?id=2.16.756.5.30.1.1.10.4.36
 dosage for split dosing: effectiveTime (start/stop) &amp; routeCode &amp; consumable (Dispense)"></documentation>
@@ -4977,6 +4993,7 @@ dosage for split dosing: effectiveTime (start/stop) &amp; routeCode &amp; consum
    </group>
    <group>
       <name value="DosageInstructionsEntryDosageChangeEntryRelationship"></name>
+      <typeMode value="none"></typeMode>
       <documentation value="source: http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured
 target: https://art-decor.org/art-decor/decor-templates--ch-pharm-?id=2.16.756.5.30.1.1.10.4.36
 dosage for split dosing: sequence number, effectiveTime (when), dose quantity, consumable (Dispense)"></documentation>
@@ -5116,6 +5133,7 @@ dosage for split dosing: sequence number, effectiveTime (when), dose quantity, c
    </group>
    <group>
       <name value="EffectiveTimeWhenNormal"></name>
+      <typeMode value="none"></typeMode>
       <documentation value="effective time when for normal dosage (Dispense, Statement, Prescription)"></documentation>
       <input>
          <name value="dosage"></name>
@@ -5310,6 +5328,7 @@ dosage for split dosing: sequence number, effectiveTime (when), dose quantity, c
    </group>
    <group>
       <name value="EffectiveTimeWhenSplit"></name>
+      <typeMode value="none"></typeMode>
       <documentation value="effective time when for split dosage (Dispense, Statement, Prescription)"></documentation>
       <input>
          <name value="dosage"></name>
@@ -5495,6 +5514,7 @@ dosage for split dosing: sequence number, effectiveTime (when), dose quantity, c
    </group>
    <group>
       <name value="SubstitutionRequest"></name>
+      <typeMode value="none"></typeMode>
       <documentation value="source: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefinition-ch-emed-medicationrequest.html
 target: Substitution permission Contains 1.3.6.1.4.1.19376.1.9.1.3.9.1 IHE Substitution Permission Content Module"></documentation>
       <input>
@@ -5601,6 +5621,7 @@ target: Substitution permission Contains 1.3.6.1.4.1.19376.1.9.1.3.9.1 IHE Subst
    </group>
    <group>
       <name value="SubstitutionStatement"></name>
+      <typeMode value="none"></typeMode>
       <documentation value="source: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefinition-ch-emed-medicationrequest.html
 target: Substitution permission Contains 1.3.6.1.4.1.19376.1.9.1.3.9.1 IHE Substitution Permission Content Module"></documentation>
       <input>
@@ -5707,6 +5728,7 @@ target: Substitution permission Contains 1.3.6.1.4.1.19376.1.9.1.3.9.1 IHE Subst
    </group>
    <group>
       <name value="PrescribedQuantity"></name>
+      <typeMode value="none"></typeMode>
       <documentation value="source: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefinition-ch-emed-medicationrequest.html
 target: https://art-decor.org/art-decor/decor-templates--cdachemed-?id=2.16.756.5.30.1.1.10.4.38"></documentation>
       <input>
@@ -5826,6 +5848,7 @@ target: https://art-decor.org/art-decor/decor-templates--cdachemed-?id=2.16.756.
    </group>
    <group>
       <name value="PrescribedQuantityUnit"></name>
+      <typeMode value="none"></typeMode>
       <documentation value="source: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefinition-ch-emed-medicationrequest.html
 target: https://art-decor.org/art-decor/decor-templates--cdachemed-?id=2.16.756.5.30.1.1.10.4.38"></documentation>
       <input>
@@ -5962,6 +5985,7 @@ target: https://art-decor.org/art-decor/decor-templates--cdachemed-?id=2.16.756.
    </group>
    <group>
       <name value="ManufacturedMaterialEntryContentModulePrescription"></name>
+      <typeMode value="none"></typeMode>
       <documentation value="source: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefinition-ch-emed-medicationrequest.html
 target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.4.33"></documentation>
       <input>
@@ -6665,6 +6689,7 @@ target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=temp
    </group>
    <group>
       <name value="PrescriptionItemEntryContentModule"></name>
+      <typeMode value="none"></typeMode>
       <documentation value="source: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefinition-ch-emed-medicationrequest.html
 target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.4.43"></documentation>
       <input>
@@ -7243,6 +7268,7 @@ target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=temp
    </group>
    <group>
       <name value="PharmaceuticalAdviceItemEntryContentModule"></name>
+      <typeMode value="none"></typeMode>
       <documentation value="source: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-observation.html
 target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.4.44
 Note/Warning: we assume that there is a narrativeLink extension which refers to the text which should be the same as in note.text"></documentation>

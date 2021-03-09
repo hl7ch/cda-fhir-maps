@@ -187,6 +187,7 @@ FHIR CH-EMED: http://fhir.ch/ig/ch-emed/index.html"></description>
    <import value="http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaChEmedToBundle"></import>
    <group>
       <name value="CdaChEmedMedicationListDocumentToBundle"></name>
+      <typeMode value="none"></typeMode>
       <documentation value="source: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.1.13
 target: http://fhir.ch/ig/ch-emed/medication-list-document.html"></documentation>
       <input>
@@ -286,6 +287,7 @@ target: http://fhir.ch/ig/ch-emed/medication-list-document.html"></documentation
    <group>
       <name value="ClinicalDocumentChEmedMedicationListDocumentToBundle"></name>
       <extends value="ClinicalDocumentChToBundle"></extends>
+      <typeMode value="none"></typeMode>
       <documentation value="source: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.1.13
 target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-composition-MedicationList.html"></documentation>
       <input>
@@ -358,6 +360,7 @@ target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-compo
    <group>
       <name value="SectionMedicationListSectionContentModule"></name>
       <extends value="ClinicalDocumentSection"></extends>
+      <typeMode value="none"></typeMode>
       <documentation value="_________________________ Section Level Templates _________________________
 source: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-composition-MedicationList.html
 target:"></documentation>
