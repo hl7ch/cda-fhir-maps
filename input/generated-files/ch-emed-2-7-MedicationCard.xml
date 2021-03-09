@@ -361,6 +361,7 @@
                 </numerator>
                 <denominator>
                   <value value="1"/>
+                  <unit value="Tablet"/>
                   <system value="http://snomed.info/sct"/>
                   <code value="732936001"/>
                 </denominator>
