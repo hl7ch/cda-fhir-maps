@@ -138,6 +138,8 @@ group MedicationTreatmentPlanItemEntryContentModule(source bundle : Bundle, sour
   medicationStatement.dosage as dosage where $this.conformsTo('http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured') and $this.sequence.exists() -&gt;  substanceAdministration.entryRelationship as entryRelationship,  entryRelationship.typeCode = 'COMP' then DosageInstructionsEntryDosageChangeSubstanceAdministration(dosage, substanceAdministration, entryRelationship) "DosageSubstanceAdministration";
   medicationStatement.reasonCode as reasonCode -&gt;  substanceAdministration.entryRelationship as entryRelationship,  entryRelationship.typeCode = 'RSON',  entryRelationship.observation as observation then TreatmentReasonEntryContentModule(reasonCode, observation) "TreatmentReasonEntryContentModule";
   medicationStatement.extension as extension where url = 'http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-treatmentplan' -&gt;  substanceAdministration.entryRelationship as entryRelationship,  entryRelationship.typeCode = 'REFR',  entryRelationship.substanceAdministration as substanceAdministration then MTPReferenceEntryContentModule(extension, substanceAdministration) "MTP-Reference";
+  // FIXME: repeatNumber ot set to 7 by examples for nullFlavor?
+  medicationStatement -&gt;  substanceAdministration.repeatNumber as repeatNumber,  repeatNumber.value = '7' "repeatNumber Default";
   // TODO: Patient Medication Instructions Contains 1.3.6.1.4.1.19376.1.5.3.1.4.3 IHE Patient Medication Instructions (DYNAMIC)
   medicationStatement.dosage as dosage where $this.conformsTo('http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-nonstructured') -&gt;  substanceAdministration.entryRelationship as entryRelationship,  entryRelationship.typeCode = 'COMP',  entryRelationship.substanceAdministration as substanceAdministration then DosageInstructionsNonStructuredEntryContentModule(dosage, substanceAdministration) "DosageInstructionsNonStructuredEntryContentModule";
   // TODO: Contains 2.16.756.5.30.1.1.10.4.37 Dosage Intake Mode Entry Content Module (DYNAMIC)
@@ -204,7 +206,8 @@ group EffectiveTimeStartEnd(source dosage : Dosage, target substanceAdministrati
 group DoseQuantity(source dosage : Dosage, target substanceAdministration : SubstanceAdministration) {
   dosage.doseAndRate as doseAndRate -&gt; substanceAdministration.doseQuantity as doseQuantity then {
     doseAndRate.dose : Quantity as quantity then {
-      quantity.value as value -&gt;  doseQuantity.center as center,  center.value = value;
+      quantity.value as value -&gt; doseQuantity.value = value;
+      quantity.code as code -&gt; doseQuantity.unit = code;
     } "quantity";
   } "doseQuantity";
 }
@@ -2025,6 +2028,28 @@ target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=temp
          </dependent>
       </rule>
       <rule>
+         <name value="repeatNumber Default"></name>
+         <source>
+            <context value="medicationStatement"></context>
+         </source>
+         <target>
+            <context value="substanceAdministration"></context>
+            <contextType value="variable"></contextType>
+            <element value="repeatNumber"></element>
+            <variable value="repeatNumber"></variable>
+         </target>
+         <target>
+            <context value="repeatNumber"></context>
+            <contextType value="variable"></contextType>
+            <element value="value"></element>
+            <transform value="copy"></transform>
+            <parameter>
+               <valueString value="7"></valueString>
+            </parameter>
+         </target>
+         <documentation value="FIXME: repeatNumber ot set to 7 by examples for nullFlavor?"></documentation>
+      </rule>
+      <rule>
          <name value="DosageInstructionsNonStructuredEntryContentModule"></name>
          <source>
             <context value="medicationStatement"></context>
@@ -2665,16 +2690,27 @@ dosage for split dosing: sequence number, effectiveTime (when), dose quantity, c
                <target>
                   <context value="doseQuantity"></context>
                   <contextType value="variable"></contextType>
-                  <element value="center"></element>
-                  <variable value="center"></variable>
-               </target>
-               <target>
-                  <context value="center"></context>
-                  <contextType value="variable"></contextType>
                   <element value="value"></element>
                   <transform value="copy"></transform>
                   <parameter>
                      <valueId value="value"></valueId>
+                  </parameter>
+               </target>
+            </rule>
+            <rule>
+               <name value="code"></name>
+               <source>
+                  <context value="quantity"></context>
+                  <element value="code"></element>
+                  <variable value="code"></variable>
+               </source>
+               <target>
+                  <context value="doseQuantity"></context>
+                  <contextType value="variable"></contextType>
+                  <element value="unit"></element>
+                  <transform value="copy"></transform>
+                  <parameter>
+                     <valueId value="code"></valueId>
                   </parameter>
                </target>
             </rule>
