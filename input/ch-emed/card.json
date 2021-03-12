@@ -263,10 +263,7 @@
                         },
                         "doseAndRate": [{
                                 "doseQuantity": {
-                                    "value": 1,
-                                    "unit": "",
-                                    "system": "",
-                                    "code": ""
+                                    "value": 1
                                 }
                             }
                         ]
