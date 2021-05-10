@@ -44,9 +44,17 @@ Content-Type: text/fhir-mapping
 < ./input/maps/BundleToCdaChEmedMedicationCardDocument.map
 
 
-### 5. Transform Medication Card document (2-7-MedicationCard.xml) from FHIR to CDA
+### 5a. Transform Medication Card document (2-7-MedicationCard.xml) from FHIR to CDA
 POST {{host}}/StructureMap/$transform?source=http://fhir.ch/ig/cda-fhir-maps/StructureMap/BundleToCdaChEmedMedicationCardDocument
 Accept: application/fhir+xml;fhirVersion=4.0
 Content-Type: application/fhir+xml;fhirVersion=4.0
 
 < ./input/generated-files/ch-emed-2-7-MedicationCard.xml
+
+
+### 5b. Transform Medication Card document (card.json) from FHIR to CDA
+POST {{host}}/StructureMap/$transform?source=http://fhir.ch/ig/cda-fhir-maps/StructureMap/BundleToCdaChEmedMedicationCardDocument
+Accept: application/fhir+xml;fhirVersion=4.0
+Content-Type: application/fhir+json;fhirVersion=4.0
+
+< ./input/ch-emed/card.json
