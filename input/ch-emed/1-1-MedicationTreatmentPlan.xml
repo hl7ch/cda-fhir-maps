@@ -16,12 +16,6 @@
             <Composition>
                 <id value="1-1-MedicationTreatmentPlan"/>
                 <language value="de-CH"/>
-                <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-setid">
-                    <valueIdentifier>
-                        <system value="urn:ietf:rfc:3986"/>
-                        <value value="urn:uuid:c9f758a1-296c-4710-84d4-e181db8c7478"/>
-                    </valueIdentifier>
-                </extension>
                 <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-versionnumber">
                     <valueUnsignedInt value="1"/>
                 </extension>
@@ -249,9 +243,6 @@
                     <Medication>
                         <id value="med"/>
                         <code>
-                            <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
-                                <valueUrl value="#mtp.1.brandedmedication"/>
-                            </extension>
                             <coding>
                                 <system value="urn:oid:2.51.1.1"/>
                                 <code value="7680538751228"/>
@@ -269,9 +260,15 @@
                         <amount>
                             <numerator>
                                 <value value="20"/>
+                                <unit value="Tablet"/>
+                                <system value="http://snomed.info/sct"/>
+                                <code value="732936001"/>
                             </numerator>
                             <denominator>
                                 <value value="1"/>
+                                <unit value="Package"/>
+                                <system value="http://unitsofmeasure.org"/>
+                                <code value="{Package}"/>
                             </denominator>
                         </amount>
                         <ingredient>
@@ -287,10 +284,14 @@
                                 <numerator>
                                     <value value="2.5"/>
                                     <unit value="mg"/>
+                                    <system value="http://unitsofmeasure.org"/>
+                                    <code value="mg"/>
                                 </numerator>
                                 <denominator>
                                     <value value="1"/>
-                                    <unit value="1"/>
+                                    <unit value="Tablet"/>
+                                    <system value="http://snomed.info/sct"/>
+                                    <code value="732936001"/>
                                 </denominator>
                             </strength>
                         </ingredient>
@@ -356,6 +357,9 @@
                     <doseAndRate>
                         <doseQuantity>
                             <value value="0.5"/>
+                            <unit value="Tablette" />
+                            <system value="http://snomed.info/sct"/>
+                            <code value="732936001"/>
                         </doseQuantity>
                     </doseAndRate>
                 </dosage>

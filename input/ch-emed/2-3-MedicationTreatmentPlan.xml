@@ -16,12 +16,6 @@
             <Composition>
                 <id value="2-3-MedicationTreatmentPlan"/>
                 <language value="de-CH"/>
-                <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-setid">
-                    <valueIdentifier>
-                        <system value="urn:ietf:rfc:3986"/>
-                        <value value="urn:uuid:17931678-20b4-11e6-b67b-9e71128cca77"/>
-                    </valueIdentifier>
-                </extension>
                 <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-versionnumber">
                     <valueUnsignedInt value="1"/>
                 </extension>
@@ -117,7 +111,7 @@
                                         <td id="mtp.1.brandedmedication">Beloc Zok</td>
                                         <td id="mtp.1.ingredient">Metoprolol</td>
                                         <td id="mtp.1.packageform"> Ret Tbl</td>
-                                        <td id="mtp.1.dosequantity">2.5 mg</td>
+                                        <td id="mtp.1.dosequantity">50 mg</td>
                                         <td id="mtp.1.dosageintakemode">Morgens 1 und abends 1/2 Tablette nehmen</td>
                                         <td id="mtp.1.dosagemorning">1</td>
                                         <td id="mtp.1.dosagelunch">0</td>
@@ -249,9 +243,6 @@
                     <Medication>
                         <id value="med"/>
                         <code>
-                            <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
-                                <valueUrl value="#mtp.1.brandedmedication"/>
-                            </extension>
                             <coding>
                                 <system value="urn:oid:2.51.1.1"/>
                                 <code value="7680521101306"/>
@@ -269,9 +260,15 @@
                         <amount>
                             <numerator>
                                 <value value="30"/>
+                                <unit value="Tablet"/>
+                                <system value="http://snomed.info/sct"/>
+                                <code value="732936001"/>
                             </numerator>
                             <denominator>
                                 <value value="1"/>
+                                <unit value="Package"/>
+                                <system value="http://unitsofmeasure.org"/>
+                                <code value="{Package}"/>
                             </denominator>
                         </amount>
                         <ingredient>
@@ -287,9 +284,14 @@
                                 <numerator>
                                     <value value="50"/>
                                     <unit value="mg"/>
+                                    <system value="http://unitsofmeasure.org"/>
+                                    <code value="mg"/>
                                 </numerator>
                                 <denominator>
                                     <value value="1"/>
+                                    <unit value="Tablet"/>
+                                    <system value="http://snomed.info/sct"/>
+                                    <code value="732936001"/>
                                 </denominator>
                             </strength>
                         </ingredient>
@@ -352,6 +354,9 @@
                     <doseAndRate>
                         <doseQuantity>
                             <value value="1"/>
+                            <unit value="Tablette" />
+                            <system value="http://snomed.info/sct"/>
+                            <code value="732936001"/>
                         </doseQuantity>
                     </doseAndRate>
                 </dosage>
@@ -380,6 +385,9 @@
                     <doseAndRate>
                         <doseQuantity>
                             <value value="0.5"/>
+                            <unit value="Tablette" />
+                            <system value="http://snomed.info/sct"/>
+                            <code value="732936001"/>
                         </doseQuantity>
                     </doseAndRate>
                 </dosage>
