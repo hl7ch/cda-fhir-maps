@@ -103,17 +103,15 @@ group ChExtEprConfidentialityCode(source src: CE, target ext: Extension) {
 }
 
 // source: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5.30.1.1.10.9.36
-// target: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefinition-ch-ext-epr-setid.html
-group ChExtEprSetId(source src: II, target ext: Extension) {
-  src -> ext.url = 'http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-setid' "url";
-  src -> ext.value = create('Identifier') as value then II(src, value) "value";
-}
-
-// source: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5.30.1.1.10.9.36
 // target: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefinition-ch-ext-epr-versionnumber.html
 group ChExtEprVersionNumber(source src: INT, target ext: Extension) {
   src -> ext.url = 'http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-versionnumber' "url";
   src -> ext.value = create('unsignedInt') as value then INT(src, value) "value";
+}
+
+group ChExtEprVersionNumber1(source src, target ext: Extension) {
+  src -> ext.url = 'http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-versionnumber' "url";
+  src -> ext.value = create('unsignedInt') as value, value.value='1' "value";
 }
 
 // source: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5.30.1.1.10.9.36
@@ -154,7 +152,7 @@ group ClinicalDocumentCompositionCh(source src : ClinicalDocument, target tgt : 
       tgt.confidentiality = translate(v, 'http://fhir.ch/ig/ch-core/ConceptMap/documententry-confidentialitycode-to-fhir', 'code') as fhirconf,
             fhirconf.extension as ext then ChExtEprConfidentialityCode(confidentialityCode, ext) "confCode";
   } "confidentialityCode";
-  src.setId as setId -> tgt.extension as ext then ChExtEprSetId(setId, ext) "setId";
+  src where $this.versionNumber.exists().not() -> tgt.extension as ext2 then ChExtEprVersionNumber1(src, ext2) "versionNumber1";
   src.versionNumber as versionNumber -> tgt.extension as ext2 then ChExtEprVersionNumber(versionNumber, ext2) "versionNumber";
   src.informationRecipient as informationRecipient -> bundle.entry as e then {
     informationRecipient.intendedRecipient as intendedRecipient where $this.receivedOrganization.exists()=false 

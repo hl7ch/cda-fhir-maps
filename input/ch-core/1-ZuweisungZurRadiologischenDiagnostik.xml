@@ -11,12 +11,6 @@
     <resource>
       <Composition>
         <language value="de-CH"/>
-        <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-setid">
-          <valueIdentifier>
-            <system value="urn:ietf:rfc:3986"/>
-            <value value="urn:uuid:807563c2-5146-11d5-a672-00b0d022e945"/>
-          </valueIdentifier>
-        </extension>
         <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-versionnumber">
           <valueUnsignedInt value="2"/>
         </extension>
@@ -39,7 +33,7 @@
         </extension>
         <identifier>
           <system value="urn:ietf:rfc:3986"/>
-          <value value="urn:uuid:31397b31-be60-47e1-bec6-f37816d42b0c"/>
+          <value value="urn:uuid:807563c2-5146-11d5-a672-00b0d022e945"/>
         </identifier>
         <status value="final"/>
         <type>

@@ -130,14 +130,12 @@ group CompositionClinicalDocumentCH(source bundle : Bundle, source composition :
   } "confidentialityCode";
 
   // If setId exists as Composition.ch-ext-epr-setid, then map to ClinicalDocument.setId
-  composition.extension as ext where $this.url='http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-setid'
-    -> cda.setId as setId then {
-      ext.valueIdentifier as valueIdentifier then IdentifierII(valueIdentifier,setId) "IdentifierII";
-  } "setIdMapped";
+  composition.identifier as identifier where $this.system='urn:ietf:rfc:3986'
+    -> cda.setId as setId then IdentifierII(identifier,setId) "IdentifierII";
+
   // If setId doesn't exist, create ClinicalDocument.setId as UUID upper case
-  composition as composition where $this.extension.where(url='http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-setid').exists()=false
-    -> cda.setId as setId then {
-      composition -> uuid() as uuid, setId.root=(%uuid.upper()) "upper";
+  composition where $this.identifier.where(system='urn:ietf:rfc:3986').exists()=false then {
+      bundle.identifier as identifier -> cda.setId as id then IdentifierII(identifier, id) "setId";
   } "setIdCreated";
 
   // If versionNumber exists as Composition.ch-ext-epr-versionnumber, then map to ClinicalDocument.versionNumber

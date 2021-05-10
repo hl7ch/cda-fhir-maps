@@ -82,7 +82,8 @@ group ClinicalDocumentSection(source src : Section, source patient : Patient, ta
 
 group ClinicalDocumentComposition(source src : ClinicalDocument, target tgt : Composition, target patientResource: Patient, target bundle : Bundle) {
   src.languageCode -> tgt.language;
-  src.id -> tgt.identifier "identifier";
+  src.id where src.setId.exists().not() -> tgt.identifier "identifier";
+  src.setId -> tgt.identifier "identifier";
   src -> tgt.status = 'final' "status";
   src.code -> tgt.type;
   src.title as t -> tgt.title = (t.dataString);
