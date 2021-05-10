@@ -252,21 +252,28 @@
                 },
                 "dosage": [{
                         "text": "Am Morgen 1"
-                    }, {
-                        "timing": {
-                            "repeat": {
-                                "boundsPeriod": {
-                                    "start": "2021-03-06T00:00:00+01:00"
-                                },
-                                "when": ["CM"]
+                    }, {                    
+                        "timing" : {
+                            "repeat" : {
+                              "boundsPeriod" : {
+                                "start" : "2012-02-04"
+                              },
+                              "when" : [
+                                "ACM",
+                                "ACV"
+                              ]
                             }
-                        },
-                        "doseAndRate": [{
-                                "doseQuantity": {
-                                    "value": 1
-                                }
+                          },
+                          "doseAndRate" : [
+                            {
+                              "doseQuantity" : {
+                                "value" : 1,
+                                "unit" : "Tablette",
+                                "system" : "http://snomed.info/sct",
+                                "code" : "732936001"
+                              }
                             }
-                        ]
+                          ] 
                     }
                 ]
             }
