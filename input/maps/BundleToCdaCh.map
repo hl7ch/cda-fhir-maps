@@ -76,7 +76,7 @@ group SectionCdaOriginalRepresentationObservationMedia(source binary : Binary, s
           entry.extension as extension where $this.url='http://hl7.org/fhir/StructureDefinition/narrativeLink' then {
             extension.valueUrl as valueUrl -> observationMedia.ID=valueUrl "reference";
           } "narrativeLink";
-          
+        // depending on the outcome of narrative handling
         } "section.entry";
         binary -> observationMedia.templateId as templateId, templateId.root='2.16.756.5.30.1.1.10.4.83' "templateId";
         binary -> observationMedia.value as value, value.mediaType='2.16.756.5.30.1.1.10.4.83', value.representation='B64' then {

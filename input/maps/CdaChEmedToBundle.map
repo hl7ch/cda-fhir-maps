@@ -40,13 +40,15 @@ imports "http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaChToBundle"
 // source: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&id=2.16.756.5.30.1.1.10.4.2
 // target: Annotation note (e.g. http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefinition-ch-emed-medicationstatement.html)
 group AnnotationComment(source section: Section, source act: Act, target note: Annotation) {
-  act -> note.text =  (%section.text.substring(%section.text.indexOf(%act.text.reference.value.substring(1))).substring(%section.text.substring(%section.text.indexOf(%act.text.reference.value.substring(1))).indexOf('>')+1, %section.text.substring(%section.text.indexOf(%act.text.reference.value.substring(1))).indexOf('<')-%section.text.substring(%section.text.indexOf(%act.text.reference.value.substring(1))).indexOf('>')-1)) "idRef"; 
   act.text as text then {
+    text.data as data -> note.text = data "level3";
+    text where (data.exists()=false) -> note.text = (%section.text.substring(%section.text.indexOf(%act.text.reference.value.substring(1))).substring(%section.text.substring(%section.text.indexOf(%act.text.reference.value.substring(1))).indexOf('>')+1, %section.text.substring(%section.text.indexOf(%act.text.reference.value.substring(1))).indexOf('<')-%section.text.substring(%section.text.indexOf(%act.text.reference.value.substring(1))).indexOf('>')-1)) "idRef";
     text.reference as reference then {
       reference.value as value -> note.extension as ext then NarrativeLink(value, ext) "narrativeLink";
     } "reference";
   } "text";
 }
+
 
 
 // source: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&id=2.16.756.5.30.1.1.10.4.33
@@ -330,8 +332,9 @@ group TreatmentReasonEntryContentModule(source section : Section, source observa
     // a = %section.text.substring(%section.text.indexOf(%id))
     // res = (%a.substring(%a.indexOf('>')+1, %a.indexOf('<')-%a.indexOf('>')-1))
     // a = %section.text.substring(%section.text.indexOf((%observation.text.reference.value.substring(1))))
-    observation -> reasonCode.text =  (%section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).substring(%section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).indexOf('>')+1, %section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).indexOf('<')-%section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).indexOf('>')-1)) "idRef"; 
     observation.text as text then {
+      text.data as data -> reasonCode.text = data "level3";
+      text where (data.exists()=false) -> reasonCode.text = (%section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).substring(%section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).indexOf('>')+1, %section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).indexOf('<')-%section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).indexOf('>')-1)) "idRef";       
       text.reference as reference then {
         reference.value as value -> reasonCode.extension as ext then NarrativeLink(value, ext) "narrativeLink";
       } "reference";
@@ -357,9 +360,10 @@ group MTPReferenceEntryContentModule(source entryrelationship, target ext: Exten
 // target: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefinition-ch-emed-dosage-nonstructured.html
 group DosageInstructionsNonStructuredEntryContentModule(source section : Section, source entry : Element, target dosage : Dosage) {
   // see MedicationTreatmentPlanItemEntryContentModule
-  entry.substanceAdministration as observation -> dosage.text = (%section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).substring(%section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).indexOf('>')+1, %section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).indexOf('<')-%section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).indexOf('>')-1)) "idRef"; 
   entry.substanceAdministration as observation then {
     observation.text as text then {
+      text.data as data -> dosage.text = data "level3";
+      text where (data.exists()=false) -> dosage.text = (%section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).substring(%section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).indexOf('>')+1, %section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).indexOf('<')-%section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).indexOf('>')-1)) "idRef";   
       text.reference as reference then {
         reference.value as value -> dosage.extension as ext then NarrativeLink(value, ext) "narrativeLink";
       } "reference";
@@ -643,7 +647,8 @@ group PharmaceuticalAdviceItemEntryContentModule(source section : Section, sourc
     -> observation.extension as ext then MTPReferenceEntryContentModule(entry, ext) "MTPReferenceEntry";   
 
   src -> observation.note as note then {
-    src -> note.text = (%section.text.substring(%section.text.indexOf(%src.text.reference.value.substring(1))).substring(%section.text.substring(%section.text.indexOf(%src.text.reference.value.substring(1))).indexOf('>')+1, %section.text.substring(%section.text.indexOf(%src.text.reference.value.substring(1))).indexOf('<')-%section.text.substring(%section.text.indexOf(%src.text.reference.value.substring(1))).indexOf('>')-1)) "idRef";
+    text.data as data -> note.text = data "level3";
+    text where (data.exists()=false) -> note.text = (%section.text.substring(%section.text.indexOf(%src.text.reference.value.substring(1))).substring(%section.text.substring(%section.text.indexOf(%src.text.reference.value.substring(1))).indexOf('>')+1, %section.text.substring(%section.text.indexOf(%src.text.reference.value.substring(1))).indexOf('<')-%section.text.substring(%section.text.indexOf(%src.text.reference.value.substring(1))).indexOf('>')-1)) "idRef";
     src.text as text then {
       text.reference as reference then {
         reference.value as value -> note.extension as ext then NarrativeLink(value, ext) "narrativeLink";
