@@ -72,7 +72,8 @@ group ManufacturedMaterialEntryContentModuleStatement(source bundle : Bundle, so
       extension.valueUrl as valueUrl -> code.originalText as text,
         text.reference as reference, reference.value=valueUrl "reference";
     } "id";
-    
+    code where (extension.where($this.url='http://hl7.org/fhir/StructureDefinition/narrativeLink').exists()=false) -> 
+      manufacturedMaterial.code as code, code.originalText as text, text.reference as reference, reference.value='#refpdf' "reference";
     code.coding as coding -> manufacturedMaterial.code as ce then CodingCE(coding,ce) "code";
   } "code";
   medication.form as form then {
@@ -140,6 +141,9 @@ group MedicationTreatmentPlanItemEntryContentModule(source bundle : Bundle, sour
   medicationStatement.extension as extension where $this.url='http://hl7.org/fhir/StructureDefinition/narrativeLink' -> substanceAdministration.text as text, text.reference as reference then {
     extension.valueUrl as valueUrl -> reference.value = valueUrl "valueUrl";
   } "narrativeLink";
+  medicationStatement where extension.where(url='http://hl7.org/fhir/StructureDefinition/narrativeLink').exists().not() -> substanceAdministration.text as text, text.reference as reference then {
+    medicationStatement -> reference.value = '#refpdf' "referencetopdf";
+  } "cat1narrativelink";
   medicationStatement -> substanceAdministration.statusCode as statusCode, statusCode.code = 'completed' "code";  
   
   medicationStatement.contained as medication where ('#'+$this.id) in %medicationStatement.medicationReference.reference 
@@ -151,6 +155,7 @@ group MedicationTreatmentPlanItemEntryContentModule(source bundle : Bundle, sour
   } "contained";     
   // TODO: AUTHOR1 Medication Treatment Plan Author
   // TODO: AUTHOR2 Community Medication Treatment Plan document author
+
 
   // dosage for normal dosing, as no sequences are present there
   medicationStatement.dosage as dosage where $this.conformsTo('http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured') and $this.sequence.empty()
@@ -368,7 +373,9 @@ group ManufacturedMaterialEntryContentModuleDispense(source bundle : Bundle, sou
       extension.valueUrl as valueUrl -> code.originalText as text,
         text.reference as reference, reference.value=valueUrl "reference";
     } "id";
-    
+    code where (extension.where($this.url='http://hl7.org/fhir/StructureDefinition/narrativeLink').exists()=false) -> 
+      manufacturedMaterial.code as code, code.originalText as text, text.reference as reference, reference.value='#refpdf' "reference";
+
     code.coding as coding -> manufacturedMaterial.code as ce then CodingCE(coding,ce) "code";
   } "code";
 
@@ -440,6 +447,9 @@ group DispenseItemEntryContentModule(source bundle : Bundle, source medicationDi
   medicationDispense.extension as extension where $this.url='http://hl7.org/fhir/StructureDefinition/narrativeLink' -> supply.text as text, text.reference as reference then {
     extension.valueUrl as valueUrl -> reference.value = valueUrl "valueUrl";
   } "narrativeLink";  
+  medicationDispense where (extension.where($this.url='http://hl7.org/fhir/StructureDefinition/narrativeLink').exists()=false) -> 
+    supply.text as text, text.reference as reference, text.reference as reference, reference.value='#refpdf' "reference";
+
   
   medicationDispense.contained as medication where ('#'+$this.id) in %medicationDispense.medicationReference.reference 
     -> supply.product as product, product.manufacturedProduct as manufacturedProduct,
@@ -685,6 +695,8 @@ group ManufacturedMaterialEntryContentModulePrescription(source bundle : Bundle,
       extension.valueUrl as valueUrl -> code.originalText as text,
         text.reference as reference, reference.value=valueUrl "reference";
     } "id";
+    code where (extension.where($this.url='http://hl7.org/fhir/StructureDefinition/narrativeLink').exists()=false) -> 
+      manufacturedMaterial.code as code, code.originalText as text, text.reference as reference, reference.value='#refpdf' "reference";
 
     code.coding as coding -> manufacturedMaterial.code as ce then CodingCE(coding,ce) "code";
   } "code";
@@ -769,6 +781,10 @@ group PrescriptionItemEntryContentModule(source bundle : Bundle, source medicati
   medicationRequest.extension as extension where $this.url='http://hl7.org/fhir/StructureDefinition/narrativeLink' -> substanceAdministration.text as text, text.reference as reference then {
     extension.valueUrl as valueUrl -> reference.value = valueUrl "valueUrl";
   } "narrativeLink";
+  medicationRequest where extension.where(url='http://hl7.org/fhir/StructureDefinition/narrativeLink').exists().not() -> substanceAdministration.text as text, text.reference as reference then {
+    medicationRequest -> reference.value = '#refpdf' "referencetopdf";
+  } "cat1narrativelink";
+
   medicationRequest -> substanceAdministration.statusCode as statusCode, statusCode.code = 'completed' "code";  
 
   medicationRequest.dispenseRequest as dispenseRequest -> substanceAdministration.repeatNumber as repeatNumber then {
@@ -863,5 +879,7 @@ group PharmaceuticalAdviceItemEntryContentModule(source bundle : Bundle, source 
     note.extension as extension where $this.url='http://hl7.org/fhir/StructureDefinition/narrativeLink' -> cdaobservation.text as text, text.reference as reference then {
       extension.valueUrl as valueUrl -> reference.value = valueUrl "valueUrl";
     } "narrativeLink";
+    note where (extension.where($this.url='http://hl7.org/fhir/StructureDefinition/narrativeLink').exists()=false) -> 
+      cdaobservation.text as text, text.reference as reference, reference.value='#refpdf' "reference";
   } "note";
 }
