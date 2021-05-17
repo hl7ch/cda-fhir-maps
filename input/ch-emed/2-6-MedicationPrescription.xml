@@ -72,47 +72,6 @@
                <reference value="Organization/Custodian"/>
             </custodian>
             <section>
-               <title value="Kommentar"/>
-               <code>
-                  <coding>
-                     <system value="http://loinc.org"/>
-                     <code value="48767-8"/>
-                     <display value="Annotation comment"/>
-                  </coding>
-               </code>
-               <text>
-                  <status value="generated"/>
-                  <div xmlns="http://www.w3.org/1999/xhtml">
-                     <span id="co1">
-						Kommentar zu Medication Prescription
-                     </span>
-                  </div>
-               </text>
-            </section>
-            <section>
-               <title value="Original representation"/>
-               <code>
-                  <coding>
-                     <system value="http://loinc.org"/>
-                     <code value="55108-5"/>
-                     <display value="Clinical presentation"/>
-                  </coding>
-               </code>
-               <text>
-                  <status value="generated"/>
-                  <div xmlns="http://www.w3.org/1999/xhtml">
-            			Representation of the original view:
-                     <img src="2-6-pdf"/>
-                  </div>
-               </text>
-               <entry>
-                  <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
-                     <valueUrl value="2-6-pdf"/>
-                  </extension>
-                  <reference value="Binary/2-6-pdf"/>
-               </entry>
-            </section>
-            <section>
                <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-sectionid">
                   <valueIdentifier>
                      <system value="urn:ietf:rfc:3986"/>
@@ -175,6 +134,44 @@
                </text>
                <entry>
                   <reference value="MedicationRequest/2-6-MedReqNorvasc"/>
+               </entry>
+            </section>
+            <section>
+               <title value="Kommentar"/>
+               <code>
+                  <coding>
+                     <system value="http://loinc.org"/>
+                     <code value="48767-8"/>
+                     <display value="Annotation comment"/>
+                  </coding>
+               </code>
+               <text>
+                  <status value="generated"/>
+                  <div xmlns="http://www.w3.org/1999/xhtml">
+                     <span id="co1">
+						Kommentar zu Medication Prescription
+                     </span>
+                  </div>
+               </text>
+            </section>
+            <section>
+               <title value="Original representation"/>
+               <code>
+                  <coding>
+                     <system value="http://loinc.org"/>
+                     <code value="55108-5"/>
+                     <display value="Clinical presentation"/>
+                  </coding>
+               </code>
+               <text>
+                  <status value="generated"/>
+                  <div xmlns="http://www.w3.org/1999/xhtml">
+            			Representation of the original view:
+                     <img src="2-6-pdf"/>
+                  </div>
+               </text>
+               <entry>
+                  <reference value="Binary/2-6-pdf"/>
                </entry>
             </section>
          </Composition>
@@ -355,9 +352,6 @@
                   </ingredient>
                </Medication>
             </contained>
-            <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
-               <valueUrl value="#pre.1"/>
-            </extension>
             <extension url="http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-treatmentplan">
                <extension url="id">
                   <valueIdentifier>
@@ -385,15 +379,9 @@
                <reference value="Patient/MonikaWegmueller"/>
             </subject>
             <reasonCode>
-               <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
-                  <valueUrl value="#pre.1.reason"/>
-               </extension>
                <text value="-"/>
             </reasonCode>
             <note>
-               <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
-                  <valueUrl value="#pre.1.note"/>
-               </extension>
                <text value="-"/>
             </note>
             <dosageInstruction>
@@ -428,9 +416,6 @@
                </doseAndRate>
             </dosageInstruction>
             <dosageInstruction>
-               <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
-                  <valueUrl value="#pre.1.dosageintakemode"/>
-               </extension>
                <text value="Morgens und abends je 1 Tablette nehmen"/>
             </dosageInstruction>
             <dispenseRequest>

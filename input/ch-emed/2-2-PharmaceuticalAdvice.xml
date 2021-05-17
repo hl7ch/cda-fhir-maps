@@ -239,9 +239,6 @@
         <resource>
             <Observation>
                 <id value="2-2-PharmaceuticalAdvice"/>
-                <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
-                    <valueUrl value="#padv.1"/>
-                </extension>
                 <extension url="http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-treatmentplan">
                     <extension url="id">
                         <valueIdentifier>
@@ -272,9 +269,6 @@
                 </subject>
                 <effectiveDateTime value="2012-02-04T14:00:00+01:00"/>
                 <note>
-                    <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
-                        <valueUrl value="#padv.1.note"/>
-                    </extension>
                     <text value="Abgesetzt aufgrund UAW trockener Husten"/>
                 </note>
             </Observation>

@@ -348,9 +348,6 @@
                         </ingredient>
                     </Medication>
                 </contained>
-                <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
-                    <valueUrl value="#mtp.1"/>
-                </extension>
                 <identifier>
                     <system value="urn:ietf:rfc:3986"/>
                     <value value="urn:uuid:c9f758a1-296c-4710-84d4-e181db8c7478"/>
@@ -363,15 +360,9 @@
                     <reference value="Patient/MonikaWegmueller"/>
                 </subject>
                 <reasonCode>
-                    <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
-                        <valueUrl value="#mtp.1.reason"/>
-                    </extension>
                     <text value="Bluthochdruck"/>
                 </reasonCode>
                 <note>
-                    <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
-                        <valueUrl value="#mtp.1.note"/>
-                    </extension>
                     <text value="-"/>
                 </note>
                 <dosage>
@@ -405,9 +396,6 @@
                     </doseAndRate>
                 </dosage>
                 <dosage>
-                    <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
-                        <valueUrl value="#mtp.1.dosageintakemode"/>
-                    </extension>
                     <text value="Morgens 1/2 Tablette nehmen"/>
                 </dosage>
             </MedicationStatement>
@@ -476,9 +464,6 @@
                         </ingredient>
                     </Medication>
                 </contained>
-                <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
-                    <valueUrl value="#dis.1"/>
-                </extension>
                 <extension url="http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-treatmentplan">
                     <extension url="id">
                         <valueIdentifier>
@@ -508,9 +493,6 @@
                     <value value="1"/>
                 </quantity>
                 <note>
-                    <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
-                        <valueUrl value="#dis.1.note"/>
-                    </extension>
                     <text value="-"/>
                 </note>
                 <dosageInstruction>
@@ -544,9 +526,6 @@
                     </doseAndRate>
                 </dosageInstruction>
                 <dosageInstruction>
-                    <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
-                        <valueUrl value="#dis.1.dosageintakemode"/>
-                    </extension>
                     <text value="Morgens 1/2 Tablette nehmen"/>
                 </dosageInstruction>
                 <!-- substitution just as test case -->

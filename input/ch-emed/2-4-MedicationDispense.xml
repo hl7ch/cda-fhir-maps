@@ -305,9 +305,6 @@
                         </ingredient>
                     </Medication>
                 </contained>
-                <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
-                    <valueUrl value="#dis.1"/>
-                </extension>
                 <extension url="http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-treatmentplan">
                     <extension url="id">
                         <valueIdentifier>
@@ -337,15 +334,9 @@
                     <value value="1"/>
                 </quantity>
                 <note>
-                    <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
-                        <valueUrl value="#dis.1.note"/>
-                    </extension>
                     <text value="-"/>
                 </note>
                 <dosageInstruction>
-                    <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
-                        <valueUrl value="#dis.1.dosageintakemode"/>
-                    </extension>
                     <text value="Morgens 1 und abends 1/2 Tablette nehmen"/>
                 </dosageInstruction>
                 <dosageInstruction>

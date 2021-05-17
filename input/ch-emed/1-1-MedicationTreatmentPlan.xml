@@ -297,9 +297,6 @@
                         </ingredient>
                     </Medication>
                 </contained>
-                <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
-                    <valueUrl value="#mtp.1"/>
-                </extension>
                 <!-- substitution just as test case -->
                 <extension url="http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-substitution">
                     <valueCodeableConcept>
@@ -328,6 +325,11 @@
                     <text value="-"/>
                 </note>
                 <dosage>
+                    <extension url="http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-dosagetype">
+                        <valueIdentifier>
+                            <value value="1.3.6.1.4.1.19376.1.5.3.1.4.7.1"/>
+                        </valueIdentifier>
+                    </extension>
                     <timing>
                         <repeat>
                             <boundsPeriod>
