@@ -70,7 +70,8 @@ group ClinicalDocumentSection(source src : Section, source patient : Patient, ta
 // _________________________ Header Level Templates _________________________
 group ClinicalDocumentComposition(source src : ClinicalDocument, target tgt : Composition, target patientResource : Patient, target bundle : Bundle) {
   src.languageCode -&gt; tgt.language;
-  src.id -&gt; tgt.identifier "identifier";
+  src.id where src.setId.exists().not() -&gt; tgt.identifier "identifier";
+  src.setId -&gt; tgt.identifier "identifier";
   src -&gt; tgt.status = 'final' "status";
   src.code -&gt; tgt.type;
   src.title as t -&gt; tgt.title = (t.dataString);
@@ -761,6 +762,22 @@ _________________________ Header Level Templates _________________________"></do
          <source>
             <context value="src"></context>
             <element value="id"></element>
+            <variable value="vvv"></variable>
+            <condition value="src.setId.exists().not()"></condition>
+         </source>
+         <target>
+            <context value="tgt"></context>
+            <contextType value="variable"></contextType>
+            <element value="identifier"></element>
+            <variable value="vvv"></variable>
+            <transform value="create"></transform>
+         </target>
+      </rule>
+      <rule>
+         <name value="identifier"></name>
+         <source>
+            <context value="src"></context>
+            <element value="setId"></element>
             <variable value="vvv"></variable>
          </source>
          <target>

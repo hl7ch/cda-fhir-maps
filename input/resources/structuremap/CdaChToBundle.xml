@@ -79,17 +79,15 @@ group ChExtEprConfidentialityCode(source src : CE, target ext : Extension) {
 }
 
 // source: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5.30.1.1.10.9.36
-// target: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefinition-ch-ext-epr-setid.html
-group ChExtEprSetId(source src : II, target ext : Extension) {
-  src -&gt; ext.url = 'http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-setid' "url";
-  src -&gt; ext.value = create('Identifier') as value then II(src, value) "value";
-}
-
-// source: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5.30.1.1.10.9.36
 // target: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefinition-ch-ext-epr-versionnumber.html
 group ChExtEprVersionNumber(source src : INT, target ext : Extension) {
   src -&gt; ext.url = 'http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-versionnumber' "url";
   src -&gt; ext.value = create('unsignedInt') as value then INT(src, value) "value";
+}
+
+group ChExtEprVersionNumber1(source src, target ext : Extension) {
+  src -&gt; ext.url = 'http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-versionnumber' "url";
+  src -&gt;  ext.value = create('unsignedInt') as value,  value.value = '1' "value";
 }
 
 // source: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5.30.1.1.10.9.36
@@ -126,7 +124,7 @@ group ClinicalDocumentCompositionCh(source src : ClinicalDocument, target tgt : 
   src.confidentialityCode as confidentialityCode then {
     confidentialityCode.code as v -&gt;  tgt.confidentiality = translate(v, 'http://fhir.ch/ig/ch-core/ConceptMap/documententry-confidentialitycode-to-fhir', 'code') as fhirconf,  fhirconf.extension as ext then ChExtEprConfidentialityCode(confidentialityCode, ext) "confCode";
   };
-  src.setId as setId -&gt; tgt.extension as ext then ChExtEprSetId(setId, ext);
+  src where $this.versionNumber.exists().not() -&gt; tgt.extension as ext2 then ChExtEprVersionNumber1(src, ext2) "versionNumber1";
   src.versionNumber as versionNumber -&gt; tgt.extension as ext2 then ChExtEprVersionNumber(versionNumber, ext2);
   src.informationRecipient as informationRecipient -&gt; bundle.entry as e then {
     informationRecipient.intendedRecipient as intendedRecipient where $this.receivedOrganization.exists() = false -&gt;  e.resource = create('Patient') as recipient,  recipient.id = uuid() as uuid,  e.fullUrl = append('urn:uuid:', uuid),  tgt.extension as ext then ChExtEprInformationRecipient(intendedRecipient, recipient, ext) "informationRecipient";
@@ -678,58 +676,6 @@ target: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefiniti
       </rule>
    </group>
    <group>
-      <name value="ChExtEprSetId"></name>
-      <typeMode value="none"></typeMode>
-      <documentation value="source: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5.30.1.1.10.9.36
-target: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefinition-ch-ext-epr-setid.html"></documentation>
-      <input>
-         <name value="src"></name>
-         <type value="II"></type>
-         <mode value="source"></mode>
-      </input>
-      <input>
-         <name value="ext"></name>
-         <type value="Extension"></type>
-         <mode value="target"></mode>
-      </input>
-      <rule>
-         <name value="url"></name>
-         <source>
-            <context value="src"></context>
-         </source>
-         <target>
-            <context value="ext"></context>
-            <contextType value="variable"></contextType>
-            <element value="url"></element>
-            <transform value="copy"></transform>
-            <parameter>
-               <valueString value="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-setid"></valueString>
-            </parameter>
-         </target>
-      </rule>
-      <rule>
-         <name value="value"></name>
-         <source>
-            <context value="src"></context>
-         </source>
-         <target>
-            <context value="ext"></context>
-            <contextType value="variable"></contextType>
-            <element value="value"></element>
-            <variable value="value"></variable>
-            <transform value="create"></transform>
-            <parameter>
-               <valueString value="Identifier"></valueString>
-            </parameter>
-         </target>
-         <dependent>
-            <name value="II"></name>
-            <variable value="src"></variable>
-            <variable value="value"></variable>
-         </dependent>
-      </rule>
-   </group>
-   <group>
       <name value="ChExtEprVersionNumber"></name>
       <typeMode value="none"></typeMode>
       <documentation value="source: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5.30.1.1.10.9.36
@@ -779,6 +725,59 @@ target: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefiniti
             <variable value="src"></variable>
             <variable value="value"></variable>
          </dependent>
+      </rule>
+   </group>
+   <group>
+      <name value="ChExtEprVersionNumber1"></name>
+      <typeMode value="none"></typeMode>
+      <input>
+         <name value="src"></name>
+         <mode value="source"></mode>
+      </input>
+      <input>
+         <name value="ext"></name>
+         <type value="Extension"></type>
+         <mode value="target"></mode>
+      </input>
+      <rule>
+         <name value="url"></name>
+         <source>
+            <context value="src"></context>
+         </source>
+         <target>
+            <context value="ext"></context>
+            <contextType value="variable"></contextType>
+            <element value="url"></element>
+            <transform value="copy"></transform>
+            <parameter>
+               <valueString value="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-versionnumber"></valueString>
+            </parameter>
+         </target>
+      </rule>
+      <rule>
+         <name value="value"></name>
+         <source>
+            <context value="src"></context>
+         </source>
+         <target>
+            <context value="ext"></context>
+            <contextType value="variable"></contextType>
+            <element value="value"></element>
+            <variable value="value"></variable>
+            <transform value="create"></transform>
+            <parameter>
+               <valueString value="unsignedInt"></valueString>
+            </parameter>
+         </target>
+         <target>
+            <context value="value"></context>
+            <contextType value="variable"></contextType>
+            <element value="value"></element>
+            <transform value="copy"></transform>
+            <parameter>
+               <valueString value="1"></valueString>
+            </parameter>
+         </target>
       </rule>
    </group>
    <group>
@@ -1161,22 +1160,21 @@ target: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefiniti
          </rule>
       </rule>
       <rule>
-         <name value="setId"></name>
+         <name value="versionNumber1"></name>
          <source>
             <context value="src"></context>
-            <element value="setId"></element>
-            <variable value="setId"></variable>
+            <condition value="$this.versionNumber.exists().not()"></condition>
          </source>
          <target>
             <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="extension"></element>
-            <variable value="ext"></variable>
+            <variable value="ext2"></variable>
          </target>
          <dependent>
-            <name value="ChExtEprSetId"></name>
-            <variable value="setId"></variable>
-            <variable value="ext"></variable>
+            <name value="ChExtEprVersionNumber1"></name>
+            <variable value="src"></variable>
+            <variable value="ext2"></variable>
          </dependent>
       </rule>
       <rule>

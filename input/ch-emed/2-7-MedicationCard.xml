@@ -127,62 +127,13 @@
               <display value="History of medication use"/>
             </coding>
           </code>
-          <text>
+          <!--  TOOD  if you generate the text yourself          <text>
             <status value="generated"/>
             <div xmlns="http://www.w3.org/1999/xhtml">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Präpartename</th>
-                    <th>Wirkstoffname</th>
-                    <th>Galenische Form</th>
-                    <th>Dosis pro Einheit</th>
-                    <th>Dosierung</th>
-                    <th>Dos.Morgen</th>
-                    <th>Dos.Mittag</th>
-                    <th>Dos.Abend</th>
-                    <th>Dos.Nacht</th>
-                    <th>Verabreichungsweg</th>
-                    <th>Kommentar</th>
-                    <th>Anwendungsdauer</th>
-                    <th>Behandlungsgrund</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr id="mtpc.1">
-                    <td id="mtpc.1.brandedmedication">Beloc Zok</td>
-                    <td id="mtpc.1.ingredient">Metoprolol</td>
-                    <td id="mtpc.1.packageform"> Ret Tbl</td>
-                    <td id="mtpc.1.dosequantity">50 mg</td>
-                    <td id="mtpc.1.dosageintakemode">Morgens 1 und abends 1/2 Tablette nehmen</td>
-                    <td id="mtpc.1.dosagemorning">1</td>
-                    <td id="mtpc.1.dosagelunch">0</td>
-                    <td id="mtpc.1.dosageevening">0.5</td>
-                    <td id="mtpc.1.dosagenight">0</td>
-                    <td id="mtpc.1.routecode">oral</td>
-                    <td id="mtpc.1.note">-</td>
-                    <td id="mtpc.1.datefromto"/>
-                    <td id="mtpc.1.reason">Bluthochdruck</td>
-                  </tr>
-                  <tr id="mtpc.2">
-                    <td id="mtpc.2.brandedmedication">Norvasc</td>
-                    <td id="mtpc.2.ingredient">Amlodipin</td>
-                    <td id="mtpc.2.packageform">Tbl</td>
-                    <td id="mtpc.2.dosequantity">10 mg</td>
-                    <td id="mtpc.2.dosageintakemode">Morgens und abends je 1 Tablette nehmen</td>
-                    <td id="mtpc.2.dosagemorning">1</td>
-                    <td id="mtpc.2.dosagelunch">0</td>
-                    <td id="mtpc.2.dosageevening">1</td>
-                    <td id="mtpc.2.dosagenight">0</td>
-                    <td id="mtpc.2.routecode">oral</td>
-                    <td id="mtpc.2.note"/>
-                    <td id="mtpc.2.datefromto">-</td>
-                    <td id="mtpc.2.reason">Bluthochdruck</td>
-                  </tr>
-                </tbody>
-              </table>
+              <span id="refpdf">See PDF</span>
             </div>
           </text>
+-->
           <entry>
             <reference value="MedicationStatement/2-7-MedStatBeloczok"/>
           </entry>
@@ -368,9 +319,6 @@
             </ingredient>
           </Medication>
         </contained>
-        <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
-          <valueUrl value="#mtpc.1"/>
-        </extension>
         <extension url="http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-treatmentplan">
           <extension url="id">
             <valueIdentifier>
@@ -397,29 +345,15 @@
           <reference value="Patient/MonikaWegmueller"/>
         </subject>
         <reasonCode>
-          <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
-            <valueUrl value="#mtpc.1.reason"/>
-          </extension>
           <text value="Bluthochdruck"/>
         </reasonCode>
         <note>
-          <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
-            <valueUrl value="#mtpc.1.note"/>
-          </extension>
           <text value="-"/>
         </note>
         <dosage>
-          <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
-            <valueUrl value="#mtpc.1.dosageintakemode"/>
-          </extension>
           <text value="Morgens 1 und abends 1/2 Tablette nehmen"/>
         </dosage>
         <dosage>
-          <extension url="http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-dosagetype">
-            <valueIdentifier>
-              <value value="1.3.6.1.4.1.19376.1.5.3.1.4.9"/>
-            </valueIdentifier>
-          </extension>
           <sequence value="1"/>
           <timing>
             <repeat>
@@ -446,11 +380,6 @@
           </doseAndRate>
         </dosage>
         <dosage>
-          <extension url="http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-dosagetype">
-            <valueIdentifier>
-              <value value="1.3.6.1.4.1.19376.1.5.3.1.4.9"/>
-            </valueIdentifier>
-          </extension>
           <sequence value="2"/>
           <timing>
             <repeat>
@@ -542,9 +471,6 @@
             </ingredient>
           </Medication>
         </contained>
-        <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
-          <valueUrl value="#mtpc.2"/>
-        </extension>
         <extension url="http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-treatmentplan">
           <extension url="id">
             <valueIdentifier>
@@ -571,23 +497,12 @@
           <reference value="Patient/MonikaWegmueller"/>
         </subject>
         <reasonCode>
-          <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
-            <valueUrl value="#mtpc.2.reason"/>
-          </extension>
           <text value="Bluthochdruck"/>
         </reasonCode>
         <note>
-          <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
-            <valueUrl value="#mtpc.2.note"/>
-          </extension>
           <text value="-"/>
         </note>
         <dosage>
-          <extension url="http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-dosagetype">
-            <valueIdentifier>
-              <value value="1.3.6.1.4.1.19376.1.5.3.1.4.7.1"/>
-            </valueIdentifier>
-          </extension>
           <timing>
             <repeat>
               <boundsPeriod>
@@ -614,9 +529,6 @@
           </doseAndRate>
         </dosage>
         <dosage>
-          <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
-            <valueUrl value="#mtpc.2.dosageintakemode"/>
-          </extension>
           <text value="Morgens und abends je 1 Tablette nehmen"/>
         </dosage>
       </MedicationStatement>

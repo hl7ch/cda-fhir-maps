@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bundle 
+  xmlns="http://hl7.org/fhir">
+  <identifier>
+    <system value="urn:ietf:rfc:3986"/>
+    <value value="urn:uuid:31397b31-be60-47e1-bec6-f37816d42b0c"/>
+  </identifier>
+  <type value="document"/>
+  <entry>
+    <fullUrl value="urn:uuid:8b6b8613-5ce4-4ab0-a36d-b6084dedc43f"/>
+    <resource>
+      <Composition>
+        <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-versionnumber">
+          <valueUnsignedInt value="2"/>
+        </extension>
+        <identifier>
+          <system value="urn:ietf:rfc:3986"/>
+          <value value="urn:uuid:807563c2-5146-11d5-a672-00b0d022e945"/>
+        </identifier>
+        <status value="final"/>
+      </Composition>
+    </resource>
+  </entry>
+</Bundle>

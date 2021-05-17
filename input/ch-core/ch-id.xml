@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bundle 
+  xmlns="http://hl7.org/fhir">
+  <identifier>
+    <system value="urn:ietf:rfc:3986"/>
+    <value value="urn:uuid:31397b31-be60-47e1-bec6-f37816d42b0c"/>
+  </identifier>
+  <type value="document"/>
+  <entry>
+    <fullUrl value="urn:uuid:a100c817-b7c2-4ab4-9970-efb0ac384fe5"/>
+    <resource>
+      <Composition>
+        <status value="final"/>
+      </Composition>
+    </resource>
+  </entry>
+</Bundle>

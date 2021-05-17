@@ -37,7 +37,6 @@ imports "http://fhir.ch/ig/cda-fhir-maps/StructureMap/BundleToCdaCh"
 
 // source: Annotation note (e.g. http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefinition-ch-emed-medicationstatement.html)
 // target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.4.2
-// Note/Warning: we assume that there is a narrativeLink extension which refers to the text which should be the same as in note.text
 group AnnotationComment(source note : Annotation, target act : Act) {
   note -&gt; act.classCode = 'ACT' "ACT";
   note -&gt; act.moodCode = 'EVN' "EVN";
@@ -45,9 +44,13 @@ group AnnotationComment(source note : Annotation, target act : Act) {
   note -&gt;  act.templateId as templateId,  templateId.root = '2.16.840.1.113883.10.20.1.40' "templateId";
   note -&gt;  act.templateId as templateId,  templateId.root = '1.3.6.1.4.1.19376.1.5.3.1.4.2' "templateId";
   note -&gt;  act.code as code,  code.code = '48767-8',  code.codeSystem = '2.16.840.1.113883.6.1',  code.displayName = 'Annotation comment',  code.codeSystemName = 'LOINC' "code";
-  note.extension as extension where $this.url = 'http://hl7.org/fhir/StructureDefinition/narrativeLink' then {
-    extension.valueUrl as valueUrl -&gt;  act.text as text,  text.reference as reference,  reference.value = valueUrl "reference";
-  } "id";
+  note.text as noteText -&gt; act.text as text then {
+    noteText -&gt; text.data = noteText "text";
+    note.extension as extension where $this.url = 'http://hl7.org/fhir/StructureDefinition/narrativeLink' then {
+      extension.valueUrl as valueUrl -&gt;  text.reference as reference,  reference.value = valueUrl "reference";
+    } "id";
+    note where (extension.where($this.url = 'http://hl7.org/fhir/StructureDefinition/narrativeLink').exists() = false) -&gt;  text.reference as reference,  reference.value = '#refpdf' "reference";
+  };
   note -&gt;  act.statusCode as code,  code.code = 'completed' "statusCode";
 }
 
@@ -66,7 +69,9 @@ group ManufacturedMaterialEntryContentModuleStatement(source bundle : Bundle, so
     code.extension as extension where $this.url = 'http://hl7.org/fhir/StructureDefinition/narrativeLink' -&gt; manufacturedMaterial.code as code then {
       extension.valueUrl as valueUrl -&gt;  code.originalText as text,  text.reference as reference,  reference.value = valueUrl "reference";
     } "id";
+    code where (extension.where($this.url = 'http://hl7.org/fhir/StructureDefinition/narrativeLink').exists() = false) -&gt;  manufacturedMaterial.code as code,  code.originalText as text,  text.reference as reference,  reference.value = '#refpdf' "reference";
     code.coding as coding -&gt; manufacturedMaterial.code as ce then CodingCE(coding, ce) "code";
+    code where coding.exists() = false -&gt;  manufacturedMaterial.code as ce,  ce.nullFlavor = 'NA' "nullFlavor";
   };
   medication.form as form then {
     form.coding as coding -&gt; manufacturedMaterial.formCode as formCode then CodingCE(coding, formCode) "formCode";
@@ -124,6 +129,9 @@ group MedicationTreatmentPlanItemEntryContentModule(source bundle : Bundle, sour
   medicationStatement.extension as extension where $this.url = 'http://hl7.org/fhir/StructureDefinition/narrativeLink' -&gt;  substanceAdministration.text as text,  text.reference as reference then {
     extension.valueUrl as valueUrl -&gt; reference.value = valueUrl;
   } "narrativeLink";
+  medicationStatement where extension.where(url = 'http://hl7.org/fhir/StructureDefinition/narrativeLink').exists().not() -&gt;  substanceAdministration.text as text,  text.reference as reference then {
+    medicationStatement -&gt; reference.value = '#refpdf' "referencetopdf";
+  } "cat1narrativelink";
   medicationStatement -&gt;  substanceAdministration.statusCode as statusCode,  statusCode.code = 'completed' "code";
   medicationStatement.contained as medication where ('#' + $this.id) in %medicationStatement.medicationReference.reference -&gt;  substanceAdministration.consumable as consumable,  consumable.manufacturedProduct as manufacturedProduct,  manufacturedProduct.classCode = 'MANU' then {
     medication -&gt;  manufacturedProduct.templateId as templateId,  templateId.root = '1.3.6.1.4.1.19376.1.5.3.1.4.7.2' "MP-TemplateId";
@@ -215,15 +223,18 @@ group DoseQuantity(source dosage : Dosage, target substanceAdministration : Subs
 // source: reasonCode Coding (e.g. http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-medicationstatement)
 // target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.4.41
 // Treatment Reason (Statement, Prescription)
-// Note/Warning: we assume that there is a narrativeLink extension which refers to the text which should be the same as in reasonCode.text
 group TreatmentReasonEntryContentModule(source reasonCode : Coding, target observation : Observation) {
   reasonCode -&gt; observation.classCode = 'OBS' "OBS";
   reasonCode -&gt; observation.moodCode = 'EVN' "EVN";
   reasonCode -&gt;  observation.templateId as templateId,  templateId.root = '2.16.756.5.30.1.1.10.4.41' "TreatmentReasonEntryContentModule";
   reasonCode -&gt;  observation.code as code,  code.code = '75326-9',  code.codeSystem = '2.16.840.1.113883.6.1',  code.displayName = 'Problem',  code.codeSystemName = 'LOINC' "code";
-  reasonCode.extension as extension where $this.url = 'http://hl7.org/fhir/StructureDefinition/narrativeLink' then {
-    extension.valueUrl as valueUrl -&gt;  observation.text as text,  text.reference as reference,  reference.value = valueUrl "reference";
-  } "id";
+  reasonCode.text as reasonText -&gt; observation.text as text then {
+    reasonText -&gt; text.data = reasonText "text";
+    reasonCode.extension as extension where $this.url = 'http://hl7.org/fhir/StructureDefinition/narrativeLink' then {
+      extension.valueUrl as valueUrl -&gt;  text.reference as reference,  reference.value = valueUrl "reference";
+    } "id";
+    reasonCode where (extension.where($this.url = 'http://hl7.org/fhir/StructureDefinition/narrativeLink').exists() = false) -&gt;  text.reference as reference,  reference.value = '#refpdf' "reference";
+  };
   reasonCode -&gt;  observation.statusCode as code,  code.code = 'completed' "statusCode";
 }
 
@@ -248,14 +259,17 @@ group MTPReferenceEntryContentModule(source ext : Extension, target substanceAdm
 // target: https://art-decor.org/art-decor/decor-templates--ch-pharm-?section=templates&amp;id=2.16.756.5.30.1.1.10.4.52
 // target: https://art-decor.org/art-decor/decor-templates--ch-pharm-?section=templates&amp;id=2.16.756.5.30.1.1.10.4.37
 // Dosage Instruction (Statement, Prescription)
-// Note/Warning: we assume that there is a narrativeLink extension which refers to the text which should be the same as in note.text
 group DosageInstructionsNonStructuredEntryContentModule(source dosage : Dosage, target substanceAdministration : SubstanceAdministration) {
   dosage -&gt; substanceAdministration.classCode = 'SBADM' "SBADM";
   dosage -&gt; substanceAdministration.moodCode = 'INT' "INT";
   dosage -&gt;  substanceAdministration.templateId as templateId,  templateId.root = '2.16.756.5.30.1.1.10.4.37' "templateId";
-  dosage.extension as extension where $this.url = 'http://hl7.org/fhir/StructureDefinition/narrativeLink' then {
-    extension.valueUrl as valueUrl -&gt;  substanceAdministration.text as text,  text.reference as reference,  reference.value = valueUrl "reference";
-  } "id";
+  dosage.text as noteText -&gt; substanceAdministration.text as text then {
+    noteText -&gt; text.data = noteText "text";
+    dosage.extension as extension where $this.url = 'http://hl7.org/fhir/StructureDefinition/narrativeLink' then {
+      extension.valueUrl as valueUrl -&gt;  text.reference as reference,  reference.value = valueUrl "reference";
+    } "id";
+    dosage where (extension.where($this.url = 'http://hl7.org/fhir/StructureDefinition/narrativeLink').exists() = false) -&gt;  text.reference as reference,  reference.value = '#refpdf' "reference";
+  };
   dosage -&gt;  substanceAdministration.consumable as consumable,  consumable.manufacturedProduct as manufacturedProduct,  manufacturedProduct.manufacturedMaterial as manufacturedMaterial,  manufacturedMaterial.nullFlavor = 'NA' "consumable";
 }
 
@@ -285,6 +299,7 @@ group ManufacturedMaterialEntryContentModuleDispense(source bundle : Bundle, sou
     code.extension as extension where $this.url = 'http://hl7.org/fhir/StructureDefinition/narrativeLink' -&gt; manufacturedMaterial.code as code then {
       extension.valueUrl as valueUrl -&gt;  code.originalText as text,  text.reference as reference,  reference.value = valueUrl "reference";
     } "id";
+    code where (extension.where($this.url = 'http://hl7.org/fhir/StructureDefinition/narrativeLink').exists() = false) -&gt;  manufacturedMaterial.code as code,  code.originalText as text,  text.reference as reference,  reference.value = '#refpdf' "reference";
     code.coding as coding -&gt; manufacturedMaterial.code as ce then CodingCE(coding, ce) "code";
   };
   medication.form as form then {
@@ -343,6 +358,7 @@ group DispenseItemEntryContentModule(source bundle : Bundle, source medicationDi
   medicationDispense.extension as extension where $this.url = 'http://hl7.org/fhir/StructureDefinition/narrativeLink' -&gt;  supply.text as text,  text.reference as reference then {
     extension.valueUrl as valueUrl -&gt; reference.value = valueUrl;
   } "narrativeLink";
+  medicationDispense where (extension.where($this.url = 'http://hl7.org/fhir/StructureDefinition/narrativeLink').exists() = false) -&gt;  supply.text as text,  text.reference as reference,  text.reference as reference,  reference.value = '#refpdf' "reference";
   medicationDispense.contained as medication where ('#' + $this.id) in %medicationDispense.medicationReference.reference -&gt;  supply.product as product,  product.manufacturedProduct as manufacturedProduct,  manufacturedProduct.classCode = 'MANU' then {
     medication -&gt;  manufacturedProduct.templateId as templateId,  templateId.root = '1.3.6.1.4.1.19376.1.5.3.1.4.7.2' "MP-TemplateId";
     medication -&gt;  manufacturedProduct.templateId as templateId,  templateId.root = '2.16.840.1.113883.10.20.1.53' "MP-TemplateId";
@@ -525,6 +541,7 @@ group ManufacturedMaterialEntryContentModulePrescription(source bundle : Bundle,
     code.extension as extension where $this.url = 'http://hl7.org/fhir/StructureDefinition/narrativeLink' -&gt; manufacturedMaterial.code as code then {
       extension.valueUrl as valueUrl -&gt;  code.originalText as text,  text.reference as reference,  reference.value = valueUrl "reference";
     } "id";
+    code where (extension.where($this.url = 'http://hl7.org/fhir/StructureDefinition/narrativeLink').exists() = false) -&gt;  manufacturedMaterial.code as code,  code.originalText as text,  text.reference as reference,  reference.value = '#refpdf' "reference";
     code.coding as coding -&gt; manufacturedMaterial.code as ce then CodingCE(coding, ce) "code";
   };
   medication.form as form then {
@@ -589,6 +606,9 @@ group PrescriptionItemEntryContentModule(source bundle : Bundle, source medicati
   medicationRequest.extension as extension where $this.url = 'http://hl7.org/fhir/StructureDefinition/narrativeLink' -&gt;  substanceAdministration.text as text,  text.reference as reference then {
     extension.valueUrl as valueUrl -&gt; reference.value = valueUrl;
   } "narrativeLink";
+  medicationRequest where extension.where(url = 'http://hl7.org/fhir/StructureDefinition/narrativeLink').exists().not() -&gt;  substanceAdministration.text as text,  text.reference as reference then {
+    medicationRequest -&gt; reference.value = '#refpdf' "referencetopdf";
+  } "cat1narrativelink";
   medicationRequest -&gt;  substanceAdministration.statusCode as statusCode,  statusCode.code = 'completed' "code";
   medicationRequest.dispenseRequest as dispenseRequest -&gt; substanceAdministration.repeatNumber as repeatNumber then {
     dispenseRequest.numberOfRepeatsAllowed as number -&gt; repeatNumber.value = number "repeatNumber";
@@ -615,7 +635,6 @@ group PrescriptionItemEntryContentModule(source bundle : Bundle, source medicati
 
 // source: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-observation.html
 // target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.4.44
-// Note/Warning: we assume that there is a narrativeLink extension which refers to the text which should be the same as in note.text
 group PharmaceuticalAdviceItemEntryContentModule(source bundle : Bundle, source fhirobservation : Observation, target cdaobservation : Observation) {
   fhirobservation -&gt; cdaobservation.classCode = 'OBS' "OBS";
   fhirobservation -&gt; cdaobservation.moodCode = 'EVN' "EVN";
@@ -632,7 +651,15 @@ group PharmaceuticalAdviceItemEntryContentModule(source bundle : Bundle, source 
     note.extension as extension where $this.url = 'http://hl7.org/fhir/StructureDefinition/narrativeLink' -&gt;  cdaobservation.text as text,  text.reference as reference then {
       extension.valueUrl as valueUrl -&gt; reference.value = valueUrl;
     } "narrativeLink";
+    note where (extension.where($this.url = 'http://hl7.org/fhir/StructureDefinition/narrativeLink').exists() = false) -&gt;  cdaobservation.text as text,  text.reference as reference,  reference.value = '#refpdf' "reference";
   };
+  fhirobservation.note as note -&gt; cdaobservation.text as text then {
+    note.text as noteText -&gt; text.data = noteText;
+    note.extension as extension where $this.url = 'http://hl7.org/fhir/StructureDefinition/narrativeLink' then {
+      extension.valueUrl as valueUrl -&gt;  text.reference as reference,  reference.value = valueUrl "reference";
+    } "id";
+    note where (extension.where($this.url = 'http://hl7.org/fhir/StructureDefinition/narrativeLink').exists() = false) -&gt;  text.reference as reference,  reference.value = '#refpdf' "reference";
+  } "text";
 }
 
 </pre>
@@ -751,8 +778,7 @@ FHIR CH-EMED: http://fhir.ch/ig/ch-emed/index.html"></description>
       <name value="AnnotationComment"></name>
       <typeMode value="none"></typeMode>
       <documentation value="source: Annotation note (e.g. http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefinition-ch-emed-medicationstatement.html)
-target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.4.2
-Note/Warning: we assume that there is a narrativeLink extension which refers to the text which should be the same as in note.text"></documentation>
+target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.4.2"></documentation>
       <input>
          <name value="note"></name>
          <type value="Annotation"></type>
@@ -905,26 +931,71 @@ Note/Warning: we assume that there is a narrativeLink extension which refers to 
          </target>
       </rule>
       <rule>
-         <name value="id"></name>
+         <name value="text"></name>
          <source>
             <context value="note"></context>
-            <element value="extension"></element>
-            <variable value="extension"></variable>
-            <condition value="$this.url = 'http://hl7.org/fhir/StructureDefinition/narrativeLink'"></condition>
+            <element value="text"></element>
+            <variable value="noteText"></variable>
          </source>
+         <target>
+            <context value="act"></context>
+            <contextType value="variable"></contextType>
+            <element value="text"></element>
+            <variable value="text"></variable>
+         </target>
+         <rule>
+            <name value="text"></name>
+            <source>
+               <context value="noteText"></context>
+            </source>
+            <target>
+               <context value="text"></context>
+               <contextType value="variable"></contextType>
+               <element value="data"></element>
+               <transform value="copy"></transform>
+               <parameter>
+                  <valueId value="noteText"></valueId>
+               </parameter>
+            </target>
+         </rule>
+         <rule>
+            <name value="id"></name>
+            <source>
+               <context value="note"></context>
+               <element value="extension"></element>
+               <variable value="extension"></variable>
+               <condition value="$this.url = 'http://hl7.org/fhir/StructureDefinition/narrativeLink'"></condition>
+            </source>
+            <rule>
+               <name value="reference"></name>
+               <source>
+                  <context value="extension"></context>
+                  <element value="valueUrl"></element>
+                  <variable value="valueUrl"></variable>
+               </source>
+               <target>
+                  <context value="text"></context>
+                  <contextType value="variable"></contextType>
+                  <element value="reference"></element>
+                  <variable value="reference"></variable>
+               </target>
+               <target>
+                  <context value="reference"></context>
+                  <contextType value="variable"></contextType>
+                  <element value="value"></element>
+                  <transform value="copy"></transform>
+                  <parameter>
+                     <valueId value="valueUrl"></valueId>
+                  </parameter>
+               </target>
+            </rule>
+         </rule>
          <rule>
             <name value="reference"></name>
             <source>
-               <context value="extension"></context>
-               <element value="valueUrl"></element>
-               <variable value="valueUrl"></variable>
+               <context value="note"></context>
+               <condition value="(extension.where($this.url = 'http://hl7.org/fhir/StructureDefinition/narrativeLink').exists() = false)"></condition>
             </source>
-            <target>
-               <context value="act"></context>
-               <contextType value="variable"></contextType>
-               <element value="text"></element>
-               <variable value="text"></variable>
-            </target>
             <target>
                <context value="text"></context>
                <contextType value="variable"></contextType>
@@ -937,7 +1008,7 @@ Note/Warning: we assume that there is a narrativeLink extension which refers to 
                <element value="value"></element>
                <transform value="copy"></transform>
                <parameter>
-                  <valueId value="valueUrl"></valueId>
+                  <valueString value="#refpdf"></valueString>
                </parameter>
             </target>
          </rule>
@@ -1145,6 +1216,40 @@ target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=temp
             <documentation value="#mtpc.no.brandedmedication"></documentation>
          </rule>
          <rule>
+            <name value="reference"></name>
+            <source>
+               <context value="code"></context>
+               <condition value="(extension.where($this.url = 'http://hl7.org/fhir/StructureDefinition/narrativeLink').exists() = false)"></condition>
+            </source>
+            <target>
+               <context value="manufacturedMaterial"></context>
+               <contextType value="variable"></contextType>
+               <element value="code"></element>
+               <variable value="code"></variable>
+            </target>
+            <target>
+               <context value="code"></context>
+               <contextType value="variable"></contextType>
+               <element value="originalText"></element>
+               <variable value="text"></variable>
+            </target>
+            <target>
+               <context value="text"></context>
+               <contextType value="variable"></contextType>
+               <element value="reference"></element>
+               <variable value="reference"></variable>
+            </target>
+            <target>
+               <context value="reference"></context>
+               <contextType value="variable"></contextType>
+               <element value="value"></element>
+               <transform value="copy"></transform>
+               <parameter>
+                  <valueString value="#refpdf"></valueString>
+               </parameter>
+            </target>
+         </rule>
+         <rule>
             <name value="code"></name>
             <source>
                <context value="code"></context>
@@ -1162,6 +1267,28 @@ target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=temp
                <variable value="coding"></variable>
                <variable value="ce"></variable>
             </dependent>
+         </rule>
+         <rule>
+            <name value="nullFlavor"></name>
+            <source>
+               <context value="code"></context>
+               <condition value="coding.exists() = false"></condition>
+            </source>
+            <target>
+               <context value="manufacturedMaterial"></context>
+               <contextType value="variable"></contextType>
+               <element value="code"></element>
+               <variable value="ce"></variable>
+            </target>
+            <target>
+               <context value="ce"></context>
+               <contextType value="variable"></contextType>
+               <element value="nullFlavor"></element>
+               <transform value="copy"></transform>
+               <parameter>
+                  <valueString value="NA"></valueString>
+               </parameter>
+            </target>
          </rule>
       </rule>
       <rule>
@@ -1773,6 +1900,40 @@ target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=temp
                <transform value="copy"></transform>
                <parameter>
                   <valueId value="valueUrl"></valueId>
+               </parameter>
+            </target>
+         </rule>
+      </rule>
+      <rule>
+         <name value="cat1narrativelink"></name>
+         <source>
+            <context value="medicationStatement"></context>
+            <condition value="extension.where(url = 'http://hl7.org/fhir/StructureDefinition/narrativeLink').exists().not()"></condition>
+         </source>
+         <target>
+            <context value="substanceAdministration"></context>
+            <contextType value="variable"></contextType>
+            <element value="text"></element>
+            <variable value="text"></variable>
+         </target>
+         <target>
+            <context value="text"></context>
+            <contextType value="variable"></contextType>
+            <element value="reference"></element>
+            <variable value="reference"></variable>
+         </target>
+         <rule>
+            <name value="referencetopdf"></name>
+            <source>
+               <context value="medicationStatement"></context>
+            </source>
+            <target>
+               <context value="reference"></context>
+               <contextType value="variable"></contextType>
+               <element value="value"></element>
+               <transform value="copy"></transform>
+               <parameter>
+                  <valueString value="#refpdf"></valueString>
                </parameter>
             </target>
          </rule>
@@ -2722,8 +2883,7 @@ dosage for split dosing: sequence number, effectiveTime (when), dose quantity, c
       <typeMode value="none"></typeMode>
       <documentation value="source: reasonCode Coding (e.g. http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-medicationstatement)
 target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.4.41
-Treatment Reason (Statement, Prescription)
-Note/Warning: we assume that there is a narrativeLink extension which refers to the text which should be the same as in reasonCode.text"></documentation>
+Treatment Reason (Statement, Prescription)"></documentation>
       <input>
          <name value="reasonCode"></name>
          <type value="Coding"></type>
@@ -2834,26 +2994,71 @@ Note/Warning: we assume that there is a narrativeLink extension which refers to 
          </target>
       </rule>
       <rule>
-         <name value="id"></name>
+         <name value="text"></name>
          <source>
             <context value="reasonCode"></context>
-            <element value="extension"></element>
-            <variable value="extension"></variable>
-            <condition value="$this.url = 'http://hl7.org/fhir/StructureDefinition/narrativeLink'"></condition>
+            <element value="text"></element>
+            <variable value="reasonText"></variable>
          </source>
+         <target>
+            <context value="observation"></context>
+            <contextType value="variable"></contextType>
+            <element value="text"></element>
+            <variable value="text"></variable>
+         </target>
+         <rule>
+            <name value="text"></name>
+            <source>
+               <context value="reasonText"></context>
+            </source>
+            <target>
+               <context value="text"></context>
+               <contextType value="variable"></contextType>
+               <element value="data"></element>
+               <transform value="copy"></transform>
+               <parameter>
+                  <valueId value="reasonText"></valueId>
+               </parameter>
+            </target>
+         </rule>
+         <rule>
+            <name value="id"></name>
+            <source>
+               <context value="reasonCode"></context>
+               <element value="extension"></element>
+               <variable value="extension"></variable>
+               <condition value="$this.url = 'http://hl7.org/fhir/StructureDefinition/narrativeLink'"></condition>
+            </source>
+            <rule>
+               <name value="reference"></name>
+               <source>
+                  <context value="extension"></context>
+                  <element value="valueUrl"></element>
+                  <variable value="valueUrl"></variable>
+               </source>
+               <target>
+                  <context value="text"></context>
+                  <contextType value="variable"></contextType>
+                  <element value="reference"></element>
+                  <variable value="reference"></variable>
+               </target>
+               <target>
+                  <context value="reference"></context>
+                  <contextType value="variable"></contextType>
+                  <element value="value"></element>
+                  <transform value="copy"></transform>
+                  <parameter>
+                     <valueId value="valueUrl"></valueId>
+                  </parameter>
+               </target>
+            </rule>
+         </rule>
          <rule>
             <name value="reference"></name>
             <source>
-               <context value="extension"></context>
-               <element value="valueUrl"></element>
-               <variable value="valueUrl"></variable>
+               <context value="reasonCode"></context>
+               <condition value="(extension.where($this.url = 'http://hl7.org/fhir/StructureDefinition/narrativeLink').exists() = false)"></condition>
             </source>
-            <target>
-               <context value="observation"></context>
-               <contextType value="variable"></contextType>
-               <element value="text"></element>
-               <variable value="text"></variable>
-            </target>
             <target>
                <context value="text"></context>
                <contextType value="variable"></contextType>
@@ -2866,7 +3071,7 @@ Note/Warning: we assume that there is a narrativeLink extension which refers to 
                <element value="value"></element>
                <transform value="copy"></transform>
                <parameter>
-                  <valueId value="valueUrl"></valueId>
+                  <valueString value="#refpdf"></valueString>
                </parameter>
             </target>
          </rule>
@@ -3145,8 +3350,7 @@ target: https://art-decor.org/art-decor/decor-templates--ch-pharm-?section=templ
       <documentation value="source: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefinition-ch-emed-dosage-nonstructured.html
 target: https://art-decor.org/art-decor/decor-templates--ch-pharm-?section=templates&amp;id=2.16.756.5.30.1.1.10.4.52
 target: https://art-decor.org/art-decor/decor-templates--ch-pharm-?section=templates&amp;id=2.16.756.5.30.1.1.10.4.37
-Dosage Instruction (Statement, Prescription)
-Note/Warning: we assume that there is a narrativeLink extension which refers to the text which should be the same as in note.text"></documentation>
+Dosage Instruction (Statement, Prescription)"></documentation>
       <input>
          <name value="dosage"></name>
          <type value="Dosage"></type>
@@ -3209,26 +3413,71 @@ Note/Warning: we assume that there is a narrativeLink extension which refers to 
          </target>
       </rule>
       <rule>
-         <name value="id"></name>
+         <name value="text"></name>
          <source>
             <context value="dosage"></context>
-            <element value="extension"></element>
-            <variable value="extension"></variable>
-            <condition value="$this.url = 'http://hl7.org/fhir/StructureDefinition/narrativeLink'"></condition>
+            <element value="text"></element>
+            <variable value="noteText"></variable>
          </source>
+         <target>
+            <context value="substanceAdministration"></context>
+            <contextType value="variable"></contextType>
+            <element value="text"></element>
+            <variable value="text"></variable>
+         </target>
+         <rule>
+            <name value="text"></name>
+            <source>
+               <context value="noteText"></context>
+            </source>
+            <target>
+               <context value="text"></context>
+               <contextType value="variable"></contextType>
+               <element value="data"></element>
+               <transform value="copy"></transform>
+               <parameter>
+                  <valueId value="noteText"></valueId>
+               </parameter>
+            </target>
+         </rule>
+         <rule>
+            <name value="id"></name>
+            <source>
+               <context value="dosage"></context>
+               <element value="extension"></element>
+               <variable value="extension"></variable>
+               <condition value="$this.url = 'http://hl7.org/fhir/StructureDefinition/narrativeLink'"></condition>
+            </source>
+            <rule>
+               <name value="reference"></name>
+               <source>
+                  <context value="extension"></context>
+                  <element value="valueUrl"></element>
+                  <variable value="valueUrl"></variable>
+               </source>
+               <target>
+                  <context value="text"></context>
+                  <contextType value="variable"></contextType>
+                  <element value="reference"></element>
+                  <variable value="reference"></variable>
+               </target>
+               <target>
+                  <context value="reference"></context>
+                  <contextType value="variable"></contextType>
+                  <element value="value"></element>
+                  <transform value="copy"></transform>
+                  <parameter>
+                     <valueId value="valueUrl"></valueId>
+                  </parameter>
+               </target>
+            </rule>
+         </rule>
          <rule>
             <name value="reference"></name>
             <source>
-               <context value="extension"></context>
-               <element value="valueUrl"></element>
-               <variable value="valueUrl"></variable>
+               <context value="dosage"></context>
+               <condition value="(extension.where($this.url = 'http://hl7.org/fhir/StructureDefinition/narrativeLink').exists() = false)"></condition>
             </source>
-            <target>
-               <context value="substanceAdministration"></context>
-               <contextType value="variable"></contextType>
-               <element value="text"></element>
-               <variable value="text"></variable>
-            </target>
             <target>
                <context value="text"></context>
                <contextType value="variable"></contextType>
@@ -3241,7 +3490,7 @@ Note/Warning: we assume that there is a narrativeLink extension which refers to 
                <element value="value"></element>
                <transform value="copy"></transform>
                <parameter>
-                  <valueId value="valueUrl"></valueId>
+                  <valueString value="#refpdf"></valueString>
                </parameter>
             </target>
          </rule>
@@ -3567,6 +3816,40 @@ target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=temp
                </target>
             </rule>
             <documentation value="#dis.no.brandedmedication"></documentation>
+         </rule>
+         <rule>
+            <name value="reference"></name>
+            <source>
+               <context value="code"></context>
+               <condition value="(extension.where($this.url = 'http://hl7.org/fhir/StructureDefinition/narrativeLink').exists() = false)"></condition>
+            </source>
+            <target>
+               <context value="manufacturedMaterial"></context>
+               <contextType value="variable"></contextType>
+               <element value="code"></element>
+               <variable value="code"></variable>
+            </target>
+            <target>
+               <context value="code"></context>
+               <contextType value="variable"></contextType>
+               <element value="originalText"></element>
+               <variable value="text"></variable>
+            </target>
+            <target>
+               <context value="text"></context>
+               <contextType value="variable"></contextType>
+               <element value="reference"></element>
+               <variable value="reference"></variable>
+            </target>
+            <target>
+               <context value="reference"></context>
+               <contextType value="variable"></contextType>
+               <element value="value"></element>
+               <transform value="copy"></transform>
+               <parameter>
+                  <valueString value="#refpdf"></valueString>
+               </parameter>
+            </target>
          </rule>
          <rule>
             <name value="code"></name>
@@ -4200,6 +4483,40 @@ target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=temp
                </parameter>
             </target>
          </rule>
+      </rule>
+      <rule>
+         <name value="reference"></name>
+         <source>
+            <context value="medicationDispense"></context>
+            <condition value="(extension.where($this.url = 'http://hl7.org/fhir/StructureDefinition/narrativeLink').exists() = false)"></condition>
+         </source>
+         <target>
+            <context value="supply"></context>
+            <contextType value="variable"></contextType>
+            <element value="text"></element>
+            <variable value="text"></variable>
+         </target>
+         <target>
+            <context value="text"></context>
+            <contextType value="variable"></contextType>
+            <element value="reference"></element>
+            <variable value="reference"></variable>
+         </target>
+         <target>
+            <context value="text"></context>
+            <contextType value="variable"></contextType>
+            <element value="reference"></element>
+            <variable value="reference"></variable>
+         </target>
+         <target>
+            <context value="reference"></context>
+            <contextType value="variable"></contextType>
+            <element value="value"></element>
+            <transform value="copy"></transform>
+            <parameter>
+               <valueString value="#refpdf"></valueString>
+            </parameter>
+         </target>
       </rule>
       <rule>
          <name value="contained"></name>
@@ -6205,6 +6522,40 @@ target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=temp
             <documentation value="#pre.no.brandedmedication"></documentation>
          </rule>
          <rule>
+            <name value="reference"></name>
+            <source>
+               <context value="code"></context>
+               <condition value="(extension.where($this.url = 'http://hl7.org/fhir/StructureDefinition/narrativeLink').exists() = false)"></condition>
+            </source>
+            <target>
+               <context value="manufacturedMaterial"></context>
+               <contextType value="variable"></contextType>
+               <element value="code"></element>
+               <variable value="code"></variable>
+            </target>
+            <target>
+               <context value="code"></context>
+               <contextType value="variable"></contextType>
+               <element value="originalText"></element>
+               <variable value="text"></variable>
+            </target>
+            <target>
+               <context value="text"></context>
+               <contextType value="variable"></contextType>
+               <element value="reference"></element>
+               <variable value="reference"></variable>
+            </target>
+            <target>
+               <context value="reference"></context>
+               <contextType value="variable"></contextType>
+               <element value="value"></element>
+               <transform value="copy"></transform>
+               <parameter>
+                  <valueString value="#refpdf"></valueString>
+               </parameter>
+            </target>
+         </rule>
+         <rule>
             <name value="code"></name>
             <source>
                <context value="code"></context>
@@ -6915,6 +7266,40 @@ target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=temp
          </rule>
       </rule>
       <rule>
+         <name value="cat1narrativelink"></name>
+         <source>
+            <context value="medicationRequest"></context>
+            <condition value="extension.where(url = 'http://hl7.org/fhir/StructureDefinition/narrativeLink').exists().not()"></condition>
+         </source>
+         <target>
+            <context value="substanceAdministration"></context>
+            <contextType value="variable"></contextType>
+            <element value="text"></element>
+            <variable value="text"></variable>
+         </target>
+         <target>
+            <context value="text"></context>
+            <contextType value="variable"></contextType>
+            <element value="reference"></element>
+            <variable value="reference"></variable>
+         </target>
+         <rule>
+            <name value="referencetopdf"></name>
+            <source>
+               <context value="medicationRequest"></context>
+            </source>
+            <target>
+               <context value="reference"></context>
+               <contextType value="variable"></contextType>
+               <element value="value"></element>
+               <transform value="copy"></transform>
+               <parameter>
+                  <valueString value="#refpdf"></valueString>
+               </parameter>
+            </target>
+         </rule>
+      </rule>
+      <rule>
          <name value="code"></name>
          <source>
             <context value="medicationRequest"></context>
@@ -7306,8 +7691,7 @@ target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=temp
       <name value="PharmaceuticalAdviceItemEntryContentModule"></name>
       <typeMode value="none"></typeMode>
       <documentation value="source: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-observation.html
-target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.4.44
-Note/Warning: we assume that there is a narrativeLink extension which refers to the text which should be the same as in note.text"></documentation>
+target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.4.44"></documentation>
       <input>
          <name value="bundle"></name>
          <type value="Bundle"></type>
@@ -7562,6 +7946,119 @@ Note/Warning: we assume that there is a narrativeLink extension which refers to 
                   </parameter>
                </target>
             </rule>
+         </rule>
+         <rule>
+            <name value="reference"></name>
+            <source>
+               <context value="note"></context>
+               <condition value="(extension.where($this.url = 'http://hl7.org/fhir/StructureDefinition/narrativeLink').exists() = false)"></condition>
+            </source>
+            <target>
+               <context value="cdaobservation"></context>
+               <contextType value="variable"></contextType>
+               <element value="text"></element>
+               <variable value="text"></variable>
+            </target>
+            <target>
+               <context value="text"></context>
+               <contextType value="variable"></contextType>
+               <element value="reference"></element>
+               <variable value="reference"></variable>
+            </target>
+            <target>
+               <context value="reference"></context>
+               <contextType value="variable"></contextType>
+               <element value="value"></element>
+               <transform value="copy"></transform>
+               <parameter>
+                  <valueString value="#refpdf"></valueString>
+               </parameter>
+            </target>
+         </rule>
+      </rule>
+      <rule>
+         <name value="text"></name>
+         <source>
+            <context value="fhirobservation"></context>
+            <element value="note"></element>
+            <variable value="note"></variable>
+         </source>
+         <target>
+            <context value="cdaobservation"></context>
+            <contextType value="variable"></contextType>
+            <element value="text"></element>
+            <variable value="text"></variable>
+         </target>
+         <rule>
+            <name value="text"></name>
+            <source>
+               <context value="note"></context>
+               <element value="text"></element>
+               <variable value="noteText"></variable>
+            </source>
+            <target>
+               <context value="text"></context>
+               <contextType value="variable"></contextType>
+               <element value="data"></element>
+               <transform value="copy"></transform>
+               <parameter>
+                  <valueId value="noteText"></valueId>
+               </parameter>
+            </target>
+         </rule>
+         <rule>
+            <name value="id"></name>
+            <source>
+               <context value="note"></context>
+               <element value="extension"></element>
+               <variable value="extension"></variable>
+               <condition value="$this.url = 'http://hl7.org/fhir/StructureDefinition/narrativeLink'"></condition>
+            </source>
+            <rule>
+               <name value="reference"></name>
+               <source>
+                  <context value="extension"></context>
+                  <element value="valueUrl"></element>
+                  <variable value="valueUrl"></variable>
+               </source>
+               <target>
+                  <context value="text"></context>
+                  <contextType value="variable"></contextType>
+                  <element value="reference"></element>
+                  <variable value="reference"></variable>
+               </target>
+               <target>
+                  <context value="reference"></context>
+                  <contextType value="variable"></contextType>
+                  <element value="value"></element>
+                  <transform value="copy"></transform>
+                  <parameter>
+                     <valueId value="valueUrl"></valueId>
+                  </parameter>
+               </target>
+            </rule>
+         </rule>
+         <rule>
+            <name value="reference"></name>
+            <source>
+               <context value="note"></context>
+               <condition value="(extension.where($this.url = 'http://hl7.org/fhir/StructureDefinition/narrativeLink').exists() = false)"></condition>
+            </source>
+            <target>
+               <context value="text"></context>
+               <contextType value="variable"></contextType>
+               <element value="reference"></element>
+               <variable value="reference"></variable>
+            </target>
+            <target>
+               <context value="reference"></context>
+               <contextType value="variable"></contextType>
+               <element value="value"></element>
+               <transform value="copy"></transform>
+               <parameter>
+                  <valueString value="#refpdf"></valueString>
+               </parameter>
+            </target>
          </rule>
       </rule>
    </group>

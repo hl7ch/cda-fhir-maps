@@ -39,8 +39,9 @@ imports "http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaChToBundle"
 // source: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.4.2
 // target: Annotation note (e.g. http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefinition-ch-emed-medicationstatement.html)
 group AnnotationComment(source section : Section, source act : Act, target note : Annotation) {
-  act -&gt; note.text = (%section.text.substring(%section.text.indexOf(%act.text.reference.value.substring(1))).substring(%section.text.substring(%section.text.indexOf(%act.text.reference.value.substring(1))).indexOf('&gt;') + 1, %section.text.substring(%section.text.indexOf(%act.text.reference.value.substring(1))).indexOf('&lt;') - %section.text.substring(%section.text.indexOf(%act.text.reference.value.substring(1))).indexOf('&gt;') - 1)) "idRef";
   act.text as text then {
+    text.data as data -&gt; note.text = data "level3";
+    text where (data.exists() = false) -&gt; note.text = (%section.text.substring(%section.text.indexOf(%act.text.reference.value.substring(1))).substring(%section.text.substring(%section.text.indexOf(%act.text.reference.value.substring(1))).indexOf('&gt;') + 1, %section.text.substring(%section.text.indexOf(%act.text.reference.value.substring(1))).indexOf('&lt;') - %section.text.substring(%section.text.indexOf(%act.text.reference.value.substring(1))).indexOf('&gt;') - 1)) "idRef";
     text.reference as reference then {
       reference.value as value -&gt; note.extension as ext then NarrativeLink(value, ext) "narrativeLink";
     };
@@ -65,17 +66,13 @@ group ManufacturedMaterialEntryContentModuleDispense(source src : Supply, target
   src.product as product then {
     product.manufacturedProduct as manufacturedProduct then {
       manufacturedProduct.manufacturedMaterial as manufacturedMaterial then {
-        // #dis.no.brandedmedication
-        manufacturedMaterial.code as code then {
-          code.originalText as text then {
-            text.reference as reference -&gt; medication.code as medCode then {
-              reference.value as value -&gt; medCode.extension as ext then NarrativeLink(value, ext) "narrativeLink";
-            };
-          } "text";
-        };
+        manufacturedMaterial.name as name where asContent.exists() = false -&gt;  medication.code as fhircode,  fhircode.text = (%manufacturedMaterial.name.other) "code";
         manufacturedMaterial.asContent as asContent then {
           asContent.containerPackagedMedicine as containerPackagedMedicine then {
-            containerPackagedMedicine.code as code -&gt;  medication.code as fhircode,  fhircode.text = (%manufacturedMaterial.name.other) then CECodeableConcept(code, fhircode);
+            containerPackagedMedicine.code as code -&gt; medication.code as fhircode share medcode then CECodeableConcept(code, fhircode);
+            containerPackagedMedicine.name as name -&gt; medication.code as fhircode share medcode then {
+              name -&gt; fhircode.text = (%name.other) "text";
+            } "text";
             containerPackagedMedicine.formCode as formCode -&gt; medication.form as form then CECodeableConcept(formCode, form);
             // Package size
             containerPackagedMedicine.capacityQuantity as capacityQuantity where (%containerPackagedMedicine.formCode.code = '10219000') -&gt; medication.amount = create('Ratio') as ratio then {
@@ -128,17 +125,13 @@ group ManufacturedMaterialEntryContentModuleStatement(source src : SubstanceAdmi
   src.consumable as consumable then {
     consumable.manufacturedProduct as manufacturedProduct then {
       manufacturedProduct.manufacturedMaterial as manufacturedMaterial then {
-        // #mtpc.no.brandedmedication
-        manufacturedMaterial.code as code then {
-          code.originalText as text then {
-            text.reference as reference -&gt; medication.code as medCode then {
-              reference.value as value -&gt; medCode.extension as ext then NarrativeLink(value, ext) "narrativeLink";
-            };
-          } "text";
-        };
+        manufacturedMaterial.name as name where asContent.exists() = false -&gt;  medication.code as fhircode,  fhircode.text = (%manufacturedMaterial.name.other) "code";
         manufacturedMaterial.asContent as asContent then {
           asContent.containerPackagedMedicine as containerPackagedMedicine then {
-            containerPackagedMedicine.code as code -&gt;  medication.code as fhircode,  fhircode.text = (%manufacturedMaterial.name.other) then CECodeableConcept(code, fhircode);
+            containerPackagedMedicine.code as code -&gt; medication.code as fhircode share medcode then CECodeableConcept(code, fhircode);
+            containerPackagedMedicine.name as name -&gt; medication.code as fhircode share medcode then {
+              name -&gt; fhircode.text = (%name.other) "text";
+            } "text";
             containerPackagedMedicine.formCode as formCode -&gt; medication.form as form then CECodeableConcept(formCode, form);
             // Package size
             containerPackagedMedicine.capacityQuantity as capacityQuantity where (%containerPackagedMedicine.formCode.code = '10219000') -&gt; medication.amount = create('Ratio') as ratio then {
@@ -254,8 +247,9 @@ group EffectiveTimeWhen(source src : substanceAdministration, target dosage : Do
 // target: reasonCode Coding (e.g. http://build.fhir.org/ig/hl7ch/ig/ch-emed/StructureDefinition/ch-emed-medicationstatement)
 group TreatmentReasonEntryContentModule(source section : Section, source observation : Observation, target reasonCode : Coding) {
   // extraxt text (Bluthochdruck) from id #mtpc.1.reason in section text &lt;td ID="mtpc.1.reason"&gt;Bluthochdruck&lt;/td&gt;
-  observation -&gt; reasonCode.text = (%section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).substring(%section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).indexOf('&gt;') + 1, %section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).indexOf('&lt;') - %section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).indexOf('&gt;') - 1)) "idRef";
   observation.text as text then {
+    text.data as data -&gt; reasonCode.text = data "level3";
+    text where (data.exists() = false) -&gt; reasonCode.text = (%section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).substring(%section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).indexOf('&gt;') + 1, %section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).indexOf('&lt;') - %section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).indexOf('&gt;') - 1)) "idRef";
     text.reference as reference then {
       reference.value as value -&gt; reasonCode.extension as ext then NarrativeLink(value, ext) "narrativeLink";
     };
@@ -280,9 +274,10 @@ group MTPReferenceEntryContentModule(source entryrelationship, target ext : Exte
 // target: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefinition-ch-emed-dosage-nonstructured.html
 group DosageInstructionsNonStructuredEntryContentModule(source section : Section, source entry : Element, target dosage : Dosage) {
   // see MedicationTreatmentPlanItemEntryContentModule
-  entry.substanceAdministration as observation -&gt; dosage.text = (%section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).substring(%section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).indexOf('&gt;') + 1, %section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).indexOf('&lt;') - %section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).indexOf('&gt;') - 1)) "idRef";
   entry.substanceAdministration as observation then {
     observation.text as text then {
+      text.data as data -&gt; dosage.text = data "level3";
+      text where (data.exists() = false) -&gt; dosage.text = (%section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).substring(%section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).indexOf('&gt;') + 1, %section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).indexOf('&lt;') - %section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).indexOf('&gt;') - 1)) "idRef";
       text.reference as reference then {
         reference.value as value -&gt; dosage.extension as ext then NarrativeLink(value, ext) "narrativeLink";
       };
@@ -339,9 +334,8 @@ group DoseQuantity(source src : substanceAdministration, target dosage : Dosage)
     doseQuantity.value as value -&gt; doseAndRate.dose = create('Quantity') as quantity then {
       value -&gt; quantity.value = value "value";
       doseQuantity.unit as unit -&gt; quantity.code = unit;
-      // doseQuantity.unit as unit -&gt; quantity.unit = translate(unit, 'http://fhir.ch/ig/ch-emed/ValueSet/UnitsOfPresentation', 'display') "unit";
-      doseQuantity.unit where ($this.length() = 9) and $this.startsWith('73') -&gt; quantity.system = 'http://snomed.info/sct' "snomedct";
-      doseQuantity.unit where (($this.length() != 9) or $this.startsWith('73').not()) as unit -&gt;  quantity.system = 'http://unitsofmeasure.org',  quantity.unit = unit "ucum";
+      doseQuantity.unit as unit -&gt; quantity.system = ('http://fhir.ch/ig/ch-emed/ValueSet/UnitCode'.resolve().compose.include.where(concept.where(code = %unit)).system);
+      doseQuantity.unit as unit -&gt; quantity.unit = ('http://fhir.ch/ig/ch-emed/ValueSet/UnitCode'.resolve().compose.include.concept.where(code = %unit).display);
     } "quantity";
   };
 }
@@ -397,17 +391,13 @@ group ManufacturedMaterialEntryContentModuleRequest(source src : SubstanceAdmini
   src.consumable as consumable then {
     consumable.manufacturedProduct as manufacturedProduct then {
       manufacturedProduct.manufacturedMaterial as manufacturedMaterial then {
-        // #pre.no.brandedmedication
-        manufacturedMaterial.code as code then {
-          code.originalText as text then {
-            text.reference as reference -&gt; medication.code as medCode then {
-              reference.value as value -&gt; medCode.extension as ext then NarrativeLink(value, ext) "narrativeLink";
-            };
-          } "text";
-        };
+        manufacturedMaterial.name as name where asContent.exists() = false -&gt;  medication.code as fhircode,  fhircode.text = (%manufacturedMaterial.name.other) "code";
         manufacturedMaterial.asContent as asContent then {
           asContent.containerPackagedMedicine as containerPackagedMedicine then {
-            containerPackagedMedicine.code as code -&gt;  medication.code as fhircode,  fhircode.text = (%manufacturedMaterial.name.other) then CECodeableConcept(code, fhircode);
+            containerPackagedMedicine.code as code -&gt; medication.code as fhircode share medcode then CECodeableConcept(code, fhircode);
+            containerPackagedMedicine.name as name -&gt; medication.code as fhircode share medcode then {
+              name -&gt; fhircode.text = (%name.other) "text";
+            } "text";
             containerPackagedMedicine.formCode as formCode -&gt; medication.form as form then CECodeableConcept(formCode, form);
             // Package size
             containerPackagedMedicine.capacityQuantity as capacityQuantity where (%containerPackagedMedicine.formCode.code = '10219000') -&gt; medication.amount = create('Ratio') as ratio then {
@@ -496,7 +486,8 @@ group PharmaceuticalAdviceItemEntryContentModule(source section : Section, sourc
   src.effectiveTime as effectiveTime -&gt; observation.effective = create('dateTime') as value then TSDateTime(effectiveTime, value) "value";
   src.entryRelationship as entry where ((typeCode = 'REFR') and substanceAdministration.templateId.where(root = '1.3.6.1.4.1.19376.1.9.1.3.10').exists()) -&gt; observation.extension as ext then MTPReferenceEntryContentModule(entry, ext) "MTPReferenceEntry";
   src -&gt; observation.note as note then {
-    src -&gt; note.text = (%section.text.substring(%section.text.indexOf(%src.text.reference.value.substring(1))).substring(%section.text.substring(%section.text.indexOf(%src.text.reference.value.substring(1))).indexOf('&gt;') + 1, %section.text.substring(%section.text.indexOf(%src.text.reference.value.substring(1))).indexOf('&lt;') - %section.text.substring(%section.text.indexOf(%src.text.reference.value.substring(1))).indexOf('&gt;') - 1)) "idRef";
+    text.data as data -&gt; note.text = data "level3";
+    text where (data.exists() = false) -&gt; note.text = (%section.text.substring(%section.text.indexOf(%src.text.reference.value.substring(1))).substring(%section.text.substring(%section.text.indexOf(%src.text.reference.value.substring(1))).indexOf('&gt;') + 1, %section.text.substring(%section.text.indexOf(%src.text.reference.value.substring(1))).indexOf('&lt;') - %section.text.substring(%section.text.indexOf(%src.text.reference.value.substring(1))).indexOf('&gt;') - 1)) "idRef";
     src.text as text then {
       text.reference as reference then {
         reference.value as value -&gt; note.extension as ext then NarrativeLink(value, ext) "narrativeLink";
@@ -662,27 +653,45 @@ target: Annotation note (e.g. http://build.fhir.org/ig/hl7ch/ch-emed/branches/ma
          <mode value="target"></mode>
       </input>
       <rule>
-         <name value="idRef"></name>
-         <source>
-            <context value="act"></context>
-         </source>
-         <target>
-            <context value="note"></context>
-            <contextType value="variable"></contextType>
-            <element value="text"></element>
-            <transform value="evaluate"></transform>
-            <parameter>
-               <valueString value="%section.text.substring(%section.text.indexOf(%act.text.reference.value.substring(1))).substring(%section.text.substring(%section.text.indexOf(%act.text.reference.value.substring(1))).indexOf('&gt;') + 1, %section.text.substring(%section.text.indexOf(%act.text.reference.value.substring(1))).indexOf('&lt;') - %section.text.substring(%section.text.indexOf(%act.text.reference.value.substring(1))).indexOf('&gt;') - 1)"></valueString>
-            </parameter>
-         </target>
-      </rule>
-      <rule>
          <name value="text"></name>
          <source>
             <context value="act"></context>
             <element value="text"></element>
             <variable value="text"></variable>
          </source>
+         <rule>
+            <name value="level3"></name>
+            <source>
+               <context value="text"></context>
+               <element value="data"></element>
+               <variable value="data"></variable>
+            </source>
+            <target>
+               <context value="note"></context>
+               <contextType value="variable"></contextType>
+               <element value="text"></element>
+               <transform value="copy"></transform>
+               <parameter>
+                  <valueId value="data"></valueId>
+               </parameter>
+            </target>
+         </rule>
+         <rule>
+            <name value="idRef"></name>
+            <source>
+               <context value="text"></context>
+               <condition value="(data.exists() = false)"></condition>
+            </source>
+            <target>
+               <context value="note"></context>
+               <contextType value="variable"></contextType>
+               <element value="text"></element>
+               <transform value="evaluate"></transform>
+               <parameter>
+                  <valueString value="%section.text.substring(%section.text.indexOf(%act.text.reference.value.substring(1))).substring(%section.text.substring(%section.text.indexOf(%act.text.reference.value.substring(1))).indexOf('&gt;') + 1, %section.text.substring(%section.text.indexOf(%act.text.reference.value.substring(1))).indexOf('&lt;') - %section.text.substring(%section.text.indexOf(%act.text.reference.value.substring(1))).indexOf('&gt;') - 1)"></valueString>
+               </parameter>
+            </target>
+         </rule>
          <rule>
             <name value="reference"></name>
             <source>
@@ -875,54 +884,28 @@ target: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefiniti
                   <variable value="manufacturedMaterial"></variable>
                </source>
                <rule>
-                  <name value="code"></name>
+                  <name value="medication.code"></name>
                   <source>
                      <context value="manufacturedMaterial"></context>
-                     <element value="code"></element>
-                     <variable value="code"></variable>
+                     <element value="name"></element>
+                     <variable value="name"></variable>
+                     <condition value="asContent.exists() = false"></condition>
                   </source>
-                  <rule>
-                     <name value="text"></name>
-                     <source>
-                        <context value="code"></context>
-                        <element value="originalText"></element>
-                        <variable value="text"></variable>
-                     </source>
-                     <rule>
-                        <name value="reference"></name>
-                        <source>
-                           <context value="text"></context>
-                           <element value="reference"></element>
-                           <variable value="reference"></variable>
-                        </source>
-                        <target>
-                           <context value="medication"></context>
-                           <contextType value="variable"></contextType>
-                           <element value="code"></element>
-                           <variable value="medCode"></variable>
-                        </target>
-                        <rule>
-                           <name value="narrativeLink"></name>
-                           <source>
-                              <context value="reference"></context>
-                              <element value="value"></element>
-                              <variable value="value"></variable>
-                           </source>
-                           <target>
-                              <context value="medCode"></context>
-                              <contextType value="variable"></contextType>
-                              <element value="extension"></element>
-                              <variable value="ext"></variable>
-                           </target>
-                           <dependent>
-                              <name value="NarrativeLink"></name>
-                              <variable value="value"></variable>
-                              <variable value="ext"></variable>
-                           </dependent>
-                        </rule>
-                     </rule>
-                  </rule>
-                  <documentation value="#dis.no.brandedmedication"></documentation>
+                  <target>
+                     <context value="medication"></context>
+                     <contextType value="variable"></contextType>
+                     <element value="code"></element>
+                     <variable value="fhircode"></variable>
+                  </target>
+                  <target>
+                     <context value="fhircode"></context>
+                     <contextType value="variable"></contextType>
+                     <element value="text"></element>
+                     <transform value="evaluate"></transform>
+                     <parameter>
+                        <valueString value="%manufacturedMaterial.name.other"></valueString>
+                     </parameter>
+                  </target>
                </rule>
                <rule>
                   <name value="asContent"></name>
@@ -950,21 +933,45 @@ target: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefiniti
                            <contextType value="variable"></contextType>
                            <element value="code"></element>
                            <variable value="fhircode"></variable>
-                        </target>
-                        <target>
-                           <context value="fhircode"></context>
-                           <contextType value="variable"></contextType>
-                           <element value="text"></element>
-                           <transform value="evaluate"></transform>
-                           <parameter>
-                              <valueString value="%manufacturedMaterial.name.other"></valueString>
-                           </parameter>
+                           <listMode value="share"></listMode>
+                           <listRuleId value="medcode"></listRuleId>
                         </target>
                         <dependent>
                            <name value="CECodeableConcept"></name>
                            <variable value="code"></variable>
                            <variable value="fhircode"></variable>
                         </dependent>
+                     </rule>
+                     <rule>
+                        <name value="code.text"></name>
+                        <source>
+                           <context value="containerPackagedMedicine"></context>
+                           <element value="name"></element>
+                           <variable value="name"></variable>
+                        </source>
+                        <target>
+                           <context value="medication"></context>
+                           <contextType value="variable"></contextType>
+                           <element value="code"></element>
+                           <variable value="fhircode"></variable>
+                           <listMode value="share"></listMode>
+                           <listRuleId value="medcode"></listRuleId>
+                        </target>
+                        <rule>
+                           <name value="medication.code.text"></name>
+                           <source>
+                              <context value="name"></context>
+                           </source>
+                           <target>
+                              <context value="fhircode"></context>
+                              <contextType value="variable"></contextType>
+                              <element value="text"></element>
+                              <transform value="evaluate"></transform>
+                              <parameter>
+                                 <valueString value="%name.other"></valueString>
+                              </parameter>
+                           </target>
+                        </rule>
                      </rule>
                      <rule>
                         <name value="medication.formCode"></name>
@@ -1522,54 +1529,28 @@ target: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefiniti
                   <variable value="manufacturedMaterial"></variable>
                </source>
                <rule>
-                  <name value="code"></name>
+                  <name value="medication.code"></name>
                   <source>
                      <context value="manufacturedMaterial"></context>
-                     <element value="code"></element>
-                     <variable value="code"></variable>
+                     <element value="name"></element>
+                     <variable value="name"></variable>
+                     <condition value="asContent.exists() = false"></condition>
                   </source>
-                  <rule>
-                     <name value="text"></name>
-                     <source>
-                        <context value="code"></context>
-                        <element value="originalText"></element>
-                        <variable value="text"></variable>
-                     </source>
-                     <rule>
-                        <name value="reference"></name>
-                        <source>
-                           <context value="text"></context>
-                           <element value="reference"></element>
-                           <variable value="reference"></variable>
-                        </source>
-                        <target>
-                           <context value="medication"></context>
-                           <contextType value="variable"></contextType>
-                           <element value="code"></element>
-                           <variable value="medCode"></variable>
-                        </target>
-                        <rule>
-                           <name value="narrativeLink"></name>
-                           <source>
-                              <context value="reference"></context>
-                              <element value="value"></element>
-                              <variable value="value"></variable>
-                           </source>
-                           <target>
-                              <context value="medCode"></context>
-                              <contextType value="variable"></contextType>
-                              <element value="extension"></element>
-                              <variable value="ext"></variable>
-                           </target>
-                           <dependent>
-                              <name value="NarrativeLink"></name>
-                              <variable value="value"></variable>
-                              <variable value="ext"></variable>
-                           </dependent>
-                        </rule>
-                     </rule>
-                  </rule>
-                  <documentation value="#mtpc.no.brandedmedication"></documentation>
+                  <target>
+                     <context value="medication"></context>
+                     <contextType value="variable"></contextType>
+                     <element value="code"></element>
+                     <variable value="fhircode"></variable>
+                  </target>
+                  <target>
+                     <context value="fhircode"></context>
+                     <contextType value="variable"></contextType>
+                     <element value="text"></element>
+                     <transform value="evaluate"></transform>
+                     <parameter>
+                        <valueString value="%manufacturedMaterial.name.other"></valueString>
+                     </parameter>
+                  </target>
                </rule>
                <rule>
                   <name value="asContent"></name>
@@ -1597,21 +1578,45 @@ target: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefiniti
                            <contextType value="variable"></contextType>
                            <element value="code"></element>
                            <variable value="fhircode"></variable>
-                        </target>
-                        <target>
-                           <context value="fhircode"></context>
-                           <contextType value="variable"></contextType>
-                           <element value="text"></element>
-                           <transform value="evaluate"></transform>
-                           <parameter>
-                              <valueString value="%manufacturedMaterial.name.other"></valueString>
-                           </parameter>
+                           <listMode value="share"></listMode>
+                           <listRuleId value="medcode"></listRuleId>
                         </target>
                         <dependent>
                            <name value="CECodeableConcept"></name>
                            <variable value="code"></variable>
                            <variable value="fhircode"></variable>
                         </dependent>
+                     </rule>
+                     <rule>
+                        <name value="code.text"></name>
+                        <source>
+                           <context value="containerPackagedMedicine"></context>
+                           <element value="name"></element>
+                           <variable value="name"></variable>
+                        </source>
+                        <target>
+                           <context value="medication"></context>
+                           <contextType value="variable"></contextType>
+                           <element value="code"></element>
+                           <variable value="fhircode"></variable>
+                           <listMode value="share"></listMode>
+                           <listRuleId value="medcode"></listRuleId>
+                        </target>
+                        <rule>
+                           <name value="medication.code.text"></name>
+                           <source>
+                              <context value="name"></context>
+                           </source>
+                           <target>
+                              <context value="fhircode"></context>
+                              <contextType value="variable"></contextType>
+                              <element value="text"></element>
+                              <transform value="evaluate"></transform>
+                              <parameter>
+                                 <valueString value="%name.other"></valueString>
+                              </parameter>
+                           </target>
+                        </rule>
                      </rule>
                      <rule>
                         <name value="medication.formCode"></name>
@@ -2671,28 +2676,45 @@ target: reasonCode Coding (e.g. http://build.fhir.org/ig/hl7ch/ig/ch-emed/Struct
          <mode value="target"></mode>
       </input>
       <rule>
-         <name value="idRef"></name>
-         <source>
-            <context value="observation"></context>
-         </source>
-         <target>
-            <context value="reasonCode"></context>
-            <contextType value="variable"></contextType>
-            <element value="text"></element>
-            <transform value="evaluate"></transform>
-            <parameter>
-               <valueString value="%section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).substring(%section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).indexOf('&gt;') + 1, %section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).indexOf('&lt;') - %section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).indexOf('&gt;') - 1)"></valueString>
-            </parameter>
-         </target>
-         <documentation value="extraxt text (Bluthochdruck) from id #mtpc.1.reason in section text &lt;td ID=&quot;mtpc.1.reason&quot;&gt;Bluthochdruck&lt;/td&gt;"></documentation>
-      </rule>
-      <rule>
          <name value="text"></name>
          <source>
             <context value="observation"></context>
             <element value="text"></element>
             <variable value="text"></variable>
          </source>
+         <rule>
+            <name value="level3"></name>
+            <source>
+               <context value="text"></context>
+               <element value="data"></element>
+               <variable value="data"></variable>
+            </source>
+            <target>
+               <context value="reasonCode"></context>
+               <contextType value="variable"></contextType>
+               <element value="text"></element>
+               <transform value="copy"></transform>
+               <parameter>
+                  <valueId value="data"></valueId>
+               </parameter>
+            </target>
+         </rule>
+         <rule>
+            <name value="idRef"></name>
+            <source>
+               <context value="text"></context>
+               <condition value="(data.exists() = false)"></condition>
+            </source>
+            <target>
+               <context value="reasonCode"></context>
+               <contextType value="variable"></contextType>
+               <element value="text"></element>
+               <transform value="evaluate"></transform>
+               <parameter>
+                  <valueString value="%section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).substring(%section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).indexOf('&gt;') + 1, %section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).indexOf('&lt;') - %section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).indexOf('&gt;') - 1)"></valueString>
+               </parameter>
+            </target>
+         </rule>
          <rule>
             <name value="reference"></name>
             <source>
@@ -2720,6 +2742,7 @@ target: reasonCode Coding (e.g. http://build.fhir.org/ig/hl7ch/ig/ch-emed/Struct
                </dependent>
             </rule>
          </rule>
+         <documentation value="extraxt text (Bluthochdruck) from id #mtpc.1.reason in section text &lt;td ID=&quot;mtpc.1.reason&quot;&gt;Bluthochdruck&lt;/td&gt;"></documentation>
       </rule>
    </group>
    <group>
@@ -2835,24 +2858,6 @@ target: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefiniti
          <mode value="target"></mode>
       </input>
       <rule>
-         <name value="idRef"></name>
-         <source>
-            <context value="entry"></context>
-            <element value="substanceAdministration"></element>
-            <variable value="observation"></variable>
-         </source>
-         <target>
-            <context value="dosage"></context>
-            <contextType value="variable"></contextType>
-            <element value="text"></element>
-            <transform value="evaluate"></transform>
-            <parameter>
-               <valueString value="%section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).substring(%section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).indexOf('&gt;') + 1, %section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).indexOf('&lt;') - %section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).indexOf('&gt;') - 1)"></valueString>
-            </parameter>
-         </target>
-         <documentation value="see MedicationTreatmentPlanItemEntryContentModule"></documentation>
-      </rule>
-      <rule>
          <name value="observation"></name>
          <source>
             <context value="entry"></context>
@@ -2866,6 +2871,39 @@ target: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefiniti
                <element value="text"></element>
                <variable value="text"></variable>
             </source>
+            <rule>
+               <name value="level3"></name>
+               <source>
+                  <context value="text"></context>
+                  <element value="data"></element>
+                  <variable value="data"></variable>
+               </source>
+               <target>
+                  <context value="dosage"></context>
+                  <contextType value="variable"></contextType>
+                  <element value="text"></element>
+                  <transform value="copy"></transform>
+                  <parameter>
+                     <valueId value="data"></valueId>
+                  </parameter>
+               </target>
+            </rule>
+            <rule>
+               <name value="idRef"></name>
+               <source>
+                  <context value="text"></context>
+                  <condition value="(data.exists() = false)"></condition>
+               </source>
+               <target>
+                  <context value="dosage"></context>
+                  <contextType value="variable"></contextType>
+                  <element value="text"></element>
+                  <transform value="evaluate"></transform>
+                  <parameter>
+                     <valueString value="%section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).substring(%section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).indexOf('&gt;') + 1, %section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).indexOf('&lt;') - %section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).indexOf('&gt;') - 1)"></valueString>
+                  </parameter>
+               </target>
+            </rule>
             <rule>
                <name value="reference"></name>
                <source>
@@ -2894,6 +2932,7 @@ target: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefiniti
                </rule>
             </rule>
          </rule>
+         <documentation value="see MedicationTreatmentPlanItemEntryContentModule"></documentation>
       </rule>
    </group>
    <group>
@@ -3395,46 +3434,36 @@ target: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefiniti
                </target>
             </rule>
             <rule>
-               <name value="snomedct"></name>
+               <name value="unit"></name>
                <source>
                   <context value="doseQuantity"></context>
                   <element value="unit"></element>
-                  <condition value="($this.length() = 9) and $this.startsWith('73')"></condition>
+                  <variable value="unit"></variable>
                </source>
                <target>
                   <context value="quantity"></context>
                   <contextType value="variable"></contextType>
                   <element value="system"></element>
-                  <transform value="copy"></transform>
+                  <transform value="evaluate"></transform>
                   <parameter>
-                     <valueString value="http://snomed.info/sct"></valueString>
+                     <valueString value="'http://fhir.ch/ig/ch-emed/ValueSet/UnitCode'.resolve().compose.include.where(concept.where(code = %unit)).system"></valueString>
                   </parameter>
                </target>
-               <documentation value="doseQuantity.unit as unit -&gt; quantity.unit = translate(unit, 'http://fhir.ch/ig/ch-emed/ValueSet/UnitsOfPresentation', 'display') &quot;unit&quot;;"></documentation>
             </rule>
             <rule>
-               <name value="ucum"></name>
+               <name value="unit"></name>
                <source>
                   <context value="doseQuantity"></context>
                   <element value="unit"></element>
-                  <condition value="(($this.length() != 9) or $this.startsWith('73').not()) as unit"></condition>
+                  <variable value="unit"></variable>
                </source>
                <target>
                   <context value="quantity"></context>
                   <contextType value="variable"></contextType>
-                  <element value="system"></element>
-                  <transform value="copy"></transform>
-                  <parameter>
-                     <valueString value="http://unitsofmeasure.org"></valueString>
-                  </parameter>
-               </target>
-               <target>
-                  <context value="quantity"></context>
-                  <contextType value="variable"></contextType>
                   <element value="unit"></element>
-                  <transform value="copy"></transform>
+                  <transform value="evaluate"></transform>
                   <parameter>
-                     <valueId value="unit"></valueId>
+                     <valueString value="'http://fhir.ch/ig/ch-emed/ValueSet/UnitCode'.resolve().compose.include.concept.where(code = %unit).display"></valueString>
                   </parameter>
                </target>
             </rule>
@@ -3890,54 +3919,28 @@ target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-medic
                   <variable value="manufacturedMaterial"></variable>
                </source>
                <rule>
-                  <name value="code"></name>
+                  <name value="medication.code"></name>
                   <source>
                      <context value="manufacturedMaterial"></context>
-                     <element value="code"></element>
-                     <variable value="code"></variable>
+                     <element value="name"></element>
+                     <variable value="name"></variable>
+                     <condition value="asContent.exists() = false"></condition>
                   </source>
-                  <rule>
-                     <name value="text"></name>
-                     <source>
-                        <context value="code"></context>
-                        <element value="originalText"></element>
-                        <variable value="text"></variable>
-                     </source>
-                     <rule>
-                        <name value="reference"></name>
-                        <source>
-                           <context value="text"></context>
-                           <element value="reference"></element>
-                           <variable value="reference"></variable>
-                        </source>
-                        <target>
-                           <context value="medication"></context>
-                           <contextType value="variable"></contextType>
-                           <element value="code"></element>
-                           <variable value="medCode"></variable>
-                        </target>
-                        <rule>
-                           <name value="narrativeLink"></name>
-                           <source>
-                              <context value="reference"></context>
-                              <element value="value"></element>
-                              <variable value="value"></variable>
-                           </source>
-                           <target>
-                              <context value="medCode"></context>
-                              <contextType value="variable"></contextType>
-                              <element value="extension"></element>
-                              <variable value="ext"></variable>
-                           </target>
-                           <dependent>
-                              <name value="NarrativeLink"></name>
-                              <variable value="value"></variable>
-                              <variable value="ext"></variable>
-                           </dependent>
-                        </rule>
-                     </rule>
-                  </rule>
-                  <documentation value="#pre.no.brandedmedication"></documentation>
+                  <target>
+                     <context value="medication"></context>
+                     <contextType value="variable"></contextType>
+                     <element value="code"></element>
+                     <variable value="fhircode"></variable>
+                  </target>
+                  <target>
+                     <context value="fhircode"></context>
+                     <contextType value="variable"></contextType>
+                     <element value="text"></element>
+                     <transform value="evaluate"></transform>
+                     <parameter>
+                        <valueString value="%manufacturedMaterial.name.other"></valueString>
+                     </parameter>
+                  </target>
                </rule>
                <rule>
                   <name value="asContent"></name>
@@ -3965,21 +3968,45 @@ target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-medic
                            <contextType value="variable"></contextType>
                            <element value="code"></element>
                            <variable value="fhircode"></variable>
-                        </target>
-                        <target>
-                           <context value="fhircode"></context>
-                           <contextType value="variable"></contextType>
-                           <element value="text"></element>
-                           <transform value="evaluate"></transform>
-                           <parameter>
-                              <valueString value="%manufacturedMaterial.name.other"></valueString>
-                           </parameter>
+                           <listMode value="share"></listMode>
+                           <listRuleId value="medcode"></listRuleId>
                         </target>
                         <dependent>
                            <name value="CECodeableConcept"></name>
                            <variable value="code"></variable>
                            <variable value="fhircode"></variable>
                         </dependent>
+                     </rule>
+                     <rule>
+                        <name value="code.text"></name>
+                        <source>
+                           <context value="containerPackagedMedicine"></context>
+                           <element value="name"></element>
+                           <variable value="name"></variable>
+                        </source>
+                        <target>
+                           <context value="medication"></context>
+                           <contextType value="variable"></contextType>
+                           <element value="code"></element>
+                           <variable value="fhircode"></variable>
+                           <listMode value="share"></listMode>
+                           <listRuleId value="medcode"></listRuleId>
+                        </target>
+                        <rule>
+                           <name value="medication.code.text"></name>
+                           <source>
+                              <context value="name"></context>
+                           </source>
+                           <target>
+                              <context value="fhircode"></context>
+                              <contextType value="variable"></contextType>
+                              <element value="text"></element>
+                              <transform value="evaluate"></transform>
+                              <parameter>
+                                 <valueString value="%name.other"></valueString>
+                              </parameter>
+                           </target>
+                        </rule>
                      </rule>
                      <rule>
                         <name value="medication.formCode"></name>
@@ -4964,9 +4991,27 @@ target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-obser
             <variable value="note"></variable>
          </target>
          <rule>
+            <name value="level3"></name>
+            <source>
+               <context value="text"></context>
+               <element value="data"></element>
+               <variable value="data"></variable>
+            </source>
+            <target>
+               <context value="note"></context>
+               <contextType value="variable"></contextType>
+               <element value="text"></element>
+               <transform value="copy"></transform>
+               <parameter>
+                  <valueId value="data"></valueId>
+               </parameter>
+            </target>
+         </rule>
+         <rule>
             <name value="idRef"></name>
             <source>
-               <context value="src"></context>
+               <context value="text"></context>
+               <condition value="(data.exists() = false)"></condition>
             </source>
             <target>
                <context value="note"></context>

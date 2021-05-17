@@ -14,12 +14,6 @@
       <Composition>
         <id value="ContainingOriginalRepresentation"/>
         <language value="en-US"/>
-        <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-setid">
-          <valueIdentifier>
-            <system value="urn:ietf:rfc:3986"/>
-            <value value="urn:uuid:11778932-3d19-486b-afe6-e32a1165c978"/>
-          </valueIdentifier>
-        </extension>
         <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-versionnumber">
           <valueUnsignedInt value="1"/>
         </extension>

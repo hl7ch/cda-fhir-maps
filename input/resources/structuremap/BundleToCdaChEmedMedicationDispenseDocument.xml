@@ -49,6 +49,14 @@ group CompositionClinicalDocumentChEmedMedicationDispenseDocument(source bundle 
     section -&gt; component.contextConductionInd = true "contextConductionInd";
     section -&gt;  component.structuredBody as structuredBody,  structuredBody.component as component,  component.section as cdasection then SectionDispenseSectionContentModule(bundle, section, cdasection) "cdasection";
   } "SectionDispenseSectionContentModule";
+  composition.section as section where $this.code.coding.where((system = 'http://loinc.org') and (code = '48767-8')) -&gt; cda.component as component then {
+    section -&gt; component.contextConductionInd = true "contextConductionInd";
+    section -&gt;  component.structuredBody as structuredBody,  structuredBody.component as component,  component.section as cdasection then SectionCdaRemarksCoded(bundle, section, cdasection) "cdasection";
+  } "SectionRemarksCoded";
+  composition.section as section where $this.code.coding.where((system = 'http://loinc.org') and (code = '55108-5')) -&gt; cda.component as component then {
+    section -&gt; component.contextConductionInd = true "contextConductionInd";
+    section -&gt;  component.structuredBody as structuredBody,  structuredBody.component as component,  component.section as cdasection then SectionCdaOriginalRepresentation(bundle, section, cdasection) "cdasection";
+  } "SectionCdaOriginalRepresentation";
 }
 
 // _________________________ Section Level Templates _________________________
@@ -57,6 +65,7 @@ group CompositionClinicalDocumentChEmedMedicationDispenseDocument(source bundle 
 group SectionDispenseSectionContentModule(source bundle : Bundle, source section : Section, target cdasection : CdaSection) extends SectionCdaSection {
   section -&gt;  cdasection.templateId as templateId,  templateId.root = '2.16.756.5.30.1.1.10.3.11' "CH-PHARM-DispenseSectionContentModule";
   section -&gt;  cdasection.templateId as templateId,  templateId.root = '1.3.6.1.4.1.19376.1.9.1.2.3' "IHE-DispenseSectionContentModule";
+  section where text.exists() = false -&gt; cdasection.text = '&lt;div xmlns=\"http://www.w3.org/1999/xhtml\"&gt;&lt;span id=\"refpdf\"&gt;see pdf&lt;/span&gt;&lt;/div&gt;' "Section";
   // create section id if there is none in the fhir bundle (mapping source)
   section as section where $this.extension.where(url = 'http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-sectionid').exists() = false -&gt; cdasection.id as id then {
     section -&gt;  uuid() as uuid,  id.root = (%uuid.upper()) "upper";
@@ -316,6 +325,126 @@ target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=temp
             </dependent>
          </rule>
       </rule>
+      <rule>
+         <name value="SectionRemarksCoded"></name>
+         <source>
+            <context value="composition"></context>
+            <element value="section"></element>
+            <variable value="section"></variable>
+            <condition value="$this.code.coding.where((system = 'http://loinc.org') and (code = '48767-8'))"></condition>
+         </source>
+         <target>
+            <context value="cda"></context>
+            <contextType value="variable"></contextType>
+            <element value="component"></element>
+            <variable value="component"></variable>
+         </target>
+         <rule>
+            <name value="contextConductionInd"></name>
+            <source>
+               <context value="section"></context>
+            </source>
+            <target>
+               <context value="component"></context>
+               <contextType value="variable"></contextType>
+               <element value="contextConductionInd"></element>
+               <transform value="copy"></transform>
+               <parameter>
+                  <valueBoolean value="true"></valueBoolean>
+               </parameter>
+            </target>
+         </rule>
+         <rule>
+            <name value="cdasection"></name>
+            <source>
+               <context value="section"></context>
+            </source>
+            <target>
+               <context value="component"></context>
+               <contextType value="variable"></contextType>
+               <element value="structuredBody"></element>
+               <variable value="structuredBody"></variable>
+            </target>
+            <target>
+               <context value="structuredBody"></context>
+               <contextType value="variable"></contextType>
+               <element value="component"></element>
+               <variable value="component"></variable>
+            </target>
+            <target>
+               <context value="component"></context>
+               <contextType value="variable"></contextType>
+               <element value="section"></element>
+               <variable value="cdasection"></variable>
+            </target>
+            <dependent>
+               <name value="SectionCdaRemarksCoded"></name>
+               <variable value="bundle"></variable>
+               <variable value="section"></variable>
+               <variable value="cdasection"></variable>
+            </dependent>
+         </rule>
+      </rule>
+      <rule>
+         <name value="SectionCdaOriginalRepresentation"></name>
+         <source>
+            <context value="composition"></context>
+            <element value="section"></element>
+            <variable value="section"></variable>
+            <condition value="$this.code.coding.where((system = 'http://loinc.org') and (code = '55108-5'))"></condition>
+         </source>
+         <target>
+            <context value="cda"></context>
+            <contextType value="variable"></contextType>
+            <element value="component"></element>
+            <variable value="component"></variable>
+         </target>
+         <rule>
+            <name value="contextConductionInd"></name>
+            <source>
+               <context value="section"></context>
+            </source>
+            <target>
+               <context value="component"></context>
+               <contextType value="variable"></contextType>
+               <element value="contextConductionInd"></element>
+               <transform value="copy"></transform>
+               <parameter>
+                  <valueBoolean value="true"></valueBoolean>
+               </parameter>
+            </target>
+         </rule>
+         <rule>
+            <name value="cdasection"></name>
+            <source>
+               <context value="section"></context>
+            </source>
+            <target>
+               <context value="component"></context>
+               <contextType value="variable"></contextType>
+               <element value="structuredBody"></element>
+               <variable value="structuredBody"></variable>
+            </target>
+            <target>
+               <context value="structuredBody"></context>
+               <contextType value="variable"></contextType>
+               <element value="component"></element>
+               <variable value="component"></variable>
+            </target>
+            <target>
+               <context value="component"></context>
+               <contextType value="variable"></contextType>
+               <element value="section"></element>
+               <variable value="cdasection"></variable>
+            </target>
+            <dependent>
+               <name value="SectionCdaOriginalRepresentation"></name>
+               <variable value="bundle"></variable>
+               <variable value="section"></variable>
+               <variable value="cdasection"></variable>
+            </dependent>
+         </rule>
+      </rule>
    </group>
    <group>
       <name value="SectionDispenseSectionContentModule"></name>
@@ -378,6 +507,22 @@ target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=temp
             <transform value="copy"></transform>
             <parameter>
                <valueString value="1.3.6.1.4.1.19376.1.9.1.2.3"></valueString>
+            </parameter>
+         </target>
+      </rule>
+      <rule>
+         <name value="Section"></name>
+         <source>
+            <context value="section"></context>
+            <condition value="text.exists() = false"></condition>
+         </source>
+         <target>
+            <context value="cdasection"></context>
+            <contextType value="variable"></contextType>
+            <element value="text"></element>
+            <transform value="copy"></transform>
+            <parameter>
+               <valueString value="&lt;div xmlns=&quot;http://www.w3.org/1999/xhtml&quot;&gt;&lt;span id=&quot;refpdf&quot;&gt;see pdf&lt;/span&gt;&lt;/div&gt;"></valueString>
             </parameter>
          </target>
       </rule>

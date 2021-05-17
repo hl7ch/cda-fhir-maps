@@ -67,15 +67,12 @@ group SectionCdaRemarksCoded(source bundle : Bundle, source section : Section, t
 }
 
 group SectionCdaOriginalRepresentationObservationMedia(source binary : Binary, source section : Section, target cdasection : CdaSection) {
+  section -&gt; cdasection.text = '&lt;div xmlns=\"http://www.w3.org/1999/xhtml\"&gt;Representation of the original view:&lt;img src=\"pdf1\"/&gt;&lt;/div&gt;' "Section";
   section -&gt; cdasection.entry as entry then {
     binary -&gt; entry.typeCode = 'DRIV' "driv";
     binary -&gt;  entry.observationMedia as observationMedia,  observationMedia.classCode = 'OBS',  observationMedia.moodCode = 'EVN' then {
-      section.entry as entry then {
-        entry.extension as extension where $this.url = 'http://hl7.org/fhir/StructureDefinition/narrativeLink' then {
-          extension.valueUrl as valueUrl -&gt; observationMedia.ID = valueUrl "reference";
-        } "narrativeLink";
-      };
       binary -&gt;  observationMedia.templateId as templateId,  templateId.root = '2.16.756.5.30.1.1.10.4.83' "templateId";
+      binary -&gt; observationMedia.ID = 'pdf1' "reference";
       binary -&gt;  observationMedia.value as value,  value.mediaType = '2.16.756.5.30.1.1.10.4.83',  value.representation = 'B64' then {
         binary.contentType as contentType -&gt; value.mediaType = contentType;
         binary.data as data -&gt; value.data = data;
@@ -124,12 +121,10 @@ group CompositionClinicalDocumentCH(source bundle : Bundle, source composition :
     };
   } "confidentialityCode";
   // If setId exists as Composition.ch-ext-epr-setid, then map to ClinicalDocument.setId
-  composition.extension as ext where $this.url = 'http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-setid' -&gt; cda.setId as setId then {
-    ext.valueIdentifier as valueIdentifier then IdentifierII(valueIdentifier, setId) "IdentifierII";
-  } "setIdMapped";
+  composition.identifier as identifier where $this.system = 'urn:ietf:rfc:3986' -&gt; cda.setId as setId then IdentifierII(identifier, setId) "IdentifierII";
   // If setId doesn't exist, create ClinicalDocument.setId as UUID upper case
-  composition as composition where $this.extension.where(url = 'http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-setid').exists() = false -&gt; cda.setId as setId then {
-    composition -&gt;  uuid() as uuid,  setId.root = (%uuid.upper()) "upper";
+  composition where $this.identifier.where(system = 'urn:ietf:rfc:3986').exists() = false then {
+    bundle.identifier as identifier -&gt; cda.setId as id then IdentifierII(identifier, id) "setId";
   } "setIdCreated";
   // If versionNumber exists as Composition.ch-ext-epr-versionnumber, then map to ClinicalDocument.versionNumber
   composition.extension as ext where $this.url = 'http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-versionnumber' -&gt; cda.versionNumber as versionNumber then {
@@ -175,14 +170,6 @@ group CompositionClinicalDocumentCH(source bundle : Bundle, source composition :
       };
     } "extensionPerson";
   } "dataEnterer";
-  composition.section as section where $this.code.coding.where((system = 'http://loinc.org') and (code = '55108-5')) -&gt; cda.component as component then {
-    section -&gt; component.contextConductionInd = true "contextConductionInd";
-    section -&gt;  component.structuredBody as structuredBody,  structuredBody.component as component,  component.section as cdasection then SectionCdaOriginalRepresentation(bundle, section, cdasection) "cdasection";
-  } "SectionCdaOriginalRepresentation";
-  composition.section as section where $this.code.coding.where((system = 'http://loinc.org') and (code = '48767-8')) -&gt; cda.component as component then {
-    section -&gt; component.contextConductionInd = true "contextConductionInd";
-    section -&gt;  component.structuredBody as structuredBody,  structuredBody.component as component,  component.section as cdasection then SectionCdaRemarksCoded(bundle, section, cdasection) "cdasection";
-  } "SectionRemarksCoded";
 }
 
 </pre>
@@ -746,6 +733,21 @@ target: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5
          <mode value="target"></mode>
       </input>
       <rule>
+         <name value="Section"></name>
+         <source>
+            <context value="section"></context>
+         </source>
+         <target>
+            <context value="cdasection"></context>
+            <contextType value="variable"></contextType>
+            <element value="text"></element>
+            <transform value="copy"></transform>
+            <parameter>
+               <valueString value="&lt;div xmlns=&quot;http://www.w3.org/1999/xhtml&quot;&gt;Representation of the original view:&lt;img src=&quot;pdf1&quot;/&gt;&lt;/div&gt;"></valueString>
+            </parameter>
+         </target>
+      </rule>
+      <rule>
          <name value="entry"></name>
          <source>
             <context value="section"></context>
@@ -801,40 +803,6 @@ target: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5
                </parameter>
             </target>
             <rule>
-               <name value="section.entry"></name>
-               <source>
-                  <context value="section"></context>
-                  <element value="entry"></element>
-                  <variable value="entry"></variable>
-               </source>
-               <rule>
-                  <name value="narrativeLink"></name>
-                  <source>
-                     <context value="entry"></context>
-                     <element value="extension"></element>
-                     <variable value="extension"></variable>
-                     <condition value="$this.url = 'http://hl7.org/fhir/StructureDefinition/narrativeLink'"></condition>
-                  </source>
-                  <rule>
-                     <name value="reference"></name>
-                     <source>
-                        <context value="extension"></context>
-                        <element value="valueUrl"></element>
-                        <variable value="valueUrl"></variable>
-                     </source>
-                     <target>
-                        <context value="observationMedia"></context>
-                        <contextType value="variable"></contextType>
-                        <element value="ID"></element>
-                        <transform value="copy"></transform>
-                        <parameter>
-                           <valueId value="valueUrl"></valueId>
-                        </parameter>
-                     </target>
-                  </rule>
-               </rule>
-            </rule>
-            <rule>
                <name value="templateId"></name>
                <source>
                   <context value="binary"></context>
@@ -852,6 +820,21 @@ target: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5
                   <transform value="copy"></transform>
                   <parameter>
                      <valueString value="2.16.756.5.30.1.1.10.4.83"></valueString>
+                  </parameter>
+               </target>
+            </rule>
+            <rule>
+               <name value="reference"></name>
+               <source>
+                  <context value="binary"></context>
+               </source>
+               <target>
+                  <context value="observationMedia"></context>
+                  <contextType value="variable"></contextType>
+                  <element value="ID"></element>
+                  <transform value="copy"></transform>
+                  <parameter>
+                     <valueString value="pdf1"></valueString>
                   </parameter>
                </target>
             </rule>
@@ -1237,12 +1220,12 @@ target: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5
          </rule>
       </rule>
       <rule>
-         <name value="setIdMapped"></name>
+         <name value="IdentifierII"></name>
          <source>
             <context value="composition"></context>
-            <element value="extension"></element>
-            <variable value="ext"></variable>
-            <condition value="$this.url = 'http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-setid'"></condition>
+            <element value="identifier"></element>
+            <variable value="identifier"></variable>
+            <condition value="$this.system = 'urn:ietf:rfc:3986'"></condition>
          </source>
          <target>
             <context value="cda"></context>
@@ -1250,52 +1233,37 @@ target: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5
             <element value="setId"></element>
             <variable value="setId"></variable>
          </target>
-         <rule>
+         <dependent>
             <name value="IdentifierII"></name>
-            <source>
-               <context value="ext"></context>
-               <element value="valueIdentifier"></element>
-               <variable value="valueIdentifier"></variable>
-            </source>
-            <dependent>
-               <name value="IdentifierII"></name>
-               <variable value="valueIdentifier"></variable>
-               <variable value="setId"></variable>
-            </dependent>
-         </rule>
+            <variable value="identifier"></variable>
+            <variable value="setId"></variable>
+         </dependent>
          <documentation value="If setId exists as Composition.ch-ext-epr-setid, then map to ClinicalDocument.setId"></documentation>
       </rule>
       <rule>
          <name value="setIdCreated"></name>
          <source>
             <context value="composition"></context>
-            <variable value="composition"></variable>
-            <condition value="$this.extension.where(url = 'http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-setid').exists() = false"></condition>
+            <condition value="$this.identifier.where(system = 'urn:ietf:rfc:3986').exists() = false"></condition>
          </source>
-         <target>
-            <context value="cda"></context>
-            <contextType value="variable"></contextType>
-            <element value="setId"></element>
-            <variable value="setId"></variable>
-         </target>
          <rule>
-            <name value="upper"></name>
+            <name value="setId"></name>
             <source>
-               <context value="composition"></context>
+               <context value="bundle"></context>
+               <element value="identifier"></element>
+               <variable value="identifier"></variable>
             </source>
             <target>
-               <variable value="uuid"></variable>
-               <transform value="uuid"></transform>
-            </target>
-            <target>
-               <context value="setId"></context>
+               <context value="cda"></context>
                <contextType value="variable"></contextType>
-               <element value="root"></element>
-               <transform value="evaluate"></transform>
-               <parameter>
-                  <valueString value="%uuid.upper()"></valueString>
-               </parameter>
+               <element value="setId"></element>
+               <variable value="id"></variable>
             </target>
+            <dependent>
+               <name value="IdentifierII"></name>
+               <variable value="identifier"></variable>
+               <variable value="id"></variable>
+            </dependent>
          </rule>
          <documentation value="If setId doesn't exist, create ClinicalDocument.setId as UUID upper case"></documentation>
       </rule>
@@ -1749,126 +1717,6 @@ target: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5
                   </rule>
                </rule>
             </rule>
-         </rule>
-      </rule>
-      <rule>
-         <name value="SectionCdaOriginalRepresentation"></name>
-         <source>
-            <context value="composition"></context>
-            <element value="section"></element>
-            <variable value="section"></variable>
-            <condition value="$this.code.coding.where((system = 'http://loinc.org') and (code = '55108-5'))"></condition>
-         </source>
-         <target>
-            <context value="cda"></context>
-            <contextType value="variable"></contextType>
-            <element value="component"></element>
-            <variable value="component"></variable>
-         </target>
-         <rule>
-            <name value="contextConductionInd"></name>
-            <source>
-               <context value="section"></context>
-            </source>
-            <target>
-               <context value="component"></context>
-               <contextType value="variable"></contextType>
-               <element value="contextConductionInd"></element>
-               <transform value="copy"></transform>
-               <parameter>
-                  <valueBoolean value="true"></valueBoolean>
-               </parameter>
-            </target>
-         </rule>
-         <rule>
-            <name value="cdasection"></name>
-            <source>
-               <context value="section"></context>
-            </source>
-            <target>
-               <context value="component"></context>
-               <contextType value="variable"></contextType>
-               <element value="structuredBody"></element>
-               <variable value="structuredBody"></variable>
-            </target>
-            <target>
-               <context value="structuredBody"></context>
-               <contextType value="variable"></contextType>
-               <element value="component"></element>
-               <variable value="component"></variable>
-            </target>
-            <target>
-               <context value="component"></context>
-               <contextType value="variable"></contextType>
-               <element value="section"></element>
-               <variable value="cdasection"></variable>
-            </target>
-            <dependent>
-               <name value="SectionCdaOriginalRepresentation"></name>
-               <variable value="bundle"></variable>
-               <variable value="section"></variable>
-               <variable value="cdasection"></variable>
-            </dependent>
-         </rule>
-      </rule>
-      <rule>
-         <name value="SectionRemarksCoded"></name>
-         <source>
-            <context value="composition"></context>
-            <element value="section"></element>
-            <variable value="section"></variable>
-            <condition value="$this.code.coding.where((system = 'http://loinc.org') and (code = '48767-8'))"></condition>
-         </source>
-         <target>
-            <context value="cda"></context>
-            <contextType value="variable"></contextType>
-            <element value="component"></element>
-            <variable value="component"></variable>
-         </target>
-         <rule>
-            <name value="contextConductionInd"></name>
-            <source>
-               <context value="section"></context>
-            </source>
-            <target>
-               <context value="component"></context>
-               <contextType value="variable"></contextType>
-               <element value="contextConductionInd"></element>
-               <transform value="copy"></transform>
-               <parameter>
-                  <valueBoolean value="true"></valueBoolean>
-               </parameter>
-            </target>
-         </rule>
-         <rule>
-            <name value="cdasection"></name>
-            <source>
-               <context value="section"></context>
-            </source>
-            <target>
-               <context value="component"></context>
-               <contextType value="variable"></contextType>
-               <element value="structuredBody"></element>
-               <variable value="structuredBody"></variable>
-            </target>
-            <target>
-               <context value="structuredBody"></context>
-               <contextType value="variable"></contextType>
-               <element value="component"></element>
-               <variable value="component"></variable>
-            </target>
-            <target>
-               <context value="component"></context>
-               <contextType value="variable"></contextType>
-               <element value="section"></element>
-               <variable value="cdasection"></variable>
-            </target>
-            <dependent>
-               <name value="SectionCdaRemarksCoded"></name>
-               <variable value="bundle"></variable>
-               <variable value="section"></variable>
-               <variable value="cdasection"></variable>
-            </dependent>
          </rule>
       </rule>
    </group>
