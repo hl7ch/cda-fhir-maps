@@ -78,6 +78,7 @@ group ManufacturedMaterialEntryContentModuleStatement(source bundle : Bundle, so
     code where (extension.where($this.url='http://hl7.org/fhir/StructureDefinition/narrativeLink').exists()=false) -> 
       manufacturedMaterial.code as code, code.originalText as text, text.reference as reference, reference.value='#refpdf' "reference";
     code.coding as coding -> manufacturedMaterial.code as ce then CodingCE(coding,ce) "code";
+    code where coding.exists()=false -> manufacturedMaterial.code as ce, ce.nullFlavor = 'NA' "nullFlavor";
   } "code";
   medication.form as form then {
     form.coding as coding -> manufacturedMaterial.formCode as formCode then CodingCE(coding, formCode) "formCode";
