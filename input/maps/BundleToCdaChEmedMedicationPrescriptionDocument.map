@@ -52,6 +52,14 @@ group CompositionClinicalDocumentChEmedMedicationPrescriptionDocument(source bun
     section -> component.contextConductionInd = true "contextConductionInd";
     section -> component.structuredBody as structuredBody, structuredBody.component as component, component.section as cdasection then SectionPrescriptionSectionContentModule(bundle, section, cdasection) "cdasection";
   } "SectionPrescriptionSectionContentModule";
+  composition.section as section where $this.code.coding.where(system='http://loinc.org' and code='48767-8') -> cda.component as component then {
+    section -> component.contextConductionInd = true "contextConductionInd";
+    section -> component.structuredBody as structuredBody, structuredBody.component as component, component.section as cdasection then SectionCdaRemarksCoded(bundle, section, cdasection) "cdasection";
+  } "SectionRemarksCoded";
+  composition.section as section where $this.code.coding.where(system='http://loinc.org' and code='55108-5') -> cda.component as component then {
+    section -> component.contextConductionInd = true "contextConductionInd";
+    section -> component.structuredBody as structuredBody, structuredBody.component as component, component.section as cdasection then SectionCdaOriginalRepresentation(bundle, section, cdasection) "cdasection";
+  } "SectionCdaOriginalRepresentation";
 }
 
 
