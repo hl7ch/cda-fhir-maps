@@ -424,15 +424,13 @@ group DispenseItemEntryContentModule(source section : Section, source src : Supp
 }
 
 // dose quantity for dosage (application schema)
-group DoseQuantity (source src: substanceAdministration, target dosage: Dosage) {
+group DoseQuantity(source src: substanceAdministration, target dosage: Dosage) {
   src.doseQuantity as doseQuantity -> dosage.doseAndRate as doseAndRate then {
     doseQuantity.value as value -> doseAndRate.dose = create('Quantity') as quantity then {
       value -> quantity.value = value "value";
       doseQuantity.unit as unit -> quantity.code = unit;
-//      doseQuantity.unit as unit -> quantity.unit = translate(unit, 'http://fhir.ch/ig/ch-emed/ValueSet/UnitsOfPresentation', 'display') "unit";
-//      FIXME needs extension maybe with read() ot lookup() to translate from code to display
-      doseQuantity.unit where $this.length()=9 and $this.startsWith('73') -> quantity.system = 'http://snomed.info/sct' "snomedct";
-      doseQuantity.unit where $this.length()!=9 or $this.startsWith('73').not() as unit -> quantity.system = 'http://unitsofmeasure.org', quantity.unit = unit "ucum";
+      doseQuantity.unit as unit -> quantity.system = ('http://fhir.ch/ig/ch-emed/ValueSet/UnitCode'.resolve().compose.include.where(concept.where(code=%unit)).system) "unit";
+      doseQuantity.unit as unit -> quantity.unit = ('http://fhir.ch/ig/ch-emed/ValueSet/UnitCode'.resolve().compose.include.concept.where(code=%unit).display) "unit";
     } "quantity";
    } "doseQuantity";
 }
