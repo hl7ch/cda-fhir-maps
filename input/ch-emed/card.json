@@ -96,10 +96,6 @@
                                 }
                             ]
                         },
-                        "text": {
-                            "status": "generated",
-                            "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">See PDF representation</div>"
-                        },
                         "entry": [{
                                 "reference": "MedicationStatement/d2c6a808-9179-4191-85ae-c662ff4958af"
                             }, {
