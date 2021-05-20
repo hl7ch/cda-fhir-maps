@@ -185,8 +185,8 @@ group MedicationTreatmentPlanItemEntryContentModule(source bundle : Bundle, sour
             entryRelationship.substanceAdministration as substanceAdministration 
               then MTPReferenceEntryContentModule(extension, substanceAdministration) "MTP-Reference";
 
-  // FIXME: repeatNumber ot set to 7 by examples for nullFlavor?
-  medicationStatement -> substanceAdministration.repeatNumber as repeatNumber, repeatNumber.value = '7' "repeatNumber Default";
+  // https://github.com/ehealthsuisse/ch-emed/issues/56
+  medicationStatement -> substanceAdministration.repeatNumber as repeatNumber, repeatNumber.nullFlavor = 'NI' "repeatNumber Default";
 
   // TODO: Patient Medication Instructions Contains 1.3.6.1.4.1.19376.1.5.3.1.4.3 IHE Patient Medication Instructions (DYNAMIC)
   // TODO: Amount of units of the consumable to dispense
@@ -801,6 +801,7 @@ group PrescriptionItemEntryContentModule(source bundle : Bundle, source medicati
 
   medicationRequest.dispenseRequest as dispenseRequest -> substanceAdministration.repeatNumber as repeatNumber then {
     dispenseRequest.numberOfRepeatsAllowed as number -> repeatNumber.value = number "repeatNumber";
+    dispenseRequest where numberOfRepeatsAllowed.exists()=false -> repeatNumber.nullFlavor = 'NI' "repeatNumberNull";
   } "dispenseRequest";
 
   medicationRequest.contained as medication where ('#'+$this.id) in %medicationRequest.medicationReference.reference 
