@@ -260,17 +260,9 @@ group MedicationTreatmentPlanItemEntryContentModule(source section : Section, so
 }
 
 // source https://art-decor.org/art-decor/decor-templates--ch-pharm-?id=2.16.756.5.30.1.1.10.4.36
-// target: http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured
+// target: http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured-split
 // dosage for split dosing, with sequences
 group DosageInstructionsEntryDosageChange(source src: substanceAdministration, source entry: entryRelationship, target dosage: Dosage) {
-  src.templateId as templateId where (($this.root='1.3.6.1.4.1.19376.1.5.3.1.4.9') or ($this.root='1.3.6.1.4.1.19376.1.5.3.1.4.8'))
-     -> dosage.extension as ext then {
-        src -> ext.url = 'http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-dosagetype' "url";
-        src -> ext.value = create('Identifier') as valueIdentifier then {
-          templateId.root as id -> valueIdentifier.value = id "dosingType";
-        } "valueIdentifier";
-  } "extension";
-  
   entry.sequenceNumber as sequenceNumber then {
     sequenceNumber.value as val  -> dosage.sequence = val "value";
   } "sequenceNumber";
@@ -605,16 +597,9 @@ group PrescriptionItemEntryContentModule(source section : Section, source src : 
 }
 
 // source: https://art-decor.org/art-decor/decor-templates--ch-pharm-?id=2.16.756.5.30.1.1.10.4.35 
-// target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition/ch-emed-dosage-structured
+// target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition/ch-emed-dosage-structured-normal
 // dosage for normal dosing, without sequences
 group DosageInstructionsStartStopFrequency(source src : SubstanceAdministration, target dosage: Dosage) {
-  src.templateId as templateId where $this.root='1.3.6.1.4.1.19376.1.5.3.1.4.7.1' -> dosage.extension as ext then {
-    src -> ext.url = 'http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-dosagetype' "url";
-    src -> ext.value = create('Identifier') as valueIdentifier then {
-      templateId.root as id -> valueIdentifier.value = id "normalDosing";
-    } "valueIdentifier";
-  } "extension";
-  
   src as src -> dosage as dosage then EffectiveTimeStartEnd(src, dosage) "effectiveTimeStartEnd";
   src as src -> dosage as dosage then EffectiveTimeWhen(src, dosage) "effectiveTimeWhen";
   src.routeCode as routeCode -> dosage.route as route then CECodeableConcept(routeCode, route) "routeCode";

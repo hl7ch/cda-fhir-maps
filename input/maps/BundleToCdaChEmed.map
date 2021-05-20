@@ -162,16 +162,16 @@ group MedicationTreatmentPlanItemEntryContentModule(source bundle : Bundle, sour
 
 
   // dosage for normal dosing, as no sequences are present there
-  medicationStatement.dosage as dosage where $this.conformsTo('http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured') and $this.sequence.empty()
+  medicationStatement.dosage as dosage where $this.conformsTo('http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured-normal')
     then DosageInstructionsStartStopFrequencySubstanceAdministration(dosage, substanceAdministration) "DosageSubstanceAdministration";
 
   // dosage for split dosing (with sequences): effectiveTime (start/stop) & routeCode
-  medicationStatement.dosage first as dosage where $this.conformsTo('http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured') and $this.sequence.exists()
+  medicationStatement.dosage first as dosage where $this.conformsTo('http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured-split')
     -> substanceAdministration.entryRelationship as entryRelationship
        then DosageInstructionsEntryStartStopRoute(dosage, substanceAdministration, entryRelationship) "DosageSubstanceAdministration"; 
 
   // dosage for split dosing (with sequences): sequence number, effectiveTime (when), dose quantity, consumable
-  medicationStatement.dosage as dosage where $this.conformsTo('http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured') and $this.sequence.exists()
+  medicationStatement.dosage as dosage where $this.conformsTo('http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured-split')
     -> substanceAdministration.entryRelationship as entryRelationship, entryRelationship.typeCode = 'COMP'
        then DosageInstructionsEntryDosageChangeSubstanceAdministration(dosage, substanceAdministration, entryRelationship) "DosageSubstanceAdministration"; 
 
@@ -215,7 +215,7 @@ group MedicationTreatmentPlanItemEntryContentModule(source bundle : Bundle, sour
 // TODO: Tapered Dose
 //medicationStatement -> substanceAdministration.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.5.3.1.4.8' "taperedDose";
 
-// source: http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured
+// source: http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured-normal
 // target: https://art-decor.org/art-decor/decor-templates--ch-pharm-?id=2.16.756.5.30.1.1.10.4.35 
 // dosage for normal dosing (without sequences) (Statement, Prescription)
 group DosageInstructionsStartStopFrequencySubstanceAdministration(source dosage: Dosage, target substanceAdministration : SubstanceAdministration) {
@@ -226,27 +226,18 @@ group DosageInstructionsStartStopFrequencySubstanceAdministration(source dosage:
   dosage as dosage -> substanceAdministration as substanceAdministration then DoseQuantity(dosage, substanceAdministration) "doseQuantity";
 }
 
-// source: http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured
+// source: http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured-split
 // target: https://art-decor.org/art-decor/decor-templates--ch-pharm-?id=2.16.756.5.30.1.1.10.4.36
 // dosage for split dosing: effectiveTime (start/stop) & routeCode (Statement, Prescription)
 group DosageInstructionsEntryStartStopRoute(source dosage: Dosage, target substanceAdministration: substanceAdministration, target entry: entryRelationship) {
-  // if the FHIR document has a dosage templateId -> take over the templateId  
-  dosage.extension as extension where $this.url='http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-dosagetype' then {
-    extension.valueIdentifier as valueIdentifier then {
-      valueIdentifier.value as value -> substanceAdministration.templateId as templateId, templateId.root = value "templateId";
-    } "valueIdentifier";
-  } "extension";
-
   // if the FHIR doucment has no dosage templateId -> create templateId for split dose
-  dosage as dosage where $this.extension.where(url='http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-dosagetype').exists()=false then {
-    dosage -> substanceAdministration.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.5.3.1.4.9' "splitDose";
-  } "noExtension";
+  dosage -> substanceAdministration.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.5.3.1.4.9' "splitDose";
 
   dosage as dosage -> substanceAdministration as substanceAdministration then EffectiveTimeStartEnd(dosage, substanceAdministration) "effectiveTimeStartEnd";
   dosage.route as route -> substanceAdministration.routeCode as routeCode then CodeableConceptCE(route, routeCode) "route";
 }
 
-// source: http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured
+// source: http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured-split
 // target: https://art-decor.org/art-decor/decor-templates--ch-pharm-?id=2.16.756.5.30.1.1.10.4.36
 // dosage for split dosing: sequence number, effectiveTime (when), dose quantity, consumable (Statement, Prescription)
 group DosageInstructionsEntryDosageChangeSubstanceAdministration(source dosage: Dosage, target substanceAdministration: substanceAdministration, target entry: entryRelationship) {
@@ -474,7 +465,7 @@ group DispenseItemEntryContentModule(source bundle : Bundle, source medicationDi
   // TODO: AUTHOR2 Community Medication Treatment Plan document author
 
   // dosage for normal dosing, as no sequences are present there
-  medicationDispense.dosageInstruction as dosage where $this.conformsTo('http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured') and $this.sequence.empty()
+  medicationDispense.dosageInstruction as dosage where $this.conformsTo('http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured-normal')
     then DosageInstructionsStartStopFrequencySupply(dosage, supply) "DosageSubstanceAdministration";
 
   // dosage for split dosing, as sequences are present there
@@ -482,11 +473,11 @@ group DispenseItemEntryContentModule(source bundle : Bundle, source medicationDi
     medicationDispense -> entryRelationship.substanceAdministration as substanceAdministration then {
       
       // split dosing (with sequences): effectiveTime (start/stop) & routeCode & consumable
-      medicationDispense.dosageInstruction first as dosage where $this.conformsTo('http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured') and $this.sequence.exists()
+      medicationDispense.dosageInstruction first as dosage where $this.conformsTo('http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured-split')
         -> substanceAdministration then DosageInstructionsEntryStartStopRouteConsumable(dosage, entryRelationship, substanceAdministration) "DosageSubstanceAdministration";
 
       // split dosing (with sequences): sequence number, effectiveTime (when), dose quantity, consumable
-      medicationDispense.dosageInstruction as dosage where $this.conformsTo('http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured') and $this.sequence.exists()
+      medicationDispense.dosageInstruction as dosage where $this.conformsTo('http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured-split')
         -> substanceAdministration.entryRelationship as entryRelationship, entryRelationship.typeCode = 'COMP' 
             then DosageInstructionsEntryDosageChangeEntryRelationship(dosage, entryRelationship) "DosageSubstanceAdministration";
 
@@ -532,7 +523,7 @@ group DispenseItemEntryContentModule(source bundle : Bundle, source medicationDi
 }
 
 
-// source: http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured
+// source: http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured-normal
 // target: https://art-decor.org/art-decor/decor-templates--ch-pharm-?id=2.16.756.5.30.1.1.10.4.35 
 // dosage for normal dosing (without sequences) (Dispense)
 group DosageInstructionsStartStopFrequencySupply(source dosage: Dosage, target supply : Supply) {
@@ -554,8 +545,7 @@ group DosageInstructionsStartStopFrequencySupply(source dosage: Dosage, target s
   }"entryRelationship";
 }
 
-
-// source: http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured
+// source: http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured-split
 // target: https://art-decor.org/art-decor/decor-templates--ch-pharm-?id=2.16.756.5.30.1.1.10.4.36
 // dosage for split dosing: effectiveTime (start/stop) & routeCode & consumable (Dispense)
 group DosageInstructionsEntryStartStopRouteConsumable(source dosage: Dosage, target entryRelationship: entryRelationship, target substanceAdministration: SubstanceAdministration) {
@@ -564,18 +554,7 @@ group DosageInstructionsEntryStartStopRouteConsumable(source dosage: Dosage, tar
   dosage -> substanceAdministration.moodCode = 'INT' "INT";
   dosage -> substanceAdministration.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.9.1.3.6' "templateId";
   
-  // if the FHIR document has a dosage templateId -> take over the templateId  
-  dosage.extension as extension where $this.url='http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-dosagetype' then {
-    extension.valueIdentifier as valueIdentifier then {
-      valueIdentifier.value as value -> substanceAdministration.templateId as templateId, templateId.root = value "templateId";
-    } "valueIdentifier";
-  } "extension";
-
-  // if the FHIR doucment has no dosage templateId -> create templateId for split dose
-  dosage as dosage where $this.extension.where(url='http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-dosagetype').exists()=false then {
-    dosage -> substanceAdministration.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.5.3.1.4.9' "splitDose";
-  } "noExtension";
-
+  dosage -> substanceAdministration.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.5.3.1.4.9' "splitDose";
 
   dosage -> substanceAdministration as substanceAdministration then EffectiveTimeStartEnd(dosage, substanceAdministration) "effectiveTimeStartEnd";
   dosage.route as route -> substanceAdministration.routeCode as routeCode then CodeableConceptCE(route, routeCode) "route";
@@ -584,7 +563,7 @@ group DosageInstructionsEntryStartStopRouteConsumable(source dosage: Dosage, tar
 }
 
 
-// source: http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured
+// source: http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured-split
 // target: https://art-decor.org/art-decor/decor-templates--ch-pharm-?id=2.16.756.5.30.1.1.10.4.36
 // dosage for split dosing: sequence number, effectiveTime (when), dose quantity, consumable (Dispense)
 group DosageInstructionsEntryDosageChangeEntryRelationship(source dosage: Dosage, target entryRelationship: entryRelationship) {
@@ -815,16 +794,16 @@ group PrescriptionItemEntryContentModule(source bundle : Bundle, source medicati
   // TODO: AUTHOR2 Community Medication Treatment Plan document author
 
   // dosage for normal dosing, as no sequences are present there
-  medicationRequest.dosageInstruction as dosage where $this.conformsTo('http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured-medicationrequest') and $this.sequence.empty()
+  medicationRequest.dosageInstruction as dosage where $this.conformsTo('http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured-normal-medicationrequest')
     then DosageInstructionsStartStopFrequencySubstanceAdministration(dosage, substanceAdministration) "DosageSubstanceAdministration";
 
   // dosage for split dosing (with sequences): effectiveTime (start/stop) & routeCode
-  medicationRequest.dosageInstruction first as dosage where $this.conformsTo('http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured-medicationrequest') and $this.sequence.exists()
+  medicationRequest.dosageInstruction first as dosage where $this.conformsTo('http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured-split-medicationrequest')
     -> substanceAdministration.entryRelationship as entryRelationship
        then DosageInstructionsEntryStartStopRoute(dosage, substanceAdministration, entryRelationship) "DosageSubstanceAdministration";
 
   // dosage for split dosing (with sequences): sequence number, effectiveTime (when), dose quantity, consumable
-  medicationRequest.dosageInstruction as dosage where $this.conformsTo('http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured-medicationrequest') and $this.sequence.exists()
+  medicationRequest.dosageInstruction as dosage where $this.conformsTo('http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured-split-medicationrequest')
     -> substanceAdministration.entryRelationship as entryRelationship, entryRelationship.typeCode = 'COMP'
        then DosageInstructionsEntryDosageChangeSubstanceAdministration(dosage, substanceAdministration, entryRelationship) "DosageSubstanceAdministration";
 
