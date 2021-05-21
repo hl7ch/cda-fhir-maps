@@ -161,6 +161,29 @@ History:
 					<family>Kristin</family>
 				</name>
 			</assignedPerson>
+			<!-- added for transformation testing -->
+			<representedOrganization>
+				<!-- The organization's id (GLN). -->
+				<id extension="7609999999999" root="2.51.1.3"/>
+				<!-- The organization's name - also according to eCH-0011. -->
+				<name use="L">Group practice CH</name>
+				<!-- The author's means of communication: phone work place.-->
+				<telecom value="tel:+41.32.234.55.66" use="WP"/>
+				<!-- The author's means of communication: fax work place.-->
+				<telecom value="fax:+41.32.234.66.77" use="WP"/>
+				<!-- The author's means of communication: eMail work place.-->
+				<telecom value="mailto:ready@gruppenpraxis.ch" use="WP"/>
+				<!-- The author's means of communication: website work place.-->
+				<telecom value="http:www.grouppractice.ch" use="WP"/>
+				<!-- The author's address - also according to eCH-0010. -->
+				<addr use="WP">
+					<streetName>doctors street</streetName>
+					<houseNumber>2</houseNumber>
+					<postalCode>8888</postalCode>
+					<city>Samplecity</city>
+					<country>CH</country>
+				</addr>
+			</representedOrganization>
 		</assignedEntity>
 	</dataEnterer>
 
