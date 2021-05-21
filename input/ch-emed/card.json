@@ -319,11 +319,11 @@
                     "reference": "Practitioner/3f0cc5e4-5ed2-4a99-89a8-a00ff03a9b19"
                 },
                 "reasonCode": [{
-                        "text": "BlutverdÃ¼nnung"
+                        "text": "Blutverdünnung"
                     }
                 ],
                 "note": [{
-                        "text": "Take one every two weeks (unstructured dosage)"
+                        "text": "Note"
                     }
                 ],
                 "dosage": [{
