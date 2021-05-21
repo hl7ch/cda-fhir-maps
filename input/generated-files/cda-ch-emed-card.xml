@@ -128,7 +128,7 @@
                     <pharm:asContent classCode="CONT">
                       <pharm:containerPackagedMedicine classCode="CONT" determinerCode="INSTANCE">
                         <pharm:name>My magistral formulary</pharm:name>
-                        <pharm:capacityQuantity nullFlavor="NP"/> <!--TBD in Mapping: see issue #-->
+                        <pharm:capacityQuantity nullFlavor="NP"/> <!--TBD in Mapping: see issue #26 -->
                       </pharm:containerPackagedMedicine>
                     </pharm:asContent>
                   </manufacturedMaterial>
@@ -155,7 +155,7 @@
               <templateId root="1.3.6.1.4.1.19376.1.9.1.3.7"/>
               <templateId root="2.16.840.1.113883.10.20.1.24"/>
               <templateId root="1.3.6.1.4.1.19376.1.5.3.1.4.7"/>
-              <!-- Normal Dosing -->
+              <!-- Normal Dosing see issue #24 -->
               <templateId root="1.3.6.1.4.1.19376.1.5.3.1.4.7.1"/>
               <id root="F5A2E372-AFCE-447A-A768-749A8207F5E9"/>
               <text>
@@ -180,7 +180,7 @@
                       <pharm:containerPackagedMedicine classCode="CONT" determinerCode="INSTANCE">
                         <pharm:code code="7680193950141" codeSystem="2.51.1.1" codeSystemName="GTIN"/>
                         <pharm:name>Marcoumar Tabl 3 mg Fl 25 Stk</pharm:name>
-                        <pharm:capacityQuantity nullFlavor="NP"/> <!--TBD in Mapping: see issue #-->
+                        <pharm:capacityQuantity nullFlavor="NP"/> <!--TBD in Mapping: see issue #26 -->
                       </pharm:containerPackagedMedicine>
                     </pharm:asContent>
                     <pharm:ingredient classCode="ACTI">
@@ -204,7 +204,7 @@
               </entryRelationship>
               <entryRelationship typeCode="COMP">
                 <substanceAdministration classCode="SBADM" moodCode="INT">
-                  <!--<templateId root="2.16.756.5.30.1.1.10.4.37"/>-->
+                  <!--<templateId root="2.16.756.5.30.1.1.10.4.37"/>--> <!-- see issue #24 -->
                   <templateId root="2.16.756.5.30.1.1.10.4.52"/>
                   <text>Take one every two weeks (unstructured dosage)
                     <reference value="#refpdf"/>
