@@ -272,7 +272,7 @@
 												<pharm:name>BELOC ZOK Ret Tabl 50 mg</pharm:name>
 												<pharm:formCode code="10219000" codeSystem="0.4.0.127.0.16.1.1.2.1"
 													displayName="Tablet" />
-												<pharm:capacityQuantity value="30" />
+												<pharm:capacityQuantity value="30" unit="732936001" />
 											</pharm:containerPackagedMedicine>
 										</pharm:asContent>
 										<pharm:ingredient classCode="ACTI">
@@ -454,7 +454,7 @@
 												<pharm:name>NORVASC Tabl 10 mg</pharm:name>
 												<pharm:formCode code="10219000" codeSystem="0.4.0.127.0.16.1.1.2.1"
 													displayName="Tablet" />
-												<pharm:capacityQuantity value="30" />
+												<pharm:capacityQuantity value="30" unit="732936001"/>
 											</pharm:containerPackagedMedicine>
 										</pharm:asContent>
 										<pharm:ingredient classCode="ACTI">

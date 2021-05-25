@@ -91,32 +91,13 @@ group ManufacturedMaterialEntryContentModuleStatement(source bundle : Bundle, so
     medication.form as form then {
       form.coding as coding -> containerPackagedMedicine.formCode as formCode then CodingCE(coding, formCode) "pharm-formCode";
     } "form";   
-
     // Package size
     medication.amount as amount then {
-      amount.numerator as numerator then {
-
-        // if the value of numerator.code is "1", then it is not a UCUM code, so generate case 1
-        // IHE: Case 1: If the capacityQuantity is given in countable units, the unit attribute SHALL NOT be present
-        numerator.code as code where $this = '1' -> containerPackagedMedicine.capacityQuantity as capacityQuantity then {
-          numerator.value as value -> capacityQuantity.value = value "value";	
-        } "noUcum";
-
-        // if the value of numerator.code is not "1", then it is a UCUM code, so generate case 2
-        // IHE: Case 2: If the capacityQuantity is given in non-countable units, the unit attribute SHALL be present and the value SHALL be out of the UCUM code system.
-        numerator.code as code where $this != '1' -> containerPackagedMedicine.capacityQuantity as capacityQuantity then {
+      amount.numerator as numerator -> containerPackagedMedicine.capacityQuantity as capacityQuantity then {
           numerator.value as value -> capacityQuantity.value = value "value";
-          numerator.unit as unit -> capacityQuantity.unit = unit "unit";	
-        } "ucum";
-
-        // if there ist no numerator.code, case 1 is generated, because no unit exists
-        numerator as numerator where $this.code.exists()=false -> containerPackagedMedicine.capacityQuantity as capacityQuantity then {
-          numerator.value as value -> capacityQuantity.value = value "value";	
-        } "noUcum";
-	    
+          numerator.code as unit -> capacityQuantity.unit = unit "unit";		    
       } "numerator";
     } "amount";
-
   } "code";
   medication.ingredient as ingredient -> manufacturedMaterial.ingredient as ingredient, ingredient.classCode = 'ACTI' then {
     ingredient.itemCodeableConcept as itemCodeableConcept -> ingredient.ingredient as pharmsubstance	then {
@@ -394,32 +375,13 @@ group ManufacturedMaterialEntryContentModuleDispense(source bundle : Bundle, sou
     medication.form as form then {
       form.coding as coding -> containerPackagedMedicine.formCode as formCode then CodingCE(coding, formCode) "pharm-formCode";
     } "form"; 
-
-    // package size
+    // Package size
     medication.amount as amount then {
-      amount.numerator as numerator then {
-
-        // if the value of numerator.code is "1", then it is not a UCUM code, so generate case 1
-        // IHE: Case 1: If the capacityQuantity is given in countable units, the unit attribute SHALL NOT be present
-        numerator.code as code where $this = '1' -> containerPackagedMedicine.capacityQuantity as capacityQuantity then {
-          numerator.value as value -> capacityQuantity.value = value "value";	
-        } "noUcum";
-
-        // if the value of numerator.code is not "1", then it is a UCUM code, so generate case 2
-        // IHE: Case 2: If the capacityQuantity is given in non-countable units, the unit attribute SHALL be present and the value SHALL be out of the UCUM code system.
-        numerator.code as code where $this != '1' -> containerPackagedMedicine.capacityQuantity as capacityQuantity then {
+      amount.numerator as numerator -> containerPackagedMedicine.capacityQuantity as capacityQuantity then {
           numerator.value as value -> capacityQuantity.value = value "value";
-          numerator.unit as unit -> capacityQuantity.unit = unit "unit";	
-        } "ucum";
-
-        // if there ist no numerator.code, case 1 is generated, because no unit exists
-        numerator as numerator where $this.code.exists()=false -> containerPackagedMedicine.capacityQuantity as capacityQuantity then {
-          numerator.value as value -> capacityQuantity.value = value "value";	
-        } "noUcum";
-	    
+          numerator.code as unit -> capacityQuantity.unit = unit "unit";		    
       } "numerator";
     } "amount";
-
   } "code";
 
   medication.ingredient as ingredient -> manufacturedMaterial.ingredient as ingredient, ingredient.classCode = 'ACTI' then {
@@ -705,28 +667,10 @@ group ManufacturedMaterialEntryContentModulePrescription(source bundle : Bundle,
 
     // Package size
     medication.amount as amount then {
-      amount.numerator as numerator then {
-
-        // if the value of numerator.code is "1", then it is not a UCUM code, so generate case 1
-        // IHE: Case 1: If the capacityQuantity is given in countable units, the unit attribute SHALL NOT be present
-        numerator.code as code where $this = '1' -> containerPackagedMedicine.capacityQuantity as capacityQuantity then {
-          numerator.value as value -> capacityQuantity.value = value "value";	
-        } "noUcum";
-
-        // if the value of numerator.code is not "1", then it is a UCUM code, so generate case 2
-        // IHE: Case 2: If the capacityQuantity is given in non-countable units, the unit attribute SHALL be present and the value SHALL be out of the UCUM code system.
-        numerator.code as code where $this != '1' -> containerPackagedMedicine.capacityQuantity as capacityQuantity then {
+      amount.numerator as numerator -> containerPackagedMedicine.capacityQuantity as capacityQuantity then {
           numerator.value as value -> capacityQuantity.value = value "value";
-          numerator.unit as unit -> capacityQuantity.unit = unit "unit";	
-        } "ucum";
-
-        // if there ist no numerator.code, case 1 is generated, because no unit exists
-        numerator as numerator where $this.code.exists()=false -> containerPackagedMedicine.capacityQuantity as capacityQuantity then {
-          numerator.value as value -> capacityQuantity.value = value "value";	
-        } "noUcum";
-	    
-      } "numerator";
-      
+          numerator.code as unit -> capacityQuantity.unit = unit "unit";		    
+      } "numerator";    
 
       // IHE-DIS: Case 1: If the product-element contains package information, the unit attribute is not be present
       medicationRequest.dispenseRequest as dispenseRequest 
