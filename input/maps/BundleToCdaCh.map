@@ -101,13 +101,40 @@ group SectionCdaOriginalRepresentation(source bundle : Bundle, source section: S
 // _________________________ Entry Level Templates   ________________________ 
 
 // _________________________ Header Level Templates _________________________ 
-  
+
+
 // source: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefinition-ch-core-composition-epr.html
 // target: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5.30.1.1.10.9.12
 group PersonAssignedEntityWithId(source practitioner: Practitioner, target assignedEntity: AssignedEntity) {
   practitioner.identifier as identifier ->  assignedEntity.id as id then IdentifierII(identifier, id) "identifier";
   practitioner.address as address ->  assignedEntity.addr as addr then AddressAD(address, addr) "address";
   practitioner.name as humanname -> assignedEntity.assignedPerson as assignedPerson, assignedPerson.name as en then HumanNameEN(humanname, en) "name";
+}
+
+// source: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefinition-ch-core-composition-epr.html
+// target: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5.30.1.1.10.9.12
+group DataEnterer(source bundle : Bundle, source practitionerRole: PractitionerRole, target assignedEntity: AssignedEntity) {
+  practitionerRole.practitioner as practitioner then {
+    practitioner.reference as reference then {
+      bundle.entry as entry then {
+          entry.fullUrl where ($this in %reference.value) and $this.startsWith('urn:uuid')  then {
+            entry.resource: Practitioner as practitioner then PersonAssignedEntityWithId(practitioner, assignedEntity) "AssignedEntityWithId";
+        } "fullUrl as urn:uuid";
+        entry.resource: Practitioner as practitioner where ('Practitioner'+'/'+$this.id) in %reference.value then  PersonAssignedEntityWithId(practitioner, assignedEntity) "AssignedEntityWithId";
+      } "practitioner";
+    } "valueReference";
+  } "extensionPerson";  
+
+  practitionerRole.organization as organization -> assignedEntity.representedOrganization as representedOrganization then {
+    organization.reference as reference then {
+      bundle.entry as entry then {
+          entry.fullUrl where ($this in %reference.value) and $this.startsWith('urn:uuid')  then {
+            entry.resource: Organization as organization then Organization2CdaOrganization(organization, representedOrganization) "representedOrganization";
+        } "fullUrl as urn:uuid";
+        entry.resource: Organization as organization where ('Organization'+'/'+$this.id) in %reference.value then Organization2CdaOrganization(practitioner, representedOrganization) "representedOrganization";
+      } "practitioner";
+    } "valueReference";
+  } "extensionPerson";  
 }
 
 // _________________________ Template Type not specified  ___________________ 
@@ -177,9 +204,9 @@ group CompositionClinicalDocumentCH(source bundle : Bundle, source composition :
       extensionPerson.valueReference as valueReference then {
         bundle.entry as entry then {
           entry.fullUrl where ($this in %valueReference.reference) and $this.startsWith('urn:uuid')  then {
-            entry.resource: Practitioner as practitioner -> dataEnterer.assignedEntity as assignedEntity then PersonAssignedEntityWithId(practitioner,assignedEntity) "AssignedEntityWithId";
+            entry.resource: PractitionerRole as practitionerRole -> dataEnterer.assignedEntity as assignedEntity then DataEnterer(bundle, practitionerRole, assignedEntity) "AssignedEntityWithId";
           } "fullUrl as urn:uuid";
-          entry.resource: Practitioner as practitioner where ('Practitioner'+'/'+$this.id) in %valueReference.reference ->  dataEnterer.assignedEntity as assignedEntity then PersonAssignedEntityWithId(practitioner,assignedEntity) "AssignedEntityWithId";
+          entry.resource: PractitionerRole as practitionerRole where ('PractitionerRole'+'/'+$this.id) in %valueReference.reference ->  dataEnterer.assignedEntity as assignedEntity then DataEnterer(bundle, practitionerRole, assignedEntity) "AssignedEntityWithId";
         } "practitioner";
       } "valueReference";
     } "extensionPerson";  
