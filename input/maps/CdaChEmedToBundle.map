@@ -42,14 +42,8 @@ imports "http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaChToBundle"
 group AnnotationComment(source section: Section, source act: Act, target note: Annotation) {
   act.text as text then {
     text.data as data -> note.text = data "level3";
-    text where (data.exists()=false) -> note.text = (%section.text.substring(%section.text.indexOf(%act.text.reference.value.substring(1))).substring(%section.text.substring(%section.text.indexOf(%act.text.reference.value.substring(1))).indexOf('>')+1, %section.text.substring(%section.text.indexOf(%act.text.reference.value.substring(1))).indexOf('<')-%section.text.substring(%section.text.indexOf(%act.text.reference.value.substring(1))).indexOf('>')-1)) "idRef";
-    text.reference as reference then {
-      reference.value as value -> note.extension as ext then NarrativeLink(value, ext) "narrativeLink";
-    } "reference";
   } "text";
 }
-
-
 
 // source: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&id=2.16.756.5.30.1.1.10.4.33
 // target: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefinition-ch-emed-medicationdispense.html
@@ -183,11 +177,6 @@ group MedicationTreatmentPlanItemEntryContentModule(source section : Section, so
   src.id -> medicationStatement.identifier;
   patient -> medicationStatement.subject = create('Reference') as reference, reference.type='Patient', reference.reference = ('urn:uuid:'+%patient.id) "patient";
   src -> medicationStatement.status = 'completed' "completed";
-  src.text as text then {
-    text.reference as reference then {
-      reference.value as value -> medicationStatement.extension as ext then NarrativeLink(value, ext) "narrativeLink";
-    } "reference";
-  } "text";
   src -> medicationStatement.contained = create('Medication') as medication then ManufacturedMaterialEntryContentModuleStatement(src, medicationStatement, medication) "medication";
 
   src.entryRelationship as entry where typeCode = 'RSON' then {
@@ -277,10 +266,6 @@ group TreatmentReasonEntryContentModule(source section : Section, source observa
     // a = %section.text.substring(%section.text.indexOf((%observation.text.reference.value.substring(1))))
     observation.text as text then {
       text.data as data -> reasonCode.text = data "level3";
-      text where (data.exists()=false) -> reasonCode.text = (%section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).substring(%section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).indexOf('>')+1, %section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).indexOf('<')-%section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).indexOf('>')-1)) "idRef";       
-      text.reference as reference then {
-        reference.value as value -> reasonCode.extension as ext then NarrativeLink(value, ext) "narrativeLink";
-      } "reference";
     } "text";
 }
 
@@ -306,10 +291,6 @@ group DosageInstructionsNonStructuredEntryContentModule(source section : Section
   entry.substanceAdministration as observation then {
     observation.text as text then {
       text.data as data -> dosage.text = data "level3";
-      text where (data.exists()=false) -> dosage.text = (%section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).substring(%section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).indexOf('>')+1, %section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).indexOf('<')-%section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).indexOf('>')-1)) "idRef";   
-      text.reference as reference then {
-        reference.value as value -> dosage.extension as ext then NarrativeLink(value, ext) "narrativeLink";
-      } "reference";
     } "text";
   } "observation";
 }
@@ -338,11 +319,6 @@ group DispenseItemEntryContentModule(source section : Section, source src : Supp
   src.id -> medicationDispense.identifier;
   patient -> medicationDispense.subject = create('Reference') as reference, reference.type='Patient', reference.reference = ('urn:uuid:'+%patient.id) "patient";
   src -> medicationDispense.status = 'completed' "completed";
-  src.text as text then {
-    text.reference as reference then {
-      reference.value as value -> medicationDispense.extension as ext then NarrativeLink(value, ext) "narrativeLink";
-    } "reference";
-  } "text";
   src -> medicationDispense.contained = create('Medication') as medication then ManufacturedMaterialEntryContentModuleDispense(src, medicationDispense, medication) "medication";
 
   src.entryRelationship as entry where (typeCode='COMP' and substanceAdministration.templateId.root='2.16.756.5.30.1.1.10.4.37') 
@@ -490,11 +466,6 @@ group PrescriptionItemEntryContentModule(source section : Section, source src : 
   patient -> medicationRequest.subject = create('Reference') as reference, reference.type='Patient', reference.reference = ('urn:uuid:'+%patient.id)  "patient";
   src -> medicationRequest.status = 'completed' "completed";
   src -> medicationRequest.intent = 'order' "order";
-  src.text as text then {
-    text.reference as reference then {
-      reference.value as value -> medicationRequest.extension as ext then NarrativeLink(value, ext) "narrativeLink";
-    } "reference";
-  } "text";
   src -> medicationRequest.contained = create('Medication') as medication then ManufacturedMaterialEntryContentModuleRequest(src, medicationRequest, medication) "medication";
 
   src.entryRelationship as entry where typeCode = 'RSON' then {
@@ -565,10 +536,6 @@ group PharmaceuticalAdviceItemEntryContentModule(source section : Section, sourc
 
 // _________________________ Template Type not specified   _________________________ 
 
-group NarrativeLink(source url, target ext: Extension) {
-  url -> ext.url = 'http://hl7.org/fhir/StructureDefinition/narrativeLink' "url";
-  url -> ext.value = create('url') as value, value.value=url "value";
-}
 
 // target: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefinition-ch-emed-ext-treatmentplan.html
 group InnerExtensionExternalDocumentId(source src, target ext: Extension) {
