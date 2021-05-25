@@ -555,14 +555,9 @@ group PharmaceuticalAdviceItemEntryContentModule(source section : Section, sourc
   src.entryRelationship as entry where (typeCode='REFR' and substanceAdministration.templateId.where(root='1.3.6.1.4.1.19376.1.9.1.3.10').exists()) 
     -> observation.extension as ext then MTPReferenceEntryContentModule(entry, ext) "MTPReferenceEntry";   
 
-  src -> observation.note as note then {
-    text.data as data -> note.text = data "level3";
+  src.text as text -> observation.note as note then {
+    text.data as data -> note.text = data "level3observation";
     text where (data.exists()=false) -> note.text = (%section.text.substring(%section.text.indexOf(%src.text.reference.value.substring(1))).substring(%section.text.substring(%section.text.indexOf(%src.text.reference.value.substring(1))).indexOf('>')+1, %section.text.substring(%section.text.indexOf(%src.text.reference.value.substring(1))).indexOf('<')-%section.text.substring(%section.text.indexOf(%src.text.reference.value.substring(1))).indexOf('>')-1)) "idRef";
-    src.text as text then {
-      text.reference as reference then {
-        reference.value as value -> note.extension as ext then NarrativeLink(value, ext) "narrativeLink";
-      } "reference";
-    } "text";
   } "note";
    
   src.code -> observation.code;

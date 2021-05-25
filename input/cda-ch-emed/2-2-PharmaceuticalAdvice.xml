@@ -212,7 +212,7 @@
 							<code code="CANCEL" codeSystem="1.3.6.1.4.1.19376.1.9.2.1"
 								codeSystemName="IHE Pharmaceutical Advice Status List" />
 							<text>
-								<reference value="#padv.1.note" />
+								<reference value="#padv.1.note" />Abgesetzt aufgrund UAW trockener Husten
 							</text>
 							<statusCode code="completed" />
 							<effectiveTime value="20120204140000+0100" />

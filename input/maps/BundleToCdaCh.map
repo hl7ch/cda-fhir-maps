@@ -131,7 +131,7 @@ group DataEnterer(source bundle : Bundle, source practitionerRole: PractitionerR
           entry.fullUrl where ($this in %reference.value) and $this.startsWith('urn:uuid')  then {
             entry.resource: Organization as organization then Organization2CdaOrganization(organization, representedOrganization) "representedOrganization";
         } "fullUrl as urn:uuid";
-        entry.resource: Organization as organization where ('Organization'+'/'+$this.id) in %reference.value then Organization2CdaOrganization(practitioner, representedOrganization) "representedOrganization";
+        entry.resource: Organization as organization where ('Organization'+'/'+$this.id) in %reference.value then Organization2CdaOrganization(organization, representedOrganization) "representedOrganization";
       } "practitioner";
     } "valueReference";
   } "extensionPerson";  
