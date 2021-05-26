@@ -53,11 +53,14 @@ group CdaChEmedMedicationDispenseDocumentToBundle(source cda : ClinicalDocument,
 
 // source: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&id=2.16.756.5.30.1.1.10.1.5
 // target: http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-composition-medicationdispense.html
-group ClinicalDocumentChEmedMedicationDispenseDocumentToBundle(source cda : ClinicalDocument, target patient : Patient, target composition : Composition, target bundle : Bundle) extends ClinicalDocumentChToBundle {
+group ClinicalDocumentChEmedMedicationDispenseDocumentToBundle(source cda : ClinicalDocument, target patient : Patient, target composition : Composition, target bundle : Bundle) {
+  cda then ClinicalDocumentCompositionCh(cda, composition, patient, bundle) "composition";
   cda.component as component then {
     component.structuredBody as body then {
       body.component as component then {
         component.section as srcSection where (templateId.where(root='2.16.756.5.30.1.1.10.3.11')) -> composition.section as tgtSection then SectionDispenseSectionContentModule(srcSection, patient, tgtSection, bundle);
+        component.section as srcSection where (templateId.where(root='2.16.756.5.30.1.1.10.3.2')) -> composition.section as tgtSection then ClinicalDocumentSection(srcSection, patient, tgtSection, bundle);
+        component.section as srcSection where (templateId.where(root='2.16.756.5.30.1.1.10.3.45')) -> composition.section as tgtSection then SectionOriginalRepresentation(srcSection, patient, tgtSection, bundle);
       } "component";
     } "body";
   } "component";
