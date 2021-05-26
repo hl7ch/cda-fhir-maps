@@ -74,7 +74,7 @@ group SectionPharmaceuticalAdviceSectionContentModule(source src : Section, sour
   src.entry as cdaEntry where (observation.templateId.where(root='2.16.756.5.30.1.1.10.4.44')) ->  bundle.entry as e,  e.resource = create('Observation') as fhirobservation,  
     fhirobservation.id = uuid() as uuid,
     e.fullUrl = append('urn:uuid:',uuid), 
-    tgt.entry = create('Reference') as reference, reference.type='Observation', reference.reference = append('urn:uuid:',uuid) then {
+    tgt.entry = create('Reference') as reference, reference.reference = append('urn:uuid:',uuid) then {
     cdaEntry.observation as cdaobservation then PharmaceuticalAdviceItemEntryContentModule(src, cdaobservation, patient, fhirobservation);
   } "cdaEntry";
 }

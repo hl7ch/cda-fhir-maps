@@ -83,9 +83,9 @@ group ManufacturedMaterialEntryContentModuleDispense(source src : Supply, target
                   medication.amount = create('Ratio') as ratio,
                   ratio.denominator	 = create('Quantity') as denominator, 
                   denominator.value = '1',
-                  denominator.unit = '{Package}',
+                  denominator.unit = 'Package',
                   denominator.system = 'http://unitsofmeasure.org',
-                  denominator.code = '1',
+                  denominator.code = '{Package}',
                   ratio.numerator = create('Quantity') as quantity then EmedPQQuantity(capacityQuantity, quantity)  "capacityQuantity"; 
           } "containerPackagedMedicine";
         } "asContent";       
@@ -124,7 +124,7 @@ group EmedRTOPQPQRatio(source src : RTO_PQ_PQ, target tgt : Ratio) {
 // source: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&id=2.16.756.5.30.1.1.10.4.33
 // target: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefinition-ch-emed-medicationstatement.html
 group ManufacturedMaterialEntryContentModuleStatement(source src : SubstanceAdministration, target medicationStatement : MedicationStatement, target medication : Medication) {
-  src -> medication.id = 'med', medicationStatement.medication = create('Reference') as vt, vt.type='Medication', vt.reference = '#med' "medication";
+  src -> medication.id = 'med', medicationStatement.medication = create('Reference') as vt, vt.reference = '#med' "medication";
   src.consumable as consumable then {
     consumable.manufacturedProduct as manufacturedProduct then {
       manufacturedProduct.manufacturedMaterial as manufacturedMaterial then {
@@ -145,9 +145,9 @@ group ManufacturedMaterialEntryContentModuleStatement(source src : SubstanceAdmi
               medication.amount = create('Ratio') as ratio,
               ratio.denominator	 = create('Quantity') as denominator, 
               denominator.value = '1',
-              denominator.unit = '{Package}',
+              denominator.unit = 'Package',
               denominator.system = 'http://unitsofmeasure.org',
-              denominator.code = '1',
+              denominator.code = '{Package}',
               ratio.numerator = create('Quantity') as quantity then EmedPQQuantity(capacityQuantity, quantity)  "capacityQuantity"; 
 
           } "containerPackagedMedicine";
@@ -175,7 +175,7 @@ group ManufacturedMaterialEntryContentModuleStatement(source src : SubstanceAdmi
 group MedicationTreatmentPlanItemEntryContentModule(source section : Section, source src : SubstanceAdministration, source patient : Patient, target medicationStatement : MedicationStatement) {
 //  src.templateId as template then TemplateID(template, medicationStatement) "templateId";
   src.id -> medicationStatement.identifier;
-  patient -> medicationStatement.subject = create('Reference') as reference, reference.type='Patient', reference.reference = ('urn:uuid:'+%patient.id) "patient";
+  patient -> medicationStatement.subject = create('Reference') as reference, reference.reference = ('urn:uuid:'+%patient.id) "patient";
   src -> medicationStatement.status = 'completed' "completed";
   src -> medicationStatement.contained = create('Medication') as medication then ManufacturedMaterialEntryContentModuleStatement(src, medicationStatement, medication) "medication";
 
@@ -317,7 +317,7 @@ group SubstitutionDispense(source act: Act, target medicationDispense: Medicatio
 group DispenseItemEntryContentModule(source section : Section, source src : Supply, source patient : Patient, target medicationDispense : MedicationDispense) {
 //  src.templateId as template then TemplateID(template, medicationDispense) "templateId";
   src.id -> medicationDispense.identifier;
-  patient -> medicationDispense.subject = create('Reference') as reference, reference.type='Patient', reference.reference = ('urn:uuid:'+%patient.id) "patient";
+  patient -> medicationDispense.subject = create('Reference') as reference, reference.reference = ('urn:uuid:'+%patient.id) "patient";
   src -> medicationDispense.status = 'completed' "completed";
   src -> medicationDispense.contained = create('Medication') as medication then ManufacturedMaterialEntryContentModuleDispense(src, medicationDispense, medication) "medication";
 
@@ -414,7 +414,7 @@ group PrescribedQuantity(source supply: Supply, target medicationRequest: Medica
 // source: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&id=2.16.756.5.30.1.1.10.4.33
 // target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-medicationrequest.html
 group ManufacturedMaterialEntryContentModuleRequest(source src : SubstanceAdministration, target medicationRequest : MedicationRequest, target medication : Medication) {
-  src -> medication.id = 'med', medicationRequest.medication = create('Reference') as vt, vt.type='Medication', vt.reference = '#med' "medication";
+  src -> medication.id = 'med', medicationRequest.medication = create('Reference') as vt, vt.reference = '#med' "medication";
   src.consumable as consumable then {
     consumable.manufacturedProduct as manufacturedProduct then {
       manufacturedProduct.manufacturedMaterial as manufacturedMaterial then {
@@ -434,9 +434,9 @@ group ManufacturedMaterialEntryContentModuleRequest(source src : SubstanceAdmini
             medication.amount = create('Ratio') as ratio,
             ratio.denominator	 = create('Quantity') as denominator, 
             denominator.value = '1',
-            denominator.unit = '{Package}',
+            denominator.unit = 'Package',
             denominator.system = 'http://unitsofmeasure.org',
-            denominator.code = '1',
+            denominator.code = '{Package}',
             ratio.numerator = create('Quantity') as quantity then EmedPQQuantity(capacityQuantity, quantity)  "capacityQuantity"; 
 
           } "containerPackagedMedicine";
@@ -463,7 +463,7 @@ group ManufacturedMaterialEntryContentModuleRequest(source src : SubstanceAdmini
 group PrescriptionItemEntryContentModule(source section : Section, source src : SubstanceAdministration, source patient : Patient, target medicationRequest : MedicationRequest) {
   
   src.id -> medicationRequest.identifier;
-  patient -> medicationRequest.subject = create('Reference') as reference, reference.type='Patient', reference.reference = ('urn:uuid:'+%patient.id)  "patient";
+  patient -> medicationRequest.subject = create('Reference') as reference, reference.reference = ('urn:uuid:'+%patient.id)  "patient";
   src -> medicationRequest.status = 'completed' "completed";
   src -> medicationRequest.intent = 'order' "order";
   src -> medicationRequest.contained = create('Medication') as medication then ManufacturedMaterialEntryContentModuleRequest(src, medicationRequest, medication) "medication";
@@ -518,7 +518,7 @@ group DosageInstructionsStartStopFrequency(source src : SubstanceAdministration,
 // target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-observation.html
 group PharmaceuticalAdviceItemEntryContentModule(source section : Section, source src : Observation, source patient : Patient, target observation : Observation) {
   src.id -> observation.identifier;
-  patient -> observation.subject = create('Reference') as reference, reference.type='Patient', reference.reference = ('urn:uuid:'+%patient.id) "patient";
+  patient -> observation.subject = create('Reference') as reference, reference.reference = ('urn:uuid:'+%patient.id) "patient";
   src -> observation.status = 'final' "final";
 
   src.effectiveTime as effectiveTime -> observation.effective = create('dateTime') as value then TSDateTime(effectiveTime, value) "value";

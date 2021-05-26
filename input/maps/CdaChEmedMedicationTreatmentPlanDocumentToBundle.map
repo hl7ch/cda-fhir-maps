@@ -73,7 +73,7 @@ group SectionMedicationTreatmentPlanSectionContentModule(source src : Section, s
   src.entry as cdaEntry where (substanceAdministration.templateId.where(root='2.16.756.5.30.1.1.10.4.34')) ->  bundle.entry as e,  e.resource = create('MedicationStatement') as medicationstatement,  
     medicationstatement.id = uuid() as uuid,
     e.fullUrl = append('urn:uuid:',uuid), 
-    tgt.entry = create('Reference') as reference, reference.type='MedicationStatement', reference.reference = append('urn:uuid:',uuid) then {
+    tgt.entry = create('Reference') as reference, reference.reference = append('urn:uuid:',uuid) then {
     cdaEntry.substanceAdministration as substanceAdministration then MedicationTreatmentPlanItemEntryContentModule(src, substanceAdministration, patient, medicationstatement);
   } "cdaEntry";
 }

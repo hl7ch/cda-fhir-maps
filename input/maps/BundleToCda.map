@@ -152,8 +152,8 @@ group PractitionerAuthor(source bundle : Bundle, source composition : Compositio
     srcauthor.extension as extensionTime where $this.url='http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-time' then {
         extensionTime.valueDateTime as valueDateTime -> tgt.time as time then DateTimeTS(valueDateTime,time) "DateTime";
     } "extensionTime";
-    bundle.timestamp as valueDateTime where %srcauthor.extension.empty() or %srcauthor.extension.where(url='http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-time').empty() -> tgt.time as time then DateTimeTS(valueDateTime,time) "DateTimeBundle";  
   } "srcAuthor";  
+  bundle.timestamp as valueDateTime where composition.author.extension.where(url='http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-time').empty() -> tgt.time as time then DateTimeTS(valueDateTime,time) "DateTimeBundle";  
   src -> tgt.assignedAuthor as assignedAuthor then {
       src.identifier as identifier -> assignedAuthor.id as id then IdentifierII(identifier, id) "id";
       src.name as name -> assignedAuthor.assignedPerson as assignedPerson, assignedPerson.name as en then HumanNameEN(name, en) "name";

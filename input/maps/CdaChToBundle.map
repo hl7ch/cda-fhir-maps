@@ -68,7 +68,6 @@ group SectionOriginalRepresentation(source src : Section, source patient : Patie
     binary.id = uuid() as uuid,
     e.fullUrl = append('urn:uuid:',uuid) as urnuuid, 
     tgt.entry = create('Reference') as reference,
-    reference.type = 'Binary',
     reference.reference = urnuuid then {
       cdaEntry.observationMedia as observationMedia then {
         observationMedia then ObservationMedia(observationMedia, binary) "observationMedia";
@@ -119,7 +118,7 @@ group ChExtEprVersionNumber1(source src, target ext: Extension) {
 // target: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefinition-ch-ext-epr-informationrecipient.html
 group ChExtEprInformationRecipient(source src: IntendedRecipient, target patient: Patient, target ext: Extension) {
   src -> ext.url = 'http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-informationrecipient' "url";
-  src -> ext.value = create('Reference') as reference, reference.type='Patient', reference.reference = ('urn:uuid:'+%patient.id) "value";
+  src -> ext.value = create('Reference') as reference, reference.reference = ('urn:uuid:'+%patient.id) "value";
   src.addr as addr -> patient.address as address then ADAddress(addr, address) "address";
   src.informationRecipient as informationRecipient then {
     informationRecipient.name as cdaname -> patient.name as fhirname then ENHumanName(cdaname, fhirname) "name";
@@ -130,7 +129,7 @@ group ChExtEprInformationRecipient(source src: IntendedRecipient, target patient
 // target: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefinition-ch-ext-epr-informationrecipient.html
 group ChExtEprInformationRecipientOrganization(source src: IntendedRecipient, target organization: Organization, target ext: Extension) {
   src -> ext.url = 'http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-informationrecipient' "url";
-  src -> ext.value = create('Reference') as reference, reference.type='Organization', reference.reference = ('urn:uuid:'+%organization.id) "value";
+  src -> ext.value = create('Reference') as reference, reference.reference = ('urn:uuid:'+%organization.id) "value";
   src.receivedOrganization as receivedOrganization then ClinicalDocumentOrganization(receivedOrganization, organization) "organization";
 }
 
@@ -161,7 +160,6 @@ group ClinicalDocumentCompositionCh(source src : ClinicalDocument, target tgt : 
       tgt.confidentiality = translate(v, 'http://fhir.ch/ig/ch-core/ConceptMap/documententry-confidentialitycode-to-fhir', 'code') as fhirconf,
             fhirconf.extension as ext then ChExtEprConfidentialityCode(confidentialityCode, ext) "confCode";
   } "confidentialityCode";
-  src where $this.versionNumber.exists().not() -> tgt.extension as ext2 then ChExtEprVersionNumber1(src, ext2) "versionNumber1";
   src.versionNumber as versionNumber -> tgt.extension as ext2 then ChExtEprVersionNumber(versionNumber, ext2) "versionNumber";
   src.informationRecipient as informationRecipient -> bundle.entry as e then {
     informationRecipient.intendedRecipient as intendedRecipient where $this.receivedOrganization.exists()=false 
