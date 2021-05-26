@@ -185,9 +185,9 @@ group MedicationTreatmentPlanItemEntryContentModule(source section : Section, so
           then TreatmentReasonEntryContentModule(section, observation, reasonCode) "reasonCode";
   } "entryRelationShip-2.16.756.5.30.1.1.10.4.41";
 
-  src.entryRelationship as entry where (typeCode='COMP' and substanceAdministration.templateId.root='2.16.756.5.30.1.1.10.4.37') 
+  src.entryRelationship as entry where (typeCode='COMP' and substanceAdministration.templateId.root='2.16.756.5.30.1.1.10.4.52') 
     -> medicationStatement.dosage as dosage 
-        then DosageInstructionsNonStructuredEntryContentModule(section, entry, dosage) "entryRelationShip-2.16.756.5.30.1.1.10.4.37";  
+        then DosageInstructionsNonStructuredEntryContentModule(section, entry, dosage) "entryRelationShip-2.16.756.5.30.1.1.10.4.52";  
 
   src.entryRelationship as entry where (typeCode='COMP' and sequenceNumber.value>=0) 
     -> medicationStatement.dosage as dosage 
@@ -321,9 +321,9 @@ group DispenseItemEntryContentModule(source section : Section, source src : Supp
   src -> medicationDispense.status = 'completed' "completed";
   src -> medicationDispense.contained = create('Medication') as medication then ManufacturedMaterialEntryContentModuleDispense(src, medicationDispense, medication) "medication";
 
-  src.entryRelationship as entry where (typeCode='COMP' and substanceAdministration.templateId.root='2.16.756.5.30.1.1.10.4.37') 
+  src.entryRelationship as entry where (typeCode='COMP' and substanceAdministration.templateId.root='2.16.756.5.30.1.1.10.4.52') 
     -> medicationDispense.dosageInstruction as dosage 
-        then DosageInstructionsNonStructuredEntryContentModule(section, entry, dosage) "entryRelationShip-2.16.756.5.30.1.1.10.4.37";  
+        then DosageInstructionsNonStructuredEntryContentModule(section, entry, dosage) "entryRelationShip-2.16.756.5.30.1.1.10.4.52";  
 
   src.entryRelationship as entryRelationship then {
     entryRelationship.substanceAdministration as substanceAdministration then {
@@ -474,9 +474,9 @@ group PrescriptionItemEntryContentModule(source section : Section, source src : 
           then TreatmentReasonEntryContentModule(section, observation, reasonCode) "reasonCode";
   } "entryRelationShip-2.16.756.5.30.1.1.10.4.41";
 
-  src.entryRelationship as entry where (typeCode='COMP' and substanceAdministration.templateId.root='2.16.756.5.30.1.1.10.4.37') 
+  src.entryRelationship as entry where (typeCode='COMP' and substanceAdministration.templateId.root='2.16.756.5.30.1.1.10.4.52') 
     -> medicationRequest.dosageInstruction as dosage 
-        then DosageInstructionsNonStructuredEntryContentModule(section, entry, dosage) "entryRelationShip-2.16.756.5.30.1.1.10.4.37";  
+        then DosageInstructionsNonStructuredEntryContentModule(section, entry, dosage) "entryRelationShip-2.16.756.5.30.1.1.10.4.52";  
 
   // dosage for split dosing, as sequences are present there
   src.entryRelationship as entry where (typeCode='COMP' and sequenceNumber.value>=0) 

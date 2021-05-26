@@ -179,9 +179,6 @@ group MedicationTreatmentPlanItemEntryContentModule(source bundle : Bundle, sour
         entryRelationship.substanceAdministration as substanceAdministration 
           then DosageInstructionsNonStructuredEntryContentModule(dosage, substanceAdministration) "DosageInstructionsNonStructuredEntryContentModule";
 
-  // TODO: Contains 2.16.756.5.30.1.1.10.4.37 Dosage Intake Mode Entry Content Module (DYNAMIC)
-  //       see group DosageInstructionsNonStructuredEntryContentModule
-
   medicationStatement.note as note 
     -> substanceAdministration.entryRelationship as entryRelationship, entryRelationship.typeCode='COMP', 
         entryRelationship.act as act 
@@ -304,12 +301,11 @@ group MTPReferenceEntryContentModule(source ext: Extension, target substanceAdmi
 
 // source: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefinition-ch-emed-dosage-nonstructured.html
 // target: https://art-decor.org/art-decor/decor-templates--ch-pharm-?section=templates&id=2.16.756.5.30.1.1.10.4.52
-// target: https://art-decor.org/art-decor/decor-templates--ch-pharm-?section=templates&id=2.16.756.5.30.1.1.10.4.37
 // Dosage Instruction (Statement, Prescription)
 group DosageInstructionsNonStructuredEntryContentModule(source dosage : Dosage, target substanceAdministration : SubstanceAdministration) {
   dosage -> substanceAdministration.classCode = 'SBADM' "SBADM";  
   dosage -> substanceAdministration.moodCode = 'INT' "INT";  
-  dosage -> substanceAdministration.templateId as templateId, templateId.root = '2.16.756.5.30.1.1.10.4.37' "templateId";
+  dosage -> substanceAdministration.templateId as templateId, templateId.root = '2.16.756.5.30.1.1.10.4.52' "templateId";
 
   dosage.text as noteText -> substanceAdministration.text as text then {
     noteText -> text.data = noteText "text";
@@ -460,9 +456,6 @@ group DispenseItemEntryContentModule(source bundle : Bundle, source medicationDi
     -> supply.entryRelationship as entryRelationship, entryRelationship.typeCode='COMP', 
         entryRelationship.substanceAdministration as substanceAdministration 
           then DosageInstructionsNonStructuredEntryContentModule(dosage, substanceAdministration) "DosageInstructionsNonStructuredEntryContentModule";
-
-  // TODO: Contains 2.16.756.5.30.1.1.10.4.37 Dosage Intake Mode Entry Content Module (DYNAMIC)
-  //       see group DosageInstructionsNonStructuredEntryContentModule
 
   // Number of packages
   // IHE-DIS: Case 1: If the product-element contains package information, the unit attribute is not be present
@@ -770,9 +763,6 @@ group PrescriptionItemEntryContentModule(source bundle : Bundle, source medicati
     -> substanceAdministration.entryRelationship as entryRelationship, entryRelationship.typeCode='COMP', 
         entryRelationship.substanceAdministration as substanceAdministration 
           then DosageInstructionsNonStructuredEntryContentModule(dosage, substanceAdministration) "DosageInstructionsNonStructuredEntryContentModule";
-
-  // TODO: Contains 2.16.756.5.30.1.1.10.4.37 Dosage Intake Mode Entry Content Module (DYNAMIC)
-  //       see group DosageInstructionsNonStructuredEntryContentModule
 
   medicationRequest.note as note 
     -> substanceAdministration.entryRelationship as entryRelationship, entryRelationship.typeCode='COMP', 
