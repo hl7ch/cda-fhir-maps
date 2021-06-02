@@ -44,11 +44,14 @@ group CdaChEmedMedicationCardDocumentToBundle(source cda : ClinicalDocument, tar
 
 // source: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.1.3
 // target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-composition-medicationcard.html
-group ClinicalDocumentChEmedMedicationCardDocumentToBundle(source cda : ClinicalDocument, target patient : Patient, target composition : Composition, target bundle : Bundle) extends ClinicalDocumentChToBundle {
+group ClinicalDocumentChEmedMedicationCardDocumentToBundle(source cda : ClinicalDocument, target patient : Patient, target composition : Composition, target bundle : Bundle) extends ClinicalDocumentToBundle {
+  cda then ClinicalDocumentCompositionCh(cda, composition, patient, bundle) "composition";
   cda.component as component then {
     component.structuredBody as body then {
       body.component as component then {
-        component.section as srcSection where (templateId.where(root = '2.16.756.5.30.1.1.10.3.9')) -&gt; composition.section as tgtSection then SectionMedicationCardSectionContentModule(srcSection, patient, tgtSection, bundle);
+        component.section as srcSection where (templateId.where(root = '2.16.756.5.30.1.1.10.3.9')) -&gt; composition.section as tgtSection then SectionMedicationCardSectionContentModule(cda, srcSection, patient, tgtSection, bundle);
+        component.section as srcSection where (templateId.where(root = '2.16.756.5.30.1.1.10.3.2')) -&gt; composition.section as tgtSection then ClinicalDocumentSection(cda, srcSection, patient, tgtSection, bundle);
+        component.section as srcSection where (templateId.where(root = '2.16.756.5.30.1.1.10.3.45')) -&gt; composition.section as tgtSection then SectionOriginalRepresentation(cda, srcSection, patient, tgtSection, bundle);
       };
     } "body";
   };
@@ -57,8 +60,8 @@ group ClinicalDocumentChEmedMedicationCardDocumentToBundle(source cda : Clinical
 // _________________________ Section Level Templates _________________________
 // source: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-composition-medicationcard.html
 // target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.3.9
-group SectionMedicationCardSectionContentModule(source src : Section, source patient : Patient, target tgt, target bundle : Bundle) extends ClinicalDocumentSection {
-  src.entry as cdaEntry where (substanceAdministration.templateId.where(root = '2.16.756.5.30.1.1.10.4.34')) -&gt;  bundle.entry as e,  e.resource = create('MedicationStatement') as medicationstatement,  medicationstatement.id = uuid() as uuid,  e.fullUrl = append('urn:uuid:', uuid),  tgt.entry = create('Reference') as reference,  reference.type = 'MedicationStatement',  reference.reference = append('urn:uuid:', uuid) then {
+group SectionMedicationCardSectionContentModule(source cda : ClinicalDocument, source src : Section, source patient : Patient, target tgt, target bundle : Bundle) extends ClinicalDocumentSection {
+  src.entry as cdaEntry where (substanceAdministration.templateId.where(root = '2.16.756.5.30.1.1.10.4.34')) -&gt;  bundle.entry as e,  e.resource = create('MedicationStatement') as medicationstatement,  medicationstatement.id = uuid() as uuid,  e.fullUrl = append('urn:uuid:', uuid),  tgt.entry = create('Reference') as reference,  reference.reference = append('urn:uuid:', uuid) then {
     cdaEntry.substanceAdministration as substanceAdministration then MedicationTreatmentPlanItemEntryContentModule(src, substanceAdministration, patient, medicationstatement);
   } "cdaEntry";
 }
@@ -285,7 +288,7 @@ target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-compo
    </group>
    <group>
       <name value="ClinicalDocumentChEmedMedicationCardDocumentToBundle"></name>
-      <extends value="ClinicalDocumentChToBundle"></extends>
+      <extends value="ClinicalDocumentToBundle"></extends>
       <typeMode value="none"></typeMode>
       <documentation value="source: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.1.3
 target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-composition-medicationcard.html"></documentation>
@@ -309,6 +312,19 @@ target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-compo
          <type value="Bundle"></type>
          <mode value="target"></mode>
       </input>
+      <rule>
+         <name value="composition"></name>
+         <source>
+            <context value="cda"></context>
+         </source>
+         <dependent>
+            <name value="ClinicalDocumentCompositionCh"></name>
+            <variable value="cda"></variable>
+            <variable value="composition"></variable>
+            <variable value="patient"></variable>
+            <variable value="bundle"></variable>
+         </dependent>
+      </rule>
       <rule>
          <name value="component"></name>
          <source>
@@ -346,6 +362,53 @@ target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-compo
                   </target>
                   <dependent>
                      <name value="SectionMedicationCardSectionContentModule"></name>
+                     <variable value="cda"></variable>
+                     <variable value="srcSection"></variable>
+                     <variable value="patient"></variable>
+                     <variable value="tgtSection"></variable>
+                     <variable value="bundle"></variable>
+                  </dependent>
+               </rule>
+               <rule>
+                  <name value="section"></name>
+                  <source>
+                     <context value="component"></context>
+                     <element value="section"></element>
+                     <variable value="srcSection"></variable>
+                     <condition value="(templateId.where(root = '2.16.756.5.30.1.1.10.3.2'))"></condition>
+                  </source>
+                  <target>
+                     <context value="composition"></context>
+                     <contextType value="variable"></contextType>
+                     <element value="section"></element>
+                     <variable value="tgtSection"></variable>
+                  </target>
+                  <dependent>
+                     <name value="ClinicalDocumentSection"></name>
+                     <variable value="cda"></variable>
+                     <variable value="srcSection"></variable>
+                     <variable value="patient"></variable>
+                     <variable value="tgtSection"></variable>
+                     <variable value="bundle"></variable>
+                  </dependent>
+               </rule>
+               <rule>
+                  <name value="section"></name>
+                  <source>
+                     <context value="component"></context>
+                     <element value="section"></element>
+                     <variable value="srcSection"></variable>
+                     <condition value="(templateId.where(root = '2.16.756.5.30.1.1.10.3.45'))"></condition>
+                  </source>
+                  <target>
+                     <context value="composition"></context>
+                     <contextType value="variable"></contextType>
+                     <element value="section"></element>
+                     <variable value="tgtSection"></variable>
+                  </target>
+                  <dependent>
+                     <name value="SectionOriginalRepresentation"></name>
+                     <variable value="cda"></variable>
                      <variable value="srcSection"></variable>
                      <variable value="patient"></variable>
                      <variable value="tgtSection"></variable>
@@ -363,6 +426,11 @@ target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-compo
       <documentation value="_________________________ Section Level Templates _________________________
 source: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-composition-medicationcard.html
 target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.3.9"></documentation>
+      <input>
+         <name value="cda"></name>
+         <type value="ClinicalDocument"></type>
+         <mode value="source"></mode>
+      </input>
       <input>
          <name value="src"></name>
          <type value="Section"></type>
@@ -433,15 +501,6 @@ target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=temp
             <transform value="create"></transform>
             <parameter>
                <valueString value="Reference"></valueString>
-            </parameter>
-         </target>
-         <target>
-            <context value="reference"></context>
-            <contextType value="variable"></contextType>
-            <element value="type"></element>
-            <transform value="copy"></transform>
-            <parameter>
-               <valueString value="MedicationStatement"></valueString>
             </parameter>
          </target>
          <target>

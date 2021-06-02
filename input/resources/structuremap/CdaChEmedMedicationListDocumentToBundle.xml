@@ -44,11 +44,14 @@ group CdaChEmedMedicationListDocumentToBundle(source cda : ClinicalDocument, tar
 
 // source: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.1.13
 // target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-composition-MedicationList.html
-group ClinicalDocumentChEmedMedicationListDocumentToBundle(source cda : ClinicalDocument, target patient : Patient, target composition : Composition, target bundle : Bundle) extends ClinicalDocumentChToBundle {
+group ClinicalDocumentChEmedMedicationListDocumentToBundle(source cda : ClinicalDocument, target patient : Patient, target composition : Composition, target bundle : Bundle) extends ClinicalDocumentToBundle {
+  cda then ClinicalDocumentCompositionCh(cda, composition, patient, bundle) "composition";
   cda.component as component then {
     component.structuredBody as body then {
       body.component as component then {
-        component.section as srcSection where (templateId.where(root = '2.16.756.5.30.1.1.10.3.44')) -&gt; composition.section as tgtSection then SectionMedicationListSectionContentModule(srcSection, patient, tgtSection, bundle);
+        component.section as srcSection where (templateId.where(root = '2.16.756.5.30.1.1.10.3.44')) -&gt; composition.section as tgtSection then SectionMedicationListSectionContentModule(cda, srcSection, patient, tgtSection, bundle);
+        component.section as srcSection where (templateId.where(root = '2.16.756.5.30.1.1.10.3.2')) -&gt; composition.section as tgtSection then ClinicalDocumentSection(cda, srcSection, patient, tgtSection, bundle);
+        component.section as srcSection where (templateId.where(root = '2.16.756.5.30.1.1.10.3.45')) -&gt; composition.section as tgtSection then SectionOriginalRepresentation(cda, srcSection, patient, tgtSection, bundle);
       };
     } "body";
   };
@@ -57,18 +60,18 @@ group ClinicalDocumentChEmedMedicationListDocumentToBundle(source cda : Clinical
 // _________________________ Section Level Templates _________________________
 // source: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-composition-MedicationList.html
 // target:
-group SectionMedicationListSectionContentModule(source src : Section, source patient : Patient, target tgt, target bundle : Bundle) extends ClinicalDocumentSection {
-  src.entry as cdaEntry where (substanceAdministration.templateId.where(root = '2.16.756.5.30.1.1.10.4.34')) -&gt;  bundle.entry as e,  e.resource = create('MedicationStatement') as medicationstatement,  medicationstatement.id = uuid() as uuid,  e.fullUrl = append('urn:uuid:', uuid),  tgt.entry = create('Reference') as reference,  reference.type = 'MedicationStatement',  reference.reference = append('urn:uuid:', uuid) then {
+group SectionMedicationListSectionContentModule(source cda : ClinicalDocument, source src : Section, source patient : Patient, target tgt, target bundle : Bundle) extends ClinicalDocumentSection {
+  src.entry as cdaEntry where (substanceAdministration.templateId.where(root = '2.16.756.5.30.1.1.10.4.34')) -&gt;  bundle.entry as e,  e.resource = create('MedicationStatement') as medicationstatement,  medicationstatement.id = uuid() as uuid,  e.fullUrl = append('urn:uuid:', uuid),  tgt.entry = create('Reference') as reference,  reference.reference = append('urn:uuid:', uuid) then {
     cdaEntry.substanceAdministration as substanceAdministration then MedicationTreatmentPlanItemEntryContentModule(src, substanceAdministration, patient, medicationstatement);
   } "MedicationTreatmentPlanItemEntryContentModule";
-  src.entry as cdaEntry where (substanceAdministration.templateId.where(root = '2.16.756.5.30.1.1.10.4.43')) -&gt;  bundle.entry as e,  e.resource = create('MedicationRequest') as medicationrequest,  medicationrequest.id = uuid() as uuid,  e.fullUrl = append('urn:uuid:', uuid),  tgt.entry = create('Reference') as reference,  reference.type = 'MedicationRequest',  reference.reference = append('urn:uuid:', uuid) then {
+  src.entry as cdaEntry where (substanceAdministration.templateId.where(root = '2.16.756.5.30.1.1.10.4.43')) -&gt;  bundle.entry as e,  e.resource = create('MedicationRequest') as medicationrequest,  medicationrequest.id = uuid() as uuid,  e.fullUrl = append('urn:uuid:', uuid),  tgt.entry = create('Reference') as reference,  reference.reference = append('urn:uuid:', uuid) then {
     cdaEntry.substanceAdministration as substanceAdministration then PrescriptionItemEntryContentModule(src, substanceAdministration, patient, medicationrequest);
   } "PrescriptionItemEntryContentModule";
-  src.entry as cdaEntry where (supply.templateId.where(root = '2.16.756.5.30.1.1.10.4.42')) -&gt;  bundle.entry as e,  e.resource = create('MedicationDispense') as medicationdispense,  medicationdispense.id = uuid() as uuid,  e.fullUrl = append('urn:uuid:', uuid),  tgt.entry = create('Reference') as reference,  reference.type = 'MedicationDispense',  reference.reference = append('urn:uuid:', uuid) then {
+  src.entry as cdaEntry where (supply.templateId.where(root = '2.16.756.5.30.1.1.10.4.42')) -&gt;  bundle.entry as e,  e.resource = create('MedicationDispense') as medicationdispense,  medicationdispense.id = uuid() as uuid,  e.fullUrl = append('urn:uuid:', uuid),  tgt.entry = create('Reference') as reference,  reference.reference = append('urn:uuid:', uuid) then {
     cdaEntry.supply as supply then DispenseItemEntryContentModule(src, supply, patient, medicationdispense);
   } "DispenseItemEntryContentModule";
-  src.entry as cdaEntry where (observation.templateId.where(root = '2.16.756.5.30.1.1.10.4.44')) -&gt;  bundle.entry as e,  e.resource = create('Observation') as fhirobservation,  fhirobservation.id = uuid() as uuid,  e.fullUrl = append('urn:uuid:', uuid),  tgt.entry = create('Reference') as reference,  reference.type = 'Observation',  reference.reference = append('urn:uuid:', uuid) then {
-    cdaEntry.observation as cdaobservation then PharmaceuticalAdviceItemEntryContentModule(src, cdaobservation, patient, fhirobservation);
+  src.entry as cdaEntry where (observation.templateId.where(root = '2.16.756.5.30.1.1.10.4.44')) -&gt;  bundle.entry as e,  e.resource = create('Observation') as fhirobservation,  fhirobservation.id = uuid() as uuid,  e.fullUrl = append('urn:uuid:', uuid),  tgt.entry = create('Reference') as reference,  reference.reference = append('urn:uuid:', uuid) then {
+    cdaEntry.observation as cdaobservation then PharmaceuticalAdviceItemEntryContentModule(src, cdaobservation, patient, fhirobservation, bundle);
   } "PharmaceuticalAdviceItemEntryContentModule";
 }
 
@@ -286,7 +289,7 @@ target: http://fhir.ch/ig/ch-emed/medication-list-document.html"></documentation
    </group>
    <group>
       <name value="ClinicalDocumentChEmedMedicationListDocumentToBundle"></name>
-      <extends value="ClinicalDocumentChToBundle"></extends>
+      <extends value="ClinicalDocumentToBundle"></extends>
       <typeMode value="none"></typeMode>
       <documentation value="source: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.1.13
 target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-composition-MedicationList.html"></documentation>
@@ -310,6 +313,19 @@ target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-compo
          <type value="Bundle"></type>
          <mode value="target"></mode>
       </input>
+      <rule>
+         <name value="composition"></name>
+         <source>
+            <context value="cda"></context>
+         </source>
+         <dependent>
+            <name value="ClinicalDocumentCompositionCh"></name>
+            <variable value="cda"></variable>
+            <variable value="composition"></variable>
+            <variable value="patient"></variable>
+            <variable value="bundle"></variable>
+         </dependent>
+      </rule>
       <rule>
          <name value="component"></name>
          <source>
@@ -347,6 +363,53 @@ target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-compo
                   </target>
                   <dependent>
                      <name value="SectionMedicationListSectionContentModule"></name>
+                     <variable value="cda"></variable>
+                     <variable value="srcSection"></variable>
+                     <variable value="patient"></variable>
+                     <variable value="tgtSection"></variable>
+                     <variable value="bundle"></variable>
+                  </dependent>
+               </rule>
+               <rule>
+                  <name value="section"></name>
+                  <source>
+                     <context value="component"></context>
+                     <element value="section"></element>
+                     <variable value="srcSection"></variable>
+                     <condition value="(templateId.where(root = '2.16.756.5.30.1.1.10.3.2'))"></condition>
+                  </source>
+                  <target>
+                     <context value="composition"></context>
+                     <contextType value="variable"></contextType>
+                     <element value="section"></element>
+                     <variable value="tgtSection"></variable>
+                  </target>
+                  <dependent>
+                     <name value="ClinicalDocumentSection"></name>
+                     <variable value="cda"></variable>
+                     <variable value="srcSection"></variable>
+                     <variable value="patient"></variable>
+                     <variable value="tgtSection"></variable>
+                     <variable value="bundle"></variable>
+                  </dependent>
+               </rule>
+               <rule>
+                  <name value="section"></name>
+                  <source>
+                     <context value="component"></context>
+                     <element value="section"></element>
+                     <variable value="srcSection"></variable>
+                     <condition value="(templateId.where(root = '2.16.756.5.30.1.1.10.3.45'))"></condition>
+                  </source>
+                  <target>
+                     <context value="composition"></context>
+                     <contextType value="variable"></contextType>
+                     <element value="section"></element>
+                     <variable value="tgtSection"></variable>
+                  </target>
+                  <dependent>
+                     <name value="SectionOriginalRepresentation"></name>
+                     <variable value="cda"></variable>
                      <variable value="srcSection"></variable>
                      <variable value="patient"></variable>
                      <variable value="tgtSection"></variable>
@@ -364,6 +427,11 @@ target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-compo
       <documentation value="_________________________ Section Level Templates _________________________
 source: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-composition-MedicationList.html
 target:"></documentation>
+      <input>
+         <name value="cda"></name>
+         <type value="ClinicalDocument"></type>
+         <mode value="source"></mode>
+      </input>
       <input>
          <name value="src"></name>
          <type value="Section"></type>
@@ -434,15 +502,6 @@ target:"></documentation>
             <transform value="create"></transform>
             <parameter>
                <valueString value="Reference"></valueString>
-            </parameter>
-         </target>
-         <target>
-            <context value="reference"></context>
-            <contextType value="variable"></contextType>
-            <element value="type"></element>
-            <transform value="copy"></transform>
-            <parameter>
-               <valueString value="MedicationStatement"></valueString>
             </parameter>
          </target>
          <target>
@@ -529,15 +588,6 @@ target:"></documentation>
          <target>
             <context value="reference"></context>
             <contextType value="variable"></contextType>
-            <element value="type"></element>
-            <transform value="copy"></transform>
-            <parameter>
-               <valueString value="MedicationRequest"></valueString>
-            </parameter>
-         </target>
-         <target>
-            <context value="reference"></context>
-            <contextType value="variable"></contextType>
             <element value="reference"></element>
             <transform value="append"></transform>
             <parameter>
@@ -614,15 +664,6 @@ target:"></documentation>
             <transform value="create"></transform>
             <parameter>
                <valueString value="Reference"></valueString>
-            </parameter>
-         </target>
-         <target>
-            <context value="reference"></context>
-            <contextType value="variable"></contextType>
-            <element value="type"></element>
-            <transform value="copy"></transform>
-            <parameter>
-               <valueString value="MedicationDispense"></valueString>
             </parameter>
          </target>
          <target>
@@ -709,15 +750,6 @@ target:"></documentation>
          <target>
             <context value="reference"></context>
             <contextType value="variable"></contextType>
-            <element value="type"></element>
-            <transform value="copy"></transform>
-            <parameter>
-               <valueString value="Observation"></valueString>
-            </parameter>
-         </target>
-         <target>
-            <context value="reference"></context>
-            <contextType value="variable"></contextType>
             <element value="reference"></element>
             <transform value="append"></transform>
             <parameter>
@@ -740,6 +772,7 @@ target:"></documentation>
                <variable value="cdaobservation"></variable>
                <variable value="patient"></variable>
                <variable value="fhirobservation"></variable>
+               <variable value="bundle"></variable>
             </dependent>
          </rule>
       </rule>

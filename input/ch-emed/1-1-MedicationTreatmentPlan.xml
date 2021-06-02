@@ -16,9 +16,6 @@
             <Composition>
                 <id value="1-1-MedicationTreatmentPlan"/>
                 <language value="de-CH"/>
-                <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-versionnumber">
-                    <valueUnsignedInt value="1"/>
-                </extension>
                 <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-informationrecipient">
                     <valueReference>
                         <reference value="Patient/MonikaWegmuellerRecipient"/>
@@ -30,16 +27,15 @@
                 </identifier>
                 <status value="final"/>
                 <type>
-                    <!-- TBD -->
-                    <coding>
-                        <system value="http://snomed.info/sct"/>
-                        <code value="419891008"/>
-                        <display value="Record artifact (record artifact)"/>
-                    </coding>
                     <coding>
                         <system value="http://loinc.org"/>
                         <code value="77603-9"/>
                         <display value="Medication treatment plan.extended"/>
+                    </coding>
+                    <coding>
+                        <system value="http://snomed.info/sct"/>
+                        <code value="419891008"/>
+                        <display value="Record artifact (record artifact)"/>
                     </coding>
                 </type>
                 <subject>
@@ -71,12 +67,6 @@
                     <reference value="Organization/Custodian"/>
                 </custodian>
                 <section>
-                    <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-sectionid">
-                        <valueIdentifier>
-                            <system value="urn:ietf:rfc:3986"/>
-                            <value value="urn:uuid:c9f758a1-296c-4710-84d4-e181db8c7478"/>
-                        </valueIdentifier>
-                    </extension>
                     <title value="Medikamentöser Behandlungsplan"/>
                     <code>
                         <coding>
@@ -189,11 +179,7 @@
                     <value value="7601000234438"/>
                 </identifier>
                 <name value="Hausarzt"/>
-                <telecom>
-                    <extension url="http://hl7.org/fhir/StructureDefinition/iso21090-nullFlavor">
-                        <valueCode value="NI"/>
-                    </extension>
-                </telecom>
+
                 <address>
                     <line value="Krankenstrasse 2"/>
                     <city value="Zürich"/>
@@ -243,6 +229,9 @@
                     <Medication>
                         <id value="med"/>
                         <code>
+                            <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
+                                <valueUrl value="#mtp.1"/>
+                            </extension>
                             <coding>
                                 <system value="urn:oid:2.51.1.1"/>
                                 <code value="7680538751228"/>
@@ -260,7 +249,7 @@
                         <amount>
                             <numerator>
                                 <value value="20"/>
-                                <unit value="Tablet"/>
+                                <unit value="Tablet (unit of presentation)"/>
                                 <system value="http://snomed.info/sct"/>
                                 <code value="732936001"/>
                             </numerator>
@@ -283,13 +272,13 @@
                             <strength>
                                 <numerator>
                                     <value value="2.5"/>
-                                    <unit value="mg"/>
+                                    <unit value="milligram"/>
                                     <system value="http://unitsofmeasure.org"/>
                                     <code value="mg"/>
                                 </numerator>
                                 <denominator>
                                     <value value="1"/>
-                                    <unit value="Tablet"/>
+                                    <unit value="Tablet (unit of presentation)"/>
                                     <system value="http://snomed.info/sct"/>
                                     <code value="732936001"/>
                                 </denominator>
@@ -297,7 +286,10 @@
                         </ingredient>
                     </Medication>
                 </contained>
-                <!-- substitution just as test case -->
+                <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
+                    <valueUrl value="#mtp.1"/>
+                </extension>
+                <!-- substitution just as test case 
                 <extension url="http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-substitution">
                     <valueCodeableConcept>
                         <coding>
@@ -306,7 +298,7 @@
                             <display value="equivalent"/>
                         </coding>
                     </valueCodeableConcept>
-                </extension>
+                </extension> -->
                 <identifier>
                     <system value="urn:ietf:rfc:3986"/>
                     <value value="urn:uuid:c9f758a1-296c-4710-84d4-e181db8c7478"/>
@@ -319,23 +311,24 @@
                     <reference value="Patient/MonikaWegmueller"/>
                 </subject>
                 <reasonCode>
+                    <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
+                        <valueUrl value="#mtp.1.reason"/>
+                    </extension>
                     <text value="Bluthochdruck"/>
                 </reasonCode>
                 <note>
+                    <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
+                        <valueUrl value="#mtp.1.note"/>
+                    </extension>
                     <text value="-"/>
                 </note>
                 <dosage>
-                    <extension url="http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-dosagetype">
-                        <valueIdentifier>
-                            <value value="1.3.6.1.4.1.19376.1.5.3.1.4.7.1"/>
-                        </valueIdentifier>
-                    </extension>
                     <timing>
                         <repeat>
                             <boundsPeriod>
                                 <start value="2011-11-29"/>
                             </boundsPeriod>
-                            <when value="ACM"/>
+                            <when value="MORN"/>
                         </repeat>
                     </timing>
                     <route>
@@ -348,13 +341,16 @@
                     <doseAndRate>
                         <doseQuantity>
                             <value value="0.5"/>
-                            <unit value="Tablette" />
+                            <unit value="Tablet (unit of presentation)"/>
                             <system value="http://snomed.info/sct"/>
                             <code value="732936001"/>
                         </doseQuantity>
                     </doseAndRate>
                 </dosage>
                 <dosage>
+                    <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
+                        <valueUrl value="#mtp.1.dosageintakemode"/>
+                    </extension>
                     <text value="Morgens 1/2 Tablette nehmen"/>
                 </dosage>
             </MedicationStatement>

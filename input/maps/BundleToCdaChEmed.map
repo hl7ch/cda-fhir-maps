@@ -172,7 +172,7 @@ group MedicationTreatmentPlanItemEntryContentModule(source bundle : Bundle, sour
               then MTPReferenceEntryContentModule(extension, substanceAdministration) "MTP-Reference";
 
   // https://github.com/ehealthsuisse/ch-emed/issues/56
-  medicationStatement -> substanceAdministration.repeatNumber as repeatNumber, repeatNumber.nullFlavor = 'NI' "repeatNumber Default";
+  medicationStatement -> substanceAdministration.repeatNumber as repeatNumber, repeatNumber.nullFlavor = 'NI' "repeatNumberDefault";
 
   // TODO: Patient Medication Instructions Contains 1.3.6.1.4.1.19376.1.5.3.1.4.3 IHE Patient Medication Instructions (DYNAMIC)
   // TODO: Amount of units of the consumable to dispense
@@ -242,7 +242,9 @@ group EffectiveTimeStartEnd(source dosage: Dosage, target substanceAdministratio
     timing.repeat as repeat then {
       repeat.bounds: Period as bounds -> substanceAdministration.effectiveTime = create('IVL_TS') as effectiveTime then {
         bounds.start as start -> effectiveTime.low as low then DateTS(start, low) "low"; 
+        bounds where start.exists().not() -> effectiveTime.low as low, low.nullFlavor = 'UNK' "NullFlavorLow";
         bounds.end as end -> effectiveTime.high as high then DateTS(end, high) "high"; 
+        bounds where end.exists().not() -> effectiveTime.high as high, high.nullFlavor = 'UNK' "NullFlavor high";
       } "bounds";
     } "repeat";
   } "timing"; 
@@ -427,40 +429,40 @@ group DispenseItemEntryContentModule(source bundle : Bundle, source medicationDi
   // TODO: AUTHOR1 Medication Treatment Plan Author
   // TODO: AUTHOR2 Community Medication Treatment Plan document author
 
-  // #24 missing template it if ch-emed-dosage-nonstructured
-  medicationStatement where dosageInstruction.count()=1 then {
-      medicationStatement.dosageInstruction as dosage where $this.conformsTo('http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-nonstructured')
-         -> substanceAdministration.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.5.3.1.4.7.1' "normalDose";
-  } "onylonedosage";
-  
-  // dosage for normal dosing, as no sequences are present there
-  medicationDispense.dosageInstruction as dosage where $this.conformsTo('http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured-normal')
-    then DosageInstructionsStartStopFrequencySupply(dosage, supply) "DosageSubstanceAdministration";
-
-  // dosage for split dosing, as sequences are present there
-  medicationDispense -> supply.entryRelationship as entryRelationship then {
-    medicationDispense -> entryRelationship.substanceAdministration as substanceAdministration then {
-      
-      // split dosing (with sequences): effectiveTime (start/stop) & routeCode & consumable
-      medicationDispense.dosageInstruction first as dosage where $this.conformsTo('http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured-split')
-        -> substanceAdministration then DosageInstructionsEntryStartStopRouteConsumable(dosage, entryRelationship, substanceAdministration) "DosageSubstanceAdministration";
-
-      // split dosing (with sequences): sequence number, effectiveTime (when), dose quantity, consumable
-      medicationDispense.dosageInstruction as dosage where $this.conformsTo('http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured-split')
-        -> substanceAdministration.entryRelationship as entryRelationship, entryRelationship.typeCode = 'COMP' 
-            then DosageInstructionsEntryDosageChangeEntryRelationship(dosage, entryRelationship) "DosageSubstanceAdministration";
-
-    } "substanceAdministration";
-  } "entryRelationship";
-
+  // TODO: Patient Medication Instructions Contains 1.3.6.1.4.1.19376.1.5.3.1.4.3 IHE Patient Medication Instructions (DYNAMIC)
   medicationDispense.extension as extension where url='http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-treatmentplan' 
     -> supply.entryRelationship as entryRelationship, entryRelationship.typeCode='REFR', 
         entryRelationship.substanceAdministration as substanceAdministration 
           then MTPReferenceEntryContentModule(extension, substanceAdministration) "MTP-Reference";
 
-  // TODO: Patient Medication Instructions Contains 1.3.6.1.4.1.19376.1.5.3.1.4.3 IHE Patient Medication Instructions (DYNAMIC)
-  // TODO: Amount of units of the consumable to dispense
-  // TODO: ID of parent container (Community Medication Treatment Plan document)
+  // #24 missing template it if ch-emed-dosage-nonstructured
+    medicationDispense where dosageInstruction.count()=1 then {
+      medicationDispense.dosageInstruction as dosage where $this.conformsTo('http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-nonstructured')
+           -> substanceAdministration.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.5.3.1.4.7.1' "normalDose";
+    } "onylonedosage";
+    
+    // dosage for normal dosing, as no sequences are present there
+    medicationDispense.dosageInstruction as dosage where $this.conformsTo('http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured-normal')
+      then DosageInstructionsStartStopFrequencySupply(dosage, supply) "DosageSubstanceAdministration";
+  
+
+
+    // dosage for split dosing, as sequences are present there
+    medicationDispense -> supply.entryRelationship as entryRelationship then {
+      medicationDispense -> entryRelationship.substanceAdministration as substanceAdministration then {
+                
+        // split dosing (with sequences): effectiveTime (start/stop) & routeCode & consumable
+        medicationDispense.dosageInstruction first as dosage where $this.conformsTo('http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured-split')
+          -> substanceAdministration then DosageInstructionsEntryStartStopRouteConsumable(dosage, entryRelationship, substanceAdministration) "DosageSubstanceAdministration";
+  
+        // split dosing (with sequences): sequence number, effectiveTime (when), dose quantity, consumable
+        medicationDispense.dosageInstruction as dosage where $this.conformsTo('http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured-split')
+          -> substanceAdministration.entryRelationship as entryRelationship, entryRelationship.typeCode = 'COMP' 
+              then DosageInstructionsEntryDosageChangeEntryRelationship(dosage, entryRelationship) "DosageSubstanceAdministration";
+  
+      } "substanceAdministration";
+    } "entryRelationship";
+  
   // TODO: Precondition Criterion
 
   medicationDispense.dosageInstruction as dosage where $this.conformsTo('http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-nonstructured')
@@ -502,6 +504,7 @@ group DosageInstructionsStartStopFrequencySupply(source dosage: Dosage, target s
       dosage -> substanceAdministration.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.5.3.1.4.7.1' "normalDose";
       dosage -> substanceAdministration as substanceAdministration then EffectiveTimeStartEnd(dosage, substanceAdministration) "effectiveTimeStartEnd";
       dosage -> substanceAdministration as substanceAdministration then EffectiveTimeWhenNormal(dosage, substanceAdministration) "effectiveTimeWhen";
+      dosage -> substanceAdministration.repeatNumber as repeatNumber, repeatNumber.nullFlavor = 'NI' "repeatNumberDefault";
       dosage.route as route -> substanceAdministration.routeCode as routeCode then CodeableConceptCE(route, routeCode) "route";
       dosage -> substanceAdministration as substanceAdministration then DoseQuantity(dosage, substanceAdministration) "doseQuantity";
       dosage -> substanceAdministration as substanceAdministration, substanceAdministration.consumable as consumable,
@@ -791,7 +794,6 @@ group PrescriptionItemEntryContentModule(source bundle : Bundle, source medicati
           then SubstitutionRequest(substitution, act) "Substitution";
 }
 
-
 // source: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-observation.html
 // target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&id=2.16.756.5.30.1.1.10.4.44
 group PharmaceuticalAdviceItemEntryContentModule(source bundle : Bundle, source fhirobservation : Observation, target cdaobservation : Observation) {
@@ -814,6 +816,16 @@ group PharmaceuticalAdviceItemEntryContentModule(source bundle : Bundle, source 
          -> cdaobservation.entryRelationship as entryRelationship, entryRelationship.typeCode='REFR', 
             entryRelationship.substanceAdministration as substanceAdministration 
               then MTPReferenceEntryContentModule(extension, substanceAdministration) "MTP-Reference";
+
+  fhirobservation.extension as extension where url='http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-medicationstatement-changed' 
+         -> cdaobservation.entryRelationship as entryRelationship, entryRelationship.typeCode='REFR' then {
+        bundle.entry as entry then {
+          entry.fullUrl where ($this in %extension.valueReference.reference) and $this.startsWith('urn:uuid') then {
+            entry.resource as medicationStatement where $this.ofType(FHIR.MedicationStatement) -> entryRelationship.substanceAdministration as substanceAdministration then MedicationTreatmentPlanItemEntryContentModule(bundle, medicationStatement, substanceAdministration) "MedicationStatement";
+          } "fullUrlAsUuid";
+          entry.resource as medicationStatement where $this.ofType(FHIR.MedicationStatement) and (('MedicationStatement'+'/'+$this.id) in %extension.valueReference.reference) -> entryRelationship.substanceAdministration as substanceAdministration then MedicationTreatmentPlanItemEntryContentModule(bundle, medicationStatement, substanceAdministration) "MedicationStatement";
+        } "entry";
+  } "changedmtp";
 
   fhirobservation.note as note then { 
     note.extension as extension where $this.url='http://hl7.org/fhir/StructureDefinition/narrativeLink' -> cdaobservation.text as text, text.reference as reference then {

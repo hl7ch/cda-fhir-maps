@@ -53,14 +53,14 @@ group CdaChEmedMedicationDispenseDocumentToBundle(source cda : ClinicalDocument,
 
 // source: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&id=2.16.756.5.30.1.1.10.1.5
 // target: http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-composition-medicationdispense.html
-group ClinicalDocumentChEmedMedicationDispenseDocumentToBundle(source cda : ClinicalDocument, target patient : Patient, target composition : Composition, target bundle : Bundle) {
+group ClinicalDocumentChEmedMedicationDispenseDocumentToBundle(source cda : ClinicalDocument, target patient : Patient, target composition : Composition, target bundle : Bundle) extends ClinicalDocumentToBundle {
   cda then ClinicalDocumentCompositionCh(cda, composition, patient, bundle) "composition";
   cda.component as component then {
     component.structuredBody as body then {
       body.component as component then {
-        component.section as srcSection where (templateId.where(root='2.16.756.5.30.1.1.10.3.11')) -> composition.section as tgtSection then SectionDispenseSectionContentModule(srcSection, patient, tgtSection, bundle);
-        component.section as srcSection where (templateId.where(root='2.16.756.5.30.1.1.10.3.2')) -> composition.section as tgtSection then ClinicalDocumentSection(srcSection, patient, tgtSection, bundle);
-        component.section as srcSection where (templateId.where(root='2.16.756.5.30.1.1.10.3.45')) -> composition.section as tgtSection then SectionOriginalRepresentation(srcSection, patient, tgtSection, bundle);
+        component.section as srcSection where (templateId.where(root='2.16.756.5.30.1.1.10.3.11')) -> composition.section as tgtSection then SectionDispenseSectionContentModule(cda, srcSection, patient, tgtSection, bundle);
+        component.section as srcSection where (templateId.where(root='2.16.756.5.30.1.1.10.3.2')) -> composition.section as tgtSection then ClinicalDocumentSection(cda, srcSection, patient, tgtSection, bundle);
+        component.section as srcSection where (templateId.where(root='2.16.756.5.30.1.1.10.3.45')) -> composition.section as tgtSection then SectionOriginalRepresentation(cda, srcSection, patient, tgtSection, bundle);
       } "component";
     } "body";
   } "component";
@@ -70,7 +70,7 @@ group ClinicalDocumentChEmedMedicationDispenseDocumentToBundle(source cda : Clin
 
 // source: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&id=2.16.756.5.30.1.1.10.3.11
 // target: http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-composition-medicationdispense.html
-group SectionDispenseSectionContentModule(source src : Section, source patient : Patient, target tgt, target bundle: Bundle) extends ClinicalDocumentSection {
+group SectionDispenseSectionContentModule(source cda : ClinicalDocument, source src : Section, source patient : Patient, target tgt, target bundle: Bundle) extends ClinicalDocumentSection {
   src.entry as cdaEntry where (supply.templateId.where(root='2.16.756.5.30.1.1.10.4.42')) ->  bundle.entry as e,  e.resource = create('MedicationDispense') as medicationdispense,  
     medicationdispense.id = uuid() as uuid,
     e.fullUrl = append('urn:uuid:',uuid), 

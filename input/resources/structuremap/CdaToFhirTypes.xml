@@ -47,12 +47,6 @@ uses "http://hl7.org/fhir/cda/StructureDefinition/IVL_TS" as source
 uses "http://hl7.org/fhir/StructureDefinition/Period" as target
 
 group Any(source src, target tgt) {
-  src.nullFlavor as nullFlavor -&gt; tgt.extension as ext then {
-    nullFlavor -&gt; ext.url = 'http://hl7.org/fhir/StructureDefinition/iso21090-nullFlavor' "url";
-    nullFlavor -&gt; ext.value = create('code') as valueCode then {
-      nullFlavor.value as v -&gt; valueCode.value = v;
-    } "valueCode";
-  } "extension";
 }
 
 group II(source src : II, target tgt : Identifier) extends Any &lt;&lt;types&gt;&gt; {
@@ -382,68 +376,6 @@ FHIR: http://hl7.org/fhir/r4/"></description>
          <name value="tgt"></name>
          <mode value="target"></mode>
       </input>
-      <rule>
-         <name value="extension"></name>
-         <source>
-            <context value="src"></context>
-            <element value="nullFlavor"></element>
-            <variable value="nullFlavor"></variable>
-         </source>
-         <target>
-            <context value="tgt"></context>
-            <contextType value="variable"></contextType>
-            <element value="extension"></element>
-            <variable value="ext"></variable>
-         </target>
-         <rule>
-            <name value="url"></name>
-            <source>
-               <context value="nullFlavor"></context>
-            </source>
-            <target>
-               <context value="ext"></context>
-               <contextType value="variable"></contextType>
-               <element value="url"></element>
-               <transform value="copy"></transform>
-               <parameter>
-                  <valueString value="http://hl7.org/fhir/StructureDefinition/iso21090-nullFlavor"></valueString>
-               </parameter>
-            </target>
-         </rule>
-         <rule>
-            <name value="valueCode"></name>
-            <source>
-               <context value="nullFlavor"></context>
-            </source>
-            <target>
-               <context value="ext"></context>
-               <contextType value="variable"></contextType>
-               <element value="value"></element>
-               <variable value="valueCode"></variable>
-               <transform value="create"></transform>
-               <parameter>
-                  <valueString value="code"></valueString>
-               </parameter>
-            </target>
-            <rule>
-               <name value="value"></name>
-               <source>
-                  <context value="nullFlavor"></context>
-                  <element value="value"></element>
-                  <variable value="v"></variable>
-               </source>
-               <target>
-                  <context value="valueCode"></context>
-                  <contextType value="variable"></contextType>
-                  <element value="value"></element>
-                  <transform value="copy"></transform>
-                  <parameter>
-                     <valueId value="v"></valueId>
-                  </parameter>
-               </target>
-            </rule>
-         </rule>
-      </rule>
    </group>
    <group>
       <name value="II"></name>

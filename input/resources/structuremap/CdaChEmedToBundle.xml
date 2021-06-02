@@ -41,7 +41,6 @@ imports "http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaChToBundle"
 group AnnotationComment(source section : Section, source act : Act, target note : Annotation) {
   act.text as text then {
     text.data as data -&gt; note.text = data "level3";
-    text where (data.exists() = false) -&gt; note.text = (%section.text.substring(%section.text.indexOf(%act.text.reference.value.substring(1))).substring(%section.text.substring(%section.text.indexOf(%act.text.reference.value.substring(1))).indexOf('&gt;') + 1, %section.text.substring(%section.text.indexOf(%act.text.reference.value.substring(1))).indexOf('&lt;') - %section.text.substring(%section.text.indexOf(%act.text.reference.value.substring(1))).indexOf('&gt;') - 1)) "idRef";
     text.reference as reference then {
       reference.value as value -&gt; note.extension as ext then NarrativeLink(value, ext) "narrativeLink";
     };
@@ -75,18 +74,7 @@ group ManufacturedMaterialEntryContentModuleDispense(source src : Supply, target
             } "text";
             containerPackagedMedicine.formCode as formCode -&gt; medication.form as form then CECodeableConcept(formCode, form);
             // Package size
-            containerPackagedMedicine.capacityQuantity as capacityQuantity where (%containerPackagedMedicine.formCode.code = '10219000') -&gt; medication.amount = create('Ratio') as ratio then {
-              // IHE: Case 1: If the capacityQuantity is given in countable units, the unit attribute SHALL NOT be present
-              capacityQuantity where $this.unit.exists() = false then {
-                capacityQuantity.value as value -&gt;  ratio.numerator = create('Quantity') as quantity,  quantity.value = value,  ratio.denominator = create('Quantity') as denominator,  denominator.value = '1' "capacityQuantity";
-              } "noUnit";
-              // IHE: Case 2: If the capacityQuantity is given in non-countable units, the unit attribute SHALL be present and the value SHALL be out of the UCUM code system.
-              capacityQuantity where $this.unit.exists() then {
-                capacityQuantity.unit as unit then {
-                  capacityQuantity.value as value -&gt;  ratio.numerator = create('Quantity') as quantity,  quantity.value = value,  quantity.unit = unit,  quantity.system = 'http://unitsofmeasure.org',  quantity.code = unit,  ratio.denominator = create('Quantity') as denominator,  denominator.value = '1',  denominator.unit = 'Package',  denominator.system = 'http://unitsofmeasure.org',  denominator.code = '1' "capacityQuantity";
-                } "capQuantUnit";
-              } "unit";
-            } "ratio";
+            containerPackagedMedicine.capacityQuantity as capacityQuantity -&gt;  medication.amount = create('Ratio') as ratio,  ratio.denominator = create('Quantity') as denominator,  denominator.value = '1',  denominator.unit = 'Package',  denominator.system = 'http://unitsofmeasure.org',  denominator.code = '{Package}',  ratio.numerator = create('Quantity') as quantity then EmedPQQuantity(capacityQuantity, quantity);
           };
         };
         manufacturedMaterial.ingredient as ingredient -&gt; medication.ingredient as ing then {
@@ -107,10 +95,10 @@ group ManufacturedMaterialEntryContentModuleDispense(source src : Supply, target
 }
 
 group EmedPQQuantity(source src : PQ, target tgt : Quantity) {
-  src.unit as unit -&gt; tgt.code = unit;
   src.value as value -&gt; tgt.value = value;
-  src.unit where ($this.length() = 9) and $this.startsWith('73') -&gt; tgt.system = 'http://snomed.info/sct' "snomedct";
-  src.unit as unit where $this.length() != 9 -&gt;  tgt.system = 'http://unitsofmeasure.org',  tgt.unit = unit "ucum";
+  src.unit as unit -&gt; tgt.code = unit;
+  src.unit as unit -&gt; tgt.system = ('http://fhir.ch/ig/ch-emed/ValueSet/UnitCode'.resolve().compose.include.where(concept.where(code = %unit)).system);
+  src.unit as unit -&gt; tgt.unit = ('http://fhir.ch/ig/ch-emed/ValueSet/UnitCode'.resolve().compose.include.concept.where(code = %unit).display);
 }
 
 group EmedRTOPQPQRatio(source src : RTO_PQ_PQ, target tgt : Ratio) {
@@ -121,7 +109,7 @@ group EmedRTOPQPQRatio(source src : RTO_PQ_PQ, target tgt : Ratio) {
 // source: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.4.33
 // target: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefinition-ch-emed-medicationstatement.html
 group ManufacturedMaterialEntryContentModuleStatement(source src : SubstanceAdministration, target medicationStatement : MedicationStatement, target medication : Medication) {
-  src -&gt;  medication.id = 'med',  medicationStatement.medication = create('Reference') as vt,  vt.type = 'Medication',  vt.reference = '#med' "medication";
+  src -&gt;  medication.id = 'med',  medicationStatement.medication = create('Reference') as vt,  vt.reference = '#med' "medication";
   src.consumable as consumable then {
     consumable.manufacturedProduct as manufacturedProduct then {
       manufacturedProduct.manufacturedMaterial as manufacturedMaterial then {
@@ -134,18 +122,7 @@ group ManufacturedMaterialEntryContentModuleStatement(source src : SubstanceAdmi
             } "text";
             containerPackagedMedicine.formCode as formCode -&gt; medication.form as form then CECodeableConcept(formCode, form);
             // Package size
-            containerPackagedMedicine.capacityQuantity as capacityQuantity where (%containerPackagedMedicine.formCode.code = '10219000') -&gt; medication.amount = create('Ratio') as ratio then {
-              // IHE: Case 1: If the capacityQuantity is given in countable units, the unit attribute SHALL NOT be present
-              capacityQuantity where $this.unit.exists() = false then {
-                capacityQuantity.value as value -&gt;  ratio.numerator = create('Quantity') as quantity,  quantity.value = value,  ratio.denominator = create('Quantity') as denominator,  denominator.value = '1' "capacityQuantity";
-              } "noUnit";
-              // IHE: Case 2: If the capacityQuantity is given in non-countable units, the unit attribute SHALL be present and the value SHALL be out of the UCUM code system.
-              capacityQuantity where $this.unit.exists() then {
-                capacityQuantity.unit as unit then {
-                  capacityQuantity.value as value -&gt;  ratio.numerator = create('Quantity') as quantity,  quantity.value = value,  quantity.unit = unit,  quantity.system = 'http://unitsofmeasure.org',  quantity.code = unit,  ratio.denominator = create('Quantity') as denominator,  denominator.value = '1',  denominator.unit = 'Package',  denominator.system = 'http://unitsofmeasure.org',  denominator.code = '1' "capacityQuantity";
-                } "capQuantUnit";
-              } "unit";
-            } "ratio";
+            containerPackagedMedicine.capacityQuantity as capacityQuantity -&gt;  medication.amount = create('Ratio') as ratio,  ratio.denominator = create('Quantity') as denominator,  denominator.value = '1',  denominator.unit = 'Package',  denominator.system = 'http://unitsofmeasure.org',  denominator.code = '{Package}',  ratio.numerator = create('Quantity') as quantity then EmedPQQuantity(capacityQuantity, quantity);
           };
         };
         manufacturedMaterial.ingredient as ingredient -&gt; medication.ingredient as ing then {
@@ -166,7 +143,7 @@ group ManufacturedMaterialEntryContentModuleStatement(source src : SubstanceAdmi
 group MedicationTreatmentPlanItemEntryContentModule(source section : Section, source src : SubstanceAdministration, source patient : Patient, target medicationStatement : MedicationStatement) {
   // src.templateId as template then TemplateID(template, medicationStatement) "templateId";
   src.id -&gt; medicationStatement.identifier;
-  patient -&gt;  medicationStatement.subject = create('Reference') as reference,  reference.type = 'Patient',  reference.reference = ('urn:uuid:' + %patient.id) "patient";
+  patient -&gt;  medicationStatement.subject = create('Reference') as reference,  reference.reference = ('urn:uuid:' + %patient.id) "patient";
   src -&gt; medicationStatement.status = 'completed' "completed";
   src.text as text then {
     text.reference as reference then {
@@ -177,7 +154,7 @@ group MedicationTreatmentPlanItemEntryContentModule(source section : Section, so
   src.entryRelationship as entry where typeCode = 'RSON' then {
     entry.observation as observation -&gt; medicationStatement.reasonCode as reasonCode then TreatmentReasonEntryContentModule(section, observation, reasonCode) "reasonCode";
   } "41";
-  src.entryRelationship as entry where ((typeCode = 'COMP') and (substanceAdministration.templateId.root = '2.16.756.5.30.1.1.10.4.37')) -&gt; medicationStatement.dosage as dosage then DosageInstructionsNonStructuredEntryContentModule(section, entry, dosage) "37";
+  src.entryRelationship as entry where ((typeCode = 'COMP') and (substanceAdministration.templateId.root = '2.16.756.5.30.1.1.10.4.52')) -&gt; medicationStatement.dosage as dosage then DosageInstructionsNonStructuredEntryContentModule(section, entry, dosage) "52";
   src.entryRelationship as entry where ((typeCode = 'COMP') and (sequenceNumber.value &gt;= 0)) -&gt; medicationStatement.dosage as dosage then DosageInstructionsEntryDosageChange(src, entry, dosage) "36";
   src.entryRelationship as entry where ((typeCode = 'REFR') and substanceAdministration.templateId.where(root = '1.3.6.1.4.1.19376.1.9.1.3.10').exists()) -&gt; medicationStatement.extension as ext then MTPReferenceEntryContentModule(entry, ext) "MTPReferenceEntry";
   src.entryRelationship as entry where ((typeCode = 'COMP') and act.templateId.where(root = '2.16.756.5.30.1.1.10.4.2').exists()) then {
@@ -189,15 +166,9 @@ group MedicationTreatmentPlanItemEntryContentModule(source section : Section, so
 }
 
 // source https://art-decor.org/art-decor/decor-templates--ch-pharm-?id=2.16.756.5.30.1.1.10.4.36
-// target: http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured
+// target: http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured-split
 // dosage for split dosing, with sequences
 group DosageInstructionsEntryDosageChange(source src : substanceAdministration, source entry : entryRelationship, target dosage : Dosage) {
-  src.templateId as templateId where (($this.root = '1.3.6.1.4.1.19376.1.5.3.1.4.9') or ($this.root = '1.3.6.1.4.1.19376.1.5.3.1.4.8')) -&gt; dosage.extension as ext then {
-    src -&gt; ext.url = 'http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-dosagetype' "url";
-    src -&gt; ext.value = create('Identifier') as valueIdentifier then {
-      templateId.root as id -&gt; valueIdentifier.value = id "dosingType";
-    } "valueIdentifier";
-  } "extension";
   entry.sequenceNumber as sequenceNumber then {
     sequenceNumber.value as val -&gt; dosage.sequence = val;
   };
@@ -249,7 +220,6 @@ group TreatmentReasonEntryContentModule(source section : Section, source observa
   // extraxt text (Bluthochdruck) from id #mtpc.1.reason in section text &lt;td ID="mtpc.1.reason"&gt;Bluthochdruck&lt;/td&gt;
   observation.text as text then {
     text.data as data -&gt; reasonCode.text = data "level3";
-    text where (data.exists() = false) -&gt; reasonCode.text = (%section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).substring(%section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).indexOf('&gt;') + 1, %section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).indexOf('&lt;') - %section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).indexOf('&gt;') - 1)) "idRef";
     text.reference as reference then {
       reference.value as value -&gt; reasonCode.extension as ext then NarrativeLink(value, ext) "narrativeLink";
     };
@@ -277,7 +247,6 @@ group DosageInstructionsNonStructuredEntryContentModule(source section : Section
   entry.substanceAdministration as observation then {
     observation.text as text then {
       text.data as data -&gt; dosage.text = data "level3";
-      text where (data.exists() = false) -&gt; dosage.text = (%section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).substring(%section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).indexOf('&gt;') + 1, %section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).indexOf('&lt;') - %section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).indexOf('&gt;') - 1)) "idRef";
       text.reference as reference then {
         reference.value as value -&gt; dosage.extension as ext then NarrativeLink(value, ext) "narrativeLink";
       };
@@ -304,7 +273,7 @@ group SubstitutionDispense(source act : Act, target medicationDispense : Medicat
 group DispenseItemEntryContentModule(source section : Section, source src : Supply, source patient : Patient, target medicationDispense : MedicationDispense) {
   // src.templateId as template then TemplateID(template, medicationDispense) "templateId";
   src.id -&gt; medicationDispense.identifier;
-  patient -&gt;  medicationDispense.subject = create('Reference') as reference,  reference.type = 'Patient',  reference.reference = ('urn:uuid:' + %patient.id) "patient";
+  patient -&gt;  medicationDispense.subject = create('Reference') as reference,  reference.reference = ('urn:uuid:' + %patient.id) "patient";
   src -&gt; medicationDispense.status = 'completed' "completed";
   src.text as text then {
     text.reference as reference then {
@@ -312,7 +281,7 @@ group DispenseItemEntryContentModule(source section : Section, source src : Supp
     };
   };
   src -&gt; medicationDispense.contained = create('Medication') as medication then ManufacturedMaterialEntryContentModuleDispense(src, medicationDispense, medication) "medication";
-  src.entryRelationship as entry where ((typeCode = 'COMP') and (substanceAdministration.templateId.root = '2.16.756.5.30.1.1.10.4.37')) -&gt; medicationDispense.dosageInstruction as dosage then DosageInstructionsNonStructuredEntryContentModule(section, entry, dosage) "37";
+  src.entryRelationship as entry where ((typeCode = 'COMP') and (substanceAdministration.templateId.root = '2.16.756.5.30.1.1.10.4.52')) -&gt; medicationDispense.dosageInstruction as dosage then DosageInstructionsNonStructuredEntryContentModule(section, entry, dosage) "52";
   src.entryRelationship as entryRelationship then {
     entryRelationship.substanceAdministration as substanceAdministration then {
       // dosage for split dosing, as sequences are present there
@@ -387,7 +356,7 @@ group PrescribedQuantity(source supply : Supply, target medicationRequest : Medi
 // source: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.4.33
 // target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-medicationrequest.html
 group ManufacturedMaterialEntryContentModuleRequest(source src : SubstanceAdministration, target medicationRequest : MedicationRequest, target medication : Medication) {
-  src -&gt;  medication.id = 'med',  medicationRequest.medication = create('Reference') as vt,  vt.type = 'Medication',  vt.reference = '#med' "medication";
+  src -&gt;  medication.id = 'med',  medicationRequest.medication = create('Reference') as vt,  vt.reference = '#med' "medication";
   src.consumable as consumable then {
     consumable.manufacturedProduct as manufacturedProduct then {
       manufacturedProduct.manufacturedMaterial as manufacturedMaterial then {
@@ -400,22 +369,11 @@ group ManufacturedMaterialEntryContentModuleRequest(source src : SubstanceAdmini
             } "text";
             containerPackagedMedicine.formCode as formCode -&gt; medication.form as form then CECodeableConcept(formCode, form);
             // Package size
-            containerPackagedMedicine.capacityQuantity as capacityQuantity where (%containerPackagedMedicine.formCode.code = '10219000') -&gt; medication.amount = create('Ratio') as ratio then {
-              // IHE: Case 1: If the capacityQuantity is given in countable units, the unit attribute SHALL NOT be present
-              capacityQuantity where $this.unit.exists() = false then {
-                capacityQuantity.value as value -&gt;  ratio.numerator = create('Quantity') as quantity,  quantity.value = value,  ratio.denominator = create('Quantity') as denominator,  denominator.value = '1' "capacityQuantity";
-              } "noUnit";
-              // IHE: Case 2: If the capacityQuantity is given in non-countable units, the unit attribute SHALL be present and the value SHALL be out of the UCUM code system.
-              capacityQuantity where $this.unit.exists() then {
-                capacityQuantity.unit as unit then {
-                  capacityQuantity.value as value -&gt;  ratio.numerator = create('Quantity') as quantity,  quantity.value = value,  quantity.unit = unit,  quantity.system = 'http://unitsofmeasure.org',  quantity.code = unit,  ratio.denominator = create('Quantity') as denominator,  denominator.value = '1',  denominator.unit = 'Package',  denominator.system = 'http://unitsofmeasure.org',  denominator.code = '1' "capacityQuantity";
-                } "capQuantUnit";
-              } "unit";
-            } "ratio";
+            containerPackagedMedicine.capacityQuantity as capacityQuantity -&gt;  medication.amount = create('Ratio') as ratio,  ratio.denominator = create('Quantity') as denominator,  denominator.value = '1',  denominator.unit = 'Package',  denominator.system = 'http://unitsofmeasure.org',  denominator.code = '{Package}',  ratio.numerator = create('Quantity') as quantity then EmedPQQuantity(capacityQuantity, quantity);
           };
         };
         manufacturedMaterial.ingredient as ingredient -&gt; medication.ingredient as ing then {
-          ingredient.quantity as quantity -&gt; ing.strength = create('Ratio') as strength then RTOPQPQRatio(quantity, strength) "strength";
+          ingredient.quantity as quantity -&gt; ing.strength = create('Ratio') as strength then EmedRTOPQPQRatio(quantity, strength) "strength";
           ingredient.ingredient as medingredient then {
             medingredient.code as code -&gt;  ing.item = create('CodeableConcept') as ingcode,  ingcode.text = (%medingredient.name.other) then CECodeableConcept(code, ingcode) "ingredientCode";
           };
@@ -431,7 +389,7 @@ group ManufacturedMaterialEntryContentModuleRequest(source src : SubstanceAdmini
 // target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-medicationrequest.html
 group PrescriptionItemEntryContentModule(source section : Section, source src : SubstanceAdministration, source patient : Patient, target medicationRequest : MedicationRequest) {
   src.id -&gt; medicationRequest.identifier;
-  patient -&gt;  medicationRequest.subject = create('Reference') as reference,  reference.type = 'Patient',  reference.reference = ('urn:uuid:' + %patient.id) "patient";
+  patient -&gt;  medicationRequest.subject = create('Reference') as reference,  reference.reference = ('urn:uuid:' + %patient.id) "patient";
   src -&gt; medicationRequest.status = 'completed' "completed";
   src -&gt; medicationRequest.intent = 'order' "order";
   src.text as text then {
@@ -443,7 +401,7 @@ group PrescriptionItemEntryContentModule(source section : Section, source src : 
   src.entryRelationship as entry where typeCode = 'RSON' then {
     entry.observation as observation -&gt; medicationRequest.reasonCode as reasonCode then TreatmentReasonEntryContentModule(section, observation, reasonCode) "reasonCode";
   } "41";
-  src.entryRelationship as entry where ((typeCode = 'COMP') and (substanceAdministration.templateId.root = '2.16.756.5.30.1.1.10.4.37')) -&gt; medicationRequest.dosageInstruction as dosage then DosageInstructionsNonStructuredEntryContentModule(section, entry, dosage) "37";
+  src.entryRelationship as entry where ((typeCode = 'COMP') and (substanceAdministration.templateId.root = '2.16.756.5.30.1.1.10.4.52')) -&gt; medicationRequest.dosageInstruction as dosage then DosageInstructionsNonStructuredEntryContentModule(section, entry, dosage) "52";
   // dosage for split dosing, as sequences are present there
   src.entryRelationship as entry where ((typeCode = 'COMP') and (sequenceNumber.value &gt;= 0)) -&gt; medicationRequest.dosageInstruction as dosage then DosageInstructionsEntryDosageChange(src, entry, dosage) "36";
   src.entryRelationship as entry where ((typeCode = 'REFR') and substanceAdministration.templateId.where(root = '1.3.6.1.4.1.19376.1.9.1.3.10').exists()) -&gt; medicationRequest.extension as ext then MTPReferenceEntryContentModule(entry, ext) "MTPReferenceEntry";
@@ -462,15 +420,9 @@ group PrescriptionItemEntryContentModule(source section : Section, source src : 
 }
 
 // source: https://art-decor.org/art-decor/decor-templates--ch-pharm-?id=2.16.756.5.30.1.1.10.4.35
-// target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition/ch-emed-dosage-structured
+// target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition/ch-emed-dosage-structured-normal
 // dosage for normal dosing, without sequences
 group DosageInstructionsStartStopFrequency(source src : SubstanceAdministration, target dosage : Dosage) {
-  src.templateId as templateId where $this.root = '1.3.6.1.4.1.19376.1.5.3.1.4.7.1' -&gt; dosage.extension as ext then {
-    src -&gt; ext.url = 'http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-dosagetype' "url";
-    src -&gt; ext.value = create('Identifier') as valueIdentifier then {
-      templateId.root as id -&gt; valueIdentifier.value = id "normalDosing";
-    } "valueIdentifier";
-  } "extension";
   src as src -&gt; dosage as dosage then EffectiveTimeStartEnd(src, dosage) "effectiveTimeStartEnd";
   src as src -&gt; dosage as dosage then EffectiveTimeWhen(src, dosage) "effectiveTimeWhen";
   src.routeCode as routeCode -&gt; dosage.route as route then CECodeableConcept(routeCode, route);
@@ -479,30 +431,26 @@ group DosageInstructionsStartStopFrequency(source src : SubstanceAdministration,
 
 // source: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.4.44
 // target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-observation.html
-group PharmaceuticalAdviceItemEntryContentModule(source section : Section, source src : Observation, source patient : Patient, target observation : Observation) {
+group PharmaceuticalAdviceItemEntryContentModule(source section : Section, source src : Observation, source patient : Patient, target observation : Observation, target bundle : Bundle) {
   src.id -&gt; observation.identifier;
-  patient -&gt;  observation.subject = create('Reference') as reference,  reference.type = 'Patient',  reference.reference = ('urn:uuid:' + %patient.id) "patient";
+  patient -&gt;  observation.subject = create('Reference') as reference,  reference.reference = ('urn:uuid:' + %patient.id) "patient";
   src -&gt; observation.status = 'final' "final";
   src.effectiveTime as effectiveTime -&gt; observation.effective = create('dateTime') as value then TSDateTime(effectiveTime, value) "value";
   src.entryRelationship as entry where ((typeCode = 'REFR') and substanceAdministration.templateId.where(root = '1.3.6.1.4.1.19376.1.9.1.3.10').exists()) -&gt; observation.extension as ext then MTPReferenceEntryContentModule(entry, ext) "MTPReferenceEntry";
-  src -&gt; observation.note as note then {
-    text.data as data -&gt; note.text = data "level3";
+  src.entryRelationship as entry where ((typeCode = 'REFR') and substanceAdministration.templateId.where(root = '1.3.6.1.4.1.19376.1.9.1.3.7').exists()) -&gt;  bundle.entry as e,  e.id = uuid() as uuid,  e.fullUrl = append('urn:uuid:', uuid),  e.resource = create('MedicationStatement') as medicationstatement,  observation.extension as ext,  ext.url = '\"http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-medicationstatement-changed',  ext.value = create('Reference') as reference,  reference.reference = append('urn:uuid:', uuid) then {
+    entry.substanceAdministration as substanceAdministration then MedicationTreatmentPlanItemEntryContentModule(section, substanceAdministration, patient, medicationstatement);
+  } "cdaEntry";
+  src.text as text -&gt; observation.note as note then {
+    text.data as data -&gt; note.text = data "level3observation";
     text where (data.exists() = false) -&gt; note.text = (%section.text.substring(%section.text.indexOf(%src.text.reference.value.substring(1))).substring(%section.text.substring(%section.text.indexOf(%src.text.reference.value.substring(1))).indexOf('&gt;') + 1, %section.text.substring(%section.text.indexOf(%src.text.reference.value.substring(1))).indexOf('&lt;') - %section.text.substring(%section.text.indexOf(%src.text.reference.value.substring(1))).indexOf('&gt;') - 1)) "idRef";
-    src.text as text then {
-      text.reference as reference then {
-        reference.value as value -&gt; note.extension as ext then NarrativeLink(value, ext) "narrativeLink";
-      };
+    text.reference as reference then {
+      reference.value as value -&gt; note.extension as ext then NarrativeLink(value, ext) "narrativeLink";
     };
   } "note";
   src.code -&gt; observation.code;
 }
 
 // _________________________ Template Type not specified   _________________________
-group NarrativeLink(source url, target ext : Extension) {
-  url -&gt; ext.url = 'http://hl7.org/fhir/StructureDefinition/narrativeLink' "url";
-  url -&gt;  ext.value = create('url') as value,  value.value = url "value";
-}
-
 // target: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefinition-ch-emed-ext-treatmentplan.html
 group InnerExtensionExternalDocumentId(source src, target ext : Extension) {
   src -&gt; ext.url = 'externalDocumentId' "url";
@@ -673,22 +621,6 @@ target: Annotation note (e.g. http://build.fhir.org/ig/hl7ch/ch-emed/branches/ma
                <transform value="copy"></transform>
                <parameter>
                   <valueId value="data"></valueId>
-               </parameter>
-            </target>
-         </rule>
-         <rule>
-            <name value="idRef"></name>
-            <source>
-               <context value="text"></context>
-               <condition value="(data.exists() = false)"></condition>
-            </source>
-            <target>
-               <context value="note"></context>
-               <contextType value="variable"></contextType>
-               <element value="text"></element>
-               <transform value="evaluate"></transform>
-               <parameter>
-                  <valueString value="%section.text.substring(%section.text.indexOf(%act.text.reference.value.substring(1))).substring(%section.text.substring(%section.text.indexOf(%act.text.reference.value.substring(1))).indexOf('&gt;') + 1, %section.text.substring(%section.text.indexOf(%act.text.reference.value.substring(1))).indexOf('&lt;') - %section.text.substring(%section.text.indexOf(%act.text.reference.value.substring(1))).indexOf('&gt;') - 1)"></valueString>
                </parameter>
             </target>
          </rule>
@@ -993,12 +925,11 @@ target: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefiniti
                         </dependent>
                      </rule>
                      <rule>
-                        <name value="ratio"></name>
+                        <name value="capacityQuantity"></name>
                         <source>
                            <context value="containerPackagedMedicine"></context>
                            <element value="capacityQuantity"></element>
                            <variable value="capacityQuantity"></variable>
-                           <condition value="(%containerPackagedMedicine.formCode.code = '10219000')"></condition>
                         </source>
                         <target>
                            <context value="medication"></context>
@@ -1010,176 +941,67 @@ target: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefiniti
                               <valueString value="Ratio"></valueString>
                            </parameter>
                         </target>
-                        <rule>
-                           <name value="noUnit"></name>
-                           <source>
-                              <context value="capacityQuantity"></context>
-                              <condition value="$this.unit.exists() = false"></condition>
-                           </source>
-                           <rule>
-                              <name value="capacityQuantity"></name>
-                              <source>
-                                 <context value="capacityQuantity"></context>
-                                 <element value="value"></element>
-                                 <variable value="value"></variable>
-                              </source>
-                              <target>
-                                 <context value="ratio"></context>
-                                 <contextType value="variable"></contextType>
-                                 <element value="numerator"></element>
-                                 <variable value="quantity"></variable>
-                                 <transform value="create"></transform>
-                                 <parameter>
-                                    <valueString value="Quantity"></valueString>
-                                 </parameter>
-                              </target>
-                              <target>
-                                 <context value="quantity"></context>
-                                 <contextType value="variable"></contextType>
-                                 <element value="value"></element>
-                                 <transform value="copy"></transform>
-                                 <parameter>
-                                    <valueId value="value"></valueId>
-                                 </parameter>
-                              </target>
-                              <target>
-                                 <context value="ratio"></context>
-                                 <contextType value="variable"></contextType>
-                                 <element value="denominator"></element>
-                                 <variable value="denominator"></variable>
-                                 <transform value="create"></transform>
-                                 <parameter>
-                                    <valueString value="Quantity"></valueString>
-                                 </parameter>
-                              </target>
-                              <target>
-                                 <context value="denominator"></context>
-                                 <contextType value="variable"></contextType>
-                                 <element value="value"></element>
-                                 <transform value="copy"></transform>
-                                 <parameter>
-                                    <valueString value="1"></valueString>
-                                 </parameter>
-                              </target>
-                           </rule>
-                           <documentation value="IHE: Case 1: If the capacityQuantity is given in countable units, the unit attribute SHALL NOT be present"></documentation>
-                        </rule>
-                        <rule>
-                           <name value="unit"></name>
-                           <source>
-                              <context value="capacityQuantity"></context>
-                              <condition value="$this.unit.exists()"></condition>
-                           </source>
-                           <rule>
-                              <name value="capQuantUnit"></name>
-                              <source>
-                                 <context value="capacityQuantity"></context>
-                                 <element value="unit"></element>
-                                 <variable value="unit"></variable>
-                              </source>
-                              <rule>
-                                 <name value="capacityQuantity"></name>
-                                 <source>
-                                    <context value="capacityQuantity"></context>
-                                    <element value="value"></element>
-                                    <variable value="value"></variable>
-                                 </source>
-                                 <target>
-                                    <context value="ratio"></context>
-                                    <contextType value="variable"></contextType>
-                                    <element value="numerator"></element>
-                                    <variable value="quantity"></variable>
-                                    <transform value="create"></transform>
-                                    <parameter>
-                                       <valueString value="Quantity"></valueString>
-                                    </parameter>
-                                 </target>
-                                 <target>
-                                    <context value="quantity"></context>
-                                    <contextType value="variable"></contextType>
-                                    <element value="value"></element>
-                                    <transform value="copy"></transform>
-                                    <parameter>
-                                       <valueId value="value"></valueId>
-                                    </parameter>
-                                 </target>
-                                 <target>
-                                    <context value="quantity"></context>
-                                    <contextType value="variable"></contextType>
-                                    <element value="unit"></element>
-                                    <transform value="copy"></transform>
-                                    <parameter>
-                                       <valueId value="unit"></valueId>
-                                    </parameter>
-                                 </target>
-                                 <target>
-                                    <context value="quantity"></context>
-                                    <contextType value="variable"></contextType>
-                                    <element value="system"></element>
-                                    <transform value="copy"></transform>
-                                    <parameter>
-                                       <valueString value="http://unitsofmeasure.org"></valueString>
-                                    </parameter>
-                                 </target>
-                                 <target>
-                                    <context value="quantity"></context>
-                                    <contextType value="variable"></contextType>
-                                    <element value="code"></element>
-                                    <transform value="copy"></transform>
-                                    <parameter>
-                                       <valueId value="unit"></valueId>
-                                    </parameter>
-                                 </target>
-                                 <target>
-                                    <context value="ratio"></context>
-                                    <contextType value="variable"></contextType>
-                                    <element value="denominator"></element>
-                                    <variable value="denominator"></variable>
-                                    <transform value="create"></transform>
-                                    <parameter>
-                                       <valueString value="Quantity"></valueString>
-                                    </parameter>
-                                 </target>
-                                 <target>
-                                    <context value="denominator"></context>
-                                    <contextType value="variable"></contextType>
-                                    <element value="value"></element>
-                                    <transform value="copy"></transform>
-                                    <parameter>
-                                       <valueString value="1"></valueString>
-                                    </parameter>
-                                 </target>
-                                 <target>
-                                    <context value="denominator"></context>
-                                    <contextType value="variable"></contextType>
-                                    <element value="unit"></element>
-                                    <transform value="copy"></transform>
-                                    <parameter>
-                                       <valueString value="Package"></valueString>
-                                    </parameter>
-                                 </target>
-                                 <target>
-                                    <context value="denominator"></context>
-                                    <contextType value="variable"></contextType>
-                                    <element value="system"></element>
-                                    <transform value="copy"></transform>
-                                    <parameter>
-                                       <valueString value="http://unitsofmeasure.org"></valueString>
-                                    </parameter>
-                                 </target>
-                                 <target>
-                                    <context value="denominator"></context>
-                                    <contextType value="variable"></contextType>
-                                    <element value="code"></element>
-                                    <transform value="copy"></transform>
-                                    <parameter>
-                                       <valueString value="1"></valueString>
-                                    </parameter>
-                                 </target>
-                              </rule>
-                           </rule>
-                           <documentation value="IHE: Case 2: If the capacityQuantity is given in non-countable units, the unit attribute SHALL be present and the value SHALL be out of the UCUM code system."></documentation>
-                        </rule>
+                        <target>
+                           <context value="ratio"></context>
+                           <contextType value="variable"></contextType>
+                           <element value="denominator"></element>
+                           <variable value="denominator"></variable>
+                           <transform value="create"></transform>
+                           <parameter>
+                              <valueString value="Quantity"></valueString>
+                           </parameter>
+                        </target>
+                        <target>
+                           <context value="denominator"></context>
+                           <contextType value="variable"></contextType>
+                           <element value="value"></element>
+                           <transform value="copy"></transform>
+                           <parameter>
+                              <valueString value="1"></valueString>
+                           </parameter>
+                        </target>
+                        <target>
+                           <context value="denominator"></context>
+                           <contextType value="variable"></contextType>
+                           <element value="unit"></element>
+                           <transform value="copy"></transform>
+                           <parameter>
+                              <valueString value="Package"></valueString>
+                           </parameter>
+                        </target>
+                        <target>
+                           <context value="denominator"></context>
+                           <contextType value="variable"></contextType>
+                           <element value="system"></element>
+                           <transform value="copy"></transform>
+                           <parameter>
+                              <valueString value="http://unitsofmeasure.org"></valueString>
+                           </parameter>
+                        </target>
+                        <target>
+                           <context value="denominator"></context>
+                           <contextType value="variable"></contextType>
+                           <element value="code"></element>
+                           <transform value="copy"></transform>
+                           <parameter>
+                              <valueString value="{Package}"></valueString>
+                           </parameter>
+                        </target>
+                        <target>
+                           <context value="ratio"></context>
+                           <contextType value="variable"></contextType>
+                           <element value="numerator"></element>
+                           <variable value="quantity"></variable>
+                           <transform value="create"></transform>
+                           <parameter>
+                              <valueString value="Quantity"></valueString>
+                           </parameter>
+                        </target>
+                        <dependent>
+                           <name value="EmedPQQuantity"></name>
+                           <variable value="capacityQuantity"></variable>
+                           <variable value="quantity"></variable>
+                        </dependent>
                         <documentation value="Package size"></documentation>
                      </rule>
                   </rule>
@@ -1314,23 +1136,6 @@ target: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefiniti
          <mode value="target"></mode>
       </input>
       <rule>
-         <name value="unit"></name>
-         <source>
-            <context value="src"></context>
-            <element value="unit"></element>
-            <variable value="unit"></variable>
-         </source>
-         <target>
-            <context value="tgt"></context>
-            <contextType value="variable"></contextType>
-            <element value="code"></element>
-            <transform value="copy"></transform>
-            <parameter>
-               <valueId value="unit"></valueId>
-            </parameter>
-         </target>
-      </rule>
-      <rule>
          <name value="value"></name>
          <source>
             <context value="src"></context>
@@ -1348,46 +1153,53 @@ target: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefiniti
          </target>
       </rule>
       <rule>
-         <name value="snomedct"></name>
-         <source>
-            <context value="src"></context>
-            <element value="unit"></element>
-            <condition value="($this.length() = 9) and $this.startsWith('73')"></condition>
-         </source>
-         <target>
-            <context value="tgt"></context>
-            <contextType value="variable"></contextType>
-            <element value="system"></element>
-            <transform value="copy"></transform>
-            <parameter>
-               <valueString value="http://snomed.info/sct"></valueString>
-            </parameter>
-         </target>
-      </rule>
-      <rule>
-         <name value="ucum"></name>
+         <name value="unit"></name>
          <source>
             <context value="src"></context>
             <element value="unit"></element>
             <variable value="unit"></variable>
-            <condition value="$this.length() != 9"></condition>
+         </source>
+         <target>
+            <context value="tgt"></context>
+            <contextType value="variable"></contextType>
+            <element value="code"></element>
+            <transform value="copy"></transform>
+            <parameter>
+               <valueId value="unit"></valueId>
+            </parameter>
+         </target>
+      </rule>
+      <rule>
+         <name value="unit"></name>
+         <source>
+            <context value="src"></context>
+            <element value="unit"></element>
+            <variable value="unit"></variable>
          </source>
          <target>
             <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="system"></element>
-            <transform value="copy"></transform>
+            <transform value="evaluate"></transform>
             <parameter>
-               <valueString value="http://unitsofmeasure.org"></valueString>
+               <valueString value="'http://fhir.ch/ig/ch-emed/ValueSet/UnitCode'.resolve().compose.include.where(concept.where(code = %unit)).system"></valueString>
             </parameter>
          </target>
+      </rule>
+      <rule>
+         <name value="unit"></name>
+         <source>
+            <context value="src"></context>
+            <element value="unit"></element>
+            <variable value="unit"></variable>
+         </source>
          <target>
             <context value="tgt"></context>
             <contextType value="variable"></contextType>
             <element value="unit"></element>
-            <transform value="copy"></transform>
+            <transform value="evaluate"></transform>
             <parameter>
-               <valueId value="unit"></valueId>
+               <valueString value="'http://fhir.ch/ig/ch-emed/ValueSet/UnitCode'.resolve().compose.include.concept.where(code = %unit).display"></valueString>
             </parameter>
          </target>
       </rule>
@@ -1486,15 +1298,6 @@ target: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefiniti
             <transform value="create"></transform>
             <parameter>
                <valueString value="Reference"></valueString>
-            </parameter>
-         </target>
-         <target>
-            <context value="vt"></context>
-            <contextType value="variable"></contextType>
-            <element value="type"></element>
-            <transform value="copy"></transform>
-            <parameter>
-               <valueString value="Medication"></valueString>
             </parameter>
          </target>
          <target>
@@ -1638,12 +1441,11 @@ target: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefiniti
                         </dependent>
                      </rule>
                      <rule>
-                        <name value="ratio"></name>
+                        <name value="capacityQuantity"></name>
                         <source>
                            <context value="containerPackagedMedicine"></context>
                            <element value="capacityQuantity"></element>
                            <variable value="capacityQuantity"></variable>
-                           <condition value="(%containerPackagedMedicine.formCode.code = '10219000')"></condition>
                         </source>
                         <target>
                            <context value="medication"></context>
@@ -1655,176 +1457,67 @@ target: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefiniti
                               <valueString value="Ratio"></valueString>
                            </parameter>
                         </target>
-                        <rule>
-                           <name value="noUnit"></name>
-                           <source>
-                              <context value="capacityQuantity"></context>
-                              <condition value="$this.unit.exists() = false"></condition>
-                           </source>
-                           <rule>
-                              <name value="capacityQuantity"></name>
-                              <source>
-                                 <context value="capacityQuantity"></context>
-                                 <element value="value"></element>
-                                 <variable value="value"></variable>
-                              </source>
-                              <target>
-                                 <context value="ratio"></context>
-                                 <contextType value="variable"></contextType>
-                                 <element value="numerator"></element>
-                                 <variable value="quantity"></variable>
-                                 <transform value="create"></transform>
-                                 <parameter>
-                                    <valueString value="Quantity"></valueString>
-                                 </parameter>
-                              </target>
-                              <target>
-                                 <context value="quantity"></context>
-                                 <contextType value="variable"></contextType>
-                                 <element value="value"></element>
-                                 <transform value="copy"></transform>
-                                 <parameter>
-                                    <valueId value="value"></valueId>
-                                 </parameter>
-                              </target>
-                              <target>
-                                 <context value="ratio"></context>
-                                 <contextType value="variable"></contextType>
-                                 <element value="denominator"></element>
-                                 <variable value="denominator"></variable>
-                                 <transform value="create"></transform>
-                                 <parameter>
-                                    <valueString value="Quantity"></valueString>
-                                 </parameter>
-                              </target>
-                              <target>
-                                 <context value="denominator"></context>
-                                 <contextType value="variable"></contextType>
-                                 <element value="value"></element>
-                                 <transform value="copy"></transform>
-                                 <parameter>
-                                    <valueString value="1"></valueString>
-                                 </parameter>
-                              </target>
-                           </rule>
-                           <documentation value="IHE: Case 1: If the capacityQuantity is given in countable units, the unit attribute SHALL NOT be present"></documentation>
-                        </rule>
-                        <rule>
-                           <name value="unit"></name>
-                           <source>
-                              <context value="capacityQuantity"></context>
-                              <condition value="$this.unit.exists()"></condition>
-                           </source>
-                           <rule>
-                              <name value="capQuantUnit"></name>
-                              <source>
-                                 <context value="capacityQuantity"></context>
-                                 <element value="unit"></element>
-                                 <variable value="unit"></variable>
-                              </source>
-                              <rule>
-                                 <name value="capacityQuantity"></name>
-                                 <source>
-                                    <context value="capacityQuantity"></context>
-                                    <element value="value"></element>
-                                    <variable value="value"></variable>
-                                 </source>
-                                 <target>
-                                    <context value="ratio"></context>
-                                    <contextType value="variable"></contextType>
-                                    <element value="numerator"></element>
-                                    <variable value="quantity"></variable>
-                                    <transform value="create"></transform>
-                                    <parameter>
-                                       <valueString value="Quantity"></valueString>
-                                    </parameter>
-                                 </target>
-                                 <target>
-                                    <context value="quantity"></context>
-                                    <contextType value="variable"></contextType>
-                                    <element value="value"></element>
-                                    <transform value="copy"></transform>
-                                    <parameter>
-                                       <valueId value="value"></valueId>
-                                    </parameter>
-                                 </target>
-                                 <target>
-                                    <context value="quantity"></context>
-                                    <contextType value="variable"></contextType>
-                                    <element value="unit"></element>
-                                    <transform value="copy"></transform>
-                                    <parameter>
-                                       <valueId value="unit"></valueId>
-                                    </parameter>
-                                 </target>
-                                 <target>
-                                    <context value="quantity"></context>
-                                    <contextType value="variable"></contextType>
-                                    <element value="system"></element>
-                                    <transform value="copy"></transform>
-                                    <parameter>
-                                       <valueString value="http://unitsofmeasure.org"></valueString>
-                                    </parameter>
-                                 </target>
-                                 <target>
-                                    <context value="quantity"></context>
-                                    <contextType value="variable"></contextType>
-                                    <element value="code"></element>
-                                    <transform value="copy"></transform>
-                                    <parameter>
-                                       <valueId value="unit"></valueId>
-                                    </parameter>
-                                 </target>
-                                 <target>
-                                    <context value="ratio"></context>
-                                    <contextType value="variable"></contextType>
-                                    <element value="denominator"></element>
-                                    <variable value="denominator"></variable>
-                                    <transform value="create"></transform>
-                                    <parameter>
-                                       <valueString value="Quantity"></valueString>
-                                    </parameter>
-                                 </target>
-                                 <target>
-                                    <context value="denominator"></context>
-                                    <contextType value="variable"></contextType>
-                                    <element value="value"></element>
-                                    <transform value="copy"></transform>
-                                    <parameter>
-                                       <valueString value="1"></valueString>
-                                    </parameter>
-                                 </target>
-                                 <target>
-                                    <context value="denominator"></context>
-                                    <contextType value="variable"></contextType>
-                                    <element value="unit"></element>
-                                    <transform value="copy"></transform>
-                                    <parameter>
-                                       <valueString value="Package"></valueString>
-                                    </parameter>
-                                 </target>
-                                 <target>
-                                    <context value="denominator"></context>
-                                    <contextType value="variable"></contextType>
-                                    <element value="system"></element>
-                                    <transform value="copy"></transform>
-                                    <parameter>
-                                       <valueString value="http://unitsofmeasure.org"></valueString>
-                                    </parameter>
-                                 </target>
-                                 <target>
-                                    <context value="denominator"></context>
-                                    <contextType value="variable"></contextType>
-                                    <element value="code"></element>
-                                    <transform value="copy"></transform>
-                                    <parameter>
-                                       <valueString value="1"></valueString>
-                                    </parameter>
-                                 </target>
-                              </rule>
-                           </rule>
-                           <documentation value="IHE: Case 2: If the capacityQuantity is given in non-countable units, the unit attribute SHALL be present and the value SHALL be out of the UCUM code system."></documentation>
-                        </rule>
+                        <target>
+                           <context value="ratio"></context>
+                           <contextType value="variable"></contextType>
+                           <element value="denominator"></element>
+                           <variable value="denominator"></variable>
+                           <transform value="create"></transform>
+                           <parameter>
+                              <valueString value="Quantity"></valueString>
+                           </parameter>
+                        </target>
+                        <target>
+                           <context value="denominator"></context>
+                           <contextType value="variable"></contextType>
+                           <element value="value"></element>
+                           <transform value="copy"></transform>
+                           <parameter>
+                              <valueString value="1"></valueString>
+                           </parameter>
+                        </target>
+                        <target>
+                           <context value="denominator"></context>
+                           <contextType value="variable"></contextType>
+                           <element value="unit"></element>
+                           <transform value="copy"></transform>
+                           <parameter>
+                              <valueString value="Package"></valueString>
+                           </parameter>
+                        </target>
+                        <target>
+                           <context value="denominator"></context>
+                           <contextType value="variable"></contextType>
+                           <element value="system"></element>
+                           <transform value="copy"></transform>
+                           <parameter>
+                              <valueString value="http://unitsofmeasure.org"></valueString>
+                           </parameter>
+                        </target>
+                        <target>
+                           <context value="denominator"></context>
+                           <contextType value="variable"></contextType>
+                           <element value="code"></element>
+                           <transform value="copy"></transform>
+                           <parameter>
+                              <valueString value="{Package}"></valueString>
+                           </parameter>
+                        </target>
+                        <target>
+                           <context value="ratio"></context>
+                           <contextType value="variable"></contextType>
+                           <element value="numerator"></element>
+                           <variable value="quantity"></variable>
+                           <transform value="create"></transform>
+                           <parameter>
+                              <valueString value="Quantity"></valueString>
+                           </parameter>
+                        </target>
+                        <dependent>
+                           <name value="EmedPQQuantity"></name>
+                           <variable value="capacityQuantity"></variable>
+                           <variable value="quantity"></variable>
+                        </dependent>
                         <documentation value="Package size"></documentation>
                      </rule>
                   </rule>
@@ -1988,15 +1681,6 @@ target: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefiniti
          <target>
             <context value="reference"></context>
             <contextType value="variable"></contextType>
-            <element value="type"></element>
-            <transform value="copy"></transform>
-            <parameter>
-               <valueString value="Patient"></valueString>
-            </parameter>
-         </target>
-         <target>
-            <context value="reference"></context>
-            <contextType value="variable"></contextType>
             <element value="reference"></element>
             <transform value="evaluate"></transform>
             <parameter>
@@ -2106,12 +1790,12 @@ target: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefiniti
          </rule>
       </rule>
       <rule>
-         <name value="entryRelationShip-2.16.756.5.30.1.1.10.4.37"></name>
+         <name value="entryRelationShip-2.16.756.5.30.1.1.10.4.52"></name>
          <source>
             <context value="src"></context>
             <element value="entryRelationship"></element>
             <variable value="entry"></variable>
-            <condition value="((typeCode = 'COMP') and (substanceAdministration.templateId.root = '2.16.756.5.30.1.1.10.4.37'))"></condition>
+            <condition value="((typeCode = 'COMP') and (substanceAdministration.templateId.root = '2.16.756.5.30.1.1.10.4.52'))"></condition>
          </source>
          <target>
             <context value="medicationStatement"></context>
@@ -2230,7 +1914,7 @@ target: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefiniti
       <name value="DosageInstructionsEntryDosageChange"></name>
       <typeMode value="none"></typeMode>
       <documentation value="source https://art-decor.org/art-decor/decor-templates--ch-pharm-?id=2.16.756.5.30.1.1.10.4.36
-target: http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured
+target: http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured-split
 dosage for split dosing, with sequences"></documentation>
       <input>
          <name value="src"></name>
@@ -2247,69 +1931,6 @@ dosage for split dosing, with sequences"></documentation>
          <type value="Dosage"></type>
          <mode value="target"></mode>
       </input>
-      <rule>
-         <name value="extension"></name>
-         <source>
-            <context value="src"></context>
-            <element value="templateId"></element>
-            <variable value="templateId"></variable>
-            <condition value="(($this.root = '1.3.6.1.4.1.19376.1.5.3.1.4.9') or ($this.root = '1.3.6.1.4.1.19376.1.5.3.1.4.8'))"></condition>
-         </source>
-         <target>
-            <context value="dosage"></context>
-            <contextType value="variable"></contextType>
-            <element value="extension"></element>
-            <variable value="ext"></variable>
-         </target>
-         <rule>
-            <name value="url"></name>
-            <source>
-               <context value="src"></context>
-            </source>
-            <target>
-               <context value="ext"></context>
-               <contextType value="variable"></contextType>
-               <element value="url"></element>
-               <transform value="copy"></transform>
-               <parameter>
-                  <valueString value="http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-dosagetype"></valueString>
-               </parameter>
-            </target>
-         </rule>
-         <rule>
-            <name value="valueIdentifier"></name>
-            <source>
-               <context value="src"></context>
-            </source>
-            <target>
-               <context value="ext"></context>
-               <contextType value="variable"></contextType>
-               <element value="value"></element>
-               <variable value="valueIdentifier"></variable>
-               <transform value="create"></transform>
-               <parameter>
-                  <valueString value="Identifier"></valueString>
-               </parameter>
-            </target>
-            <rule>
-               <name value="dosingType"></name>
-               <source>
-                  <context value="templateId"></context>
-                  <element value="root"></element>
-                  <variable value="id"></variable>
-               </source>
-               <target>
-                  <context value="valueIdentifier"></context>
-                  <contextType value="variable"></contextType>
-                  <element value="value"></element>
-                  <transform value="copy"></transform>
-                  <parameter>
-                     <valueId value="id"></valueId>
-                  </parameter>
-               </target>
-            </rule>
-         </rule>
-      </rule>
       <rule>
          <name value="sequenceNumber"></name>
          <source>
@@ -2700,22 +2321,6 @@ target: reasonCode Coding (e.g. http://build.fhir.org/ig/hl7ch/ig/ch-emed/Struct
             </target>
          </rule>
          <rule>
-            <name value="idRef"></name>
-            <source>
-               <context value="text"></context>
-               <condition value="(data.exists() = false)"></condition>
-            </source>
-            <target>
-               <context value="reasonCode"></context>
-               <contextType value="variable"></contextType>
-               <element value="text"></element>
-               <transform value="evaluate"></transform>
-               <parameter>
-                  <valueString value="%section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).substring(%section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).indexOf('&gt;') + 1, %section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).indexOf('&lt;') - %section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).indexOf('&gt;') - 1)"></valueString>
-               </parameter>
-            </target>
-         </rule>
-         <rule>
             <name value="reference"></name>
             <source>
                <context value="text"></context>
@@ -2885,22 +2490,6 @@ target: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefiniti
                   <transform value="copy"></transform>
                   <parameter>
                      <valueId value="data"></valueId>
-                  </parameter>
-               </target>
-            </rule>
-            <rule>
-               <name value="idRef"></name>
-               <source>
-                  <context value="text"></context>
-                  <condition value="(data.exists() = false)"></condition>
-               </source>
-               <target>
-                  <context value="dosage"></context>
-                  <contextType value="variable"></contextType>
-                  <element value="text"></element>
-                  <transform value="evaluate"></transform>
-                  <parameter>
-                     <valueString value="%section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).substring(%section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).indexOf('&gt;') + 1, %section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).indexOf('&lt;') - %section.text.substring(%section.text.indexOf(%observation.text.reference.value.substring(1))).indexOf('&gt;') - 1)"></valueString>
                   </parameter>
                </target>
             </rule>
@@ -3131,15 +2720,6 @@ target: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefiniti
          <target>
             <context value="reference"></context>
             <contextType value="variable"></contextType>
-            <element value="type"></element>
-            <transform value="copy"></transform>
-            <parameter>
-               <valueString value="Patient"></valueString>
-            </parameter>
-         </target>
-         <target>
-            <context value="reference"></context>
-            <contextType value="variable"></contextType>
             <element value="reference"></element>
             <transform value="evaluate"></transform>
             <parameter>
@@ -3220,12 +2800,12 @@ target: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefiniti
          </dependent>
       </rule>
       <rule>
-         <name value="entryRelationShip-2.16.756.5.30.1.1.10.4.37"></name>
+         <name value="entryRelationShip-2.16.756.5.30.1.1.10.4.52"></name>
          <source>
             <context value="src"></context>
             <element value="entryRelationship"></element>
             <variable value="entry"></variable>
-            <condition value="((typeCode = 'COMP') and (substanceAdministration.templateId.root = '2.16.756.5.30.1.1.10.4.37'))"></condition>
+            <condition value="((typeCode = 'COMP') and (substanceAdministration.templateId.root = '2.16.756.5.30.1.1.10.4.52'))"></condition>
          </source>
          <target>
             <context value="medicationDispense"></context>
@@ -3881,15 +3461,6 @@ target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-medic
          <target>
             <context value="vt"></context>
             <contextType value="variable"></contextType>
-            <element value="type"></element>
-            <transform value="copy"></transform>
-            <parameter>
-               <valueString value="Medication"></valueString>
-            </parameter>
-         </target>
-         <target>
-            <context value="vt"></context>
-            <contextType value="variable"></contextType>
             <element value="reference"></element>
             <transform value="copy"></transform>
             <parameter>
@@ -4028,12 +3599,11 @@ target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-medic
                         </dependent>
                      </rule>
                      <rule>
-                        <name value="ratio"></name>
+                        <name value="capacityQuantity"></name>
                         <source>
                            <context value="containerPackagedMedicine"></context>
                            <element value="capacityQuantity"></element>
                            <variable value="capacityQuantity"></variable>
-                           <condition value="(%containerPackagedMedicine.formCode.code = '10219000')"></condition>
                         </source>
                         <target>
                            <context value="medication"></context>
@@ -4045,176 +3615,67 @@ target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-medic
                               <valueString value="Ratio"></valueString>
                            </parameter>
                         </target>
-                        <rule>
-                           <name value="noUnit"></name>
-                           <source>
-                              <context value="capacityQuantity"></context>
-                              <condition value="$this.unit.exists() = false"></condition>
-                           </source>
-                           <rule>
-                              <name value="capacityQuantity"></name>
-                              <source>
-                                 <context value="capacityQuantity"></context>
-                                 <element value="value"></element>
-                                 <variable value="value"></variable>
-                              </source>
-                              <target>
-                                 <context value="ratio"></context>
-                                 <contextType value="variable"></contextType>
-                                 <element value="numerator"></element>
-                                 <variable value="quantity"></variable>
-                                 <transform value="create"></transform>
-                                 <parameter>
-                                    <valueString value="Quantity"></valueString>
-                                 </parameter>
-                              </target>
-                              <target>
-                                 <context value="quantity"></context>
-                                 <contextType value="variable"></contextType>
-                                 <element value="value"></element>
-                                 <transform value="copy"></transform>
-                                 <parameter>
-                                    <valueId value="value"></valueId>
-                                 </parameter>
-                              </target>
-                              <target>
-                                 <context value="ratio"></context>
-                                 <contextType value="variable"></contextType>
-                                 <element value="denominator"></element>
-                                 <variable value="denominator"></variable>
-                                 <transform value="create"></transform>
-                                 <parameter>
-                                    <valueString value="Quantity"></valueString>
-                                 </parameter>
-                              </target>
-                              <target>
-                                 <context value="denominator"></context>
-                                 <contextType value="variable"></contextType>
-                                 <element value="value"></element>
-                                 <transform value="copy"></transform>
-                                 <parameter>
-                                    <valueString value="1"></valueString>
-                                 </parameter>
-                              </target>
-                           </rule>
-                           <documentation value="IHE: Case 1: If the capacityQuantity is given in countable units, the unit attribute SHALL NOT be present"></documentation>
-                        </rule>
-                        <rule>
-                           <name value="unit"></name>
-                           <source>
-                              <context value="capacityQuantity"></context>
-                              <condition value="$this.unit.exists()"></condition>
-                           </source>
-                           <rule>
-                              <name value="capQuantUnit"></name>
-                              <source>
-                                 <context value="capacityQuantity"></context>
-                                 <element value="unit"></element>
-                                 <variable value="unit"></variable>
-                              </source>
-                              <rule>
-                                 <name value="capacityQuantity"></name>
-                                 <source>
-                                    <context value="capacityQuantity"></context>
-                                    <element value="value"></element>
-                                    <variable value="value"></variable>
-                                 </source>
-                                 <target>
-                                    <context value="ratio"></context>
-                                    <contextType value="variable"></contextType>
-                                    <element value="numerator"></element>
-                                    <variable value="quantity"></variable>
-                                    <transform value="create"></transform>
-                                    <parameter>
-                                       <valueString value="Quantity"></valueString>
-                                    </parameter>
-                                 </target>
-                                 <target>
-                                    <context value="quantity"></context>
-                                    <contextType value="variable"></contextType>
-                                    <element value="value"></element>
-                                    <transform value="copy"></transform>
-                                    <parameter>
-                                       <valueId value="value"></valueId>
-                                    </parameter>
-                                 </target>
-                                 <target>
-                                    <context value="quantity"></context>
-                                    <contextType value="variable"></contextType>
-                                    <element value="unit"></element>
-                                    <transform value="copy"></transform>
-                                    <parameter>
-                                       <valueId value="unit"></valueId>
-                                    </parameter>
-                                 </target>
-                                 <target>
-                                    <context value="quantity"></context>
-                                    <contextType value="variable"></contextType>
-                                    <element value="system"></element>
-                                    <transform value="copy"></transform>
-                                    <parameter>
-                                       <valueString value="http://unitsofmeasure.org"></valueString>
-                                    </parameter>
-                                 </target>
-                                 <target>
-                                    <context value="quantity"></context>
-                                    <contextType value="variable"></contextType>
-                                    <element value="code"></element>
-                                    <transform value="copy"></transform>
-                                    <parameter>
-                                       <valueId value="unit"></valueId>
-                                    </parameter>
-                                 </target>
-                                 <target>
-                                    <context value="ratio"></context>
-                                    <contextType value="variable"></contextType>
-                                    <element value="denominator"></element>
-                                    <variable value="denominator"></variable>
-                                    <transform value="create"></transform>
-                                    <parameter>
-                                       <valueString value="Quantity"></valueString>
-                                    </parameter>
-                                 </target>
-                                 <target>
-                                    <context value="denominator"></context>
-                                    <contextType value="variable"></contextType>
-                                    <element value="value"></element>
-                                    <transform value="copy"></transform>
-                                    <parameter>
-                                       <valueString value="1"></valueString>
-                                    </parameter>
-                                 </target>
-                                 <target>
-                                    <context value="denominator"></context>
-                                    <contextType value="variable"></contextType>
-                                    <element value="unit"></element>
-                                    <transform value="copy"></transform>
-                                    <parameter>
-                                       <valueString value="Package"></valueString>
-                                    </parameter>
-                                 </target>
-                                 <target>
-                                    <context value="denominator"></context>
-                                    <contextType value="variable"></contextType>
-                                    <element value="system"></element>
-                                    <transform value="copy"></transform>
-                                    <parameter>
-                                       <valueString value="http://unitsofmeasure.org"></valueString>
-                                    </parameter>
-                                 </target>
-                                 <target>
-                                    <context value="denominator"></context>
-                                    <contextType value="variable"></contextType>
-                                    <element value="code"></element>
-                                    <transform value="copy"></transform>
-                                    <parameter>
-                                       <valueString value="1"></valueString>
-                                    </parameter>
-                                 </target>
-                              </rule>
-                           </rule>
-                           <documentation value="IHE: Case 2: If the capacityQuantity is given in non-countable units, the unit attribute SHALL be present and the value SHALL be out of the UCUM code system."></documentation>
-                        </rule>
+                        <target>
+                           <context value="ratio"></context>
+                           <contextType value="variable"></contextType>
+                           <element value="denominator"></element>
+                           <variable value="denominator"></variable>
+                           <transform value="create"></transform>
+                           <parameter>
+                              <valueString value="Quantity"></valueString>
+                           </parameter>
+                        </target>
+                        <target>
+                           <context value="denominator"></context>
+                           <contextType value="variable"></contextType>
+                           <element value="value"></element>
+                           <transform value="copy"></transform>
+                           <parameter>
+                              <valueString value="1"></valueString>
+                           </parameter>
+                        </target>
+                        <target>
+                           <context value="denominator"></context>
+                           <contextType value="variable"></contextType>
+                           <element value="unit"></element>
+                           <transform value="copy"></transform>
+                           <parameter>
+                              <valueString value="Package"></valueString>
+                           </parameter>
+                        </target>
+                        <target>
+                           <context value="denominator"></context>
+                           <contextType value="variable"></contextType>
+                           <element value="system"></element>
+                           <transform value="copy"></transform>
+                           <parameter>
+                              <valueString value="http://unitsofmeasure.org"></valueString>
+                           </parameter>
+                        </target>
+                        <target>
+                           <context value="denominator"></context>
+                           <contextType value="variable"></contextType>
+                           <element value="code"></element>
+                           <transform value="copy"></transform>
+                           <parameter>
+                              <valueString value="{Package}"></valueString>
+                           </parameter>
+                        </target>
+                        <target>
+                           <context value="ratio"></context>
+                           <contextType value="variable"></contextType>
+                           <element value="numerator"></element>
+                           <variable value="quantity"></variable>
+                           <transform value="create"></transform>
+                           <parameter>
+                              <valueString value="Quantity"></valueString>
+                           </parameter>
+                        </target>
+                        <dependent>
+                           <name value="EmedPQQuantity"></name>
+                           <variable value="capacityQuantity"></variable>
+                           <variable value="quantity"></variable>
+                        </dependent>
                         <documentation value="Package size"></documentation>
                      </rule>
                   </rule>
@@ -4250,7 +3711,7 @@ target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-medic
                         </parameter>
                      </target>
                      <dependent>
-                        <name value="RTOPQPQRatio"></name>
+                        <name value="EmedRTOPQPQRatio"></name>
                         <variable value="quantity"></variable>
                         <variable value="strength"></variable>
                      </dependent>
@@ -4372,15 +3833,6 @@ target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-medic
             <transform value="create"></transform>
             <parameter>
                <valueString value="Reference"></valueString>
-            </parameter>
-         </target>
-         <target>
-            <context value="reference"></context>
-            <contextType value="variable"></contextType>
-            <element value="type"></element>
-            <transform value="copy"></transform>
-            <parameter>
-               <valueString value="Patient"></valueString>
             </parameter>
          </target>
          <target>
@@ -4510,12 +3962,12 @@ target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-medic
          </rule>
       </rule>
       <rule>
-         <name value="entryRelationShip-2.16.756.5.30.1.1.10.4.37"></name>
+         <name value="entryRelationShip-2.16.756.5.30.1.1.10.4.52"></name>
          <source>
             <context value="src"></context>
             <element value="entryRelationship"></element>
             <variable value="entry"></variable>
-            <condition value="((typeCode = 'COMP') and (substanceAdministration.templateId.root = '2.16.756.5.30.1.1.10.4.37'))"></condition>
+            <condition value="((typeCode = 'COMP') and (substanceAdministration.templateId.root = '2.16.756.5.30.1.1.10.4.52'))"></condition>
          </source>
          <target>
             <context value="medicationRequest"></context>
@@ -4695,7 +4147,7 @@ target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-medic
       <name value="DosageInstructionsStartStopFrequency"></name>
       <typeMode value="none"></typeMode>
       <documentation value="source: https://art-decor.org/art-decor/decor-templates--ch-pharm-?id=2.16.756.5.30.1.1.10.4.35
-target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition/ch-emed-dosage-structured
+target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition/ch-emed-dosage-structured-normal
 dosage for normal dosing, without sequences"></documentation>
       <input>
          <name value="src"></name>
@@ -4707,69 +4159,6 @@ dosage for normal dosing, without sequences"></documentation>
          <type value="Dosage"></type>
          <mode value="target"></mode>
       </input>
-      <rule>
-         <name value="extension"></name>
-         <source>
-            <context value="src"></context>
-            <element value="templateId"></element>
-            <variable value="templateId"></variable>
-            <condition value="$this.root = '1.3.6.1.4.1.19376.1.5.3.1.4.7.1'"></condition>
-         </source>
-         <target>
-            <context value="dosage"></context>
-            <contextType value="variable"></contextType>
-            <element value="extension"></element>
-            <variable value="ext"></variable>
-         </target>
-         <rule>
-            <name value="url"></name>
-            <source>
-               <context value="src"></context>
-            </source>
-            <target>
-               <context value="ext"></context>
-               <contextType value="variable"></contextType>
-               <element value="url"></element>
-               <transform value="copy"></transform>
-               <parameter>
-                  <valueString value="http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-dosagetype"></valueString>
-               </parameter>
-            </target>
-         </rule>
-         <rule>
-            <name value="valueIdentifier"></name>
-            <source>
-               <context value="src"></context>
-            </source>
-            <target>
-               <context value="ext"></context>
-               <contextType value="variable"></contextType>
-               <element value="value"></element>
-               <variable value="valueIdentifier"></variable>
-               <transform value="create"></transform>
-               <parameter>
-                  <valueString value="Identifier"></valueString>
-               </parameter>
-            </target>
-            <rule>
-               <name value="normalDosing"></name>
-               <source>
-                  <context value="templateId"></context>
-                  <element value="root"></element>
-                  <variable value="id"></variable>
-               </source>
-               <target>
-                  <context value="valueIdentifier"></context>
-                  <contextType value="variable"></contextType>
-                  <element value="value"></element>
-                  <transform value="copy"></transform>
-                  <parameter>
-                     <valueId value="id"></valueId>
-                  </parameter>
-               </target>
-            </rule>
-         </rule>
-      </rule>
       <rule>
          <name value="effectiveTimeStartEnd"></name>
          <source>
@@ -4872,6 +4261,11 @@ target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-obser
          <type value="Observation"></type>
          <mode value="target"></mode>
       </input>
+      <input>
+         <name value="bundle"></name>
+         <type value="Bundle"></type>
+         <mode value="target"></mode>
+      </input>
       <rule>
          <name value="id"></name>
          <source>
@@ -4900,15 +4294,6 @@ target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-obser
             <transform value="create"></transform>
             <parameter>
                <valueString value="Reference"></valueString>
-            </parameter>
-         </target>
-         <target>
-            <context value="reference"></context>
-            <contextType value="variable"></contextType>
-            <element value="type"></element>
-            <transform value="copy"></transform>
-            <parameter>
-               <valueString value="Patient"></valueString>
             </parameter>
          </target>
          <target>
@@ -4980,9 +4365,107 @@ target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-obser
          </dependent>
       </rule>
       <rule>
+         <name value="cdaEntry"></name>
+         <source>
+            <context value="src"></context>
+            <element value="entryRelationship"></element>
+            <variable value="entry"></variable>
+            <condition value="((typeCode = 'REFR') and substanceAdministration.templateId.where(root = '1.3.6.1.4.1.19376.1.9.1.3.7').exists())"></condition>
+         </source>
+         <target>
+            <context value="bundle"></context>
+            <contextType value="variable"></contextType>
+            <element value="entry"></element>
+            <variable value="e"></variable>
+         </target>
+         <target>
+            <context value="e"></context>
+            <contextType value="variable"></contextType>
+            <element value="id"></element>
+            <variable value="uuid"></variable>
+            <transform value="uuid"></transform>
+         </target>
+         <target>
+            <context value="e"></context>
+            <contextType value="variable"></contextType>
+            <element value="fullUrl"></element>
+            <transform value="append"></transform>
+            <parameter>
+               <valueString value="urn:uuid:"></valueString>
+            </parameter>
+            <parameter>
+               <valueId value="uuid"></valueId>
+            </parameter>
+         </target>
+         <target>
+            <context value="e"></context>
+            <contextType value="variable"></contextType>
+            <element value="resource"></element>
+            <variable value="medicationstatement"></variable>
+            <transform value="create"></transform>
+            <parameter>
+               <valueString value="MedicationStatement"></valueString>
+            </parameter>
+         </target>
+         <target>
+            <context value="observation"></context>
+            <contextType value="variable"></contextType>
+            <element value="extension"></element>
+            <variable value="ext"></variable>
+         </target>
+         <target>
+            <context value="ext"></context>
+            <contextType value="variable"></contextType>
+            <element value="url"></element>
+            <transform value="copy"></transform>
+            <parameter>
+               <valueString value="&quot;http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-medicationstatement-changed"></valueString>
+            </parameter>
+         </target>
+         <target>
+            <context value="ext"></context>
+            <contextType value="variable"></contextType>
+            <element value="value"></element>
+            <variable value="reference"></variable>
+            <transform value="create"></transform>
+            <parameter>
+               <valueString value="Reference"></valueString>
+            </parameter>
+         </target>
+         <target>
+            <context value="reference"></context>
+            <contextType value="variable"></contextType>
+            <element value="reference"></element>
+            <transform value="append"></transform>
+            <parameter>
+               <valueString value="urn:uuid:"></valueString>
+            </parameter>
+            <parameter>
+               <valueId value="uuid"></valueId>
+            </parameter>
+         </target>
+         <rule>
+            <name value="substanceAdministration"></name>
+            <source>
+               <context value="entry"></context>
+               <element value="substanceAdministration"></element>
+               <variable value="substanceAdministration"></variable>
+            </source>
+            <dependent>
+               <name value="MedicationTreatmentPlanItemEntryContentModule"></name>
+               <variable value="section"></variable>
+               <variable value="substanceAdministration"></variable>
+               <variable value="patient"></variable>
+               <variable value="medicationstatement"></variable>
+            </dependent>
+         </rule>
+      </rule>
+      <rule>
          <name value="note"></name>
          <source>
             <context value="src"></context>
+            <element value="text"></element>
+            <variable value="text"></variable>
          </source>
          <target>
             <context value="observation"></context>
@@ -4991,7 +4474,7 @@ target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-obser
             <variable value="note"></variable>
          </target>
          <rule>
-            <name value="level3"></name>
+            <name value="level3observation"></name>
             <source>
                <context value="text"></context>
                <element value="data"></element>
@@ -5024,38 +4507,30 @@ target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-obser
             </target>
          </rule>
          <rule>
-            <name value="text"></name>
+            <name value="reference"></name>
             <source>
-               <context value="src"></context>
-               <element value="text"></element>
-               <variable value="text"></variable>
+               <context value="text"></context>
+               <element value="reference"></element>
+               <variable value="reference"></variable>
             </source>
             <rule>
-               <name value="reference"></name>
+               <name value="narrativeLink"></name>
                <source>
-                  <context value="text"></context>
-                  <element value="reference"></element>
-                  <variable value="reference"></variable>
+                  <context value="reference"></context>
+                  <element value="value"></element>
+                  <variable value="value"></variable>
                </source>
-               <rule>
-                  <name value="narrativeLink"></name>
-                  <source>
-                     <context value="reference"></context>
-                     <element value="value"></element>
-                     <variable value="value"></variable>
-                  </source>
-                  <target>
-                     <context value="note"></context>
-                     <contextType value="variable"></contextType>
-                     <element value="extension"></element>
-                     <variable value="ext"></variable>
-                  </target>
-                  <dependent>
-                     <name value="NarrativeLink"></name>
-                     <variable value="value"></variable>
-                     <variable value="ext"></variable>
-                  </dependent>
-               </rule>
+               <target>
+                  <context value="note"></context>
+                  <contextType value="variable"></contextType>
+                  <element value="extension"></element>
+                  <variable value="ext"></variable>
+               </target>
+               <dependent>
+                  <name value="NarrativeLink"></name>
+                  <variable value="value"></variable>
+                  <variable value="ext"></variable>
+               </dependent>
             </rule>
          </rule>
       </rule>
@@ -5076,63 +4551,10 @@ target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-obser
       </rule>
    </group>
    <group>
-      <name value="NarrativeLink"></name>
-      <typeMode value="none"></typeMode>
-      <documentation value="_________________________ Template Type not specified   _________________________"></documentation>
-      <input>
-         <name value="url"></name>
-         <mode value="source"></mode>
-      </input>
-      <input>
-         <name value="ext"></name>
-         <type value="Extension"></type>
-         <mode value="target"></mode>
-      </input>
-      <rule>
-         <name value="url"></name>
-         <source>
-            <context value="url"></context>
-         </source>
-         <target>
-            <context value="ext"></context>
-            <contextType value="variable"></contextType>
-            <element value="url"></element>
-            <transform value="copy"></transform>
-            <parameter>
-               <valueString value="http://hl7.org/fhir/StructureDefinition/narrativeLink"></valueString>
-            </parameter>
-         </target>
-      </rule>
-      <rule>
-         <name value="value"></name>
-         <source>
-            <context value="url"></context>
-         </source>
-         <target>
-            <context value="ext"></context>
-            <contextType value="variable"></contextType>
-            <element value="value"></element>
-            <variable value="value"></variable>
-            <transform value="create"></transform>
-            <parameter>
-               <valueString value="url"></valueString>
-            </parameter>
-         </target>
-         <target>
-            <context value="value"></context>
-            <contextType value="variable"></contextType>
-            <element value="value"></element>
-            <transform value="copy"></transform>
-            <parameter>
-               <valueId value="url"></valueId>
-            </parameter>
-         </target>
-      </rule>
-   </group>
-   <group>
       <name value="InnerExtensionExternalDocumentId"></name>
       <typeMode value="none"></typeMode>
-      <documentation value="target: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefinition-ch-emed-ext-treatmentplan.html"></documentation>
+      <documentation value="_________________________ Template Type not specified   _________________________
+target: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefinition-ch-emed-ext-treatmentplan.html"></documentation>
       <input>
          <name value="src"></name>
          <mode value="source"></mode>

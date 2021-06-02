@@ -57,9 +57,9 @@ group ClinicalDocumentChEmedMedicationCardDocumentToBundle(source cda : Clinical
   cda.component as component then {
     component.structuredBody as body then {
       body.component as component then {
-        component.section as srcSection where (templateId.where(root='2.16.756.5.30.1.1.10.3.9')) -> composition.section as tgtSection then SectionMedicationCardSectionContentModule(srcSection, patient, tgtSection, bundle);
-        component.section as srcSection where (templateId.where(root='2.16.756.5.30.1.1.10.3.2')) -> composition.section as tgtSection then ClinicalDocumentSection(srcSection, patient, tgtSection, bundle);
-        component.section as srcSection where (templateId.where(root='2.16.756.5.30.1.1.10.3.45')) -> composition.section as tgtSection then SectionOriginalRepresentation(srcSection, patient, tgtSection, bundle);
+        component.section as srcSection where (templateId.where(root='2.16.756.5.30.1.1.10.3.9')) -> composition.section as tgtSection then SectionMedicationCardSectionContentModule(cda, srcSection, patient, tgtSection, bundle);
+        component.section as srcSection where (templateId.where(root='2.16.756.5.30.1.1.10.3.2')) -> composition.section as tgtSection then ClinicalDocumentSection(cda, srcSection, patient, tgtSection, bundle);
+        component.section as srcSection where (templateId.where(root='2.16.756.5.30.1.1.10.3.45')) -> composition.section as tgtSection then SectionOriginalRepresentation(cda, srcSection, patient, tgtSection, bundle);
       } "component";
     } "body";
   } "component";
@@ -69,7 +69,7 @@ group ClinicalDocumentChEmedMedicationCardDocumentToBundle(source cda : Clinical
 
 // source: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-composition-medicationcard.html
 // target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&id=2.16.756.5.30.1.1.10.3.9
-group SectionMedicationCardSectionContentModule(source src : Section, source patient : Patient, target tgt, target bundle: Bundle) extends ClinicalDocumentSection {
+group SectionMedicationCardSectionContentModule(source cda : ClinicalDocument, source src : Section, source patient : Patient, target tgt, target bundle: Bundle) extends ClinicalDocumentSection {
   src.entry as cdaEntry where (substanceAdministration.templateId.where(root='2.16.756.5.30.1.1.10.4.34')) ->  bundle.entry as e,  e.resource = create('MedicationStatement') as medicationstatement,  
     medicationstatement.id = uuid() as uuid,
     e.fullUrl = append('urn:uuid:',uuid), 

@@ -66,10 +66,6 @@ group SectionMedicationCardSectionContentModule(source bundle : Bundle, source s
   section -&gt;  cdasection.templateId as templateId,  templateId.root = '2.16.756.5.30.1.1.10.3.9' "CH-PHARM-MedicationCardSectionContentModule";
   section -&gt;  cdasection.templateId as templateId,  templateId.root = '1.3.6.1.4.1.19376.1.9.1.2.5' "IHE-PHARM-PML";
   section where text.exists() = false -&gt; cdasection.text = '&lt;div xmlns=\"http://www.w3.org/1999/xhtml\"&gt;&lt;span id=\"refpdf\"&gt;see pdf&lt;/span&gt;&lt;/div&gt;' "Section";
-  // create section id if there is none in the fhir bundle (mapping source)
-  section as section where $this.extension.where(url = 'http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-sectionid').exists() = false -&gt; cdasection.id as id then {
-    section -&gt;  uuid() as uuid,  id.root = (%uuid.upper()) "upper";
-  } "extension";
   bundle.entry as entry then {
     entry.fullUrl where ($this in %section.entry.reference) and $this.startsWith('urn:uuid') then {
       entry.resource as medicationStatement where $this.ofType(FHIR.MedicationStatement) -&gt;  cdasection.entry as entry,  entry.substanceAdministration as substanceAdministration then MedicationTreatmentPlanItemEntryContentModule(bundle, medicationStatement, substanceAdministration) "MedicationStatement";
@@ -525,40 +521,6 @@ target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=temp
                <valueString value="&lt;div xmlns=&quot;http://www.w3.org/1999/xhtml&quot;&gt;&lt;span id=&quot;refpdf&quot;&gt;see pdf&lt;/span&gt;&lt;/div&gt;"></valueString>
             </parameter>
          </target>
-      </rule>
-      <rule>
-         <name value="extension"></name>
-         <source>
-            <context value="section"></context>
-            <variable value="section"></variable>
-            <condition value="$this.extension.where(url = 'http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-sectionid').exists() = false"></condition>
-         </source>
-         <target>
-            <context value="cdasection"></context>
-            <contextType value="variable"></contextType>
-            <element value="id"></element>
-            <variable value="id"></variable>
-         </target>
-         <rule>
-            <name value="upper"></name>
-            <source>
-               <context value="section"></context>
-            </source>
-            <target>
-               <variable value="uuid"></variable>
-               <transform value="uuid"></transform>
-            </target>
-            <target>
-               <context value="id"></context>
-               <contextType value="variable"></contextType>
-               <element value="root"></element>
-               <transform value="evaluate"></transform>
-               <parameter>
-                  <valueString value="%uuid.upper()"></valueString>
-               </parameter>
-            </target>
-         </rule>
-         <documentation value="create section id if there is none in the fhir bundle (mapping source)"></documentation>
       </rule>
       <rule>
          <name value="entry"></name>

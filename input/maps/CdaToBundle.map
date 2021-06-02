@@ -56,7 +56,7 @@ group ClinicalDocumentToBundle(source cda : ClinicalDocument, target patient : P
   cda.component as component then {
     component.structuredBody as body then {
       body.component as component log 'component' then {
-        component.section as srcSection where $this.code.empty() -> composition.section as tgtSection then ClinicalDocumentSection(srcSection, patient, tgtSection, bundle);
+        component.section as srcSection where $this.code.empty() -> composition.section as tgtSection then ClinicalDocumentSection(cda, srcSection, patient, tgtSection, bundle);
       } "component";
     } "body";
   } "component";
@@ -64,15 +64,15 @@ group ClinicalDocumentToBundle(source cda : ClinicalDocument, target patient : P
 
 // _________________________ Section Level Templates _________________________ 
 
-group ClinicalDocumentSection(source src : Section, source patient : Patient, target tgt, target bundle: Bundle) {
-  src.id as id -> tgt.extension as ext then ChExtEprSectionId(id, ext) "sectionId";
+group ClinicalDocumentSection(source cda : ClinicalDocument, source src : Section, source patient : Patient, target tgt, target bundle: Bundle) {
+  src.id as id where ($this.root=%cda.id.root)=false -> tgt.extension as ext then ChExtEprSectionId(id, ext) "sectionId";
   src.title as t -> tgt.title = (t.dataString);
   src.code -> tgt.code;
   src.text as cdaText -> tgt.text as fhirText then {
     cdaText -> fhirText.status = 'generated' "narrativeStatus";
     cdaText as t -> fhirText.div = t "narrativeText";
   } "cdaText";
-  src.section as srcSection -> tgt.section as tgtSection then ClinicalDocumentSection(srcSection, patient, tgtSection, bundle);
+  src.section as srcSection -> tgt.section as tgtSection then ClinicalDocumentSection(cda, srcSection, patient, tgtSection, bundle);
 }
 
 // _________________________ Entry Level Templates   ________________________ 

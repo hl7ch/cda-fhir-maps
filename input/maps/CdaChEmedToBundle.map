@@ -42,6 +42,9 @@ imports "http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaChToBundle"
 group AnnotationComment(source section: Section, source act: Act, target note: Annotation) {
   act.text as text then {
     text.data as data -> note.text = data "level3";
+    text.reference as reference then {
+      reference.value as value -> note.extension as ext then NarrativeLink(value, ext) "narrativeLink";
+    } "reference";
   } "text";
 }
 
@@ -176,7 +179,11 @@ group MedicationTreatmentPlanItemEntryContentModule(source section : Section, so
 //  src.templateId as template then TemplateID(template, medicationStatement) "templateId";
   src.id -> medicationStatement.identifier;
   patient -> medicationStatement.subject = create('Reference') as reference, reference.reference = ('urn:uuid:'+%patient.id) "patient";
-  src -> medicationStatement.status = 'completed' "completed";
+  src -> medicationStatement.status = 'completed' "completed";  src.text as text then {
+    text.reference as reference then {
+      reference.value as value -> medicationStatement.extension as ext then NarrativeLink(value, ext) "narrativeLink";
+    } "reference";
+  } "text";
   src -> medicationStatement.contained = create('Medication') as medication then ManufacturedMaterialEntryContentModuleStatement(src, medicationStatement, medication) "medication";
 
   src.entryRelationship as entry where typeCode = 'RSON' then {
@@ -266,6 +273,9 @@ group TreatmentReasonEntryContentModule(source section : Section, source observa
     // a = %section.text.substring(%section.text.indexOf((%observation.text.reference.value.substring(1))))
     observation.text as text then {
       text.data as data -> reasonCode.text = data "level3";
+      text.reference as reference then {
+        reference.value as value -> reasonCode.extension as ext then NarrativeLink(value, ext) "narrativeLink";
+      } "reference";
     } "text";
 }
 
@@ -291,6 +301,9 @@ group DosageInstructionsNonStructuredEntryContentModule(source section : Section
   entry.substanceAdministration as observation then {
     observation.text as text then {
       text.data as data -> dosage.text = data "level3";
+            text.reference as reference then {
+        reference.value as value -> dosage.extension as ext then NarrativeLink(value, ext) "narrativeLink";
+      } "reference";
     } "text";
   } "observation";
 }
@@ -318,7 +331,12 @@ group DispenseItemEntryContentModule(source section : Section, source src : Supp
 //  src.templateId as template then TemplateID(template, medicationDispense) "templateId";
   src.id -> medicationDispense.identifier;
   patient -> medicationDispense.subject = create('Reference') as reference, reference.reference = ('urn:uuid:'+%patient.id) "patient";
-  src -> medicationDispense.status = 'completed' "completed";
+  src -> medicationDispense.status = 'completed' "completed";  
+  src.text as text then {
+    text.reference as reference then {
+      reference.value as value -> medicationDispense.extension as ext then NarrativeLink(value, ext) "narrativeLink";
+    } "reference";
+  } "text";
   src -> medicationDispense.contained = create('Medication') as medication then ManufacturedMaterialEntryContentModuleDispense(src, medicationDispense, medication) "medication";
 
   src.entryRelationship as entry where (typeCode='COMP' and substanceAdministration.templateId.root='2.16.756.5.30.1.1.10.4.52') 
@@ -442,7 +460,7 @@ group ManufacturedMaterialEntryContentModuleRequest(source src : SubstanceAdmini
           } "containerPackagedMedicine";
         } "asContent";
         manufacturedMaterial.ingredient as ingredient -> medication.ingredient as ing then {
-          ingredient.quantity as quantity -> ing.strength = create('Ratio') as strength then RTOPQPQRatio(quantity, strength) "strength";
+          ingredient.quantity as quantity -> ing.strength = create('Ratio') as strength then EmedRTOPQPQRatio(quantity, strength) "strength";
           ingredient.ingredient as medingredient then {
               medingredient.code as code -> ing.item = create('CodeableConcept') as ingcode, ingcode.text = (%medingredient.name.other) then CECodeableConcept(code, ingcode) "ingredientCode";
           } "ingredient.ingredient";
@@ -466,6 +484,11 @@ group PrescriptionItemEntryContentModule(source section : Section, source src : 
   patient -> medicationRequest.subject = create('Reference') as reference, reference.reference = ('urn:uuid:'+%patient.id)  "patient";
   src -> medicationRequest.status = 'completed' "completed";
   src -> medicationRequest.intent = 'order' "order";
+  src.text as text then {
+    text.reference as reference then {
+      reference.value as value -> medicationRequest.extension as ext then NarrativeLink(value, ext) "narrativeLink";
+    } "reference";
+  } "text";
   src -> medicationRequest.contained = create('Medication') as medication then ManufacturedMaterialEntryContentModuleRequest(src, medicationRequest, medication) "medication";
 
   src.entryRelationship as entry where typeCode = 'RSON' then {
@@ -516,7 +539,7 @@ group DosageInstructionsStartStopFrequency(source src : SubstanceAdministration,
 
 // source: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&id=2.16.756.5.30.1.1.10.4.44
 // target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-observation.html
-group PharmaceuticalAdviceItemEntryContentModule(source section : Section, source src : Observation, source patient : Patient, target observation : Observation) {
+group PharmaceuticalAdviceItemEntryContentModule(source section : Section, source src : Observation, source patient : Patient, target observation : Observation, target bundle: Bundle) {
   src.id -> observation.identifier;
   patient -> observation.subject = create('Reference') as reference, reference.reference = ('urn:uuid:'+%patient.id) "patient";
   src -> observation.status = 'final' "final";
@@ -526,9 +549,24 @@ group PharmaceuticalAdviceItemEntryContentModule(source section : Section, sourc
   src.entryRelationship as entry where (typeCode='REFR' and substanceAdministration.templateId.where(root='1.3.6.1.4.1.19376.1.9.1.3.10').exists()) 
     -> observation.extension as ext then MTPReferenceEntryContentModule(entry, ext) "MTPReferenceEntry";   
 
+  src.entryRelationship as entry where (typeCode='REFR' and substanceAdministration.templateId.where(root='1.3.6.1.4.1.19376.1.9.1.3.7').exists()) 
+    -> bundle.entry as e,  
+           e.id = uuid() as uuid,
+           e.fullUrl = append('urn:uuid:',uuid), 
+           e.resource = create('MedicationStatement') as medicationstatement, 
+      observation.extension as ext,  
+          ext.url = '"http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-medicationstatement-changed',
+          ext.value = create('Reference') as reference, reference.reference = append('urn:uuid:',uuid)
+      then {
+        entry.substanceAdministration as substanceAdministration then MedicationTreatmentPlanItemEntryContentModule(section, substanceAdministration, patient, medicationstatement);
+      } "cdaEntry";
+
   src.text as text -> observation.note as note then {
     text.data as data -> note.text = data "level3observation";
     text where (data.exists()=false) -> note.text = (%section.text.substring(%section.text.indexOf(%src.text.reference.value.substring(1))).substring(%section.text.substring(%section.text.indexOf(%src.text.reference.value.substring(1))).indexOf('>')+1, %section.text.substring(%section.text.indexOf(%src.text.reference.value.substring(1))).indexOf('<')-%section.text.substring(%section.text.indexOf(%src.text.reference.value.substring(1))).indexOf('>')-1)) "idRef";
+    text.reference as reference then {
+      reference.value as value -> note.extension as ext then NarrativeLink(value, ext) "narrativeLink";
+    } "reference";
   } "note";
    
   src.code -> observation.code;

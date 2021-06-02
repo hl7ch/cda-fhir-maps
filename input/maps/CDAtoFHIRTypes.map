@@ -49,12 +49,6 @@ uses "http://hl7.org/fhir/cda/StructureDefinition/IVL_TS" as source
 uses "http://hl7.org/fhir/StructureDefinition/Period" as target
 
 group Any(source src, target tgt) {
-  src.nullFlavor as nullFlavor -> tgt.extension as ext then {
-    nullFlavor -> ext.url = 'http://hl7.org/fhir/StructureDefinition/iso21090-nullFlavor' "url";
-    nullFlavor -> ext.value = create('code') as valueCode then {
-      nullFlavor.value as v -> valueCode.value = v "value";
-    } "valueCode";
-  } "extension";
 }
 
 group II(source src : II, target tgt : Identifier) extends Any <<types>> {

@@ -39,11 +39,14 @@ group BundleToClinicalDocumentCh(source bundle : Bundle, target recordTarget: Re
     bundle -> realmCode.code = 'CHE' "CHE";
   } "realmCode";
   bundle -> cda.templateId as templateId then {
+    bundle -> templateId.root = '2.16.756.5.30.1.1.10.1.9' "root";
+  } "CDA-CHv2.0-structuredBody";
+  bundle -> cda.templateId as templateId then {
     bundle -> templateId.root = '2.16.840.1.113883.10.12.2' "root";
   } "HL7CdaR2-2005-containsClinicalDocument.componentAsStructuredBody";
   bundle -> cda.templateId as templateId then {
-    bundle -> templateId.root = '2.16.756.5.30.1.1.10.1.9' "root";
-  } "CDA-CHv2.0-structuredBody";
+    bundle -> templateId.root = '2.16.840.1.113883.10.12.1' "root";
+  } "HL7CdaR2-2005";
   bundle.entry as entry then {
     entry.resource as resource where $this.ofType(FHIR.Composition) then CompositionClinicalDocumentCH(bundle, resource, cda);
   } "entry";
@@ -90,6 +93,12 @@ group SectionCdaOriginalRepresentationObservationMedia(source binary : Binary, s
 // target: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5.30.1.1.10.4.83
 group SectionCdaOriginalRepresentation(source bundle : Bundle, source section: Section, target cdasection: CdaSection) extends SectionCdaSection{
   section -> cdasection.templateId as templateId, templateId.root='2.16.756.5.30.1.1.10.3.45' "templateId";
+  section where title.exists().not() then {
+    section where (%bundle.entry[0].resource.language.startsWith('de')) -> cdasection.title as title, title.data = 'Original Darstellung' "titleDE";
+    section where (%bundle.entry[0].resource.language.startsWith('fr')) -> cdasection.title as title, title.data = 'Représentation originale' "titleFR";
+    section where (%bundle.entry[0].resource.language.startsWith('it')) -> cdasection.title as title, title.data = 'Rappresentazione originale' "titleIT";
+    section where (%bundle.entry[0].resource.language.startsWith('en')) -> cdasection.title as title, title.data = 'Original representation' "titleEN";
+  } "defaulttitles";
   bundle.entry as entry then {
     entry.fullUrl where ($this in %section.entry.reference) and $this.startsWith('urn:uuid')  then {
         entry.resource as binary then SectionCdaOriginalRepresentationObservationMedia(binary, section, cdasection) "patient";
@@ -119,7 +128,7 @@ group DataEnterer(source bundle : Bundle, source practitionerRole: PractitionerR
       bundle.entry as entry then {
           entry.fullUrl where ($this in %reference.value) and $this.startsWith('urn:uuid')  then {
             entry.resource: Practitioner as practitioner then PersonAssignedEntityWithId(practitioner, assignedEntity) "AssignedEntityWithId";
-        } "fullUrl as urn:uuid";
+        } "uuid";
         entry.resource: Practitioner as practitioner where ('Practitioner'+'/'+$this.id) in %reference.value then  PersonAssignedEntityWithId(practitioner, assignedEntity) "AssignedEntityWithId";
       } "practitioner";
     } "valueReference";
@@ -130,7 +139,7 @@ group DataEnterer(source bundle : Bundle, source practitionerRole: PractitionerR
       bundle.entry as entry then {
           entry.fullUrl where ($this in %reference.value) and $this.startsWith('urn:uuid')  then {
             entry.resource: Organization as organization then Organization2CdaOrganization(organization, representedOrganization) "representedOrganization";
-        } "fullUrl as urn:uuid";
+        } "uuid";
         entry.resource: Organization as organization where ('Organization'+'/'+$this.id) in %reference.value then Organization2CdaOrganization(organization, representedOrganization) "representedOrganization";
       } "practitioner";
     } "valueReference";
@@ -157,7 +166,7 @@ group CompositionClinicalDocumentCH(source bundle : Bundle, source composition :
   composition.identifier as identifier where $this.system='urn:ietf:rfc:3986'
     -> cda.setId as setId then IdentifierII(identifier,setId) "IdentifierII";
 
-  // If setId doesn't exist, create ClinicalDocument.setId as UUID upper case
+  // If setId doesn't exist, used bundle.identifer
   composition where $this.identifier.where(system='urn:ietf:rfc:3986').exists()=false then {
       bundle.identifier as identifier -> cda.setId as id then IdentifierII(identifier, id) "setId";
   } "setIdCreated";
@@ -185,7 +194,7 @@ group CompositionClinicalDocumentCH(source bundle : Bundle, source composition :
             } "fullUrl patient";
             entry.resource: Organization as organization -> informationRecipient.intendedRecipient as intendedRecipient share intendedRecipient,
              intendedRecipient.receivedOrganization as receivedOrganization then Organization2CdaOrganization(organization, receivedOrganization) "organization";	
-          } "fullUrl as urn:uuid";
+          } "uuid";
          entry.resource:Patient as patient where (($this.id=%valueReference.reference.substring(8)) or ($this.id=%valueReference.reference.substring(9))) -> informationRecipient.intendedRecipient as intendedRecipient share intendedRecipient  then {
             patient.address as address ->  intendedRecipient.addr as addr then AddressAD(address, addr) "address";
             patient.name as humanname -> intendedRecipient.informationRecipient as informationRecipient2, informationRecipient2.name as en then HumanNameEN(humanname, en) "name";
@@ -205,7 +214,7 @@ group CompositionClinicalDocumentCH(source bundle : Bundle, source composition :
         bundle.entry as entry then {
           entry.fullUrl where ($this in %valueReference.reference) and $this.startsWith('urn:uuid')  then {
             entry.resource: PractitionerRole as practitionerRole -> dataEnterer.assignedEntity as assignedEntity then DataEnterer(bundle, practitionerRole, assignedEntity) "AssignedEntityWithId";
-          } "fullUrl as urn:uuid";
+          } "uuid";
           entry.resource: PractitionerRole as practitionerRole where ('PractitionerRole'+'/'+$this.id) in %valueReference.reference ->  dataEnterer.assignedEntity as assignedEntity then DataEnterer(bundle, practitionerRole, assignedEntity) "AssignedEntityWithId";
         } "practitioner";
       } "valueReference";

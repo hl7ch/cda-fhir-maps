@@ -48,22 +48,22 @@ group ClinicalDocumentToBundle(source cda : ClinicalDocument, target patient : P
   cda.component as component then {
     component.structuredBody as body then {
       body.component as component log 'component' then {
-        component.section as srcSection where $this.code.empty() -&gt; composition.section as tgtSection then ClinicalDocumentSection(srcSection, patient, tgtSection, bundle);
+        component.section as srcSection where $this.code.empty() -&gt; composition.section as tgtSection then ClinicalDocumentSection(cda, srcSection, patient, tgtSection, bundle);
       };
     } "body";
   };
 }
 
 // _________________________ Section Level Templates _________________________
-group ClinicalDocumentSection(source src : Section, source patient : Patient, target tgt, target bundle : Bundle) {
-  src.id as id -&gt; tgt.extension as ext then ChExtEprSectionId(id, ext) "sectionId";
+group ClinicalDocumentSection(source cda : ClinicalDocument, source src : Section, source patient : Patient, target tgt, target bundle : Bundle) {
+  src.id as id where ($this.root = %cda.id.root) = false -&gt; tgt.extension as ext then ChExtEprSectionId(id, ext) "sectionId";
   src.title as t -&gt; tgt.title = (t.dataString);
   src.code -&gt; tgt.code;
   src.text as cdaText -&gt; tgt.text as fhirText then {
     cdaText -&gt; fhirText.status = 'generated' "narrativeStatus";
     cdaText as t -&gt; fhirText.div = t "narrativeText";
   } "cdaText";
-  src.section as srcSection -&gt; tgt.section as tgtSection then ClinicalDocumentSection(srcSection, patient, tgtSection, bundle);
+  src.section as srcSection -&gt; tgt.section as tgtSection then ClinicalDocumentSection(cda, srcSection, patient, tgtSection, bundle);
 }
 
 // _________________________ Entry Level Templates   ________________________
@@ -76,13 +76,13 @@ group ClinicalDocumentComposition(source src : ClinicalDocument, target tgt : Co
   src.code -&gt; tgt.type;
   src.title as t -&gt; tgt.title = (t.dataString);
   src.recordTarget as recordTarget then {
-    recordTarget.patientRole as patient -&gt;  tgt.subject = create('Reference') as reference,  reference.type = 'Patient',  reference.reference = ('urn:uuid:' + %patientResource.id) then ClinicalDocumentPatientRole(patient, patientResource, bundle) "subject";
+    recordTarget.patientRole as patient -&gt;  tgt.subject = create('Reference') as reference,  reference.reference = ('urn:uuid:' + %patientResource.id) then ClinicalDocumentPatientRole(patient, patientResource, bundle) "subject";
   } "patientRole";
   src.componentOf as comp -&gt;  bundle.entry as e,  e.resource = create('Encounter') as encounter,  encounter.id = uuid() as uuid,  e.fullUrl = append('urn:uuid:', uuid) then {
-    comp.encompassingEncounter as srcEnc -&gt;  tgt.encounter = create('Reference') as reference,  reference.type = 'Encounter',  reference.reference = ('urn:uuid:' + %encounter.id) then ClinicalDocumentEncounter(srcEnc, bundle, encounter) "srcEncounter";
+    comp.encompassingEncounter as srcEnc -&gt;  tgt.encounter = create('Reference') as reference,  reference.reference = ('urn:uuid:' + %encounter.id) then ClinicalDocumentEncounter(srcEnc, bundle, encounter) "srcEncounter";
   } "encompassingEncounter";
   src.effectiveTime -&gt; tgt.date;
-  src.author as srcAuthor -&gt;  bundle.entry as e,  e.resource = create('Practitioner') as practitioner,  practitioner.id = uuid() as uuid2,  e.fullUrl = append('urn:uuid:', uuid2),  tgt.author = create('Reference') as reference,  reference.type = 'Practitioner',  reference.reference = ('urn:uuid:' + %practitioner.id) then {
+  src.author as srcAuthor -&gt;  bundle.entry as e,  e.resource = create('Practitioner') as practitioner,  practitioner.id = uuid() as uuid2,  e.fullUrl = append('urn:uuid:', uuid2),  tgt.author = create('Reference') as reference,  reference.reference = ('urn:uuid:' + %practitioner.id) then {
     srcAuthor.time as time -&gt; reference.extension as exttime then ChExtEprTime(time, exttime);
     srcAuthor.assignedAuthor as assignedAuthor then {
       assignedAuthor.id -&gt; practitioner.identifier;
@@ -91,7 +91,7 @@ group ClinicalDocumentComposition(source src : ClinicalDocument, target tgt : Co
       assignedAuthor.assignedPerson as person then {
         person.name -&gt; practitioner.name;
       } "name";
-      assignedAuthor.representedOrganization as srcOrg -&gt;  bundle.entry as e2,  e2.resource = create('Organization') as organization,  organization.id = uuid() as uuid3,  e2.fullUrl = append('urn:uuid:', uuid3),  tgt.author = create('Reference') as reference2,  reference2.type = 'Organization',  reference2.reference = ('urn:uuid:' + %organization.id) then ClinicalDocumentOrganization(srcOrg, organization);
+      assignedAuthor.representedOrganization as srcOrg -&gt;  bundle.entry as e2,  e2.resource = create('Organization') as organization,  organization.id = uuid() as uuid3,  e2.fullUrl = append('urn:uuid:', uuid3),  tgt.author = create('Reference') as reference2,  reference2.reference = ('urn:uuid:' + %organization.id) then ClinicalDocumentOrganization(srcOrg, organization);
     } "author";
   } "srcAuthor";
   src.confidentialityCode -&gt; tgt.confidentiality;
@@ -99,19 +99,19 @@ group ClinicalDocumentComposition(source src : ClinicalDocument, target tgt : Co
     legalAuth -&gt; tgt.attester as attester then {
       legalAuth -&gt; attester.mode = 'legal' "mode";
       legalAuth.time -&gt; attester.time;
-      legalAuth.assignedEntity as entity -&gt;  attester.party = create('Reference') as reference,  reference.type = 'Practitioner',  reference.reference = ('urn:uuid:' + %practitioner.id) then ClinicalDocumentEntityPractitioner(entity, practitioner) "entity";
+      legalAuth.assignedEntity as entity -&gt;  attester.party = create('Reference') as reference,  reference.reference = ('urn:uuid:' + %practitioner.id) then ClinicalDocumentEntityPractitioner(entity, practitioner) "entity";
     } "attester";
   } "legalAuth";
   src.authenticator as auth -&gt;  bundle.entry as e,  e.resource = create('Practitioner') as practitioner,  practitioner.id = uuid() as uuid2,  e.fullUrl = append('urn:uuid:', uuid2) then {
     auth -&gt; tgt.attester as attester then {
       auth -&gt; attester.mode = 'official' "mode";
       auth.time -&gt; attester.time;
-      auth.assignedEntity as entity -&gt;  attester.party = create('Reference') as reference,  reference.type = 'Practitioner',  reference.reference = ('urn:uuid:' + %practitioner.id) then ClinicalDocumentEntityPractitioner(entity, practitioner) "entity";
+      auth.assignedEntity as entity -&gt;  attester.party = create('Reference') as reference,  reference.reference = ('urn:uuid:' + %practitioner.id) then ClinicalDocumentEntityPractitioner(entity, practitioner) "entity";
     } "attester";
   } "auth";
   src.custodian as custodian -&gt; bundle.entry as e then {
     custodian.assignedCustodian as assignedCustodian -&gt;  e.resource = create('Organization') as organization,  organization.id = uuid() as uuid3,  e.fullUrl = append('urn:uuid:', uuid3) then {
-      assignedCustodian.representedCustodianOrganization as srcOrg -&gt;  tgt.custodian = create('Reference') as reference,  reference.type = 'Organization',  reference.reference = ('urn:uuid:' + %organization.id) then ClinicalDocumentOrganization(srcOrg, organization) "assignedCustodian";
+      assignedCustodian.representedCustodianOrganization as srcOrg -&gt;  tgt.custodian = create('Reference') as reference,  reference.reference = ('urn:uuid:' + %organization.id) then ClinicalDocumentOrganization(srcOrg, organization) "assignedCustodian";
     } "custodian";
   } "cust";
   src.documentationOf as docOf then {
@@ -170,7 +170,7 @@ group ClinicalDocumentPatientRole(source src : PatientRole, target tgt : Patient
     } "language";
   };
   src.providerOrganization as org -&gt;  bundle.entry as e,  e.resource = create('Organization') as organization,  organization.id = uuid() as uuid3,  e.fullUrl = append('urn:uuid:', uuid3) then {
-    org -&gt;  tgt.managingOrganization = create('Reference') as reference,  reference.type = 'Organization',  reference.reference = ('urn:uuid:' + %organization.id) "reference";
+    org -&gt;  tgt.managingOrganization = create('Reference') as reference,  reference.reference = ('urn:uuid:' + %organization.id) "reference";
     org.id -&gt; organization.identifier;
     org.name as v -&gt; organization.name = (v.other);
     org.telecom -&gt; organization.telecom;
@@ -190,12 +190,12 @@ group ClinicalDocumentEncounter(source src : EncompassingEncounter, target bundl
     srcPart.typeCode as code -&gt; tgtPart.type = cc('http://terminology.hl7.org/CodeSystem/v3-ParticipationType', code);
     srcPart.time -&gt; tgtPart.period;
     srcPart.assignedEntity as entity -&gt;  bundle.entry as e,  e.resource = create('Practitioner') as practitioner,  practitioner.id = uuid() as uuid2,  e.fullUrl = append('urn:uuid:', uuid2) then {
-      entity -&gt;  tgtPart.individual = create('Reference') as reference,  reference.type = 'Practitioner',  reference.reference = ('urn:uuid:' + %practitioner.id) then ClinicalDocumentEntityPractitioner(entity, practitioner) "entry";
+      entity -&gt;  tgtPart.individual = create('Reference') as reference,  reference.reference = ('urn:uuid:' + %practitioner.id) then ClinicalDocumentEntityPractitioner(entity, practitioner) "entry";
     } "entity";
   } "participant";
   src.location as srcLocation then {
     srcLocation.healthCareFacility as facility -&gt;  bundle.entry as e,  e.resource = create('Location') as location,  location.id = uuid() as uuid2,  e.fullUrl = append('urn:uuid:', uuid2) then {
-      facility -&gt;  tgt.location as tgtLocation,  tgtLocation.location = create('Reference') as reference,  reference.type = 'Location',  reference.reference = ('urn:uuid:' + %location.id) then ClinicalDocumentLocation(facility, bundle, location) "facLocation";
+      facility -&gt;  tgt.location as tgtLocation,  tgtLocation.location = create('Reference') as reference,  reference.reference = ('urn:uuid:' + %location.id) then ClinicalDocumentLocation(facility, bundle, location) "facLocation";
     } "facility";
   };
 }
@@ -207,7 +207,7 @@ group ClinicalDocumentLocation(source src : HealthCareFacility, target bundle : 
     // place names are usually stored with no parts    location.name as srcName -&gt; tgt.name = cast(srcName, 'string');
     location.addr -&gt; tgt.address;
     location.serviceProviderOrganization as srcOrg -&gt;  bundle.entry as e,  e.resource = create('Organization') as organization,  organization.id = uuid() as uuid3,  e.fullUrl = append('urn:uuid:', uuid3) then {
-      srcOrg -&gt;  tgt.managingOrganization = create('Reference') as reference,  reference.type = 'Organization',  reference.reference = ('urn:uuid:' + %organization.id) then ClinicalDocumentOrganization(srcOrg, organization) "organization";
+      srcOrg -&gt;  tgt.managingOrganization = create('Reference') as reference,  reference.reference = ('urn:uuid:' + %organization.id) then ClinicalDocumentOrganization(srcOrg, organization) "organization";
     } "org";
   };
 }
@@ -566,6 +566,7 @@ FHIR: http://hl7.org/fhir/r4/"></description>
                   </target>
                   <dependent>
                      <name value="ClinicalDocumentSection"></name>
+                     <variable value="cda"></variable>
                      <variable value="srcSection"></variable>
                      <variable value="patient"></variable>
                      <variable value="tgtSection"></variable>
@@ -580,6 +581,11 @@ FHIR: http://hl7.org/fhir/r4/"></description>
       <name value="ClinicalDocumentSection"></name>
       <typeMode value="none"></typeMode>
       <documentation value="_________________________ Section Level Templates _________________________"></documentation>
+      <input>
+         <name value="cda"></name>
+         <type value="ClinicalDocument"></type>
+         <mode value="source"></mode>
+      </input>
       <input>
          <name value="src"></name>
          <type value="Section"></type>
@@ -605,6 +611,7 @@ FHIR: http://hl7.org/fhir/r4/"></description>
             <context value="src"></context>
             <element value="id"></element>
             <variable value="id"></variable>
+            <condition value="($this.root = %cda.id.root) = false"></condition>
          </source>
          <target>
             <context value="tgt"></context>
@@ -710,6 +717,7 @@ FHIR: http://hl7.org/fhir/r4/"></description>
          </target>
          <dependent>
             <name value="ClinicalDocumentSection"></name>
+            <variable value="cda"></variable>
             <variable value="srcSection"></variable>
             <variable value="patient"></variable>
             <variable value="tgtSection"></variable>
@@ -862,15 +870,6 @@ _________________________ Header Level Templates _________________________"></do
             <target>
                <context value="reference"></context>
                <contextType value="variable"></contextType>
-               <element value="type"></element>
-               <transform value="copy"></transform>
-               <parameter>
-                  <valueString value="Patient"></valueString>
-               </parameter>
-            </target>
-            <target>
-               <context value="reference"></context>
-               <contextType value="variable"></contextType>
                <element value="reference"></element>
                <transform value="evaluate"></transform>
                <parameter>
@@ -942,15 +941,6 @@ _________________________ Header Level Templates _________________________"></do
                <transform value="create"></transform>
                <parameter>
                   <valueString value="Reference"></valueString>
-               </parameter>
-            </target>
-            <target>
-               <context value="reference"></context>
-               <contextType value="variable"></contextType>
-               <element value="type"></element>
-               <transform value="copy"></transform>
-               <parameter>
-                  <valueString value="Encounter"></valueString>
                </parameter>
             </target>
             <target>
@@ -1035,15 +1025,6 @@ _________________________ Header Level Templates _________________________"></do
             <transform value="create"></transform>
             <parameter>
                <valueString value="Reference"></valueString>
-            </parameter>
-         </target>
-         <target>
-            <context value="reference"></context>
-            <contextType value="variable"></contextType>
-            <element value="type"></element>
-            <transform value="copy"></transform>
-            <parameter>
-               <valueString value="Practitioner"></valueString>
             </parameter>
          </target>
          <target>
@@ -1204,15 +1185,6 @@ _________________________ Header Level Templates _________________________"></do
                <target>
                   <context value="reference2"></context>
                   <contextType value="variable"></contextType>
-                  <element value="type"></element>
-                  <transform value="copy"></transform>
-                  <parameter>
-                     <valueString value="Organization"></valueString>
-                  </parameter>
-               </target>
-               <target>
-                  <context value="reference2"></context>
-                  <contextType value="variable"></contextType>
                   <element value="reference"></element>
                   <transform value="evaluate"></transform>
                   <parameter>
@@ -1345,15 +1317,6 @@ _________________________ Header Level Templates _________________________"></do
                <target>
                   <context value="reference"></context>
                   <contextType value="variable"></contextType>
-                  <element value="type"></element>
-                  <transform value="copy"></transform>
-                  <parameter>
-                     <valueString value="Practitioner"></valueString>
-                  </parameter>
-               </target>
-               <target>
-                  <context value="reference"></context>
-                  <contextType value="variable"></contextType>
                   <element value="reference"></element>
                   <transform value="evaluate"></transform>
                   <parameter>
@@ -1471,15 +1434,6 @@ _________________________ Header Level Templates _________________________"></do
                <target>
                   <context value="reference"></context>
                   <contextType value="variable"></contextType>
-                  <element value="type"></element>
-                  <transform value="copy"></transform>
-                  <parameter>
-                     <valueString value="Practitioner"></valueString>
-                  </parameter>
-               </target>
-               <target>
-                  <context value="reference"></context>
-                  <contextType value="variable"></contextType>
                   <element value="reference"></element>
                   <transform value="evaluate"></transform>
                   <parameter>
@@ -1558,15 +1512,6 @@ _________________________ Header Level Templates _________________________"></do
                   <transform value="create"></transform>
                   <parameter>
                      <valueString value="Reference"></valueString>
-                  </parameter>
-               </target>
-               <target>
-                  <context value="reference"></context>
-                  <contextType value="variable"></contextType>
-                  <element value="type"></element>
-                  <transform value="copy"></transform>
-                  <parameter>
-                     <valueString value="Organization"></valueString>
                   </parameter>
                </target>
                <target>
@@ -2233,15 +2178,6 @@ _________________________ Header Level Templates _________________________"></do
             <target>
                <context value="reference"></context>
                <contextType value="variable"></contextType>
-               <element value="type"></element>
-               <transform value="copy"></transform>
-               <parameter>
-                  <valueString value="Organization"></valueString>
-               </parameter>
-            </target>
-            <target>
-               <context value="reference"></context>
-               <contextType value="variable"></contextType>
                <element value="reference"></element>
                <transform value="evaluate"></transform>
                <parameter>
@@ -2527,15 +2463,6 @@ _________________________ Header Level Templates _________________________"></do
                <target>
                   <context value="reference"></context>
                   <contextType value="variable"></contextType>
-                  <element value="type"></element>
-                  <transform value="copy"></transform>
-                  <parameter>
-                     <valueString value="Practitioner"></valueString>
-                  </parameter>
-               </target>
-               <target>
-                  <context value="reference"></context>
-                  <contextType value="variable"></contextType>
                   <element value="reference"></element>
                   <transform value="evaluate"></transform>
                   <parameter>
@@ -2618,15 +2545,6 @@ _________________________ Header Level Templates _________________________"></do
                   <transform value="create"></transform>
                   <parameter>
                      <valueString value="Reference"></valueString>
-                  </parameter>
-               </target>
-               <target>
-                  <context value="reference"></context>
-                  <contextType value="variable"></contextType>
-                  <element value="type"></element>
-                  <transform value="copy"></transform>
-                  <parameter>
-                     <valueString value="Location"></valueString>
                   </parameter>
                </target>
                <target>
@@ -2774,15 +2692,6 @@ _________________________ Header Level Templates _________________________"></do
                   <transform value="create"></transform>
                   <parameter>
                      <valueString value="Reference"></valueString>
-                  </parameter>
-               </target>
-               <target>
-                  <context value="reference"></context>
-                  <contextType value="variable"></contextType>
-                  <element value="type"></element>
-                  <transform value="copy"></transform>
-                  <parameter>
-                     <valueString value="Organization"></valueString>
                   </parameter>
                </target>
                <target>

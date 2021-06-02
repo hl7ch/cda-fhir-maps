@@ -35,9 +35,6 @@ group BundleToClinicalDocument(source bundle : Bundle, target recordTarget : Rec
     bundle -&gt; typeId.root = '2.16.840.1.113883.1.3' "root";
     bundle -&gt; typeId.extension = 'POCD_HD000040' "extension";
   } "typeId";
-  bundle -&gt; cda.templateId as templateId then {
-    bundle -&gt; templateId.root = '2.16.840.1.113883.10.12.1' "root";
-  } "HL7CdaR2-2005";
   bundle.identifier as identifier -&gt; cda.id as id then IdentifierII(identifier, id) "id";
   bundle.timestamp as timestamp -&gt; cda.effectiveTime as effectiveTime then InstantTS(timestamp, effectiveTime) "effectiveTime";
   bundle.entry as entry then {
@@ -50,6 +47,9 @@ group SectionCdaSection(source bundle : Bundle, source section : BackboneElement
   section.extension as extension where $this.url = 'http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-sectionid' -&gt; cdasection.id as id then {
     extension.valueIdentifier as valueIdentifier then IdentifierII(valueIdentifier, id) "IdentifierII";
   } "valueIdentifier";
+  section as section where $this.extension.where(url = 'http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-sectionid').exists() = false -&gt; cdasection.id as id then {
+    bundle.identifier as identifier -&gt; cdasection.id as id then IdentifierII(identifier, id) "setId";
+  } "sectionid";
   section.code as code then {
     code.coding as coding where $this.system = 'http://loinc.org' -&gt; cdasection.code as cdacode then CodingCE(coding, cdacode) "codingsection";
   };
@@ -129,8 +129,8 @@ group PractitionerAuthor(source bundle : Bundle, source composition : Compositio
     srcauthor.extension as extensionTime where $this.url = 'http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-time' then {
       extensionTime.valueDateTime as valueDateTime -&gt; tgt.time as time then DateTimeTS(valueDateTime, time) "DateTime";
     } "extensionTime";
-    bundle.timestamp as valueDateTime where %srcauthor.extension.empty() or %srcauthor.extension.where(url = 'http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-time').empty() -&gt; tgt.time as time then DateTimeTS(valueDateTime, time) "DateTimeBundle";
   } "srcAuthor";
+  bundle.timestamp as valueDateTime where composition.author.extension.where(url = 'http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-time').empty() -&gt; tgt.time as time then DateTimeTS(valueDateTime, time) "DateTimeBundle";
   src -&gt; tgt.assignedAuthor as assignedAuthor then {
     src.identifier as identifier -&gt; assignedAuthor.id as id then IdentifierII(identifier, id) "id";
     src.name as name -&gt;  assignedAuthor.assignedPerson as assignedPerson,  assignedPerson.name as en then HumanNameEN(name, en);
@@ -357,33 +357,6 @@ FHIR: http://hl7.org/fhir/r4/"></description>
          </rule>
       </rule>
       <rule>
-         <name value="HL7CdaR2-2005"></name>
-         <source>
-            <context value="bundle"></context>
-         </source>
-         <target>
-            <context value="cda"></context>
-            <contextType value="variable"></contextType>
-            <element value="templateId"></element>
-            <variable value="templateId"></variable>
-         </target>
-         <rule>
-            <name value="root"></name>
-            <source>
-               <context value="bundle"></context>
-            </source>
-            <target>
-               <context value="templateId"></context>
-               <contextType value="variable"></contextType>
-               <element value="root"></element>
-               <transform value="copy"></transform>
-               <parameter>
-                  <valueString value="2.16.840.1.113883.10.12.1"></valueString>
-               </parameter>
-            </target>
-         </rule>
-      </rule>
-      <rule>
          <name value="id"></name>
          <source>
             <context value="bundle"></context>
@@ -490,6 +463,39 @@ FHIR: http://hl7.org/fhir/r4/"></description>
             <dependent>
                <name value="IdentifierII"></name>
                <variable value="valueIdentifier"></variable>
+               <variable value="id"></variable>
+            </dependent>
+         </rule>
+      </rule>
+      <rule>
+         <name value="sectionid"></name>
+         <source>
+            <context value="section"></context>
+            <variable value="section"></variable>
+            <condition value="$this.extension.where(url = 'http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-sectionid').exists() = false"></condition>
+         </source>
+         <target>
+            <context value="cdasection"></context>
+            <contextType value="variable"></contextType>
+            <element value="id"></element>
+            <variable value="id"></variable>
+         </target>
+         <rule>
+            <name value="setId"></name>
+            <source>
+               <context value="bundle"></context>
+               <element value="identifier"></element>
+               <variable value="identifier"></variable>
+            </source>
+            <target>
+               <context value="cdasection"></context>
+               <contextType value="variable"></contextType>
+               <element value="id"></element>
+               <variable value="id"></variable>
+            </target>
+            <dependent>
+               <name value="IdentifierII"></name>
+               <variable value="identifier"></variable>
                <variable value="id"></variable>
             </dependent>
          </rule>
@@ -1343,26 +1349,26 @@ _________________________ Header Level Templates _________________________"></do
                </dependent>
             </rule>
          </rule>
-         <rule>
-            <name value="DateTimeBundle"></name>
-            <source>
-               <context value="bundle"></context>
-               <element value="timestamp"></element>
-               <variable value="valueDateTime"></variable>
-               <condition value="%srcauthor.extension.empty() or %srcauthor.extension.where(url = 'http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-time').empty()"></condition>
-            </source>
-            <target>
-               <context value="tgt"></context>
-               <contextType value="variable"></contextType>
-               <element value="time"></element>
-               <variable value="time"></variable>
-            </target>
-            <dependent>
-               <name value="DateTimeTS"></name>
-               <variable value="valueDateTime"></variable>
-               <variable value="time"></variable>
-            </dependent>
-         </rule>
+      </rule>
+      <rule>
+         <name value="DateTimeBundle"></name>
+         <source>
+            <context value="bundle"></context>
+            <element value="timestamp"></element>
+            <variable value="valueDateTime"></variable>
+            <condition value="composition.author.extension.where(url = 'http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-time').empty()"></condition>
+         </source>
+         <target>
+            <context value="tgt"></context>
+            <contextType value="variable"></contextType>
+            <element value="time"></element>
+            <variable value="time"></variable>
+         </target>
+         <dependent>
+            <name value="DateTimeTS"></name>
+            <variable value="valueDateTime"></variable>
+            <variable value="time"></variable>
+         </dependent>
       </rule>
       <rule>
          <name value="assignedAuthor"></name>

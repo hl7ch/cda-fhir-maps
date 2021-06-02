@@ -72,12 +72,6 @@ group SectionPrescriptionSectionContentModule(source bundle : Bundle, source sec
   section -> cdasection.templateId as templateId, templateId.root='1.3.6.1.4.1.19376.1.9.1.2.1' "IHE-PrescriptionSectionContentModule";
   
   section where text.exists() = false -> cdasection.text = '<div xmlns="http://www.w3.org/1999/xhtml"><span id="refpdf">see pdf</span></div>' "Section";
-
-  // create section id if there is none in the fhir bundle (mapping source)
-  section as section where $this.extension.where(url='http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-sectionid').exists()=false 
-    -> cdasection.id as id then { 
-      section -> uuid() as uuid, id.root=(%uuid.upper()) "upper";
-    } "extension";
     
   bundle.entry as entry then {
     entry.fullUrl where ($this in %section.entry.reference) and $this.startsWith('urn:uuid') then {

@@ -372,7 +372,7 @@
 									<code code="48767-8" codeSystem="2.16.840.1.113883.6.1"
 										codeSystemName="LOINC" displayName="Annotation comment" />
 									<text>
-										<reference value="#dis.1.note" />
+										<reference value="#dis.1.note"/>Annotation comment
 									</text>
 									<statusCode code="completed" />
 								</act>
@@ -385,7 +385,7 @@
 				<section>
 					<templateId root="2.16.756.5.30.1.1.10.3.45" />
 					<code code="55108-5" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Clinical presentation" />
-					<title>Original representation</title>
+					<title></title>
 					<text>
 						Representation of the original view:
 						<renderMultiMedia referencedObject="pdf1" />

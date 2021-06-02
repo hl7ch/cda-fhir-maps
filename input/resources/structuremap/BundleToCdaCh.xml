@@ -38,11 +38,14 @@ group BundleToClinicalDocumentCh(source bundle : Bundle, target recordTarget : R
     bundle -&gt; realmCode.code = 'CHE' "CHE";
   } "realmCode";
   bundle -&gt; cda.templateId as templateId then {
+    bundle -&gt; templateId.root = '2.16.756.5.30.1.1.10.1.9' "root";
+  } "0-structuredBody";
+  bundle -&gt; cda.templateId as templateId then {
     bundle -&gt; templateId.root = '2.16.840.1.113883.10.12.2' "root";
   } "componentAsStructuredBody";
   bundle -&gt; cda.templateId as templateId then {
-    bundle -&gt; templateId.root = '2.16.756.5.30.1.1.10.1.9' "root";
-  } "0-structuredBody";
+    bundle -&gt; templateId.root = '2.16.840.1.113883.10.12.1' "root";
+  } "HL7CdaR2-2005";
   bundle.entry as entry then {
     entry.resource as resource where $this.ofType(FHIR.Composition) then CompositionClinicalDocumentCH(bundle, resource, cda);
   };
@@ -88,6 +91,12 @@ group SectionCdaOriginalRepresentationObservationMedia(source binary : Binary, s
 // target: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5.30.1.1.10.4.83
 group SectionCdaOriginalRepresentation(source bundle : Bundle, source section : Section, target cdasection : CdaSection) extends SectionCdaSection {
   section -&gt;  cdasection.templateId as templateId,  templateId.root = '2.16.756.5.30.1.1.10.3.45' "templateId";
+  section where title.exists().not() then {
+    section where (%bundle.entry[0].resource.language.startsWith('de')) -&gt;  cdasection.title as title,  title.data = 'Original Darstellung' "titleDE";
+    section where (%bundle.entry[0].resource.language.startsWith('fr')) -&gt;  cdasection.title as title,  title.data = 'Représentation originale' "titleFR";
+    section where (%bundle.entry[0].resource.language.startsWith('it')) -&gt;  cdasection.title as title,  title.data = 'Rappresentazione originale' "titleIT";
+    section where (%bundle.entry[0].resource.language.startsWith('en')) -&gt;  cdasection.title as title,  title.data = 'Original representation' "titleEN";
+  } "defaulttitles";
   bundle.entry as entry then {
     entry.fullUrl where ($this in %section.entry.reference) and $this.startsWith('urn:uuid') then {
       entry.resource as binary then SectionCdaOriginalRepresentationObservationMedia(binary, section, cdasection) "patient";
@@ -106,6 +115,31 @@ group PersonAssignedEntityWithId(source practitioner : Practitioner, target assi
   practitioner.name as humanname -&gt;  assignedEntity.assignedPerson as assignedPerson,  assignedPerson.name as en then HumanNameEN(humanname, en);
 }
 
+// source: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefinition-ch-core-composition-epr.html
+// target: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5.30.1.1.10.9.12
+group DataEnterer(source bundle : Bundle, source practitionerRole : PractitionerRole, target assignedEntity : AssignedEntity) {
+  practitionerRole.practitioner as practitioner then {
+    practitioner.reference as reference then {
+      bundle.entry as entry then {
+        entry.fullUrl where ($this in %reference.value) and $this.startsWith('urn:uuid') then {
+          entry.resource : Practitioner as practitioner then PersonAssignedEntityWithId(practitioner, assignedEntity) "AssignedEntityWithId";
+        } "fullUrl as urn:uuid";
+        entry.resource : Practitioner as practitioner where ('Practitioner' + '/' + $this.id) in %reference.value then PersonAssignedEntityWithId(practitioner, assignedEntity) "AssignedEntityWithId";
+      } "practitioner";
+    } "valueReference";
+  } "extensionPerson";
+  practitionerRole.organization as organization -&gt; assignedEntity.representedOrganization as representedOrganization then {
+    organization.reference as reference then {
+      bundle.entry as entry then {
+        entry.fullUrl where ($this in %reference.value) and $this.startsWith('urn:uuid') then {
+          entry.resource : Organization as organization then Organization2CdaOrganization(organization, representedOrganization) "representedOrganization";
+        } "fullUrl as urn:uuid";
+        entry.resource : Organization as organization where ('Organization' + '/' + $this.id) in %reference.value then Organization2CdaOrganization(organization, representedOrganization) "representedOrganization";
+      } "practitioner";
+    } "valueReference";
+  } "extensionPerson";
+}
+
 // _________________________ Template Type not specified  ___________________
 // source: http://hl7.org/fhir/R4/person.html
 // target: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5.30.1.1.10.9.36
@@ -122,7 +156,7 @@ group CompositionClinicalDocumentCH(source bundle : Bundle, source composition :
   } "confidentialityCode";
   // If setId exists as Composition.ch-ext-epr-setid, then map to ClinicalDocument.setId
   composition.identifier as identifier where $this.system = 'urn:ietf:rfc:3986' -&gt; cda.setId as setId then IdentifierII(identifier, setId) "IdentifierII";
-  // If setId doesn't exist, create ClinicalDocument.setId as UUID upper case
+  // If setId doesn't exist, used bundle.identifer
   composition where $this.identifier.where(system = 'urn:ietf:rfc:3986').exists() = false then {
     bundle.identifier as identifier -&gt; cda.setId as id then IdentifierII(identifier, id) "setId";
   } "setIdCreated";
@@ -163,9 +197,9 @@ group CompositionClinicalDocumentCH(source bundle : Bundle, source composition :
       extensionPerson.valueReference as valueReference then {
         bundle.entry as entry then {
           entry.fullUrl where ($this in %valueReference.reference) and $this.startsWith('urn:uuid') then {
-            entry.resource : Practitioner as practitioner -&gt; dataEnterer.assignedEntity as assignedEntity then PersonAssignedEntityWithId(practitioner, assignedEntity) "AssignedEntityWithId";
+            entry.resource : PractitionerRole as practitionerRole -&gt; dataEnterer.assignedEntity as assignedEntity then DataEnterer(bundle, practitionerRole, assignedEntity) "AssignedEntityWithId";
           } "fullUrl as urn:uuid";
-          entry.resource : Practitioner as practitioner where ('Practitioner' + '/' + $this.id) in %valueReference.reference -&gt; dataEnterer.assignedEntity as assignedEntity then PersonAssignedEntityWithId(practitioner, assignedEntity) "AssignedEntityWithId";
+          entry.resource : PractitionerRole as practitionerRole where ('PractitionerRole' + '/' + $this.id) in %valueReference.reference -&gt; dataEnterer.assignedEntity as assignedEntity then DataEnterer(bundle, practitionerRole, assignedEntity) "AssignedEntityWithId";
         } "practitioner";
       };
     } "extensionPerson";
@@ -387,6 +421,33 @@ target: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5
          </rule>
       </rule>
       <rule>
+         <name value="CDA-CHv2.0-structuredBody"></name>
+         <source>
+            <context value="bundle"></context>
+         </source>
+         <target>
+            <context value="cda"></context>
+            <contextType value="variable"></contextType>
+            <element value="templateId"></element>
+            <variable value="templateId"></variable>
+         </target>
+         <rule>
+            <name value="root"></name>
+            <source>
+               <context value="bundle"></context>
+            </source>
+            <target>
+               <context value="templateId"></context>
+               <contextType value="variable"></contextType>
+               <element value="root"></element>
+               <transform value="copy"></transform>
+               <parameter>
+                  <valueString value="2.16.756.5.30.1.1.10.1.9"></valueString>
+               </parameter>
+            </target>
+         </rule>
+      </rule>
+      <rule>
          <name value="HL7CdaR2-2005-containsClinicalDocument.componentAsStructuredBody"></name>
          <source>
             <context value="bundle"></context>
@@ -414,7 +475,7 @@ target: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5
          </rule>
       </rule>
       <rule>
-         <name value="CDA-CHv2.0-structuredBody"></name>
+         <name value="HL7CdaR2-2005"></name>
          <source>
             <context value="bundle"></context>
          </source>
@@ -435,7 +496,7 @@ target: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5
                <element value="root"></element>
                <transform value="copy"></transform>
                <parameter>
-                  <valueString value="2.16.756.5.30.1.1.10.1.9"></valueString>
+                  <valueString value="2.16.840.1.113883.10.12.1"></valueString>
                </parameter>
             </target>
          </rule>
@@ -994,6 +1055,101 @@ target: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5
          </target>
       </rule>
       <rule>
+         <name value="defaulttitles"></name>
+         <source>
+            <context value="section"></context>
+            <condition value="title.exists().not()"></condition>
+         </source>
+         <rule>
+            <name value="titleDE"></name>
+            <source>
+               <context value="section"></context>
+               <condition value="(%bundle.entry[0].resource.language.startsWith('de'))"></condition>
+            </source>
+            <target>
+               <context value="cdasection"></context>
+               <contextType value="variable"></contextType>
+               <element value="title"></element>
+               <variable value="title"></variable>
+            </target>
+            <target>
+               <context value="title"></context>
+               <contextType value="variable"></contextType>
+               <element value="data"></element>
+               <transform value="copy"></transform>
+               <parameter>
+                  <valueString value="Original Darstellung"></valueString>
+               </parameter>
+            </target>
+         </rule>
+         <rule>
+            <name value="titleFR"></name>
+            <source>
+               <context value="section"></context>
+               <condition value="(%bundle.entry[0].resource.language.startsWith('fr'))"></condition>
+            </source>
+            <target>
+               <context value="cdasection"></context>
+               <contextType value="variable"></contextType>
+               <element value="title"></element>
+               <variable value="title"></variable>
+            </target>
+            <target>
+               <context value="title"></context>
+               <contextType value="variable"></contextType>
+               <element value="data"></element>
+               <transform value="copy"></transform>
+               <parameter>
+                  <valueString value="Représentation originale"></valueString>
+               </parameter>
+            </target>
+         </rule>
+         <rule>
+            <name value="titleIT"></name>
+            <source>
+               <context value="section"></context>
+               <condition value="(%bundle.entry[0].resource.language.startsWith('it'))"></condition>
+            </source>
+            <target>
+               <context value="cdasection"></context>
+               <contextType value="variable"></contextType>
+               <element value="title"></element>
+               <variable value="title"></variable>
+            </target>
+            <target>
+               <context value="title"></context>
+               <contextType value="variable"></contextType>
+               <element value="data"></element>
+               <transform value="copy"></transform>
+               <parameter>
+                  <valueString value="Rappresentazione originale"></valueString>
+               </parameter>
+            </target>
+         </rule>
+         <rule>
+            <name value="titleEN"></name>
+            <source>
+               <context value="section"></context>
+               <condition value="(%bundle.entry[0].resource.language.startsWith('en'))"></condition>
+            </source>
+            <target>
+               <context value="cdasection"></context>
+               <contextType value="variable"></contextType>
+               <element value="title"></element>
+               <variable value="title"></variable>
+            </target>
+            <target>
+               <context value="title"></context>
+               <contextType value="variable"></contextType>
+               <element value="data"></element>
+               <transform value="copy"></transform>
+               <parameter>
+                  <valueString value="Original representation"></valueString>
+               </parameter>
+            </target>
+         </rule>
+      </rule>
+      <rule>
          <name value="patient"></name>
          <source>
             <context value="bundle"></context>
@@ -1118,6 +1274,155 @@ target: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5
             <variable value="humanname"></variable>
             <variable value="en"></variable>
          </dependent>
+      </rule>
+   </group>
+   <group>
+      <name value="DataEnterer"></name>
+      <typeMode value="none"></typeMode>
+      <documentation value="source: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefinition-ch-core-composition-epr.html
+target: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5.30.1.1.10.9.12"></documentation>
+      <input>
+         <name value="bundle"></name>
+         <type value="Bundle"></type>
+         <mode value="source"></mode>
+      </input>
+      <input>
+         <name value="practitionerRole"></name>
+         <type value="PractitionerRole"></type>
+         <mode value="source"></mode>
+      </input>
+      <input>
+         <name value="assignedEntity"></name>
+         <type value="AssignedEntity"></type>
+         <mode value="target"></mode>
+      </input>
+      <rule>
+         <name value="extensionPerson"></name>
+         <source>
+            <context value="practitionerRole"></context>
+            <element value="practitioner"></element>
+            <variable value="practitioner"></variable>
+         </source>
+         <rule>
+            <name value="valueReference"></name>
+            <source>
+               <context value="practitioner"></context>
+               <element value="reference"></element>
+               <variable value="reference"></variable>
+            </source>
+            <rule>
+               <name value="practitioner"></name>
+               <source>
+                  <context value="bundle"></context>
+                  <element value="entry"></element>
+                  <variable value="entry"></variable>
+               </source>
+               <rule>
+                  <name value="fullUrl as urn:uuid"></name>
+                  <source>
+                     <context value="entry"></context>
+                     <element value="fullUrl"></element>
+                     <condition value="($this in %reference.value) and $this.startsWith('urn:uuid')"></condition>
+                  </source>
+                  <rule>
+                     <name value="AssignedEntityWithId"></name>
+                     <source>
+                        <context value="entry"></context>
+                        <type value="Practitioner"></type>
+                        <element value="resource"></element>
+                        <variable value="practitioner"></variable>
+                     </source>
+                     <dependent>
+                        <name value="PersonAssignedEntityWithId"></name>
+                        <variable value="practitioner"></variable>
+                        <variable value="assignedEntity"></variable>
+                     </dependent>
+                  </rule>
+               </rule>
+               <rule>
+                  <name value="AssignedEntityWithId"></name>
+                  <source>
+                     <context value="entry"></context>
+                     <type value="Practitioner"></type>
+                     <element value="resource"></element>
+                     <variable value="practitioner"></variable>
+                     <condition value="('Practitioner' + '/' + $this.id) in %reference.value"></condition>
+                  </source>
+                  <dependent>
+                     <name value="PersonAssignedEntityWithId"></name>
+                     <variable value="practitioner"></variable>
+                     <variable value="assignedEntity"></variable>
+                  </dependent>
+               </rule>
+            </rule>
+         </rule>
+      </rule>
+      <rule>
+         <name value="extensionPerson"></name>
+         <source>
+            <context value="practitionerRole"></context>
+            <element value="organization"></element>
+            <variable value="organization"></variable>
+         </source>
+         <target>
+            <context value="assignedEntity"></context>
+            <contextType value="variable"></contextType>
+            <element value="representedOrganization"></element>
+            <variable value="representedOrganization"></variable>
+         </target>
+         <rule>
+            <name value="valueReference"></name>
+            <source>
+               <context value="organization"></context>
+               <element value="reference"></element>
+               <variable value="reference"></variable>
+            </source>
+            <rule>
+               <name value="practitioner"></name>
+               <source>
+                  <context value="bundle"></context>
+                  <element value="entry"></element>
+                  <variable value="entry"></variable>
+               </source>
+               <rule>
+                  <name value="fullUrl as urn:uuid"></name>
+                  <source>
+                     <context value="entry"></context>
+                     <element value="fullUrl"></element>
+                     <condition value="($this in %reference.value) and $this.startsWith('urn:uuid')"></condition>
+                  </source>
+                  <rule>
+                     <name value="representedOrganization"></name>
+                     <source>
+                        <context value="entry"></context>
+                        <type value="Organization"></type>
+                        <element value="resource"></element>
+                        <variable value="organization"></variable>
+                     </source>
+                     <dependent>
+                        <name value="Organization2CdaOrganization"></name>
+                        <variable value="organization"></variable>
+                        <variable value="representedOrganization"></variable>
+                     </dependent>
+                  </rule>
+               </rule>
+               <rule>
+                  <name value="representedOrganization"></name>
+                  <source>
+                     <context value="entry"></context>
+                     <type value="Organization"></type>
+                     <element value="resource"></element>
+                     <variable value="organization"></variable>
+                     <condition value="('Organization' + '/' + $this.id) in %reference.value"></condition>
+                  </source>
+                  <dependent>
+                     <name value="Organization2CdaOrganization"></name>
+                     <variable value="organization"></variable>
+                     <variable value="representedOrganization"></variable>
+                  </dependent>
+               </rule>
+            </rule>
+         </rule>
       </rule>
    </group>
    <group>
@@ -1265,7 +1570,7 @@ target: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5
                <variable value="id"></variable>
             </dependent>
          </rule>
-         <documentation value="If setId doesn't exist, create ClinicalDocument.setId as UUID upper case"></documentation>
+         <documentation value="If setId doesn't exist, used bundle.identifer"></documentation>
       </rule>
       <rule>
          <name value="versionNumberMapped"></name>
@@ -1677,9 +1982,9 @@ target: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5
                         <name value="AssignedEntityWithId"></name>
                         <source>
                            <context value="entry"></context>
-                           <type value="Practitioner"></type>
+                           <type value="PractitionerRole"></type>
                            <element value="resource"></element>
-                           <variable value="practitioner"></variable>
+                           <variable value="practitionerRole"></variable>
                         </source>
                         <target>
                            <context value="dataEnterer"></context>
@@ -1688,8 +1993,9 @@ target: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5
                            <variable value="assignedEntity"></variable>
                         </target>
                         <dependent>
-                           <name value="PersonAssignedEntityWithId"></name>
-                           <variable value="practitioner"></variable>
+                           <name value="DataEnterer"></name>
+                           <variable value="bundle"></variable>
+                           <variable value="practitionerRole"></variable>
                            <variable value="assignedEntity"></variable>
                         </dependent>
                      </rule>
@@ -1698,10 +2004,10 @@ target: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5
                      <name value="AssignedEntityWithId"></name>
                      <source>
                         <context value="entry"></context>
-                        <type value="Practitioner"></type>
+                        <type value="PractitionerRole"></type>
                         <element value="resource"></element>
-                        <variable value="practitioner"></variable>
-                        <condition value="('Practitioner' + '/' + $this.id) in %valueReference.reference"></condition>
+                        <variable value="practitionerRole"></variable>
+                        <condition value="('PractitionerRole' + '/' + $this.id) in %valueReference.reference"></condition>
                      </source>
                      <target>
                         <context value="dataEnterer"></context>
@@ -1710,8 +2016,9 @@ target: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5
                         <variable value="assignedEntity"></variable>
                      </target>
                      <dependent>
-                        <name value="PersonAssignedEntityWithId"></name>
-                        <variable value="practitioner"></variable>
+                        <name value="DataEnterer"></name>
+                        <variable value="bundle"></variable>
+                        <variable value="practitionerRole"></variable>
                         <variable value="assignedEntity"></variable>
                      </dependent>
                   </rule>

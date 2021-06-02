@@ -19,6 +19,7 @@ uses "http://hl7.org/fhir/StructureDefinition/Composition" alias Composition as 
 uses "http://hl7.org/fhir/StructureDefinition/Patient" alias Patient as produced
 uses "http://hl7.org/fhir/StructureDefinition/Person" alias Person as produced
 uses "http://hl7.org/fhir/StructureDefinition/Practitioner" alias Practitioner as produced
+uses "http://hl7.org/fhir/StructureDefinition/Practitioner" alias PractitionerRole as produced
 uses "http://hl7.org/fhir/StructureDefinition/Organization" alias Organization as produced
 
 imports "http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaToFhirTypes"
@@ -37,8 +38,8 @@ group ClinicalDocumentChToBundle(source cda : ClinicalDocument, target patient :
   cda.component as component then {
     component.structuredBody as body then {
       body.component as component then {
-        component.section as srcSection where (templateId.where(root = '2.16.756.5.30.1.1.10.3.2')) -&gt; composition.section as tgtSection then ClinicalDocumentSection(srcSection, patient, tgtSection, bundle);
-        component.section as srcSection where (templateId.where(root = '2.16.756.5.30.1.1.10.3.45')) -&gt; composition.section as tgtSection then SectionOriginalRepresentation(srcSection, patient, tgtSection, bundle);
+        component.section as srcSection where (templateId.where(root = '2.16.756.5.30.1.1.10.3.2')) -&gt; composition.section as tgtSection then ClinicalDocumentSection(cda, srcSection, patient, tgtSection, bundle);
+        component.section as srcSection where (templateId.where(root = '2.16.756.5.30.1.1.10.3.45')) -&gt; composition.section as tgtSection then SectionOriginalRepresentation(cda, srcSection, patient, tgtSection, bundle);
       };
     } "body";
   };
@@ -48,8 +49,8 @@ group ClinicalDocumentChToBundle(source cda : ClinicalDocument, target patient :
 // source: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5.30.1.1.10.1.14
 // target: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefinition-ch-core-composition-definitions.html#Composition.section
 // TODO: not excplicitly modeled in CH-Core
-group SectionOriginalRepresentation(source src : Section, source patient : Patient, target tgt, target bundle : Bundle) extends ClinicalDocumentSection {
-  src.entry as cdaEntry -&gt;  bundle.entry as e,  e.resource = create('Binary') as binary,  binary.id = uuid() as uuid,  e.fullUrl = append('urn:uuid:', uuid) as urnuuid,  tgt.entry = create('Reference') as reference,  reference.type = 'Binary',  reference.reference = urnuuid then {
+group SectionOriginalRepresentation(source cda : ClinicalDocument, source src : Section, source patient : Patient, target tgt, target bundle : Bundle) extends ClinicalDocumentSection {
+  src.entry as cdaEntry -&gt;  bundle.entry as e,  e.resource = create('Binary') as binary,  binary.id = uuid() as uuid,  e.fullUrl = append('urn:uuid:', uuid) as urnuuid,  tgt.entry = create('Reference') as reference,  reference.reference = urnuuid then {
     cdaEntry.observationMedia as observationMedia then {
       observationMedia then ObservationMedia(observationMedia, binary) "observationMedia";
       observationMedia.ID as value -&gt; reference.extension as ext then NarrativeLink(value, ext) "narrativeLink";
@@ -94,7 +95,7 @@ group ChExtEprVersionNumber1(source src, target ext : Extension) {
 // target: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefinition-ch-ext-epr-informationrecipient.html
 group ChExtEprInformationRecipient(source src : IntendedRecipient, target patient : Patient, target ext : Extension) {
   src -&gt; ext.url = 'http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-informationrecipient' "url";
-  src -&gt;  ext.value = create('Reference') as reference,  reference.type = 'Patient',  reference.reference = ('urn:uuid:' + %patient.id) "value";
+  src -&gt;  ext.value = create('Reference') as reference,  reference.reference = ('urn:uuid:' + %patient.id) "value";
   src.addr as addr -&gt; patient.address as address then ADAddress(addr, address) "address";
   src.informationRecipient as informationRecipient then {
     informationRecipient.name as cdaname -&gt; patient.name as fhirname then ENHumanName(cdaname, fhirname);
@@ -105,16 +106,20 @@ group ChExtEprInformationRecipient(source src : IntendedRecipient, target patien
 // target: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefinition-ch-ext-epr-informationrecipient.html
 group ChExtEprInformationRecipientOrganization(source src : IntendedRecipient, target organization : Organization, target ext : Extension) {
   src -&gt; ext.url = 'http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-informationrecipient' "url";
-  src -&gt;  ext.value = create('Reference') as reference,  reference.type = 'Organization',  reference.reference = ('urn:uuid:' + %organization.id) "value";
+  src -&gt;  ext.value = create('Reference') as reference,  reference.reference = ('urn:uuid:' + %organization.id) "value";
   src.receivedOrganization as receivedOrganization then ClinicalDocumentOrganization(receivedOrganization, organization) "organization";
 }
 
 // source: https://art-decor.org/art-decor/decor-templates--hl7chcda-?section=templates&amp;id=2.16.756.5.30.1.1.10.2.7
 // target: http://build.fhir.org/ig/hl7ch/ch-core/StructureDefinition-ch-ext-epr-dataenterer.html
-group ChExtEprDataEnterer(source src : DataEnterer, target practitioner : Practitioner, target ext : Extension) {
+group ChExtEprDataEnterer(source src : DataEnterer, target bundle : Bundle, target practitionerRole : PractitionerRole, target ext : Extension) {
   src -&gt; ext.url = 'http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-dataenterer' "url";
-  src.assignedEntity as assignedEntity -&gt;  ext.extension as ext,  ext.url = 'enterer',  ext.value = create('Reference') as reference,  reference.type = 'Practitioner',  reference.reference = ('urn:uuid:' + %practitioner.id) then ClinicalDocumentEntityPractitioner(assignedEntity, practitioner) "practitioner";
+  src.assignedEntity as assignedEntity -&gt;  ext.extension as ext,  ext.url = 'enterer',  ext.value = create('Reference') as reference,  reference.reference = ('urn:uuid:' + %practitionerRole.id) "PractitionerRole";
   src.time as time -&gt; ext.extension as exttime then ChExtEprTime(time, exttime);
+  src.assignedEntity as assignedEntity then {
+    assignedEntity -&gt;  bundle.entry as e,  e.resource = create('Practitioner') as practitioner,  practitioner.id = uuid() as uuid,  e.fullUrl = append('urn:uuid:', uuid),  practitionerRole.practitioner = create('Reference') as reference,  reference.reference = append('urn:uuid:', uuid) then ClinicalDocumentEntityPractitioner(assignedEntity, practitioner) "Practitioner";
+    assignedEntity.representedOrganization as representedOrganization -&gt;  bundle.entry as e,  e.resource = create('Organization') as organization,  organization.id = uuid() as uuid2,  e.fullUrl = append('urn:uuid:', uuid2),  practitionerRole.organization = create('Reference') as referenceOrg,  referenceOrg.reference = append('urn:uuid:', uuid2) then ClinicalDocumentOrganization(representedOrganization, organization) "Organization";
+  };
 }
 
 // _________________________ Template Type not specified  ___________________
@@ -124,15 +129,14 @@ group ClinicalDocumentCompositionCh(source src : ClinicalDocument, target tgt : 
   src.confidentialityCode as confidentialityCode then {
     confidentialityCode.code as v -&gt;  tgt.confidentiality = translate(v, 'http://fhir.ch/ig/ch-core/ConceptMap/documententry-confidentialitycode-to-fhir', 'code') as fhirconf,  fhirconf.extension as ext then ChExtEprConfidentialityCode(confidentialityCode, ext) "confCode";
   };
-  src where $this.versionNumber.exists().not() -&gt; tgt.extension as ext2 then ChExtEprVersionNumber1(src, ext2) "versionNumber1";
-  src.versionNumber as versionNumber -&gt; tgt.extension as ext2 then ChExtEprVersionNumber(versionNumber, ext2);
+  src.versionNumber as versionNumber where (versionNumber &gt; 1) -&gt; tgt.extension as ext2 then ChExtEprVersionNumber(versionNumber, ext2);
   src.informationRecipient as informationRecipient -&gt; bundle.entry as e then {
     informationRecipient.intendedRecipient as intendedRecipient where $this.receivedOrganization.exists() = false -&gt;  e.resource = create('Patient') as recipient,  recipient.id = uuid() as uuid,  e.fullUrl = append('urn:uuid:', uuid),  tgt.extension as ext then ChExtEprInformationRecipient(intendedRecipient, recipient, ext) "informationRecipient";
     informationRecipient.intendedRecipient as intendedRecipient then {
       intendedRecipient.receivedOrganization -&gt;  e.resource = create('Organization') as recipient,  recipient.id = uuid() as uuid2,  e.fullUrl = append('urn:uuid:', uuid2),  tgt.extension as ext then ChExtEprInformationRecipientOrganization(intendedRecipient, recipient, ext) "informationRecipientOrganization";
     } "intendedRecipientAsOrganization";
   } "entry";
-  src.dataEnterer as dataEnterer -&gt;  bundle.entry as e,  e.resource = create('Practitioner') as practitioner,  practitioner.id = uuid() as uuid,  e.fullUrl = append('urn:uuid:', uuid),  tgt.extension as ext then ChExtEprDataEnterer(dataEnterer, practitioner, ext);
+  src.dataEnterer as dataEnterer -&gt;  bundle.entry as e,  e.resource = create('PractitionerRole') as practitionerRole,  practitionerRole.id = uuid() as uuid,  e.fullUrl = append('urn:uuid:', uuid),  tgt.extension as ext then ChExtEprDataEnterer(dataEnterer, bundle, practitionerRole, ext);
 }
 
 </pre>
@@ -188,6 +192,11 @@ FHIR CH-Core: http://fhir.ch/ig/ch-core/index.html"></description>
       <url value="http://hl7.org/fhir/StructureDefinition/Practitioner"></url>
       <mode value="produced"></mode>
       <alias value="Practitioner"></alias>
+   </structure>
+   <structure>
+      <url value="http://hl7.org/fhir/StructureDefinition/Practitioner"></url>
+      <mode value="produced"></mode>
+      <alias value="PractitionerRole"></alias>
    </structure>
    <structure>
       <url value="http://hl7.org/fhir/StructureDefinition/Organization"></url>
@@ -371,6 +380,7 @@ target: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefiniti
                   </target>
                   <dependent>
                      <name value="ClinicalDocumentSection"></name>
+                     <variable value="cda"></variable>
                      <variable value="srcSection"></variable>
                      <variable value="patient"></variable>
                      <variable value="tgtSection"></variable>
@@ -393,6 +403,7 @@ target: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefiniti
                   </target>
                   <dependent>
                      <name value="SectionOriginalRepresentation"></name>
+                     <variable value="cda"></variable>
                      <variable value="srcSection"></variable>
                      <variable value="patient"></variable>
                      <variable value="tgtSection"></variable>
@@ -411,6 +422,11 @@ target: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefiniti
 source: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5.30.1.1.10.1.14
 target: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefinition-ch-core-composition-definitions.html#Composition.section
 TODO: not excplicitly modeled in CH-Core"></documentation>
+      <input>
+         <name value="cda"></name>
+         <type value="ClinicalDocument"></type>
+         <mode value="source"></mode>
+      </input>
       <input>
          <name value="src"></name>
          <type value="Section"></type>
@@ -481,15 +497,6 @@ TODO: not excplicitly modeled in CH-Core"></documentation>
             <transform value="create"></transform>
             <parameter>
                <valueString value="Reference"></valueString>
-            </parameter>
-         </target>
-         <target>
-            <context value="reference"></context>
-            <contextType value="variable"></contextType>
-            <element value="type"></element>
-            <transform value="copy"></transform>
-            <parameter>
-               <valueString value="Binary"></valueString>
             </parameter>
          </target>
          <target>
@@ -833,15 +840,6 @@ target: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefiniti
          <target>
             <context value="reference"></context>
             <contextType value="variable"></contextType>
-            <element value="type"></element>
-            <transform value="copy"></transform>
-            <parameter>
-               <valueString value="Patient"></valueString>
-            </parameter>
-         </target>
-         <target>
-            <context value="reference"></context>
-            <contextType value="variable"></contextType>
             <element value="reference"></element>
             <transform value="evaluate"></transform>
             <parameter>
@@ -949,15 +947,6 @@ target: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefiniti
          <target>
             <context value="reference"></context>
             <contextType value="variable"></contextType>
-            <element value="type"></element>
-            <transform value="copy"></transform>
-            <parameter>
-               <valueString value="Organization"></valueString>
-            </parameter>
-         </target>
-         <target>
-            <context value="reference"></context>
-            <contextType value="variable"></contextType>
             <element value="reference"></element>
             <transform value="evaluate"></transform>
             <parameter>
@@ -990,8 +979,13 @@ target: http://build.fhir.org/ig/hl7ch/ch-core/StructureDefinition-ch-ext-epr-da
          <mode value="source"></mode>
       </input>
       <input>
-         <name value="practitioner"></name>
-         <type value="Practitioner"></type>
+         <name value="bundle"></name>
+         <type value="Bundle"></type>
+         <mode value="target"></mode>
+      </input>
+      <input>
+         <name value="practitionerRole"></name>
+         <type value="PractitionerRole"></type>
          <mode value="target"></mode>
       </input>
       <input>
@@ -1015,7 +1009,7 @@ target: http://build.fhir.org/ig/hl7ch/ch-core/StructureDefinition-ch-ext-epr-da
          </target>
       </rule>
       <rule>
-         <name value="practitioner"></name>
+         <name value="PractitionerRole"></name>
          <source>
             <context value="src"></context>
             <element value="assignedEntity"></element>
@@ -1049,26 +1043,12 @@ target: http://build.fhir.org/ig/hl7ch/ch-core/StructureDefinition-ch-ext-epr-da
          <target>
             <context value="reference"></context>
             <contextType value="variable"></contextType>
-            <element value="type"></element>
-            <transform value="copy"></transform>
-            <parameter>
-               <valueString value="Practitioner"></valueString>
-            </parameter>
-         </target>
-         <target>
-            <context value="reference"></context>
-            <contextType value="variable"></contextType>
             <element value="reference"></element>
             <transform value="evaluate"></transform>
             <parameter>
-               <valueString value="'urn:uuid:' + %practitioner.id"></valueString>
+               <valueString value="'urn:uuid:' + %practitionerRole.id"></valueString>
             </parameter>
          </target>
-         <dependent>
-            <name value="ClinicalDocumentEntityPractitioner"></name>
-            <variable value="assignedEntity"></variable>
-            <variable value="practitioner"></variable>
-         </dependent>
       </rule>
       <rule>
          <name value="time"></name>
@@ -1088,6 +1068,152 @@ target: http://build.fhir.org/ig/hl7ch/ch-core/StructureDefinition-ch-ext-epr-da
             <variable value="time"></variable>
             <variable value="exttime"></variable>
          </dependent>
+      </rule>
+      <rule>
+         <name value="assignedEntity"></name>
+         <source>
+            <context value="src"></context>
+            <element value="assignedEntity"></element>
+            <variable value="assignedEntity"></variable>
+         </source>
+         <rule>
+            <name value="Practitioner"></name>
+            <source>
+               <context value="assignedEntity"></context>
+            </source>
+            <target>
+               <context value="bundle"></context>
+               <contextType value="variable"></contextType>
+               <element value="entry"></element>
+               <variable value="e"></variable>
+            </target>
+            <target>
+               <context value="e"></context>
+               <contextType value="variable"></contextType>
+               <element value="resource"></element>
+               <variable value="practitioner"></variable>
+               <transform value="create"></transform>
+               <parameter>
+                  <valueString value="Practitioner"></valueString>
+               </parameter>
+            </target>
+            <target>
+               <context value="practitioner"></context>
+               <contextType value="variable"></contextType>
+               <element value="id"></element>
+               <variable value="uuid"></variable>
+               <transform value="uuid"></transform>
+            </target>
+            <target>
+               <context value="e"></context>
+               <contextType value="variable"></contextType>
+               <element value="fullUrl"></element>
+               <transform value="append"></transform>
+               <parameter>
+                  <valueString value="urn:uuid:"></valueString>
+               </parameter>
+               <parameter>
+                  <valueId value="uuid"></valueId>
+               </parameter>
+            </target>
+            <target>
+               <context value="practitionerRole"></context>
+               <contextType value="variable"></contextType>
+               <element value="practitioner"></element>
+               <variable value="reference"></variable>
+               <transform value="create"></transform>
+               <parameter>
+                  <valueString value="Reference"></valueString>
+               </parameter>
+            </target>
+            <target>
+               <context value="reference"></context>
+               <contextType value="variable"></contextType>
+               <element value="reference"></element>
+               <transform value="append"></transform>
+               <parameter>
+                  <valueString value="urn:uuid:"></valueString>
+               </parameter>
+               <parameter>
+                  <valueId value="uuid"></valueId>
+               </parameter>
+            </target>
+            <dependent>
+               <name value="ClinicalDocumentEntityPractitioner"></name>
+               <variable value="assignedEntity"></variable>
+               <variable value="practitioner"></variable>
+            </dependent>
+         </rule>
+         <rule>
+            <name value="Organization"></name>
+            <source>
+               <context value="assignedEntity"></context>
+               <element value="representedOrganization"></element>
+               <variable value="representedOrganization"></variable>
+            </source>
+            <target>
+               <context value="bundle"></context>
+               <contextType value="variable"></contextType>
+               <element value="entry"></element>
+               <variable value="e"></variable>
+            </target>
+            <target>
+               <context value="e"></context>
+               <contextType value="variable"></contextType>
+               <element value="resource"></element>
+               <variable value="organization"></variable>
+               <transform value="create"></transform>
+               <parameter>
+                  <valueString value="Organization"></valueString>
+               </parameter>
+            </target>
+            <target>
+               <context value="organization"></context>
+               <contextType value="variable"></contextType>
+               <element value="id"></element>
+               <variable value="uuid2"></variable>
+               <transform value="uuid"></transform>
+            </target>
+            <target>
+               <context value="e"></context>
+               <contextType value="variable"></contextType>
+               <element value="fullUrl"></element>
+               <transform value="append"></transform>
+               <parameter>
+                  <valueString value="urn:uuid:"></valueString>
+               </parameter>
+               <parameter>
+                  <valueId value="uuid2"></valueId>
+               </parameter>
+            </target>
+            <target>
+               <context value="practitionerRole"></context>
+               <contextType value="variable"></contextType>
+               <element value="organization"></element>
+               <variable value="referenceOrg"></variable>
+               <transform value="create"></transform>
+               <parameter>
+                  <valueString value="Reference"></valueString>
+               </parameter>
+            </target>
+            <target>
+               <context value="referenceOrg"></context>
+               <contextType value="variable"></contextType>
+               <element value="reference"></element>
+               <transform value="append"></transform>
+               <parameter>
+                  <valueString value="urn:uuid:"></valueString>
+               </parameter>
+               <parameter>
+                  <valueId value="uuid2"></valueId>
+               </parameter>
+            </target>
+            <dependent>
+               <name value="ClinicalDocumentOrganization"></name>
+               <variable value="representedOrganization"></variable>
+               <variable value="organization"></variable>
+            </dependent>
+         </rule>
       </rule>
    </group>
    <group>
@@ -1160,29 +1286,12 @@ target: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefiniti
          </rule>
       </rule>
       <rule>
-         <name value="versionNumber1"></name>
-         <source>
-            <context value="src"></context>
-            <condition value="$this.versionNumber.exists().not()"></condition>
-         </source>
-         <target>
-            <context value="tgt"></context>
-            <contextType value="variable"></contextType>
-            <element value="extension"></element>
-            <variable value="ext2"></variable>
-         </target>
-         <dependent>
-            <name value="ChExtEprVersionNumber1"></name>
-            <variable value="src"></variable>
-            <variable value="ext2"></variable>
-         </dependent>
-      </rule>
-      <rule>
          <name value="versionNumber"></name>
          <source>
             <context value="src"></context>
             <element value="versionNumber"></element>
             <variable value="versionNumber"></variable>
+            <condition value="(versionNumber &gt; 1)"></condition>
          </source>
          <target>
             <context value="tgt"></context>
@@ -1333,14 +1442,14 @@ target: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefiniti
             <context value="e"></context>
             <contextType value="variable"></contextType>
             <element value="resource"></element>
-            <variable value="practitioner"></variable>
+            <variable value="practitionerRole"></variable>
             <transform value="create"></transform>
             <parameter>
-               <valueString value="Practitioner"></valueString>
+               <valueString value="PractitionerRole"></valueString>
             </parameter>
          </target>
          <target>
-            <context value="practitioner"></context>
+            <context value="practitionerRole"></context>
             <contextType value="variable"></contextType>
             <element value="id"></element>
             <variable value="uuid"></variable>
@@ -1367,7 +1476,8 @@ target: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefiniti
          <dependent>
             <name value="ChExtEprDataEnterer"></name>
             <variable value="dataEnterer"></variable>
-            <variable value="practitioner"></variable>
+            <variable value="bundle"></variable>
+            <variable value="practitionerRole"></variable>
             <variable value="ext"></variable>
          </dependent>
       </rule>

@@ -9,6 +9,8 @@
 <!-- 2020.02.03: Oliver Egger, ahdis ag: Update to CDA-CH EMED (2020) -->
 <!-- 2020.11.12: Michaela Ziegler, ahdis ag: Add missing elements in dispense entry, corresponding to 1-2-MedicationList -->
 <!-- 2021.03.01: Annatina Foppa, eHealth Suisse: Update to CDA-CH EMED v0.97. Some issues remained unresolved, concerning repeatNumber and doseQuantity, see https://art-decor.org/art-decor/decor-issues%2D%2Dch-pharm -->
+<!-- 2021.04.28: Michaela Ziegler, ahdis ag: Remove original representation -->
+<!-- 2021.06.02: Oliver Egger: Update to next CDA-CH-EMED 0.97 -->
 <!-- ************************************************************ -->
 <?xml-stylesheet type='text/xsl' href='../../../../stylesheets/HL7.ch/CDA-CH/v2.0/cda-ch.xsl'?>
 <ClinicalDocument xmlns:pharm="urn:ihe:pharm"
@@ -271,11 +273,12 @@
 							<statusCode code="completed" />
 							<effectiveTime xsi:type="IVL_TS">
 								<low value="20111129" />
+								<high nullFlavor="UNK" />
 							</effectiveTime>
 							<effectiveTime operator='A' xsi:type='EIVL_TS'>
-								<event code='ACM' />
+								<event code='MORN' />
 							</effectiveTime>
-							<repeatNumber value="7" />
+							<repeatNumber nullFlavor="NI" />
 							<routeCode code="20053000" codeSystem="0.4.0.127.0.16.1.1.2.1"
 							displayName="Oral use" />
 							<doseQuantity unit="732936001" value="0.5" />
@@ -307,7 +310,7 @@
 												<!-- Brand name (package) -->
 												<pharm:name>TRIATEC Tabl 2.5 mg</pharm:name>
 												<pharm:formCode code="10219000" codeSystem="0.4.0.127.0.16.1.1.2.1" displayName="Tablet" />
-												<pharm:capacityQuantity value="20" />
+												<pharm:capacityQuantity unit="732936001" value="20" />
 											</pharm:containerPackagedMedicine>
 										</pharm:asContent>
 										<pharm:ingredient classCode="ACTI">
@@ -329,12 +332,28 @@
 									</manufacturedMaterial>
 								</manufacturedProduct>
 							</consumable>
+							<entryRelationship typeCode="COMP">
+								<substanceAdministration moodCode="INT"
+									classCode="SBADM">
+									<templateId root="2.16.756.5.30.1.1.10.4.37" />
+									<text>
+										<reference value="#mtp.1.dosageintakemode" />
+									</text>
+									<consumable>
+										<manufacturedProduct>
+											<manufacturedMaterial nullFlavor="NA" />
+										</manufacturedProduct>
+									</consumable>
+								</substanceAdministration>
+							</entryRelationship>							
 							<entryRelationship typeCode="RSON">
 								<observation classCode="OBS" moodCode="EVN">
 									<templateId root="2.16.756.5.30.1.1.10.4.41" />
 									<code code="75326-9" codeSystem="2.16.840.1.113883.6.1"
 									displayName="Problem" codeSystemName='LOINC' />
 									<text>
+										Bluthochdruck
+										
 										<reference value="#mtp.1.reason" />
 									</text>
 									<statusCode code="completed" />
@@ -343,8 +362,10 @@
 							<entryRelationship typeCode="COMP">
 								<substanceAdministration moodCode="INT"
 									classCode="SBADM">
-									<templateId root="2.16.756.5.30.1.1.10.4.37" />
+									<templateId root="2.16.756.5.30.1.1.10.4.52" />
 									<text>
+										Morgens 1/2 Tablette nehmen
+									
 										<reference value="#mtp.1.dosageintakemode" />
 									</text>
 									<consumable>
@@ -362,6 +383,7 @@
 									<code code="48767-8" codeSystem="2.16.840.1.113883.6.1"
 									codeSystemName="LOINC" displayName="Annotation comment" />
 									<text>
+										-
 										<reference value="#mtp.1.note" />
 									</text>
 									<statusCode code="completed" />
@@ -418,7 +440,7 @@
 												<!-- Brand name (package) -->
 												<pharm:name>TRIATEC Tabl 2.5 mg</pharm:name>
 												<pharm:formCode code="10219000" codeSystem="0.4.0.127.0.16.1.1.2.1" displayName="Tablet" />
-												<pharm:capacityQuantity value="20" />
+												<pharm:capacityQuantity unit="732936001" value="20" />
 											</pharm:containerPackagedMedicine>
 										</pharm:asContent>
 										<pharm:ingredient classCode="ACTI">
@@ -472,11 +494,12 @@
 									<effectiveTime xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 										xsi:type="IVL_TS">
 										<low value="20111129" />
+										<high nullFlavor="UNK" />
 									</effectiveTime>
 									<effectiveTime xsi:type='EIVL_TS' operator='A'>
-										<event code='ACM' />
+										<event code='MORN' />
 									</effectiveTime>
-									<repeatNumber value="7" />
+									<repeatNumber nullFlavor="NI" />
 									<routeCode code="20053000" codeSystem="0.4.0.127.0.16.1.1.2.1"
 										displayName="Oral use" />
 									<doseQuantity unit="732936001" value="0.5" />
@@ -490,8 +513,10 @@
 							<entryRelationship typeCode="COMP">
 								<substanceAdministration moodCode="INT"
 									classCode="SBADM">
-									<templateId root="2.16.756.5.30.1.1.10.4.37" />
+									<templateId root="2.16.756.5.30.1.1.10.4.52" />
 									<text>
+										Morgens 1/2 Tablette nehmen
+										
 										<reference value="#dis.1.dosageintakemode" />
 									</text>
 									<consumable>
@@ -509,30 +534,13 @@
 									<code code="48767-8" codeSystem="2.16.840.1.113883.6.1"
 										codeSystemName="LOINC" displayName="Annotation comment" />
 									<text>
+										-
 										<reference value="#dis.1.note" />
 									</text>
 									<statusCode code="completed" />
 								</act>
 							</entryRelationship>
 						</supply>
-					</entry>
-				</section>
-			</component>
-			<component>
-				<section>
-					<templateId root="2.16.756.5.30.1.1.10.3.45" />
-					<code code="55108-5" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Clinical presentation" />
-					<title>Original representation</title>
-					<text>
-						Representation of the original view:
-						<renderMultiMedia referencedObject="pdf1" />
-					</text>
-					<entry typeCode='DRIV'>
-						<observationMedia classCode="OBS" moodCode="EVN" ID="pdf1">
-							<templateId root="2.16.756.5.30.1.1.10.4.83" />
-							<languageCode code="en-US" />
-							<value xsi:type='ED' mediaType="application/pdf" representation="B64">c25pcA==</value>
-						</observationMedia>
 					</entry>
 				</section>
 			</component>

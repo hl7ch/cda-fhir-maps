@@ -1,0 +1,524 @@
+<Bundle 
+  xmlns="http://hl7.org/fhir">
+  <identifier>
+    <system value="urn:ietf:rfc:3986"/>
+    <value value="urn:uuid:17931678-20b4-11e6-b67b-9e71128cae77"/>
+  </identifier>
+  <type value="document"/>
+  <timestamp value="2012-02-04T13:55:00+01:00"/>
+  <entry>
+    <fullUrl value="urn:uuid:eb4023eb-bc97-4223-86ac-5e2d80fd94ec"/>
+    <resource>
+      <Composition>
+        <language value="de-CH"/>
+        <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-informationrecipient">
+          <valueReference>
+            <reference value="urn:uuid:e89c0e17-a3af-4179-a089-1a2189f5241c"/>
+          </valueReference>
+        </extension>
+        <identifier>
+          <system value="urn:ietf:rfc:3986"/>
+          <value value="urn:uuid:17931678-20b4-11e6-b67b-9e71128cae77"/>
+        </identifier>
+        <status value="final"/>
+        <type>
+          <coding>
+            <system value="http://loinc.org"/>
+            <code value="56445-0"/>
+            <display value="Medication summary"/>
+          </coding>
+          <coding>
+            <system value="http://snomed.info/sct"/>
+            <code value="721912009"/>
+            <display value="Medication summary document (record artifact)"/>
+          </coding>
+        </type>
+        <subject>
+          <reference value="urn:uuid:1848022e-bf1c-4421-bb4c-b803522c3411"/>
+        </subject>
+        <date value="2012-02-04T13:55:00+01:00"/>
+        <author>
+          <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-time">
+            <valueDateTime value="2012-02-04T13:55:00+01:00"/>
+          </extension>
+          <reference value="urn:uuid:9689296c-7861-44d4-8824-714f2917c8c9"/>
+        </author>
+        <author>
+          <reference value="urn:uuid:76c1ea57-0834-4f52-b87b-8b534e9918f2"/>
+        </author>
+        <title value="Medikationsliste"/>
+        <confidentiality value="N">
+          <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-confidentialitycode">
+            <valueCodeableConcept>
+              <coding>
+                <system value="http://snomed.info/sct"/>
+                <code value="17621005"/>
+                <display value="Normally accessible"/>
+              </coding>
+            </valueCodeableConcept>
+          </extension>
+        </confidentiality>
+        <custodian>
+          <reference value="urn:uuid:c7ab130a-7962-47f8-bd62-4f40e0099f4d"/>
+        </custodian>
+        <section>
+          <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-sectionid">
+            <valueIdentifier>
+              <system value="urn:ietf:rfc:3986"/>
+              <value value="urn:uuid:f5ee14ee-52dc-48b0-8d96-e2713c99e607"/>
+            </valueIdentifier>
+          </extension>
+          <title value="Medikamentenliste"/>
+          <code>
+            <coding>
+              <system value="http://loinc.org"/>
+              <code value="10160-0"/>
+              <display value="History of medication use"/>
+            </coding>
+          </code>
+          <text>
+            <status value="generated"/>
+            <div 
+              xmlns="http://www.w3.org/1999/xhtml">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Typ des Dokuments</th>
+                    <th>Präpartename</th>
+                    <th>Wirkstoffname</th>
+                    <th>Galenische Form</th>
+                    <th>Dosis pro Einheit</th>
+                    <th>Dosierung</th>
+                    <th>Dos.Morgen</th>
+                    <th>Dos.Mittag</th>
+                    <th>Dos.Abend</th>
+                    <th>Dos.Nacht</th>
+                    <th>Verabreichungsweg</th>
+                    <th>Kommentar</th>
+                    <th>Anwendungsdauer</th>
+                    <th>Behandlungsgrund</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr id="mtp.1">
+                    <td id="mtp.1.documenttype">Medication Treatment Plan document</td>
+                    <td id="mtp.1.brandedmedication">Triatec</td>
+                    <td id="mtp.1.ingredient">Ramipril</td>
+                    <td id="mtp.1.packageform">Tbl</td>
+                    <td id="mtp.1.dosequantity">2.5 mg</td>
+                    <td id="mtp.1.dosageintakemode">Morgens 1/2 Tablette nehmen</td>
+                    <td id="mtp.1.dosagemorning">0.5</td>
+                    <td id="mtp.1.dosagelunch">0</td>
+                    <td id="mtp.1.dosageevening">0</td>
+                    <td id="mtp.1.dosagenight">0</td>
+                    <td id="mtp.1.routecode">oral</td>
+                    <td id="mtp.1.note"/>
+                    <td id="mtp.1.datefromto"/>
+                    <td id="mtp.1.reason">Bluthochdruck</td>
+                  </tr>
+                </tbody>
+              </table>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Typ des Dokuments</th>
+                    <th>Präpartename</th>
+                    <th>Wirkstoffname</th>
+                    <th>Galenische Form</th>
+                    <th>Dosis pro Einheit</th>
+                    <th>Anzahl Packungen</th>
+                    <th>Packungsgrösse</th>
+                    <th>Dosierung</th>
+                    <th>Dos.Morgen</th>
+                    <th>Dos.Mittag</th>
+                    <th>Dos.Abend</th>
+                    <th>Dos.Nacht</th>
+                    <th>Verabreichungsweg</th>
+                    <th>Kommentar</th>
+                    <th>Behandlungsrund</th>
+                    <th>Datum/Zeit der Abgabe/ Anwendung</th>
+                    <th>Identifikation des Empfängers</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr id="dis.1">
+                    <td id="dis.1.documenttype">Medication Dispense document</td>
+                    <td id="dis.1.brandedmedication">Triatec</td>
+                    <td id="dis.1.ingredient">Ramipril</td>
+                    <td id="dis.1.dosequantity">2.5 mg</td>
+                    <td id="dis.1.packageform">Tbl</td>
+                    <td id="dis.1.nopackages">1</td>
+                    <td id="dis.1.packagesize">20</td>
+                    <td id="dis.1.dosageintakemode">Morgens 1/2 Tablette nehmen</td>
+                    <td id="dis.1.dosagemorning">0.5</td>
+                    <td id="dis.1.dosagelunch">0</td>
+                    <td id="dis.1.dosageevening">0</td>
+                    <td id="dis.1.dosagenight">0</td>
+                    <td id="dis.1.routecode">oral</td>
+                    <td id="dis.1.note"/>
+                    <td id="dis.1.datefromto"/>
+                    <td id="dis.1.reason">Bluthochdruck</td>
+                    <td id="dis.1.dipsensedate"/>
+                    <td id="dis.1.dipsenseto"/>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </text>
+          <entry>
+            <reference value="urn:uuid:733f5a67-5347-43bb-a3e1-068b10a0d808"/>
+          </entry>
+          <entry>
+            <reference value="urn:uuid:97ebd6b4-f0d9-4ee6-a81b-0853c259d5b6"/>
+          </entry>
+        </section>
+      </Composition>
+    </resource>
+  </entry>
+  <entry>
+    <fullUrl value="urn:uuid:1848022e-bf1c-4421-bb4c-b803522c3411"/>
+    <resource>
+      <Patient>
+        <identifier>
+          <type>
+            <coding>
+              <system value="http://terminology.hl7.org/CodeSystem/v2-0203"/>
+              <code value="MR"/>
+            </coding>
+          </type>
+          <system value="urn:oid:2.999"/>
+          <value value="11111111"/>
+        </identifier>
+        <name>
+          <family value="Wegmüller"/>
+          <given value="Monika"/>
+        </name>
+        <gender value="female"/>
+        <birthDate value="1943-05-15"/>
+        <address>
+          <line value="Wiesenstr. 12"/>
+          <city value="Zürich"/>
+          <postalCode value="8003"/>
+          <country value="CH"/>
+        </address>
+      </Patient>
+    </resource>
+  </entry>
+  <entry>
+    <fullUrl value="urn:uuid:9689296c-7861-44d4-8824-714f2917c8c9"/>
+    <resource>
+      <Practitioner>
+        <identifier>
+          <system value="urn:oid:2.51.1.3"/>
+          <value value="7601000234438"/>
+        </identifier>
+        <name>
+          <family value="Hausarzt"/>
+          <given value="Familien"/>
+        </name>
+      </Practitioner>
+    </resource>
+  </entry>
+  <entry>
+    <fullUrl value="urn:uuid:76c1ea57-0834-4f52-b87b-8b534e9918f2"/>
+    <resource>
+      <Organization>
+        <identifier>
+          <system value="urn:oid:2.51.1.3"/>
+          <value value="7601000234438"/>
+        </identifier>
+        <name value="Hausarzt"/>
+        <address>
+          <line value="Krankenstrasse 2"/>
+          <city value="Zürich"/>
+          <postalCode value="8005"/>
+          <country value="CH"/>
+        </address>
+      </Organization>
+    </resource>
+  </entry>
+  <entry>
+    <fullUrl value="urn:uuid:c7ab130a-7962-47f8-bd62-4f40e0099f4d"/>
+    <resource>
+      <Organization>
+        <identifier>
+          <system value="urn:oid:2.51.1.3"/>
+          <value value="7601000234438"/>
+        </identifier>
+        <name value="Hausarzt"/>
+      </Organization>
+    </resource>
+  </entry>
+  <entry>
+    <fullUrl value="urn:uuid:e89c0e17-a3af-4179-a089-1a2189f5241c"/>
+    <resource>
+      <Patient>
+        <name>
+          <family value="Wegmüller"/>
+          <given value="Monika"/>
+        </name>
+        <address>
+          <line value="Wiesenstr. 12"/>
+          <city value="Zürich"/>
+          <postalCode value="8003"/>
+          <country value="CH"/>
+        </address>
+      </Patient>
+    </resource>
+  </entry>
+  <entry>
+    <fullUrl value="urn:uuid:733f5a67-5347-43bb-a3e1-068b10a0d808"/>
+    <resource>
+      <MedicationStatement>
+        <contained>
+          <Medication>
+            <id value="med"/>
+            <code>
+              <coding>
+                <system value="urn:oid:2.51.1.1"/>
+                <code value="7680538751228"/>
+                <display value="TRIATEC Tabl 2.5 mg 20 Stk"/>
+              </coding>
+              <text value="TRIATEC Tabl 2.5 mg"/>
+            </code>
+            <form>
+              <coding>
+                <system value="urn:oid:0.4.0.127.0.16.1.1.2.1"/>
+                <code value="10219000"/>
+                <display value="Tablet"/>
+              </coding>
+            </form>
+            <amount>
+              <numerator>
+                <value value="20"/>
+                <unit value="Tablet (unit of presentation)"/>
+                <system value="http://snomed.info/sct"/>
+                <code value="732936001"/>
+              </numerator>
+              <denominator>
+                <value value="1"/>
+                <unit value="Package"/>
+                <system value="http://unitsofmeasure.org"/>
+                <code value="{Package}"/>
+              </denominator>
+            </amount>
+            <ingredient>
+              <itemCodeableConcept>
+                <coding>
+                  <system value="http://snomed.info/sct"/>
+                  <code value="386872004"/>
+                  <display value="Ramipril (substance)"/>
+                </coding>
+                <text value="Ramipril"/>
+              </itemCodeableConcept>
+              <strength>
+                <numerator>
+                  <value value="2.5"/>
+                  <unit value="milligram"/>
+                  <system value="http://unitsofmeasure.org"/>
+                  <code value="mg"/>
+                </numerator>
+                <denominator>
+                  <value value="1"/>
+                  <unit value="Tablet (unit of presentation)"/>
+                  <system value="http://snomed.info/sct"/>
+                  <code value="732936001"/>
+                </denominator>
+              </strength>
+            </ingredient>
+          </Medication>
+        </contained>
+        <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
+          <valueUrl value="#mtp.1"/>
+        </extension>
+        <identifier>
+          <system value="urn:ietf:rfc:3986"/>
+          <value value="urn:uuid:c9f758a1-296c-4710-84d4-e181db8c7478"/>
+        </identifier>
+        <status value="completed"/>
+        <medicationReference>
+          <reference value="#med"/>
+        </medicationReference>
+        <subject>
+          <reference value="urn:uuid:1848022e-bf1c-4421-bb4c-b803522c3411"/>
+        </subject>
+        <reasonCode>
+          <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
+            <valueUrl value="#mtp.1.reason"/>
+          </extension>
+          <text value="Bluthochdruck"/>
+        </reasonCode>
+        <note>
+          <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
+            <valueUrl value="#mtp.1.note"/>
+          </extension>
+          <text value="-"/>
+        </note>
+        <dosage>
+          <timing>
+            <repeat>
+              <boundsPeriod>
+                <start value="2011-11-29"/>
+              </boundsPeriod>
+              <when value="MORN"/>
+            </repeat>
+          </timing>
+          <route>
+            <coding>
+              <system value="urn:oid:0.4.0.127.0.16.1.1.2.1"/>
+              <code value="20053000"/>
+              <display value="Oral use"/>
+            </coding>
+          </route>
+          <doseAndRate>
+            <doseQuantity>
+              <value value="0.5"/>
+              <unit value="Tablet (unit of presentation)"/>
+              <system value="http://snomed.info/sct"/>
+              <code value="732936001"/>
+            </doseQuantity>
+          </doseAndRate>
+        </dosage>
+        <dosage>
+          <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
+            <valueUrl value="#mtp.1.dosageintakemode"/>
+          </extension>
+          <text value="Morgens 1/2 Tablette nehmen"/>
+        </dosage>
+      </MedicationStatement>
+    </resource>
+  </entry>
+  <entry>
+    <fullUrl value="urn:uuid:97ebd6b4-f0d9-4ee6-a81b-0853c259d5b6"/>
+    <resource>
+      <MedicationDispense>
+        <contained>
+          <Medication>
+            <id value="med"/>
+            <code>
+              <coding>
+                <system value="urn:oid:2.51.1.1"/>
+                <code value="7680538751228"/>
+                <display value="TRIATEC Tabl 2.5 mg 20 Stk"/>
+              </coding>
+              <text value="TRIATEC Tabl 2.5 mg"/>
+            </code>
+            <form>
+              <coding>
+                <system value="urn:oid:0.4.0.127.0.16.1.1.2.1"/>
+                <code value="10219000"/>
+                <display value="Tablet"/>
+              </coding>
+            </form>
+            <amount>
+              <numerator>
+                <value value="20"/>
+                <unit value="Tablet (unit of presentation)"/>
+                <system value="http://snomed.info/sct"/>
+                <code value="732936001"/>
+              </numerator>
+              <denominator>
+                <value value="1"/>
+                <unit value="Package"/>
+                <system value="http://unitsofmeasure.org"/>
+                <code value="{Package}"/>
+              </denominator>
+            </amount>
+            <ingredient>
+              <itemCodeableConcept>
+                <coding>
+                  <system value="http://snomed.info/sct"/>
+                  <code value="386872004"/>
+                  <display value="Ramipril (substance)"/>
+                </coding>
+                <text value="Ramipril"/>
+              </itemCodeableConcept>
+              <strength>
+                <numerator>
+                  <value value="2.5"/>
+                  <unit value="milligram"/>
+                  <system value="http://unitsofmeasure.org"/>
+                  <code value="mg"/>
+                </numerator>
+                <denominator>
+                  <value value="1"/>
+                  <unit value="Tablet (unit of presentation)"/>
+                  <system value="http://snomed.info/sct"/>
+                  <code value="732936001"/>
+                </denominator>
+              </strength>
+            </ingredient>
+          </Medication>
+        </contained>
+        <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
+          <valueUrl value="#dis.1"/>
+        </extension>
+        <extension url="http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-treatmentplan">
+          <extension url="id">
+            <valueIdentifier>
+              <system value="urn:ietf:rfc:3986"/>
+              <value value="urn:uuid:c9f758a1-296c-4710-84d4-e181db8c7478"/>
+            </valueIdentifier>
+          </extension>
+          <extension url="externalDocumentId">
+            <valueIdentifier>
+              <system value="urn:ietf:rfc:3986"/>
+              <value value="urn:uuid:c9f758a1-296c-4710-84d4-e181db8c7478"/>
+            </valueIdentifier>
+          </extension>
+        </extension>
+        <identifier>
+          <system value="urn:ietf:rfc:3986"/>
+          <value value="urn:uuid:488bd23a-20c6-11e6-b67b-9e71128cae77"/>
+        </identifier>
+        <status value="completed"/>
+        <medicationReference>
+          <reference value="#med"/>
+        </medicationReference>
+        <subject>
+          <reference value="urn:uuid:1848022e-bf1c-4421-bb4c-b803522c3411"/>
+        </subject>
+        <quantity>
+          <value value="1"/>
+        </quantity>
+        <note>
+          <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
+            <valueUrl value="#dis.1.note"/>
+          </extension>
+          <text value="-"/>
+        </note>
+        <dosageInstruction>
+          <timing>
+            <repeat>
+              <boundsPeriod>
+                <start value="2011-11-29"/>
+              </boundsPeriod>
+              <when value="MORN"/>
+            </repeat>
+          </timing>
+          <route>
+            <coding>
+              <system value="urn:oid:0.4.0.127.0.16.1.1.2.1"/>
+              <code value="20053000"/>
+              <display value="Oral use"/>
+            </coding>
+          </route>
+          <doseAndRate>
+            <doseQuantity>
+              <value value="0.5"/>
+              <unit value="Tablet (unit of presentation)"/>
+              <system value="http://snomed.info/sct"/>
+              <code value="732936001"/>
+            </doseQuantity>
+          </doseAndRate>
+        </dosageInstruction>
+        <dosageInstruction>
+          <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
+            <valueUrl value="#dis.1.dosageintakemode"/>
+          </extension>
+          <text value="Morgens 1/2 Tablette nehmen"/>
+        </dosageInstruction>
+      </MedicationDispense>
+    </resource>
+  </entry>
+</Bundle>
