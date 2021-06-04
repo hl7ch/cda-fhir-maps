@@ -16,6 +16,7 @@
             <Composition>
                 <id value="2-2-PharmaceuticalAdvice"/>
                 <language value="de-CH"/>
+
                 <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-informationrecipient">
                     <valueReference>
                         <reference value="Patient/MonikaWegmuellerRecipient"/>

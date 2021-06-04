@@ -555,7 +555,7 @@ group PharmaceuticalAdviceItemEntryContentModule(source section : Section, sourc
            e.fullUrl = append('urn:uuid:',uuid), 
            e.resource = create('MedicationStatement') as medicationstatement, 
       observation.extension as ext,  
-          ext.url = '"http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-medicationstatement-changed',
+          ext.url = 'http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-medicationstatement-changed',
           ext.value = create('Reference') as reference, reference.reference = append('urn:uuid:',uuid)
       then {
         entry.substanceAdministration as substanceAdministration then MedicationTreatmentPlanItemEntryContentModule(section, substanceAdministration, patient, medicationstatement);
