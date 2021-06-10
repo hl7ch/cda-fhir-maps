@@ -140,7 +140,7 @@ group MedicationTreatmentPlanItemEntryContentModule(source bundle : Bundle, sour
   medicationStatement.reasonCode as reasonCode -&gt;  substanceAdministration.entryRelationship as entryRelationship,  entryRelationship.typeCode = 'RSON',  entryRelationship.observation as observation then TreatmentReasonEntryContentModule(reasonCode, observation) "TreatmentReasonEntryContentModule";
   medicationStatement.extension as extension where url = 'http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-treatmentplan' -&gt;  substanceAdministration.entryRelationship as entryRelationship,  entryRelationship.typeCode = 'REFR',  entryRelationship.substanceAdministration as substanceAdministration then MTPReferenceEntryContentModule(extension, substanceAdministration) "MTP-Reference";
   // https://github.com/ehealthsuisse/ch-emed/issues/56
-  medicationStatement -&gt;  substanceAdministration.repeatNumber as repeatNumber,  repeatNumber.nullFlavor = 'NI' "repeatNumber Default";
+  medicationStatement -&gt;  substanceAdministration.repeatNumber as repeatNumber,  repeatNumber.nullFlavor = 'NI' "repeatNumberDefault";
   // TODO: Patient Medication Instructions Contains 1.3.6.1.4.1.19376.1.5.3.1.4.3 IHE Patient Medication Instructions (DYNAMIC)
   medicationStatement.dosage as dosage where $this.conformsTo('http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-nonstructured') -&gt;  substanceAdministration.entryRelationship as entryRelationship,  entryRelationship.typeCode = 'COMP',  entryRelationship.substanceAdministration as substanceAdministration then DosageInstructionsNonStructuredEntryContentModule(dosage, substanceAdministration) "DosageInstructionsNonStructuredEntryContentModule";
   medicationStatement.note as note -&gt;  substanceAdministration.entryRelationship as entryRelationship,  entryRelationship.typeCode = 'COMP',  entryRelationship.act as act then AnnotationComment(note, act) "AnnotationComment";
@@ -188,7 +188,7 @@ group EffectiveTimeStartEnd(source dosage : Dosage, target substanceAdministrati
     timing.repeat as repeat then {
       repeat.bounds : Period as bounds -&gt; substanceAdministration.effectiveTime = create('IVL_TS') as effectiveTime then {
         bounds.start as start -&gt; effectiveTime.low as low then DateTS(start, low) "low";
-        bounds where start.exists().not() -&gt;  effectiveTime.low as low,  low.nullFlavor = 'UNK' "NullFlavor low";
+        bounds where start.exists().not() -&gt;  effectiveTime.low as low,  low.nullFlavor = 'UNK' "NullFlavorLow";
         bounds.end as end -&gt; effectiveTime.high as high then DateTS(end, high) "high";
         bounds where end.exists().not() -&gt;  effectiveTime.high as high,  high.nullFlavor = 'UNK' "NullFlavor high";
       };
@@ -378,7 +378,6 @@ group DosageInstructionsStartStopFrequencySupply(source dosage : Dosage, target 
       dosage -&gt;  substanceAdministration.templateId as templateId,  templateId.root = '1.3.6.1.4.1.19376.1.5.3.1.4.7.1' "normalDose";
       dosage -&gt; substanceAdministration as substanceAdministration then EffectiveTimeStartEnd(dosage, substanceAdministration) "effectiveTimeStartEnd";
       dosage -&gt; substanceAdministration as substanceAdministration then EffectiveTimeWhenNormal(dosage, substanceAdministration) "effectiveTimeWhen";
-      dosage -&gt;  substanceAdministration.repeatNumber as repeatNumber,  repeatNumber.nullFlavor = 'NI' "repeatNumber Default";
       dosage.route as route -&gt; substanceAdministration.routeCode as routeCode then CodeableConceptCE(route, routeCode);
       dosage -&gt; substanceAdministration as substanceAdministration then DoseQuantity(dosage, substanceAdministration) "doseQuantity";
       dosage -&gt;  substanceAdministration as substanceAdministration,  substanceAdministration.consumable as consumable,  consumable.manufacturedProduct as manufacturedProduct,  manufacturedProduct.manufacturedMaterial as manufacturedMaterial,  manufacturedMaterial.nullFlavor = 'NA' "consumable";
@@ -2117,7 +2116,7 @@ target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=temp
          </dependent>
       </rule>
       <rule>
-         <name value="repeatNumber Default"></name>
+         <name value="repeatNumberDefault"></name>
          <source>
             <context value="medicationStatement"></context>
          </source>
@@ -2662,7 +2661,7 @@ dosage for split dosing: sequence number, effectiveTime (when), dose quantity, c
                   </dependent>
                </rule>
                <rule>
-                  <name value="NullFlavor low"></name>
+                  <name value="NullFlavorLow"></name>
                   <source>
                      <context value="bounds"></context>
                      <condition value="start.exists().not()"></condition>
@@ -4913,27 +4912,6 @@ dosage for normal dosing (without sequences) (Dispense)"></documentation>
                   <variable value="dosage"></variable>
                   <variable value="substanceAdministration"></variable>
                </dependent>
-            </rule>
-            <rule>
-               <name value="repeatNumber Default"></name>
-               <source>
-                  <context value="dosage"></context>
-               </source>
-               <target>
-                  <context value="substanceAdministration"></context>
-                  <contextType value="variable"></contextType>
-                  <element value="repeatNumber"></element>
-                  <variable value="repeatNumber"></variable>
-               </target>
-               <target>
-                  <context value="repeatNumber"></context>
-                  <contextType value="variable"></contextType>
-                  <element value="nullFlavor"></element>
-                  <transform value="copy"></transform>
-                  <parameter>
-                     <valueString value="NI"></valueString>
-                  </parameter>
-               </target>
             </rule>
             <rule>
                <name value="route"></name>
