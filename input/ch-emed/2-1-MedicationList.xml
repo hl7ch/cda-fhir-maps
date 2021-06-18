@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Bundle xmlns="http://hl7.org/fhir">
     <id value="2-1-MedicationList"/>
+    <meta>
+        <lastUpdated value="2020-03-10T12:31:59.738+00:00"/>
+        <profile value="http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-document-medicationlist"/>
+    </meta>
     <identifier>
         <system value="urn:ietf:rfc:3986"/>
         <value value="urn:uuid:17931678-20b4-11e6-b67b-9e71128cae77"/>
@@ -137,7 +141,7 @@
                                         <th>Kommentar</th>
                                         <th>Behandlungsrund</th>
                                         <th>Datum/Zeit der Abgabe/ Anwendung</th>
-                                        <th>Identifikation des Empfängers</th>
+                                        <th>Identifikation des Empfängers</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -348,12 +352,6 @@
                     </extension>
                     <text value="Bluthochdruck"/>
                 </reasonCode>
-                <note>
-                    <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
-                        <valueUrl value="#mtp.1.note"/>
-                    </extension>
-                    <text value="-"/>
-                </note>
                 <dosage>
                     <timing>
                         <repeat>
@@ -481,12 +479,6 @@
                 <quantity>
                     <value value="1"/>
                 </quantity>
-                <note>
-                    <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
-                        <valueUrl value="#dis.1.note"/>
-                    </extension>
-                    <text value="-"/>
-                </note>
                 <dosageInstruction>
                     <timing>
                         <repeat>

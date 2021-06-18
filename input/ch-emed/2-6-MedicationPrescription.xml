@@ -36,7 +36,7 @@
                <coding>
                   <system value="http://snomed.info/sct"/>
                   <code value="761938008"/>
-                  <display value="Medicinal Prescription record (record artifact)"/>
+                  <display value="Medicinal prescription record (record artifact)"/>
                </coding>
             </type>
             <subject>

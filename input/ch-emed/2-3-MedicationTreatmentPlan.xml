@@ -67,7 +67,7 @@
                     <reference value="Organization/Custodian"/>
                 </custodian>
                 <section>
-                    <title value="Medikamentöser Behandlungsplan"/>
+                    <title value="Medikamentöser Behandlungsplan"/>
                     <code>
                         <coding>
                             <system value="http://loinc.org"/>
@@ -306,12 +306,6 @@
                     </extension>
                     <text value="Bluthochdruck"/>
                 </reasonCode>
-                <note>
-                    <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
-                        <valueUrl value="#mtp.1.note"/>
-                    </extension>
-                    <text value="-"/>
-                </note>
                 <dosage>
                     <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
                         <valueUrl value="#mtp.1.dosageintakemode"/>

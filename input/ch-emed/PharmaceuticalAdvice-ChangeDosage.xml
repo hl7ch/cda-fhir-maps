@@ -309,7 +309,7 @@
                         <amount>
                             <numerator>
                                 <value value="20"/>
-                                <unit value="Tablet"/>
+                                <unit value="Tablet (unit of presentation)"/>
                                 <system value="http://snomed.info/sct"/>
                                 <code value="732936001"/>
                             </numerator>
@@ -366,12 +366,6 @@
                     </extension>
                     <text value="Bluthochdruck"/>
                 </reasonCode>
-                <note>
-                    <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
-                        <valueUrl value="#padv.1.note"/>
-                    </extension>
-                    <text value="-"/>
-                </note>
                 <dosage>
                     <timing>
                         <repeat>
@@ -391,7 +385,7 @@
                     <doseAndRate>
                         <doseQuantity>
                             <value value="1"/>
-                            <unit value="Tablette" />
+                            <unit value="Tablet (unit of presentation)"/>
                             <system value="http://snomed.info/sct"/>
                             <code value="732936001"/>
                         </doseQuantity>
