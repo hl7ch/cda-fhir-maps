@@ -13,14 +13,24 @@
       "current": true
     },
     {
-      "version": "0.1.0",
-      "date": "2020-12-09",
+      "version": "0.2.0",
+      "date": "2021-06-18",
       "desc": "DSTU 1",
       "path": "http://fhir.ch/ig/cda-fhir-maps",
       "status": "trial-use",
       "sequence" : "DSTU 1",
       "fhirversion": "4.0.1",
       "current": true
+    },
+    {
+      "version": "0.1.0",
+      "date": "2020-12-09",
+      "desc": "DSTU 1",
+      "path": "http://fhir.ch/ig/cda-fhir-maps/0.1.0",
+      "status": "trial-use",
+      "sequence" : "DSTU 1",
+      "fhirversion": "4.0.1"
     }
-  ]
+  ],
+  "category": "National Base"
 }

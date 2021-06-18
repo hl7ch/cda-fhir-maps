@@ -9,12 +9,12 @@
     </div>
   </text>
   <url value="http://fhir.ch/ig/cda-fhir-maps/ImplementationGuide/ch.fhir.ig.cda-fhir-maps"/>
-  <version value="0.1.1"/>
+  <version value="0.2.0"/>
   <name value="CDA_FHIR_MAPS"/>
   <title value="CDA-FHIR-Maps (R4)"/>
   <status value="active"/>
   <experimental value="false"/>
-  <date value="2020-12-09"/>
+  <date value="2021-06-18"/>
   <publisher value="ahdis"/>
   <contact>
     <name value="ahdis"/>
@@ -35,7 +35,7 @@
    <dependsOn id="chemed">
       <uri value="http://fhir.ch/ig/ch-emed/ImplementationGuide/ch.fhir.ig.ch-emed"/>
       <packageId value="ch.fhir.ig.ch-emed"/>
-      <version value="0.2.0"/>
+      <version value="1.0.0"/>
    </dependsOn>
   <definition>
     <!-- References to structure maps -->
@@ -195,8 +195,8 @@
     <!-- parameters -->
     <parameter>
       <code value="releaselabel"/>
-      <value value="CI build"/>
-      <!--<value value="Draft Standard for Trial Use"/>-->
+      <!-- <value value="CI build"/> -->
+      <value value="Draft Standard for Trial Use"/>
     </parameter>
     <parameter>
       <code value="path-pages" />
