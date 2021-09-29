@@ -61,3 +61,17 @@ Content-Type: application/fhir+xml;fhirVersion=4.0
 
 
 
+### 5. Transform PADV from FHIR to CDA
+POST {{host}}/StructureMap/$transform?source=http://fhir.ch/ig/cda-fhir-maps/StructureMap/BundleToCdaChEmedPharmaceuticalAdviceDocument
+Accept: application/fhir+xml;fhirVersion=4.0
+Content-Type: application/fhir+json;fhirVersion=4.0
+
+< ./input/ch-emed/PADV-CANCEL.json
+
+
+### 5. Transform PADV from FHIR to CDA
+POST {{host}}/StructureMap/$transform?source=http://fhir.ch/ig/cda-fhir-maps/StructureMap/BundleToCdaChEmedPharmaceuticalAdviceDocument
+Accept: application/fhir+xml;fhirVersion=4.0
+Content-Type: application/fhir+json;fhirVersion=4.0
+
+< ./input/ch-emed/PADV-CHANGE.json
