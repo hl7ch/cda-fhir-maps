@@ -47,6 +47,7 @@ group BundleToCdaChEmedPharmaceuticalAdviceDocument(source bundle : Bundle, targ
 // source: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-composition-pharmaceuticaladvice.html
 // target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&id=2.16.756.5.30.1.1.10.1.6
 group CompositionClinicalDocumentChEmedPharmaceuticalAdviceDocument(source bundle : Bundle, source composition : Composition, target cda : ClinicalDocument) {
+  composition.type -> cda.code as code, code.codeSystem = '2.16.840.1.113883.6.1', code.codeSystemName='LOINC', code.code = '61356-2', code.displayName='Medication pharmaceutical advice.extended' "fixloinc";
   composition.section as section where $this.code.coding.where(system='http://loinc.org' and code='61357-0') -> cda.component as component then {
     section -> component.contextConductionInd = true "contextConductionInd";
     section -> component.structuredBody as structuredBody, structuredBody.component as component, component.section as cdasection then SectionPharmaceuticalAdviceSectionContentModule(bundle, section, cdasection) "cdasection";

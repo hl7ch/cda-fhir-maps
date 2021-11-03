@@ -48,6 +48,7 @@ group BundleToCdaChEmedMedicationPrescriptionDocument(source bundle : Bundle, ta
 // source: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-composition-medicationprescription.html
 // target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&id=2.16.756.5.30.1.1.10.1.4
 group CompositionClinicalDocumentChEmedMedicationPrescriptionDocument(source bundle : Bundle, source composition : Composition, target cda : ClinicalDocument) {
+  composition.type -> cda.code as code, code.codeSystem = '2.16.840.1.113883.6.1', code.codeSystemName='LOINC', code.code = '57833-6', code.displayName='Prescription for medication' "fixloinc";
   composition.section as section where $this.code.coding.where(system='http://loinc.org' and code='57828-6') -> cda.component as component then {
     section -> component.contextConductionInd = true "contextConductionInd";
     section -> component.structuredBody as structuredBody, structuredBody.component as component, component.section as cdasection then SectionPrescriptionSectionContentModule(bundle, section, cdasection) "cdasection";
