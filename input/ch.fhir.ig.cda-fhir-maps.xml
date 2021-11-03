@@ -69,6 +69,13 @@
     </resource>
     <resource>
       <reference>
+        <reference value="ConceptMap/cm-administrative-gender-v3"/>
+      </reference>
+      <name value="v3.AdministrativeGender"/>
+      <description value="v3 map for AdministrativeGender (copy from HL7)"/>
+    </resource>
+    <resource>
+      <reference>
         <reference value="StructureMap/CdaChEmedMedicationTreatmentPlanDocumentToBundle"/>
       </reference>
       <name value="CDA-CH-EMED Medication Treatment Plan document to Bundle"/>
