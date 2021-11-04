@@ -244,7 +244,7 @@ group EffectiveTimeStartEnd(source dosage: Dosage, target substanceAdministratio
         bounds.start as start -> effectiveTime.low as low then DateTS(start, low) "low"; 
         bounds where start.exists().not() -> effectiveTime.low as low, low.nullFlavor = 'UNK' "NullFlavorLow";
         bounds.end as end -> effectiveTime.high as high then DateTS(end, high) "high"; 
-        bounds where end.exists().not() -> effectiveTime.high as high, high.nullFlavor = 'UNK' "NullFlavor high";
+        bounds where end.exists().not() -> effectiveTime.high as high, high.nullFlavor = 'UNK' "NullFlavorhigh";
       } "bounds";
     } "repeat";
   } "timing"; 

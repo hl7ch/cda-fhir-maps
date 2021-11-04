@@ -146,12 +146,6 @@ group CodeableConceptCE(source src : CodeableConcept, target tgt : CE) extends A
 //  } "translation";
 //}
 
-//group CSCodeableConcept(source src : CS, target tgt : CodeableConcept) extends CECodeableConcept <<types>> {
-//}
-
-//group CDCodeableConcept(source src : CD, target tgt : CodeableConcept) extends CECodeableConcept <<types>> {
-//}
-
 group AddressAD(source src : Address, target tgt : AD) extends Any <<types>> {
   src.line as v -> tgt.streetAddressLine as line, line.data = v "streetAddress";
   src.postalCode as v -> tgt.postalCode as postalCode, postalCode.data = v;

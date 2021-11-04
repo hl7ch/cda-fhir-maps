@@ -29,11 +29,6 @@
                 <status value="final"/>
                 <type>
                     <coding>
-                        <system value="http://loinc.org"/>
-                        <code value="61356-2"/>
-                        <display value="Medication pharmaceutical advice.extended"/>
-                    </coding>
-                    <coding>
                         <system value="http://snomed.info/sct"/>
                         <code value="419891008"/>
                         <display value="Record artifact (record artifact)"/>

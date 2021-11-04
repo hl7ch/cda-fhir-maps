@@ -191,7 +191,7 @@ group CompositionClinicalDocumentCH(source bundle : Bundle, source composition :
             entry.resource: Patient as patient -> informationRecipient.intendedRecipient as intendedRecipient share intendedRecipient then {
               patient.address as address ->  intendedRecipient.addr as addr then AddressAD(address, addr) "address";
               patient.name as humanname -> intendedRecipient.informationRecipient as informationRecipient2, informationRecipient2.name as en then HumanNameEN(humanname, en) "name";        
-            } "fullUrl patient";
+            } "fullUrlPatient";
             entry.resource: Organization as organization -> informationRecipient.intendedRecipient as intendedRecipient share intendedRecipient,
              intendedRecipient.receivedOrganization as receivedOrganization then Organization2CdaOrganization(organization, receivedOrganization) "organization";	
           } "uuid";

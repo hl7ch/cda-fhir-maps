@@ -1,8 +1,8 @@
 ### Create and Update FHIR maps for converting to CDA with RESTClient and running matchbox (locally)
 ### Note: POST the maps in the following order, if you update one map you need to repost also the maps below
 
-@host = https://test.ahdis.ch/r4
-### @host = http://localhost:8080/r4
+### @host = https://test.ahdis.ch/matchbox/fhir
+@host = http://localhost:8080/matchbox/fhir
 
 
 ### 1. POST FhirToCdaTypes.map
@@ -58,3 +58,26 @@ Accept: application/fhir+xml;fhirVersion=4.0
 Content-Type: application/fhir+json;fhirVersion=4.0
 
 < ./input/ch-emed/card.json
+
+
+
+###
+POST {{host}}/StructureMap/$transform?source=http://fhir.ch/ig/cda-fhir-maps/StructureMap/BundleToCdaChEmedMedicationCardDocument
+Accept: application/fhir+xml;fhirVersion=4.0
+Content-Type: application/fhir+xml;fhirVersion=4.0
+
+< ./input/ch-emed/2-7-MedicationCard-UUIDfullUrl.xml
+
+###
+POST {{host}}/StructureMap/$transform?source=http://fhir.ch/ig/cda-fhir-maps/StructureMap/BundleToCdaChEmedMedicationCardDocument
+Accept: application/fhir+xml;fhirVersion=4.0
+Content-Type: application/fhir+json;fhirVersion=4.0
+
+< ./projectathon/input.json
+
+###
+POST {{host}}/StructureMap/$transform?source=http://fhir.ch/ig/cda-fhir-maps/StructureMap/BundleToCdaChEmedMedicationCardDocument
+Accept: application/fhir+xml;fhirVersion=4.0
+Content-Type: application/fhir+json;fhirVersion=4.0
+
+< ./projectathon/input2.json
