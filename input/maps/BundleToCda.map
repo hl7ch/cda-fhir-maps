@@ -159,6 +159,8 @@ group PractitionerAuthor(source bundle : Bundle, source composition : Compositio
   bundle.timestamp as valueDateTime where composition.author.extension.where(url='http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-time').empty() -> tgt.time as time then DateTimeTS(valueDateTime,time) "DateTimeBundle";  
   src -> tgt.assignedAuthor as assignedAuthor then {
       src.identifier as identifier -> assignedAuthor.id as id then IdentifierII(identifier, id) "id";
+      src.telecom first as telecom -> assignedAuthor.telecom as tel then ContactPointTEL(telecom, tel) "telecom";
+      src.address as address -> assignedAuthor.addr as ad then AddressAD(address, ad) "address";
       src.name as name -> assignedAuthor.assignedPerson as assignedPerson, assignedPerson.name as en then HumanNameEN(name, en) "name";
       bundle.entry as entry then {
         entry.fullUrl where ($this in %composition.author.reference) and $this.startsWith('urn:uuid')  then {

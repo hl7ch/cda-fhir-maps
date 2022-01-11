@@ -1,8 +1,8 @@
 <StructureMap xmlns="http://hl7.org/fhir">
    <id value="BundleToCda"/>
    <meta>
-      <versionId value="2"/>
-      <lastUpdated value="2021-11-04T13:39:01.754+01:00"/>
+      <versionId value="3"/>
+      <lastUpdated value="2022-01-11T22:14:50.980+01:00"/>
    </meta>
    <text>
       <status value="generated"/>
@@ -138,6 +138,8 @@ group PractitionerAuthor(source bundle : Bundle, source composition : Compositio
   bundle.timestamp as valueDateTime where composition.author.extension.where(url = &apos;http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-time&apos;).empty() -&gt; tgt.time as time then DateTimeTS(valueDateTime, time) &quot;DateTimeBundle&quot;;
   src -&gt; tgt.assignedAuthor as assignedAuthor then {
     src.identifier as identifier -&gt; assignedAuthor.id as id then IdentifierII(identifier, id) &quot;id&quot;;
+    src.telecom first as telecom -&gt; assignedAuthor.telecom as tel then ContactPointTEL(telecom, tel);
+    src.address as address -&gt; assignedAuthor.addr as ad then AddressAD(address, ad);
     src.name as name -&gt;  assignedAuthor.assignedPerson as assignedPerson,  assignedPerson.name as en then HumanNameEN(name, en);
     bundle.entry as entry then {
       entry.fullUrl where ($this in %composition.author.reference) and $this.startsWith(&apos;urn:uuid&apos;) then {
@@ -1399,6 +1401,45 @@ group PractitionerLegalAuthenticator(source bundle : Bundle, source composition 
                <name value="IdentifierII"/>
                <variable value="identifier"/>
                <variable value="id"/>
+            </dependent>
+         </rule>
+         <rule>
+            <name value="telecom"/>
+            <source>
+               <context value="src"/>
+               <element value="telecom"/>
+               <listMode value="first"/>
+               <variable value="telecom"/>
+            </source>
+            <target>
+               <context value="assignedAuthor"/>
+               <contextType value="variable"/>
+               <element value="telecom"/>
+               <variable value="tel"/>
+            </target>
+            <dependent>
+               <name value="ContactPointTEL"/>
+               <variable value="telecom"/>
+               <variable value="tel"/>
+            </dependent>
+         </rule>
+         <rule>
+            <name value="address"/>
+            <source>
+               <context value="src"/>
+               <element value="address"/>
+               <variable value="address"/>
+            </source>
+            <target>
+               <context value="assignedAuthor"/>
+               <contextType value="variable"/>
+               <element value="addr"/>
+               <variable value="ad"/>
+            </target>
+            <dependent>
+               <name value="AddressAD"/>
+               <variable value="address"/>
+               <variable value="ad"/>
             </dependent>
          </rule>
          <rule>
