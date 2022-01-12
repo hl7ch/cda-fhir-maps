@@ -156,7 +156,7 @@ group ChExtEprDataEnterer(source src: DataEnterer, target bundle: Bundle, target
 // target: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefinition-ch-core-composition-epr.html
 group ClinicalDocumentCompositionCh(source src : ClinicalDocument, target tgt : Composition, target patientResource: Patient, target bundle : Bundle) {
   src.confidentialityCode as confidentialityCode then {
-    confidentialityCode.code as v -> 
+    confidentialityCode.code as v where ('http://fhir.ch/ig/ch-epr-term/ValueSet/DocumentEntry.confidentialityCode'.resolve().compose.include.concept.where($this.code=src.confidentialityCode.code).exists()) -> 
       tgt.confidentiality = translate(v, 'http://fhir.ch/ig/ch-core/ConceptMap/documententry-confidentialitycode-to-fhir', 'code') as fhirconf,
             fhirconf.extension as ext then ChExtEprConfidentialityCode(confidentialityCode, ext) "confCode";
   } "confidentialityCode";
