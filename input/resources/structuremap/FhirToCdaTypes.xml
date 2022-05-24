@@ -2,9 +2,194 @@
   xmlns="http://hl7.org/fhir">
   <id value="FhirToCdaTypes"/>
   <meta>
-    <versionId value="2"/>
-    <lastUpdated value="2021-11-03T10:16:56.175+00:00"/>
+    <versionId value="4"/>
+    <lastUpdated value="2022-05-24T12:19:27.952+00:00"/>
   </meta>
+  <text>
+    <status value="generated"/>
+    <div 
+      xmlns="http://www.w3.org/1999/xhtml">
+      <pre>map &quot;http://fhir.ch/ig/cda-fhir-maps/StructureMap/FhirToCdaTypes&quot; = &quot;FhirToCdaTypes&quot;
+
+// Adapted from https://github.com/HL7/ccda-to-fhir/tree/master/mappings
+// CDA:  http://build.fhir.org/ig/ahdis/cda-core-2.0/branches/master/index.html
+// FHIR: http://hl7.org/fhir/r4/
+
+conceptmap &quot;uri2oid&quot; {
+  prefix s = &quot;http://hl7.org/fhir&quot;
+  prefix t = &quot;http://hl7.org/cda&quot;
+
+  s:&quot;http://snomed.info/sct&quot; == t:&quot;2.16.840.1.113883.6.96&quot;
+  s:&quot;http://loinc.org&quot; == t:&quot;2.16.840.1.113883.6.1&quot;
+  s:&quot;http://hl7.org/fhir/sid/atc&quot; == t:&quot;2.16.840.1.113883.6.73&quot;
+  s:&quot;http://www.whocc.no/atc&quot; == t:&quot;2.16.840.1.113883.6.73&quot;
+  s:&quot;http://terminology.hl7.org/CodeSystem/v3-substanceAdminSubstitution&quot; == t:&quot;2.16.840.1.113883.5.1070&quot;
+}
+
+conceptmap &quot;uri2system&quot; {
+  prefix s = &quot;http://hl7.org/fhir&quot;
+  prefix t = &quot;http://hl7.org/cda&quot;
+
+  s:&quot;http://snomed.info/sct&quot; == t:&quot;SNOMED CT&quot;
+  s:&quot;http://loinc.org&quot; == t:LOINC
+  s:&quot;http://hl7.org/fhir/sid/atc&quot; == t:&quot;ATC WHO&quot;
+  s:&quot;http://www.whocc.no/atc&quot; == t:&quot;ATC WHO&quot;
+  s:&quot;http://terminology.hl7.org/CodeSystem/v3-substanceAdminSubstitution&quot; == t:&quot;HL7 Substance Admin Substitution&quot;
+}
+
+conceptmap &quot;oid2system&quot; {
+  prefix s = &quot;http://hl7.org/fhir&quot;
+  prefix t = &quot;http://hl7.org/cda&quot;
+
+  s:&quot;urn:oid:2.51.1.1&quot; == t:GTIN
+  s:&quot;urn:oid:1.3.6.1.4.1.19376.1.9.2.1&quot; == t:&quot;IHE Pharmaceutical Advice Status List&quot;
+}
+
+conceptmap &quot;addressUse&quot; {
+  prefix s = &quot;http://hl7.org/fhir/valueset-address-use.html&quot;
+  prefix t = &quot;http://terminology.hl7.org/ValueSet/v3-AddressUse&quot;
+
+  s:home == t:H
+  s:work == t:WP
+  s:temp == t:TMP
+  s:old == t:OLD
+}
+
+uses &quot;http://hl7.org/fhir/StructureDefinition/Identifier&quot; as source
+uses &quot;http://hl7.org/fhir/cda/StructureDefinition/II&quot; as target
+
+group Any(source src, target tgt) {
+  src.extension as extension where $this.url = &apos;http://hl7.org/fhir/StructureDefinition/iso21090-nullFlavor&apos; -&gt; tgt.nullFlavor as nullFlavor then {
+    extension.valueCode as valueCode then {
+      valueCode.value as v -&gt; nullFlavor.value = cast(v, &apos;string&apos;);
+    } &quot;nullFlavor&quot;;
+  };
+}
+
+group IdentifierII(source src : Identifier, target tgt : II) extends Any &lt;&lt;types&gt;&gt; {
+  src.value as value where src.system.empty() and src.value.startsWith(&apos;urn:uuid:&apos;) -&gt; tgt.root = (value.substring(9).upper()) &quot;idAsUuid&quot;;
+  src.value as value where src.system = &apos;urn:ietf:rfc:3986&apos; -&gt; tgt.root = (value.substring(9).upper()) &quot;idAsUuid&quot;;
+  src.value as value where src.system.startsWith(&apos;urn:oid:&apos;) then {
+    src.system as system -&gt;  tgt.root = (system.substring(8)),  tgt.extension = value &quot;oidident&quot;;
+  } &quot;system&quot;;
+}
+
+group IntegerINT(source src : integer, target tgt : INT) extends Any &lt;&lt;types&gt;&gt; {
+  src.value as v -&gt; tgt.value = v &quot;integer&quot;;
+}
+
+// group Identifier(source src : Identifier, target tgt : II) extends Any &lt;&lt;types&gt;&gt; {
+// src.system as system then {
+// src.value as value then {
+// value.value as v where system.value = &apos;urn:ietf:rfc:3986&apos; -&gt; tgt.root = cast(v, &apos;string&apos;) &quot;noExtension&quot;;
+// system.value as v where system.value != &apos;urn:ietf:rfc:3986&apos; -&gt; tgt.root = v then {
+// value.value as val -&gt; tgt.extension = cast(val, &apos;string&apos;) &quot;extension&quot;;
+// } &quot;withExtension&quot;;
+// } &quot;rootValue&quot;;
+// } &quot;root&quot;;
+// src.value as value -&gt; tgt.root = &apos;123&apos; &quot;test&quot;;
+// src -&gt; tgt.root = &apos;123&apos; &quot;test&quot;;
+// src.assigner as a then {
+// a.display as display then {
+// display.value as val -&gt; tgt.assigningAuthorityName = cast(val, &apos;string&apos;);
+// } &quot;display&quot;;
+// } &quot;assigner&quot;;
+// src.extension as ext where ext.url = &apos;http://hl7.org/fhir/cdaStructureDefinition/extension-displayable&apos; -&gt; tgt.displayable as displayable then {
+// ext.value as v -&gt; displayable.value = cast(v, &apos;string&apos;);
+// } &quot;displayable&quot;;
+// }
+group InstantTS(source src : instant, target tgt : TS) extends Any &lt;&lt;types&gt;&gt; {
+  src.value as v -&gt; tgt.value = v &quot;copy&quot;;
+}
+
+group DateTimeTS(source src : dateTime, target tgt : TS) extends InstantTS &lt;&lt;types&gt;&gt; {
+}
+
+group DateTS(source src : date, target tgt : TS) extends InstantTS &lt;&lt;types&gt;&gt; {
+}
+
+group CodeCS(source src : code, target tgt : CS) extends Any &lt;&lt;types&gt;&gt; {
+  src.code as c -&gt; tgt.value = cast(c, &apos;string&apos;);
+}
+
+group CodeCE(source src : code, target tgt : CE) extends CodeCS &lt;&lt;types&gt;&gt; {
+}
+
+group CodeCD(source src : code, target tgt : CD) extends CodeCS &lt;&lt;types&gt;&gt; {
+}
+
+group CodingCE(source src : Coding, target tgt : CE) extends Any &lt;&lt;types&gt;&gt; {
+  src.code as code -&gt; tgt.code = code;
+  src.system as system where $this.startsWith(&apos;http:&apos;) -&gt; tgt.codeSystem = translate(system, &apos;#uri2oid&apos;, &apos;code&apos;);
+  src.system as system where $this.startsWith(&apos;urn:oid:&apos;) then {
+    src.system as system -&gt; tgt.codeSystem = (system.substring(8)) &quot;oidident&quot;;
+  };
+  src.system as system where $this.startsWith(&apos;http:&apos;) -&gt; tgt.codeSystemName = translate(system, &apos;#uri2system&apos;, &apos;code&apos;) &quot;systemName1&quot;;
+  src.system as system where $this.startsWith(&apos;urn:oid:&apos;) -&gt; tgt.codeSystemName = translate(system, &apos;#oid2system&apos;, &apos;code&apos;) &quot;systemName2&quot;;
+  src.display as display -&gt; tgt.displayName = display;
+}
+
+group CodeableConceptCE(source src : CodeableConcept, target tgt : CE) extends Any &lt;&lt;types&gt;&gt; {
+  src.text as text -&gt;  tgt.orginialText as originalText,  originalText.data = text;
+  src.coding first as coding then CodingCE(coding, tgt) &quot;first&quot;;
+  src.coding not_first as coding -&gt; tgt.translation as translation then CodingCE(coding, translation) &quot;translation&quot;;
+}
+
+// group CECodeableConcept(source src : CE, target tgt : CodeableConcept) extends Any &lt;&lt;types&gt;&gt; {
+// src.originalText -&gt; tgt.text;
+// src -&gt; tgt.coding as coding then {
+// src.code as code -&gt; coding.code = cast(code, &apos;string&apos;);
+// src.codeSystem as system -&gt; coding.system = translate(system, &apos;http://hl7.org/fhir/ConceptMap/special-oid2uri&apos;, &apos;uri&apos;);
+// src.displayName as display -&gt; coding.display = cast(display, &apos;string&apos;);
+// } &quot;code&quot;;
+// src.translation as translation -&gt; tgt.coding as coding then {
+// translation.code as code -&gt; coding.code = cast(code, &apos;string&apos;);
+// translation.codeSystem as system -&gt; coding.system = translate(system, &apos;http://hl7.org/fhir/ConceptMap/special-oid2uri&apos;, &apos;uri&apos;);
+// translation.displayName as display -&gt; coding.display = cast(display, &apos;string&apos;);
+// } &quot;translation&quot;;
+// }
+group AddressAD(source src : Address, target tgt : AD) extends Any &lt;&lt;types&gt;&gt; {
+  src.line as v -&gt;  tgt.streetAddressLine as line,  line.data = v &quot;streetAddress&quot;;
+  src.postalCode as v -&gt;  tgt.postalCode as postalCode,  postalCode.data = v;
+  src where $this.postalCode.exists() = false -&gt;  tgt.postalCode as postalCode,  postalCode.nullFlavor = &apos;NI&apos; &quot;nullFlavor&quot;;
+  src.city as v -&gt;  tgt.city as city,  city.data = v;
+  src where $this.city.exists() = false -&gt;  tgt.city as city,  city.nullFlavor = &apos;NI&apos; &quot;nullFlavor&quot;;
+  src.state as v -&gt;  tgt.state as state,  state.data = v;
+  src.district as v -&gt;  tgt.county as county,  county.data = v;
+  src.country as v -&gt;  tgt.country as country,  country.data = v;
+  src where $this.country.exists() = false -&gt;  tgt.country as country,  country.nullFlavor = &apos;NI&apos; &quot;nullFlavor&quot;;
+  src.use as c -&gt; tgt.use = translate(c, &apos;#addressUse&apos;, &apos;code&apos;) &quot;addressUse&quot;;
+}
+
+group ContactPointTEL(source src : ContactPoint, target tgt : TEL) extends Any &lt;&lt;types&gt;&gt; {
+  src.value as value -&gt; tgt.value = (iif(%src.system = &apos;phone&apos;, &apos;tel:&apos;, &apos;&apos;) + iif(%src.system = &apos;fax&apos;, &apos;fax:&apos;, &apos;&apos;) + iif(%src.system = &apos;email&apos;, &apos;mailto:&apos;, &apos;&apos;) + iif(%src.system = &apos;url&apos;, &apos;http:&apos;, &apos;&apos;) + value);
+  src.use as use where $this = &apos;home&apos; -&gt; tgt.use = &apos;HP&apos;;
+  src.use as use where $this = &apos;work&apos; -&gt; tgt.use = &apos;WP&apos;;
+  src.use as use where $this = &apos;old&apos; -&gt; tgt.use = &apos;BAD&apos;;
+  src.use as use where $this = &apos;temp&apos; -&gt; tgt.use = &apos;TMP&apos;;
+  src.use as use where $this = &apos;mobile&apos; -&gt; tgt.use = &apos;MC&apos;;
+}
+
+group HumanNameEN(source src : HumanName, target tgt : EN) extends Any &lt;&lt;types&gt;&gt; {
+  src.family as v -&gt;  tgt.family as family,  family.data = v;
+  src.given as v -&gt;  tgt.given as given,  given.data = v;
+  src.prefix as v -&gt;  tgt.prefix as prefix,  prefix.data = v,  prefix.qualifier = &apos;AC&apos; &quot;CDA-CH prefix&quot;;
+  src.suffix as v -&gt;  tgt.suffix as suffix,  suffix.data = v;
+}
+
+group QuantityPQ(source src : Quantity, target tgt : PQ) extends Any &lt;&lt;types&gt;&gt; {
+  src.code as code -&gt; tgt.unit = code;
+  src.value as value -&gt; tgt.value = value;
+}
+
+group RatioRTOPQPQ(source src : Ratio, target tgt : RTO_PQ_PQ) extends Any &lt;&lt;types&gt;&gt; {
+  src.numerator as numerator -&gt; tgt.numerator as targetNumerator then QuantityPQ(numerator, targetNumerator);
+  src.denominator as denominator -&gt; tgt.denominator as targetDenominator then QuantityPQ(denominator, targetDenominator);
+}
+
+</pre>
+    </div>
+  </text>
   <contained>
     <ConceptMap 
       xmlns="http://hl7.org/fhir">
@@ -167,26 +352,6 @@
       </group>
     </ConceptMap>
   </contained>
-  <extension url="http://fhir.ch/reference">
-    <valueReference>
-      <reference value="#uri2oid"/>
-    </valueReference>
-  </extension>
-  <extension url="http://fhir.ch/reference">
-    <valueReference>
-      <reference value="#uri2system"/>
-    </valueReference>
-  </extension>
-  <extension url="http://fhir.ch/reference">
-    <valueReference>
-      <reference value="#oid2system"/>
-    </valueReference>
-  </extension>
-  <extension url="http://fhir.ch/reference">
-    <valueReference>
-      <reference value="#addressUse"/>
-    </valueReference>
-  </extension>
   <url value="http://fhir.ch/ig/cda-fhir-maps/StructureMap/FhirToCdaTypes"/>
   <name value="FhirToCdaTypes"/>
   <description value="Adapted from https://github.com/HL7/ccda-to-fhir/tree/master/mappings&#xd;&#xa;CDA:  http://build.fhir.org/ig/ahdis/cda-core-2.0/branches/master/index.html&#xd;&#xa;FHIR: http://hl7.org/fhir/r4/"/>
@@ -693,8 +858,16 @@
       </source>
       <dependent>
         <name value="CodingCE"/>
-        <variable value="coding"/>
-        <variable value="tgt"/>
+        <variable value="coding">
+          <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+            <valueUrl value="id"/>
+          </extension>
+        </variable>
+        <variable value="tgt">
+          <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+            <valueUrl value="id"/>
+          </extension>
+        </variable>
       </dependent>
     </rule>
     <rule>
@@ -713,8 +886,16 @@
       </target>
       <dependent>
         <name value="CodingCE"/>
-        <variable value="coding"/>
-        <variable value="translation"/>
+        <variable value="coding">
+          <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+            <valueUrl value="id"/>
+          </extension>
+        </variable>
+        <variable value="translation">
+          <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+            <valueUrl value="id"/>
+          </extension>
+        </variable>
       </dependent>
     </rule>
   </group>
@@ -722,7 +903,7 @@
     <name value="AddressAD"/>
     <extends value="Any"/>
     <typeMode value="types"/>
-    <documentation value="group CECodeableConcept(source src : CE, target tgt : CodeableConcept) extends Any &lt;&lt;types>> {&#xd;&#xa;src.originalText -> tgt.text;&#xd;&#xa;src -> tgt.coding as coding then {&#xd;&#xa;src.code as code -> coding.code = cast(code, 'string');&#xd;&#xa;src.codeSystem as system -> coding.system = translate(system, 'http://hl7.org/fhir/ConceptMap/special-oid2uri', 'uri');&#xd;&#xa;src.displayName as display -> coding.display = cast(display, 'string');&#xd;&#xa;} &quot;code&quot;;&#xd;&#xa;src.translation as translation -> tgt.coding as coding then {&#xd;&#xa;translation.code as code -> coding.code = cast(code, 'string');&#xd;&#xa;translation.codeSystem as system -> coding.system = translate(system, 'http://hl7.org/fhir/ConceptMap/special-oid2uri', 'uri');&#xd;&#xa;translation.displayName as display -> coding.display = cast(display, 'string');&#xd;&#xa;} &quot;translation&quot;;&#xd;&#xa;}&#xd;&#xa;group CSCodeableConcept(source src : CS, target tgt : CodeableConcept) extends CECodeableConcept &lt;&lt;types>> {&#xd;&#xa;}&#xd;&#xa;group CDCodeableConcept(source src : CD, target tgt : CodeableConcept) extends CECodeableConcept &lt;&lt;types>> {&#xd;&#xa;}"/>
+    <documentation value="group CECodeableConcept(source src : CE, target tgt : CodeableConcept) extends Any &lt;&lt;types>> {&#xd;&#xa;src.originalText -> tgt.text;&#xd;&#xa;src -> tgt.coding as coding then {&#xd;&#xa;src.code as code -> coding.code = cast(code, 'string');&#xd;&#xa;src.codeSystem as system -> coding.system = translate(system, 'http://hl7.org/fhir/ConceptMap/special-oid2uri', 'uri');&#xd;&#xa;src.displayName as display -> coding.display = cast(display, 'string');&#xd;&#xa;} &quot;code&quot;;&#xd;&#xa;src.translation as translation -> tgt.coding as coding then {&#xd;&#xa;translation.code as code -> coding.code = cast(code, 'string');&#xd;&#xa;translation.codeSystem as system -> coding.system = translate(system, 'http://hl7.org/fhir/ConceptMap/special-oid2uri', 'uri');&#xd;&#xa;translation.displayName as display -> coding.display = cast(display, 'string');&#xd;&#xa;} &quot;translation&quot;;&#xd;&#xa;}"/>
     <input>
       <name value="src"/>
       <type value="Address"/>
@@ -1144,7 +1325,7 @@
       </target>
     </rule>
     <rule>
-      <name value="prefix"/>
+      <name value="CDA-CH prefix"/>
       <source>
         <context value="src"/>
         <element value="prefix"/>
@@ -1163,6 +1344,15 @@
         <transform value="copy"/>
         <parameter>
           <valueId value="v"/>
+        </parameter>
+      </target>
+      <target>
+        <context value="prefix"/>
+        <contextType value="variable"/>
+        <element value="qualifier"/>
+        <transform value="copy"/>
+        <parameter>
+          <valueString value="AC"/>
         </parameter>
       </target>
     </rule>
@@ -1268,8 +1458,16 @@
       </target>
       <dependent>
         <name value="QuantityPQ"/>
-        <variable value="numerator"/>
-        <variable value="targetNumerator"/>
+        <variable value="numerator">
+          <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+            <valueUrl value="id"/>
+          </extension>
+        </variable>
+        <variable value="targetNumerator">
+          <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+            <valueUrl value="id"/>
+          </extension>
+        </variable>
       </dependent>
     </rule>
     <rule>
@@ -1287,8 +1485,16 @@
       </target>
       <dependent>
         <name value="QuantityPQ"/>
-        <variable value="denominator"/>
-        <variable value="targetDenominator"/>
+        <variable value="denominator">
+          <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+            <valueUrl value="id"/>
+          </extension>
+        </variable>
+        <variable value="targetDenominator">
+          <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+            <valueUrl value="id"/>
+          </extension>
+        </variable>
       </dependent>
     </rule>
   </group>

@@ -171,7 +171,7 @@ group ContactPointTEL(source src : ContactPoint, target tgt : TEL) extends Any <
 group HumanNameEN(source src : HumanName, target tgt : EN) extends Any <<types>> {
   src.family as v -> tgt.family as family, family.data = v;
   src.given as v -> tgt.given as given, given.data = v;
-  src.prefix as v -> tgt.prefix as prefix, prefix.data = v;
+  src.prefix as v -> tgt.prefix as prefix, prefix.data = v, prefix.qualifier = 'AC' "CDA-CH prefix";
   src.suffix as v -> tgt.suffix as suffix, suffix.data = v;
   // src.use as c -> tgt.use = translate(c, 'http://hl7.org/fhir/ConceptMap/cm-name-use-v3', 'code');
   // src.validTime -> tgt.period;
