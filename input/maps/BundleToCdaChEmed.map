@@ -83,21 +83,21 @@ group ManufacturedMaterialEntryContentModuleStatement(source bundle : Bundle, so
   medication.form as form then {
     form.coding as coding -> manufacturedMaterial.formCode as formCode then CodingCE(coding, formCode) "formCode";
   } "form";
-  medication.code as code -> manufacturedMaterial.asContent as asContent, asContent.classCode='CONT', asContent.containerPackagedMedicine as containerPackagedMedicine then {
-    code -> containerPackagedMedicine.classCode = 'CONT' "CONT";  
-    code -> containerPackagedMedicine.determinerCode = 'INSTANCE' "INSTANCE";  
-    code.coding as coding -> containerPackagedMedicine.code as ce then CodingCE(coding,ce) "pharm-code";
-    code.text as text -> containerPackagedMedicine.name as name, name.other = text "pharm-name";
-    medication.form as form then {
-      form.coding as coding -> containerPackagedMedicine.formCode as formCode then CodingCE(coding, formCode) "pharm-formCode";
-    } "form";   
-    // Package size
-    medication.amount as amount then {
+  medication.code as code then {
+    medication.amount as amount -> manufacturedMaterial.asContent as asContent, asContent.classCode='CONT', asContent.containerPackagedMedicine as containerPackagedMedicine then {
+      code -> containerPackagedMedicine.classCode = 'CONT' "CONT";  
+      code -> containerPackagedMedicine.determinerCode = 'INSTANCE' "INSTANCE";  
+      code.coding as coding -> containerPackagedMedicine.code as ce then CodingCE(coding,ce) "pharm-code";
+      code.text as text -> containerPackagedMedicine.name as name, name.other = text "pharm-name";
+      medication.form as form then {
+        form.coding as coding -> containerPackagedMedicine.formCode as formCode then CodingCE(coding, formCode) "pharm-formCode";
+      } "form";   
+      // Package size
       amount.numerator as numerator -> containerPackagedMedicine.capacityQuantity as capacityQuantity then {
-          numerator.value as value -> capacityQuantity.value = value "value";
-          numerator.code as unit -> capacityQuantity.unit = unit "unit";		    
-      } "numerator";
-    } "amount";
+            numerator.value as value -> capacityQuantity.value = value "value";
+            numerator.code as unit -> capacityQuantity.unit = unit "unit";		    
+        } "numerator";
+      } "amount";
   } "code";
   medication.ingredient as ingredient -> manufacturedMaterial.ingredient as ingredient, ingredient.classCode = 'ACTI' then {
     ingredient.itemCodeableConcept as itemCodeableConcept -> ingredient.ingredient as pharmsubstance	then {
