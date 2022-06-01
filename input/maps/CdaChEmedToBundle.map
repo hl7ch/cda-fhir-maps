@@ -132,15 +132,14 @@ group ManufacturedMaterialEntryContentModuleStatement(source src : SubstanceAdmi
     consumable.manufacturedProduct as manufacturedProduct then {
       manufacturedProduct.manufacturedMaterial as manufacturedMaterial then {
 
-        manufacturedMaterial.name as name where asContent.exists()=false -> medication.code as fhircode, fhircode.text = (%manufacturedMaterial.name.other) "medication.code";
+        manufacturedMaterial.code as code -> medication.code as fhircode share medcode then CECodeableConcept(code, fhircode) "medication.code";
+        manufacturedMaterial.name as name -> medication.code as fhircode share medcode then { 
+          name -> fhircode.text = (%manufacturedMaterial.name.other) "medication.code.text";
+        } "code.text";
 
         manufacturedMaterial.asContent as asContent then {
           asContent.containerPackagedMedicine as containerPackagedMedicine then {
-            containerPackagedMedicine.code as code -> medication.code as fhircode share medcode then CECodeableConcept(code, fhircode) "medication.code";
-            containerPackagedMedicine.name as name -> medication.code as fhircode share medcode then { 
-              name -> fhircode.text = (%name.other)  "medication.code.text";
-            } "code.text";
-
+            
             containerPackagedMedicine.formCode as formCode -> medication.form as form then CECodeableConcept(formCode, form)  "medication.formCode";
             
             // Package size 
