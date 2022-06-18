@@ -1,0 +1,619 @@
+{
+	"resourceType": "Bundle",
+	"id": "father",
+	"meta": {
+		"lastUpdated": "2022-03-22T22:12:21Z",
+		"versionId": "1",
+		"profile":["urn:oid:2.16.840.1.113883.2.9.2.30.10.8"]
+		
+	},
+	"implicitRules": "2.16.840.1.113883.1.3",
+	"language": "it-IT",
+	"identifier": {
+	  "system": "urn:oid:2.16.840.1.113883.2.9.2.30.4.4",
+	  "value":  "120905.FRRTZN80A01F205G.20220322T221221Z"
+	  	
+	},
+	"type": "document",
+	"timestamp": "2022-03-22T22:12:21Z",
+	"entry": [
+	{
+	"fullUrl":"https://example.com/base/Composition/composition",
+	"resource": {
+		"resourceType": "Composition",
+		"id": "composition",
+		"meta": {
+			"lastUpdated": "2022-03-22T22:12:21Z",
+			"versionId": "1"
+	       },
+		"language": "it-IT",
+        "extension": [ 
+			{
+			"url": "http://hl7.org/fhir/StructureDefinition/composition-clinicaldocument-versionNumber",
+			"valueString": "1"
+			}
+		],
+        "status": "final",
+		"identifier": {
+			"system": "urn:oid:2.16.840.1.113883.2.9.2.30.4.4",
+			"value": "120905.FRRTZN80A01F205G.20220322T221221Z",
+			"assigner": {
+				"reference": "Organization/organization2" 				 
+				  }	
+		},
+		"type": {
+			"coding": [
+			{
+				"system": "urn:oid:2.16.840.1.113883.6.1", 
+				"version": "LOINC V 2.19",
+				"code": "11502-2", 
+				"display": "Referto di laboratorio"  
+			}
+			],
+		"text": "Referto di laboratorio"
+		},	 
+		
+		"subject": {
+			"reference": "Patient/patient"               
+		},
+		"encounter": {
+		   "reference": "Encounter/encounter"
+		},
+		"date": "2022-03-22T22:12:21Z",
+		"author": [
+			{
+			"reference": "PractitionerRole/practitionerRole1"
+			}
+		],
+	    "attester": [
+			{
+			"mode": "professional", 
+			"time": "2022-03-22T22:12:21Z",
+			"party": {
+				"reference": "Practitioner/practitioner2"
+				}
+			},
+	       {
+			"mode": "legal",
+			"time": "2022-03-22T22:12:21Z",
+			"party": {
+				"reference": "PractitionerRole/practitionerRole1"
+			   }
+	        }
+	     ],
+		"custodian": 
+			{
+			"reference": "Organization/organization1"
+			},
+		
+	    "title": "REFERTO DI LABORATORIO",
+	    "confidentiality": "N",
+            
+	    "event": [
+           {
+			"period": {
+			   "start": "2022-03-22T22:12:21Z"
+			   },
+			"detail": [
+				{
+				"reference": "PractitionerRole/practitionerRole2"
+				}
+			]
+		  }
+	    ],
+	    "section": [
+			{
+			"code": {
+				"coding": [
+				{
+				"system": "urn:oid:2.16.840.1.113883.6.1",
+				"version": "LOINC V 2.19",
+				"code": "18729-4",
+				"display": "Esame delle urine"	  
+				}
+			  ]
+			},
+			"section": [
+				{
+				"code": {
+					"coding": [
+						{
+						"system": "urn:oid:2.16.840.1.113883.6.1",
+						"version": "LOINC V 2.19",
+						"code": "14957-5",
+						"display": "Microalbumin Massa/Volume in Urine"
+						  
+						}
+					]
+				},
+				"title": "Esami delle urine",
+				"text": {
+                    "status":"generated",					
+					"div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n\t<table>\n \t<tr>\n\t<td>\n\t<b>Nome esame</b>\n\t</td>\n\t<td>\n\t<b>Metodo utilizzato</b>\n\t</td>\n\t<td>\n\t<b>Materiale</b>\n\t</td>\n\t<td>\n\t<b>Risultato</b>\n\t</td>\n\t<td>\n\t<b>Riferimenti a commenti presenti in note a piè di pagina</b>\n\t\t\t\t\t\t</td>\n\t\t\t\t\t>\n\t\t\t\t\t\t<td> \n\t\t\t\t\t\t\t<b>Unità di Misura</b>\n\t\t\t\t\t\t</td>\n\t\t\t\t\t\t<td>\n\t\t\t\t\t\t\t<b>Intervallo di Riferimento</b>\n\t\t\t\t\t\t</td>\n\t\t\t\t\t\t<td>\n\t\t\t\t\t\t\t<b>Criteri per l'intervallo di riferimento</b>\n\t\t\t\t\t\t</td>\n\t\t\t\t\t\t<td>\n\t\t\t\t\t\t\t<b>Codice di interpretazione</b>\n\t\t\t\t\t\t</td>\n\t\t\t\t\t\t<td>\n\t\t\t\t\t\t\t<b>Riferimenti ad oggetti multimediali esterni</b>\n\t\t\t\t\t\t</td>\n\t\t\t\t\t </tr>\n\t\t\t\t\t<tr>\n\t\t\t\t\t\t<td>Microalbumina</td>\n\t\t\t\t\t\t<td></td>\n\t\t\t\t\t\t<td>Urine</td>\n\t\t\t\t\t\t<td/>\n\t\t\t\t\t\t<td/>\n\t\t\t\t\t\n\t\t\t\t\t\t<td>16</td>\n\t\t\t\t\t\t<td></td>\n\t\t\t\t\t\t<td>mg/L</td>\n\t\t\t\t\t\t<td/>\n\t\t\t\t\t\t<td/>\n\t\t\t\t\t\n\t\t\t\t\t\t<td>0-20</td>\n\t\t\t\t\t\t<td></td>\n\t\t\t\t\t\t<td>N</td>\n\t\t\t\t\t\t<td/>\n\t\t\t\t\t\t<td/>\n\t\t\t\t\t\n\t\t\t\t\t\t<td></td></tr>\n\t\t\t\t</table>\n\t\t\t</div>"
+						},
+				"entry": [{
+					"reference": "DiagnosticReport/diagnosticReport"
+				   }]
+				}
+              ]
+			}  
+         ]
+		}  
+	},
+	{
+	"fullUrl":"https://example.com/base/Patient/patient",
+	"resource": {
+		"resourceType": "Patient",
+		"id": "patient",
+		"meta": {
+			"lastUpdated": "2022-03-22T22:12:21Z",
+			"versionId": "1"
+		},
+		"identifier": [
+		  {
+			"system": "urn:oid:2.16.840.1.113883.2.9.4.3.8",
+			"value": "RSSMRA81T20H501L",
+			"assigner": {
+				 "reference": "Organization/organization1" 
+				}	
+			}
+		],
+	    "address": [
+		    {
+			"use": "home",
+			"type": "both",
+			"line": ["Via Lombardia 12"],
+			"city": "Roma",
+			"district": "Roma",
+			"state": "Italia",
+			"postalCode": "00187"
+			},			   
+		    {
+			"use": "home",
+			"type": "both",
+			"line": ["Via Emilia 50"],
+			"city": "Roma",
+			"district": "Roma",
+			"state": "Italia",
+			"postalCode": "00187"
+			}
+		],   
+		"telecom": [
+		    {
+			"system": "phone",
+			"value": "0861783310",
+			"use": "home"
+			},
+			{
+			"system": "phone",
+			"value": "+393445812567",
+			"use": "mobile"
+			}
+		],
+		"name": [
+			{
+			"family": "Rossi",
+			"given": ["Mario"]
+			}
+		],
+		"gender": "male",
+		"birthDate": "1981-12-20",
+		
+			"extension": [
+				{
+				"url": "http://hl7.org/fhir/StructureDefinition/patient-birthPlace",
+				"valueAddress": {
+					"use": "home",
+					"line": ["Via Bocelli, 37"],
+					"city": "Roma",
+					"postalCode": "00187",
+					"country": "Italia"
+				}
+			 }
+			]
+		      
+     } 
+	},
+	{
+  "fullUrl":"https://example.com/base/Practitioner/practitioner1",
+	"resource": {
+		"resourceType": "Practitioner",
+		"id": "practitioner1",
+             "meta": {
+                 "lastUpdated": "2022-03-22T22:12:21Z",
+	           "versionId": "1"
+		},
+		"identifier": [
+		{
+		    "system": "urn:oid:2.16.840.1.113883.2.9.4.3.8",
+		    "value": "BNCFNC68R09F839P", 
+		    "assigner": {
+			   "reference": "Organization/organization1"
+			    } 
+		     }
+		],
+		"name": [
+			{
+			"family": "Belli",
+			"given": ["Francesco"],
+			"prefix":["Specialista"]
+			}
+		],
+		"telecom": [
+			{
+			"system": "phone",
+			"value": "+393441834678",
+			"use": "work"
+			},
+			{
+			"system": "email",
+			"value": "francesco.belli@gmx.it",
+			"use": "work"
+			}
+		]
+	    }
+      },	
+	{
+	"fullUrl":"https://example.com/base/Practitioner/practitioner2",
+	"resource": {
+		"resourceType": "Practitioner",
+		"id": "practitioner2",
+		"meta": {
+			"lastUpdated": "2022-03-22T22:12:21Z",
+			"versionId": "1"
+		},
+		"identifier": [
+			{
+			"system": "urn:oid:2.16.840.1.113883.2.9.4.3.8",
+			"value": "VRDGPP80A01H501U", 
+			"assigner": {
+				"reference": "Organization/organization1" 
+			} 
+		 }
+		],
+		"name": [
+			{
+			"family": "Verdi",
+			"given": ["Giuseppe"],
+			"prefix":["dott"]
+		}
+	    ] 
+	 }
+    },
+    {
+	"fullUrl":"https://example.com/base/Practitioner/practitioner3",
+	"resource": {
+		"resourceType": "Practitioner",
+		"id": "practitioner3",
+		"meta": {
+			"lastUpdated": "2022-03-22T22:12:21Z",
+			"versionId": "1"
+		},
+		"identifier": [
+			{
+			"system": "urn:oid:2.16.840.1.113883.2.9.4.3.8",
+			"value": "FRRTZN80A01F205G", 
+			"assigner": {
+				"reference": "Organization/organization1"
+			} 
+		 }
+		],
+		"name": [
+			{
+			"family": "Ferro",
+			"given": ["Tiziano"],
+			"prefix": ["dott"]
+		 }
+	    ] 
+	 }
+    },	
+	{
+	"fullUrl":"https://example.com/base/PractitionerRole/practitionerRole1",
+	"resource": {
+		"resourceType": "PractitionerRole",
+		"id": "practitionerRole1",
+		"meta": {
+			"lastUpdated": "2022-03-22T22:12:21Z",
+			"versionId": "1"
+	    },
+		"practitioner": {
+			"reference": "Practitioner/practitioner1"
+		},
+		"organization": {
+			"reference": "Organization/organization2"
+		}  
+	 }	
+    },	
+	{
+	"fullUrl":"https://example.com/base/PractitionerRole/practitionerRole2",
+	"resource": {
+	  "resourceType": "PractitionerRole",
+	  "id": "practitionerRole2",
+	  "meta": {
+		"lastUpdated": "2022-03-22T22:12:21Z",
+		"versionId": "1"
+	    },
+
+         "practitioner": {
+	        "reference": "Practitioner/practitioner2"
+          },
+         "organization": {
+	        "reference": "Organization/organization2"
+          }  
+        }
+       },
+	{
+	"fullUrl":"https://example.com/base/PractitionerRole/practitionerRole3",
+	"resource": {
+		"resourceType": "PractitionerRole",
+		"id": "practitionerRole3",
+		"meta": {
+			"lastUpdated": "2022-03-22T22:12:21Z",
+			"versionId": "1"
+		},
+		"practitioner": {
+			"reference": "Practitioner/practitioner3"
+		},
+		"organization": {
+			"reference": "Organization/organization2"
+		}
+		
+       }		
+	},
+	{
+	"fullUrl":"https://example.com/base/Organization/organization1",
+	"resource": {
+		"resourceType":  "Organization",
+		"id": "organization1",
+		"meta": {
+			"lastUpdated": "2022-03-22T22:12:21Z",
+			"versionId": "1"
+		},
+		"identifier": [{
+			"system":"urn:oid:2.16.840.1.113883.2.9.4.3.8",
+			"value":"@NRE@"
+		}],
+		"name": "Ministero dell’Economia e delle Finanze",
+		"address": [
+			{
+            "line": ["Via Venti Settembre, 97"],
+            "city": "Roma",
+            "state": "Italia",
+            "postalCode": "00187"
+         }
+        ],
+		"telecom": [
+			{
+			"system": "phone",
+			"value":"0011224555"
+		 }
+		]
+	}
+	},
+	{
+	"fullUrl":"https://example.com/base/Organization/organization2",
+	"resource": {
+		"resourceType":  "Organization",
+		"id": "organization2",
+		"meta": {
+			"lastUpdated": "2022-03-22T22:12:21Z",
+			"versionId": "1"
+			},
+		"identifier":[ {
+			"system":"urn:oid:2.16.840.1.113883.2.9.4.1.1",
+			"value":"120905"
+		}],
+		"name": "Policlinico Gemelli",
+		"address": [
+    		{
+			"line": ["Largo Agostino Gemelli, 8"],
+			"city": "Roma",
+			"state": "Italia",
+			"postalCode": "00168"
+		 }
+		],
+		"telecom": [
+			{
+			"system": "phone",
+			"value":"0011223556"
+		 }
+		]
+	 }
+	},
+	{
+	"fullUrl":"https://example.com/base/ServiceRequest/serviceRequest",
+	"resource": {
+		"resourceType": "ServiceRequest",
+		"id": "serviceRequest",
+		"meta": {
+			"lastUpdated": "2022-03-22T22:12:21Z",
+			"versionId": "1"
+			},
+		"identifier": [{
+			"system":"urn:oid:2.16.840.1.113883.2.9.4.3.8",
+			"value":"@NRE@",
+			"assigner": {
+				"reference":"Organization/organization1"
+	             }
+             }],
+		"status":"active",
+        "intent":"order",		
+		"priority":"routine",
+		"subject": {
+				"reference":"Patient/patient"
+	             }
+       }
+      },
+	{
+	"fullUrl":"https://example.com/base/DiagnosticReport/diagnosticReport",
+	"resource": {
+		"resourceType": "DiagnosticReport",
+		"id": "diagnosticReport",
+		"meta": {
+			"lastUpdated": "2022-03-22T22:12:21Z",
+			"versionId": "1"
+              },
+		"status":"final",
+		"code": {
+          "coding": [
+            {
+              "system": "urn:oid:2.16.840.1.113883.6.1",
+              "code": "18729-4",
+              "display": "Esame delle urine"
+            }
+          ]
+        },
+		"performer": [
+		   {
+			"reference": "Practitioner/practitioner2"                     
+		   }
+		],
+		"result": [
+			{
+			"reference": "Observation/observation"
+		 }
+		]	
+	 }		  	
+	},
+	{
+	"fullUrl":"https://example.com/base/Observation/observation",
+	"resource": {
+		"resourceType": "Observation",
+		"id": "observation",
+		"meta": {
+			"lastUpdated": "2022-03-22T22:12:21Z",
+			"versionId": "1"
+		   },
+		"status": "final",
+		"code": {
+			"coding": [
+			   {
+				"system": "urn:oid:2.16.840.1.113883.6.1",
+				"version":"LOINC v2.19",
+				"code": "14957-5",
+				"display": "Microalbumin Massa/Volume in Urine"
+			 }
+			]
+		},
+		"effectiveDateTime": "2022-03-22T10:30:10+01:00",
+		
+		"valueQuantity": {
+            "value": 16.00,
+            "unit": "mg/L"
+            
+           
+        },
+		
+		"referenceRange": [
+    {
+      "low": {
+        "value": 0.00 ,
+        "unit": "mg/L"
+        
+      },
+      "high": {
+        "value": 20.00,
+        "unit": "mg/L"
+        
+      }
+    }
+    ],
+		"interpretation": [{
+			"coding": [
+				{
+				"system": "urn:oid:2.16.840.1.113883.5.83",
+				"version":"HL7 Observation Interpretation",
+				"code": "N",
+				"display": "Normal"
+			 }
+			]
+		}],
+		"specimen": {
+			"reference": "Specimen/specimen"
+			}
+	 } 		
+	},
+    {
+	"fullUrl":"https://example.com/base/Specimen/specimen",
+	"resource": {
+		"resourceType": "Specimen",
+		"id": "specimen",
+		"meta": {
+			"lastUpdated": "2022-03-22T22:12:21Z",
+			"versionId": "1"
+		},
+		"type": {
+			"coding": [
+				{
+				"system": "urn:oid:2.16.840.1.113883.5.129",
+				"code": "UR",
+				"display": "Urine"
+			 }
+			]
+		}
+	 }		
+	},
+    {
+		"fullUrl":"https://example.com/base/Encounter/encounter",
+	"resource": {
+		"resourceType": "Encounter",
+		"id": "encounter",
+		"meta": {
+			"lastUpdated": "2022-03-22T22:12:21Z",
+			"versionId": "1"
+		},
+		"status":"finished",
+		"class": 
+			{
+				"system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+				"code": "AMB",
+				"display": "ambulatory"
+	 
+		},
+		"type": [
+			{
+			"coding": [
+			   {
+				"system": "urn:oid:2.16.840.1.113883.2.9.5.1.88",
+				"code": "PRE",
+				"display": "primary performer"
+			 }
+			]
+		 }
+		],
+		"basedOn": [{
+			"reference": "ServiceRequest/serviceRequest"
+		}],
+		"period": {
+			"start": "2022-03-22T21:12:21Z"
+		},   
+		"participant": [ 
+		    {
+			"type": [
+			 {
+			"coding": [
+					{
+					"system": "urn:oid:2.16.840.1.113883.2.9.5.1.88",
+					"code": "REF",
+					"display": "referrer"	
+					}, 
+					{
+					"system": "urn:oid:2.16.840.1.113883.2.9.5.1.88",
+					"code": "PRE",
+					"display": "PRE"	
+					} 
+				]
+			 }
+			],
+			"period": {
+				"start": "2022-01-09T12:24:37Z"
+			},
+			"individual": {
+				"reference": "PractitionerRole/practitionerRole3" 
+			}
+		 }
+		]
+     }
+    }
+   ]
+}

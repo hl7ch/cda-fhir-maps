@@ -1,0 +1,66 @@
+map "http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaItRefertoMedicinaLaboratorio" = "CdaItRefertoMedicinaLaboratorio"
+
+//
+// Referto di Radiologia
+
+uses "http://hl7.org/fhir/cda/StructureDefinition/ClinicalDocument" alias ClinicalDocument as source
+uses "http://hl7.org/fhir/cda/StructureDefinition/AssignedAuthor" alias AssignedAuthor as source
+uses "http://hl7.org/fhir/cda/StructureDefinition/AssignedEntity" alias AssignedEntity as source
+uses "http://hl7.org/fhir/cda/StructureDefinition/Author" alias Author as source
+uses "http://hl7.org/fhir/cda/StructureDefinition/CustodianOrganization" alias CustodianOrganization as source
+uses "http://hl7.org/fhir/cda/StructureDefinition/IVL_TS" alias IVL_TS as source
+uses "http://hl7.org/fhir/cda/StructureDefinition/EIVL_TS" alias EIVL_TS as source
+uses "http://hl7.org/fhir/cda/StructureDefinition/Observation" alias Observation as source
+uses "http://hl7.org/fhir/cda/StructureDefinition/PatientRole" alias PatientRole as source
+uses "http://hl7.org/fhir/cda/StructureDefinition/RecordTarget" alias RecordTarget as source
+uses "http://hl7.org/fhir/cda/StructureDefinition/Section" alias Section as source
+uses "http://hl7.org/fhir/cda/StructureDefinition/SubstanceAdministration" alias SubstanceAdministration as source
+uses "http://hl7.org/fhir/cda/StructureDefinition/SXPR_TS" alias SXPR_TS as source
+
+uses "http://hl7.org/fhir/StructureDefinition/Bundle" alias Bundle as target
+uses "http://hl7.org/fhir/StructureDefinition/Composition" alias Composition as produced
+uses "http://hl7.org/fhir/StructureDefinition/Patient" alias Patient as produced
+uses "http://hl7.org/fhir/StructureDefinition/Practitioner" alias Practitioner as produced
+uses "http://hl7.org/fhir/StructureDefinition/Organization" alias Organization as produced
+uses "http://hl7.org/fhir/StructureDefinition/MedicationStatement" alias MedicationStatement as produced
+uses "http://hl7.org/fhir/StructureDefinition/Dosage" alias Dosage as produced
+
+imports "http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaToFhirTypes"
+imports "http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaToBundle"
+imports "http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaItToBundle"
+
+// _________________________ Document Level Template  _________________________ 
+
+group CdaItRefertoMedicinaLaboratorio(source cda : ClinicalDocument, target bundle : Bundle) {
+  cda ->  bundle.entry as e, 
+             e.resource = create('Composition') as composition, 
+             composition.id = uuid() as uuid,
+             e.fullUrl = append('urn:uuid:',uuid),
+             bundle.entry as e2, 
+             e2.resource = create('Patient') as patient,patient share patient,
+             patient.id = uuid() as uuid2,
+             e2.fullUrl = append('urn:uuid:',uuid2)
+             then CdaItRefertoMedicinaLaboratorioDocumentToBundle(cda, patient, composition, bundle) "ClinicalDocumentToBody";
+}
+
+group CdaItRefertoMedicinaLaboratorioDocumentToBundle(source cda : ClinicalDocument, target patient : Patient, target composition : Composition, target bundle : Bundle) extends ClinicalDocumentToBundle {
+  cda then ClinicalDocumentCompositionIt(cda, composition, patient, bundle) "composition";
+  cda.component as component then {
+    component.structuredBody as body then {
+      body.component as component then {
+        component.section as srcSection where (code.code='18729-4' and code.codeSystem='2.16.840.1.113883.6.1') -> composition.section as tgtSection then SectionUrine(cda, srcSection, patient, tgtSection, bundle);
+      } "component";
+    } "body";
+  } "component";
+}
+
+// _________________________ Section Level Templates _________________________ 
+
+group SectionUrine(source cda : ClinicalDocument, source src : Section, source patient : Patient, target tgt, target bundle: Bundle) extends ClinicalDocumentSection {
+  src.component as component then {
+    component.section as srcSection where (code.code='14957-5' and code.codeSystem='2.16.840.1.113883.6.1') -> tgt.section as tgtSection then SectionEsameDelleUrine(cda, srcSection, patient, tgtSection, bundle);
+  } "component";
+}
+
+group SectionEsameDelleUrine(source cda : ClinicalDocument, source src : Section, source patient : Patient, target tgt, target bundle: Bundle) extends ClinicalDocumentSection {
+}

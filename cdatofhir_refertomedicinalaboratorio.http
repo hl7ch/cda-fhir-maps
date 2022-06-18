@@ -1,0 +1,44 @@
+### Create and Update CDA maps for converting to FHIR with RESTClient and running matchbox (locally)
+### Note: If you use matchbox on the test system check that you hav your "own" maps, you need also to update only changes you do
+
+### @host = https://test.ahdis.ch/matchbox/fhir
+@host = http://localhost:8080/matchbox/fhir
+
+### 1. POST CdaToFhirTypes.map
+POST {{host}}/StructureMap HTTP/1.1
+Accept: application/fhir+xml;fhirVersion=4.0
+Content-Type: text/fhir-mapping
+
+< ./input/maps/CdaToFhirTypes.map
+
+
+### 2. POST CdaToBundle.map
+POST {{host}}/StructureMap HTTP/1.1
+Accept: application/fhir+xml;fhirVersion=4.0
+Content-Type: text/fhir-mapping
+
+< ./input/maps/CdaToBundle.map
+
+
+### 3. POST CdaItToBundle.map
+POST {{host}}/StructureMap HTTP/1.1
+Accept: application/fhir+xml;fhirVersion=4.0
+Content-Type: text/fhir-mapping
+
+< ./input/maps/CdaItToBundle.map
+
+
+### 3b. POST CdaItRefertoMedicinaLaboratorio.map
+POST {{host}}/StructureMap HTTP/1.1
+Accept: application/fhir+xml;fhirVersion=4.0
+Content-Type: text/fhir-mapping
+
+< ./input/maps/CdaItRefertoMedicinaLaboratorio.map
+
+
+###
+POST {{host}}/StructureMap/$transform?source=http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaItRefertoMedicinaLaboratorio
+Accept: application/fhir+xml;fhirVersion=4.0
+Content-Type: application/fhir+xml;fhirVersion=4.0
+
+< ./input/cda-it/CDA2_Referto_di_Medicina_di_Laboratorio.xml

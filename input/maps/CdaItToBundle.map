@@ -1,0 +1,179 @@
+map "http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaItToBundle" = "CdaItToBundle"
+
+//
+// CDA-IT document
+// 2022-06-18 Oliver Egger, copyright ahdis ag, Apache License 
+
+uses "http://hl7.org/fhir/cda/StructureDefinition/ClinicalDocument" alias ClinicalDocument as source
+uses "http://hl7.org/fhir/cda/StructureDefinition/Section" alias Section as queried
+uses "http://hl7.org/fhir/cda/StructureDefinition/PatientRole" alias PatientRole as queried
+uses "http://hl7.org/fhir/cda/StructureDefinition/DataEnterer" alias DataEnterer as queried
+
+uses "http://hl7.org/fhir/StructureDefinition/Bundle" alias Bundle as target
+uses "http://hl7.org/fhir/StructureDefinition/Composition" alias Composition as produced
+uses "http://hl7.org/fhir/StructureDefinition/Patient" alias Patient as produced
+uses "http://hl7.org/fhir/StructureDefinition/Person" alias Person as produced
+uses "http://hl7.org/fhir/StructureDefinition/Practitioner" alias Practitioner as produced
+uses "http://hl7.org/fhir/StructureDefinition/Practitioner" alias PractitionerRole as produced
+uses "http://hl7.org/fhir/StructureDefinition/Organization" alias Organization as produced
+
+imports "http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaToFhirTypes"
+imports "http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaToBundle"
+
+// _________________________ Document Level Template  _________________________ 
+
+group CdaItToBundle(source cda : ClinicalDocument, target bundle : Bundle) {
+  cda ->  bundle.entry as e, 
+             e.resource = create('Composition') as composition, 
+             composition.id = uuid() as uuid,
+             e.fullUrl = append('urn:uuid:',uuid),
+             bundle.entry as e2, 
+             e2.resource = create('Patient') as patient,
+             patient.id = uuid() as uuid2,
+             e2.fullUrl = append('urn:uuid:',uuid2)
+             then ClinicalDocumentItToBundle(cda, patient, composition, bundle) "ClinicalDocumentToBody";
+}
+
+// source: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5.30.1.1.10.1.14
+// target: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefinition-ch-core-document.html
+group ClinicalDocumentItToBundle(source cda : ClinicalDocument, target patient : Patient, target composition : Composition, target bundle : Bundle) 
+  extends ClinicalDocumentToBundle {
+  cda then ClinicalDocumentCompositionCh(cda, composition, patient, bundle) "composition";
+  cda.component as component then {
+    component.structuredBody as body then {
+      body.component as component then {
+        component.section as srcSection where (templateId.where(root='2.16.756.5.30.1.1.10.3.2')) -> composition.section as tgtSection 
+          then ClinicalDocumentSection(cda, srcSection, patient, tgtSection, bundle);
+        component.section as srcSection where (templateId.where(root='2.16.756.5.30.1.1.10.3.45')) -> composition.section as tgtSection
+          then SectionOriginalRepresentation(cda, srcSection, patient, tgtSection, bundle);
+      } "component";
+    } "body";
+  } "component";
+}
+
+// _________________________ Section Level Templates _________________________ 
+
+
+// source: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5.30.1.1.10.1.14
+// target: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefinition-ch-core-composition-definitions.html#Composition.section
+// TODO: not excplicitly modeled in CH-Core
+group SectionOriginalRepresentation(source cda : ClinicalDocument, source src : Section, source patient : Patient, target tgt, target bundle: Bundle) extends ClinicalDocumentSection {
+  src.entry as cdaEntry ->  bundle.entry as e,  
+    e.resource = create('Binary') as binary,
+    binary.id = uuid() as uuid,
+    e.fullUrl = append('urn:uuid:',uuid) as urnuuid, 
+    tgt.entry = create('Reference') as reference,
+    reference.reference = urnuuid then {
+      cdaEntry.observationMedia as observationMedia then {
+        observationMedia then ObservationMedia(observationMedia, binary) "observationMedia";
+        observationMedia.ID as value -> reference.extension as ext then NarrativeLink(value, ext) "narrativeLink";
+      } "observationMedia";
+  } "cdaEntry";
+}
+
+
+// _________________________ Entry Level Templates   ________________________ 
+
+
+// source: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5.30.1.1.10.4.83
+// TODO: not excplicitly modeled in CH-Core
+group ObservationMedia(source observationMedia, target binary : Binary) {
+  observationMedia.value as value then {
+    value.mediaType as mediaType -> binary.contentType = mediaType "contentType";
+    value -> binary.data = (value.dataBase64Binary) "dataString";
+  } "value";
+  observationMedia.languageCode as languageCode then {
+    languageCode.code as lang -> binary.language = lang "lang";
+  } "languageCode";
+}
+
+
+// _________________________ Header Level Templates _________________________ 
+
+// source: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5.30.1.1.10.9.36
+// target: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefinition-ch-ext-epr-confidentialitycode.html
+group ChExtEprConfidentialityCode(source src: CE, target ext: Extension) {
+  src -> ext.url = 'http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-confidentialitycode' "url";
+  src -> ext.value = create('CodeableConcept') as value then CECodeableConcept(src, value) "code";
+}
+
+// source: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5.30.1.1.10.9.36
+// target: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefinition-ch-ext-epr-versionnumber.html
+group ChExtEprVersionNumber(source src: INT, target ext: Extension) {
+  src -> ext.url = 'http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-versionnumber' "url";
+  src -> ext.value = create('unsignedInt') as value then INT(src, value) "value";
+}
+
+group ChExtEprVersionNumber1(source src, target ext: Extension) {
+  src -> ext.url = 'http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-versionnumber' "url";
+  src -> ext.value = create('unsignedInt') as value, value.value='1' "value";
+}
+
+// source: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5.30.1.1.10.9.36
+// target: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefinition-ch-ext-epr-informationrecipient.html
+group ChExtEprInformationRecipient(source src: IntendedRecipient, target patient: Patient, target ext: Extension) {
+  src -> ext.url = 'http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-informationrecipient' "url";
+  src -> ext.value = create('Reference') as reference, reference.reference = ('urn:uuid:'+%patient.id) "value";
+  src.addr as addr -> patient.address as address then ADAddress(addr, address) "address";
+  src.informationRecipient as informationRecipient then {
+    informationRecipient.name as cdaname -> patient.name as fhirname then ENHumanName(cdaname, fhirname) "name";
+  } "informationRecipient";
+}
+
+// source: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5.30.1.1.10.9.36
+// target: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefinition-ch-ext-epr-informationrecipient.html
+group ChExtEprInformationRecipientOrganization(source src: IntendedRecipient, target organization: Organization, target ext: Extension) {
+  src -> ext.url = 'http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-informationrecipient' "url";
+  src -> ext.value = create('Reference') as reference, reference.reference = ('urn:uuid:'+%organization.id) "value";
+  src.receivedOrganization as receivedOrganization then ClinicalDocumentOrganization(receivedOrganization, organization) "organization";
+}
+
+// source: https://art-decor.org/art-decor/decor-templates--hl7chcda-?section=templates&id=2.16.756.5.30.1.1.10.2.7
+// target: http://build.fhir.org/ig/hl7ch/ch-core/StructureDefinition-ch-ext-epr-dataenterer.html
+group ChExtEprDataEnterer(source src: DataEnterer, target bundle: Bundle, target practitionerRole: PractitionerRole, target ext: Extension) {
+  src -> ext.url = 'http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-dataenterer' "url";
+
+  src.assignedEntity as assignedEntity -> ext.extension as ext, ext.url='enterer', ext.value = create('Reference') as reference, 
+                reference.reference = ('urn:uuid:'+%practitionerRole.id) "PractitionerRole";
+  src.time as time -> ext.extension as exttime then ChExtEprTime(time, exttime) "time";
+
+  src.assignedEntity as assignedEntity then {
+    assignedEntity -> bundle.entry as e, e.resource = create('Practitioner') as practitioner, practitioner.id = uuid() as uuid,
+            e.fullUrl = append('urn:uuid:',uuid), practitionerRole.practitioner = create('Reference') as reference, reference.reference = append('urn:uuid:',uuid) then ClinicalDocumentEntityPractitioner(assignedEntity, practitioner) "Practitioner";
+    assignedEntity.representedOrganization as representedOrganization -> bundle.entry as e, e.resource = create('Organization') as organization, organization.id = uuid() as uuid2,
+            e.fullUrl = append('urn:uuid:',uuid2), practitionerRole.organization = create('Reference') as referenceOrg, referenceOrg.reference = append('urn:uuid:',uuid2) then ClinicalDocumentOrganization(representedOrganization, organization) "Organization";
+  } "assignedEntity";
+}
+
+// _________________________ Template Type not specified  ___________________ 
+
+// source: https://art-decor.org/art-decor/decor-templates--hl7chcda-?id=2.16.756.5.30.1.1.10.9.36
+// target: http://build.fhir.org/ig/hl7ch/ch-core/branches/master/StructureDefinition-ch-core-composition-epr.html
+group ClinicalDocumentCompositionIt(source src : ClinicalDocument, target tgt : Composition, target patientResource: Patient, target bundle : Bundle) {
+  src.confidentialityCode as confidentialityCode then {
+    confidentialityCode.code as v where ('http://fhir.ch/ig/ch-epr-term/ValueSet/DocumentEntry.confidentialityCode'.resolve().compose.include.concept.where($this.code=src.confidentialityCode.code).exists()) -> 
+      tgt.confidentiality = translate(v, 'http://fhir.ch/ig/ch-core/ConceptMap/documententry-confidentialitycode-to-fhir', 'code') as fhirconf,
+            fhirconf.extension as ext then ChExtEprConfidentialityCode(confidentialityCode, ext) "confCode";
+  } "confidentialityCode";
+  src.versionNumber as versionNumber where (versionNumber>1)-> tgt.extension as ext2 then ChExtEprVersionNumber(versionNumber, ext2) "versionNumber";
+  src.informationRecipient as informationRecipient -> bundle.entry as e then {
+    informationRecipient.intendedRecipient as intendedRecipient where $this.receivedOrganization.exists()=false 
+       -> e.resource = create('Patient') as recipient,
+          recipient.id = uuid() as uuid,
+          e.fullUrl = append('urn:uuid:',uuid),
+          tgt.extension as ext then ChExtEprInformationRecipient(intendedRecipient, recipient, ext) "informationRecipient";
+    informationRecipient.intendedRecipient as intendedRecipient then {
+      intendedRecipient.receivedOrganization -> e.resource = create('Organization') as recipient, 
+           recipient.id = uuid() as uuid2,
+           e.fullUrl = append('urn:uuid:',uuid2),          
+           tgt.extension as ext 
+           then ChExtEprInformationRecipientOrganization(intendedRecipient, recipient, ext) "informationRecipientOrganization";
+    } "intendedRecipientAsOrganization";
+  } "entry";
+  src.dataEnterer as dataEnterer -> bundle.entry as e, 
+      e.resource = create('PractitionerRole') as practitionerRole, 
+      practitionerRole.id = uuid() as uuid,
+      e.fullUrl = append('urn:uuid:',uuid),
+      tgt.extension as ext then ChExtEprDataEnterer(dataEnterer, bundle, practitionerRole, ext) "dataEnterer";
+}
+
