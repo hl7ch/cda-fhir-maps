@@ -1,0 +1,16 @@
+hapi:
+  fhir:
+    implementationguides:
+      cda:
+        url: https://github.com/ahdis/cda-core-2.0/releases/download/v0.0.3-dev/package.tgz
+        name: hl7.fhir.cda
+        version: 2.1.0
+      cdach:
+        name: ch.fhir.ig.cda-fhir-maps
+        version: 0.3.0
+      eprterm:
+        name: ch.fhir.ig.ch-epr-term
+        version: 2.0.7
+      core:
+        name: ch.fhir.ig.ch-core
+        version: 2.0.0

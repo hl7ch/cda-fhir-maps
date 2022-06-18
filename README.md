@@ -72,9 +72,7 @@ To transform the documents from CDA to FHIR and back and maybe add your own maps
 * Download and install [Docker](https://www.docker.com/)
 
 ```
-docker pull eu.gcr.io/fhir-ch/matchbox:v0815
-docker run -d --name matchbox -p 8080:8080 eu.gcr.io/fhir-ch/matchbox:v0815
-docker logs matchbox
+docker run --rm -i -t --name matchbox -p 8080:8080 -v /PATH/TO/DIR:/config eu.gcr.io/fhir-ch/matchbox:v220
 ```
 
 ### GitHub Desktop (optional)
@@ -94,7 +92,7 @@ Open it with Visual Studio Code (REST Client extension is needed).
 
 ## Transform documents between CDA and FHIR and back
 * Open **cdatofhir.http** or **fhirtocda.http** from the main directory with Visual Studio Code. 
-* Choose @host = http://localhost:8080/r4  
+* Choose @host = http://localhost:8080/matchbox  
 * Add the maps to matchbox (Step 1 to 3).
 * Transform your document (Examples shown in Step 5).
 
@@ -106,5 +104,5 @@ Open it with Visual Studio Code (REST Client extension is needed).
    * Medication List document: cdatofhir_list.http, -
    * Pharmaceutical Advice document: cdatofhir_padv.http, fhirtocda_padv.http
    * Medication Treatment Plan document: cdatofhir_treatmentplan.http, fhirtocda_treatmentplan.http
-* Choose @host = http://localhost:8080/r4  
+* Choose @host = http://localhost:8080/matchbox  
 * Transform your document of the choosen exchange format (Examples shown in Step 5).
