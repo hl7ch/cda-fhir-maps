@@ -69,6 +69,15 @@ group SectionDICOMObjectCatalog(source cda : ClinicalDocument, source src : Sect
 
 
 group SectionQuesitoDiagnostico(source cda : ClinicalDocument, source src : Section, source patient : Patient, target tgt, target bundle: Bundle) extends ClinicalDocumentSection {
+  src.entry as cdaEntry where (observation.classCode='OBS') ->  bundle.entry as e,  e.resource = create('DiagnosticReport') as dr,  
+      dr.id = uuid() as uuid,
+      e.fullUrl = append('urn:uuid:',uuid), 
+      tgt.entry = create('Reference') as reference, reference.reference = append('urn:uuid:',uuid) then {
+       cdaEntry.observation as observation then {
+        observation.code as code -> dr.code as drcode then CECodeableConcept(code, drcode) "CE";
+        observation.value as value -> dr.conclusionCode as conclusionCode then CECodeableConcept(value, conclusionCode) "CE2";
+       } "cd2";
+      } "observation";
 }
 
 group SectionStoriaClinica(source cda : ClinicalDocument, source src : Section, source patient : Patient, target tgt, target bundle: Bundle) extends ClinicalDocumentSection {
