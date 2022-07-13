@@ -65,7 +65,8 @@ group SectionCdaRemarksCoded(source bundle : Bundle, source section: Section, ta
     section -> act.code as code, code.code='48767-8', code.codeSystem='2.16.840.1.113883.6.1', code.codeSystemName='LOINC', code.displayName='Annotation comment' "code";    
     // <span id="co1">
     section.text as text then {
-      text.div as div -> act.text as text, text.reference as reference, reference.value= ('#' + %div.substring(%div.indexOf('id')+%div.substring(%div.indexOf('id')).indexOf('"')+1,%div.substring(%div.indexOf('id')+%div.substring(%div.indexOf('id')).indexOf('"')+1).indexOf('"'))) "id";  
+      text.div as div where indexOf('id')>=0 -> act.text as text, text.reference as reference, reference.value= ('#' + %div.substring(%div.indexOf('id')+%div.substring(%div.indexOf('id')).indexOf('"')+1,%div.substring(%div.indexOf('id')+%div.substring(%div.indexOf('id')).indexOf('"')+1).indexOf('"'))) "id";  
+      text.div as div where indexOf('id') = -1 -> act.text as text, text.reference as reference, reference.value= '#refpdf' "refpdfassumed";  
     } "section.text";     
     section -> act.statusCode as statusCode, statusCode.code='completed' "completed";
   } "entry";
