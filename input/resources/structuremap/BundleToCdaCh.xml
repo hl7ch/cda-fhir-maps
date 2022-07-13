@@ -1,8 +1,8 @@
 <StructureMap xmlns="http://hl7.org/fhir">
    <id value="BundleToCdaCh"/>
    <meta>
-      <versionId value="3"/>
-      <lastUpdated value="2021-11-04T13:44:54.811+01:00"/>
+      <versionId value="5"/>
+      <lastUpdated value="2022-07-13T12:19:40.813+00:00"/>
    </meta>
    <text>
       <status value="generated"/>
@@ -68,7 +68,8 @@ group SectionCdaRemarksCoded(source bundle : Bundle, source section : Section, t
     section -&gt;  act.code as code,  code.code = &apos;48767-8&apos;,  code.codeSystem = &apos;2.16.840.1.113883.6.1&apos;,  code.codeSystemName = &apos;LOINC&apos;,  code.displayName = &apos;Annotation comment&apos; &quot;code&quot;;
     // &lt;span id=&quot;co1&quot;&gt;
     section.text as text then {
-      text.div as div -&gt;  act.text as text,  text.reference as reference,  reference.value = (&apos;#&apos; + %div.substring(%div.indexOf(&apos;id&apos;) + %div.substring(%div.indexOf(&apos;id&apos;)).indexOf(&apos;\&quot;&apos;) + 1, %div.substring(%div.indexOf(&apos;id&apos;) + %div.substring(%div.indexOf(&apos;id&apos;)).indexOf(&apos;\&quot;&apos;) + 1).indexOf(&apos;\&quot;&apos;))) &quot;id&quot;;
+      text.div as div where indexOf(&apos;id&apos;) &gt;= 0 -&gt;  act.text as text,  text.reference as reference,  reference.value = (&apos;#&apos; + %div.substring(%div.indexOf(&apos;id&apos;) + %div.substring(%div.indexOf(&apos;id&apos;)).indexOf(&apos;\&quot;&apos;) + 1, %div.substring(%div.indexOf(&apos;id&apos;) + %div.substring(%div.indexOf(&apos;id&apos;)).indexOf(&apos;\&quot;&apos;) + 1).indexOf(&apos;\&quot;&apos;))) &quot;id&quot;;
+      text.div as div where indexOf(&apos;id&apos;) = ( - 1) -&gt;  act.text as text,  text.reference as reference,  reference.value = &apos;#refpdf&apos; &quot;refpdfassumed&quot;;
     };
     section -&gt;  act.statusCode as statusCode,  statusCode.code = &apos;completed&apos; &quot;completed&quot;;
   } &quot;entry&quot;;
@@ -126,7 +127,7 @@ group DataEnterer(source bundle : Bundle, source practitionerRole : Practitioner
   practitionerRole.practitioner as practitioner then {
     practitioner.reference as reference then {
       bundle.entry as entry then {
-        entry.fullUrl where ($this in %reference.value) and $this.startsWith('urn:uuid') then {
+        entry.fullUrl where ($this in %reference.value) and $this.startsWith(&apos;urn:uuid&apos;) then {
           entry.resource : Practitioner as practitioner then PersonAssignedEntityWithId(practitioner, assignedEntity) &quot;AssignedEntityWithId&quot;;
         } &quot;uuid&quot;;
         entry.resource : Practitioner as practitioner where (&apos;Practitioner&apos; + &apos;/&apos; + $this.id) in %reference.value then PersonAssignedEntityWithId(practitioner, assignedEntity) &quot;AssignedEntityWithId&quot;;
@@ -292,10 +293,26 @@ group CompositionClinicalDocumentCH(source bundle : Bundle, source composition :
          </target>
          <dependent>
             <name value="BundleToClinicalDocumentCh"/>
-            <variable value="bundle"/>
-            <variable value="recordTarget"/>
-            <variable value="author"/>
-            <variable value="cda"/>
+            <variable value="bundle">
+               <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                  <valueUrl value="id"/>
+               </extension>
+            </variable>
+            <variable value="recordTarget">
+               <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                  <valueUrl value="id"/>
+               </extension>
+            </variable>
+            <variable value="author">
+               <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                  <valueUrl value="id"/>
+               </extension>
+            </variable>
+            <variable value="cda">
+               <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                  <valueUrl value="id"/>
+               </extension>
+            </variable>
          </dependent>
       </rule>
    </group>
@@ -518,9 +535,21 @@ group CompositionClinicalDocumentCH(source bundle : Bundle, source composition :
             </source>
             <dependent>
                <name value="CompositionClinicalDocumentCH"/>
-               <variable value="bundle"/>
-               <variable value="resource"/>
-               <variable value="cda"/>
+               <variable value="bundle">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
+               <variable value="resource">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
+               <variable value="cda">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
             </dependent>
          </rule>
       </rule>
@@ -725,6 +754,7 @@ group CompositionClinicalDocumentCH(source bundle : Bundle, source composition :
                   <context value="text"/>
                   <element value="div"/>
                   <variable value="div"/>
+                  <condition value="indexOf('id') >= 0"/>
                </source>
                <target>
                   <context value="act"/>
@@ -745,6 +775,36 @@ group CompositionClinicalDocumentCH(source bundle : Bundle, source composition :
                   <transform value="evaluate"/>
                   <parameter>
                      <valueString value="'#' + %div.substring(%div.indexOf('id') + %div.substring(%div.indexOf('id')).indexOf('\&quot;') + 1, %div.substring(%div.indexOf('id') + %div.substring(%div.indexOf('id')).indexOf('\&quot;') + 1).indexOf('\&quot;'))"/>
+                  </parameter>
+               </target>
+            </rule>
+            <rule>
+               <name value="refpdfassumed"/>
+               <source>
+                  <context value="text"/>
+                  <element value="div"/>
+                  <variable value="div"/>
+                  <condition value="indexOf('id') = ( - 1)"/>
+               </source>
+               <target>
+                  <context value="act"/>
+                  <contextType value="variable"/>
+                  <element value="text"/>
+                  <variable value="text"/>
+               </target>
+               <target>
+                  <context value="text"/>
+                  <contextType value="variable"/>
+                  <element value="reference"/>
+                  <variable value="reference"/>
+               </target>
+               <target>
+                  <context value="reference"/>
+                  <contextType value="variable"/>
+                  <element value="value"/>
+                  <transform value="copy"/>
+                  <parameter>
+                     <valueString value="#refpdf"/>
                   </parameter>
                </target>
             </rule>
@@ -1168,9 +1228,21 @@ group CompositionClinicalDocumentCH(source bundle : Bundle, source composition :
                </source>
                <dependent>
                   <name value="SectionCdaOriginalRepresentationObservationMedia"/>
-                  <variable value="binary"/>
-                  <variable value="section"/>
-                  <variable value="cdasection"/>
+                  <variable value="binary">
+                     <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                        <valueUrl value="id"/>
+                     </extension>
+                  </variable>
+                  <variable value="section">
+                     <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                        <valueUrl value="id"/>
+                     </extension>
+                  </variable>
+                  <variable value="cdasection">
+                     <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                        <valueUrl value="id"/>
+                     </extension>
+                  </variable>
                </dependent>
             </rule>
          </rule>
@@ -1184,9 +1256,21 @@ group CompositionClinicalDocumentCH(source bundle : Bundle, source composition :
             </source>
             <dependent>
                <name value="SectionCdaOriginalRepresentationObservationMedia"/>
-               <variable value="binary"/>
-               <variable value="section"/>
-               <variable value="cdasection"/>
+               <variable value="binary">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
+               <variable value="section">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
+               <variable value="cdasection">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
             </dependent>
          </rule>
       </rule>
@@ -1220,8 +1304,16 @@ group CompositionClinicalDocumentCH(source bundle : Bundle, source composition :
          </target>
          <dependent>
             <name value="IdentifierII"/>
-            <variable value="identifier"/>
-            <variable value="id"/>
+            <variable value="identifier">
+               <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                  <valueUrl value="id"/>
+               </extension>
+            </variable>
+            <variable value="id">
+               <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                  <valueUrl value="id"/>
+               </extension>
+            </variable>
          </dependent>
       </rule>
       <rule>
@@ -1239,8 +1331,16 @@ group CompositionClinicalDocumentCH(source bundle : Bundle, source composition :
          </target>
          <dependent>
             <name value="AddressAD"/>
-            <variable value="address"/>
-            <variable value="addr"/>
+            <variable value="address">
+               <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                  <valueUrl value="id"/>
+               </extension>
+            </variable>
+            <variable value="addr">
+               <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                  <valueUrl value="id"/>
+               </extension>
+            </variable>
          </dependent>
       </rule>
       <rule>
@@ -1264,8 +1364,16 @@ group CompositionClinicalDocumentCH(source bundle : Bundle, source composition :
          </target>
          <dependent>
             <name value="HumanNameEN"/>
-            <variable value="humanname"/>
-            <variable value="en"/>
+            <variable value="humanname">
+               <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                  <valueUrl value="id"/>
+               </extension>
+            </variable>
+            <variable value="en">
+               <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                  <valueUrl value="id"/>
+               </extension>
+            </variable>
          </dependent>
       </rule>
    </group>
@@ -1326,8 +1434,16 @@ group CompositionClinicalDocumentCH(source bundle : Bundle, source composition :
                      </source>
                      <dependent>
                         <name value="PersonAssignedEntityWithId"/>
-                        <variable value="practitioner"/>
-                        <variable value="assignedEntity"/>
+                        <variable value="practitioner">
+                           <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                              <valueUrl value="id"/>
+                           </extension>
+                        </variable>
+                        <variable value="assignedEntity">
+                           <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                              <valueUrl value="id"/>
+                           </extension>
+                        </variable>
                      </dependent>
                   </rule>
                </rule>
@@ -1342,8 +1458,16 @@ group CompositionClinicalDocumentCH(source bundle : Bundle, source composition :
                   </source>
                   <dependent>
                      <name value="PersonAssignedEntityWithId"/>
-                     <variable value="practitioner"/>
-                     <variable value="assignedEntity"/>
+                     <variable value="practitioner">
+                        <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                           <valueUrl value="id"/>
+                        </extension>
+                     </variable>
+                     <variable value="assignedEntity">
+                        <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                           <valueUrl value="id"/>
+                        </extension>
+                     </variable>
                   </dependent>
                </rule>
             </rule>
@@ -1393,8 +1517,16 @@ group CompositionClinicalDocumentCH(source bundle : Bundle, source composition :
                      </source>
                      <dependent>
                         <name value="Organization2CdaOrganization"/>
-                        <variable value="organization"/>
-                        <variable value="representedOrganization"/>
+                        <variable value="organization">
+                           <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                              <valueUrl value="id"/>
+                           </extension>
+                        </variable>
+                        <variable value="representedOrganization">
+                           <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                              <valueUrl value="id"/>
+                           </extension>
+                        </variable>
                      </dependent>
                   </rule>
                </rule>
@@ -1409,8 +1541,16 @@ group CompositionClinicalDocumentCH(source bundle : Bundle, source composition :
                   </source>
                   <dependent>
                      <name value="Organization2CdaOrganization"/>
-                     <variable value="organization"/>
-                     <variable value="representedOrganization"/>
+                     <variable value="organization">
+                        <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                           <valueUrl value="id"/>
+                        </extension>
+                     </variable>
+                     <variable value="representedOrganization">
+                        <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                           <valueUrl value="id"/>
+                        </extension>
+                     </variable>
                   </dependent>
                </rule>
             </rule>
@@ -1465,8 +1605,16 @@ group CompositionClinicalDocumentCH(source bundle : Bundle, source composition :
             </target>
             <dependent>
                <name value="CodingCE"/>
-               <variable value="coding"/>
-               <variable value="translation"/>
+               <variable value="coding">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
+               <variable value="translation">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
             </dependent>
          </rule>
       </rule>
@@ -1507,8 +1655,16 @@ group CompositionClinicalDocumentCH(source bundle : Bundle, source composition :
                   </source>
                   <dependent>
                      <name value="CodingCE"/>
-                     <variable value="coding"/>
-                     <variable value="cdaconf"/>
+                     <variable value="coding">
+                        <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                           <valueUrl value="id"/>
+                        </extension>
+                     </variable>
+                     <variable value="cdaconf">
+                        <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                           <valueUrl value="id"/>
+                        </extension>
+                     </variable>
                   </dependent>
                </rule>
             </rule>
@@ -1530,8 +1686,16 @@ group CompositionClinicalDocumentCH(source bundle : Bundle, source composition :
          </target>
          <dependent>
             <name value="IdentifierII"/>
-            <variable value="identifier"/>
-            <variable value="setId"/>
+            <variable value="identifier">
+               <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                  <valueUrl value="id"/>
+               </extension>
+            </variable>
+            <variable value="setId">
+               <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                  <valueUrl value="id"/>
+               </extension>
+            </variable>
          </dependent>
          <documentation value="If setId exists as Composition.ch-ext-epr-setid, then map to ClinicalDocument.setId"/>
       </rule>
@@ -1556,8 +1720,16 @@ group CompositionClinicalDocumentCH(source bundle : Bundle, source composition :
             </target>
             <dependent>
                <name value="IdentifierII"/>
-               <variable value="identifier"/>
-               <variable value="id"/>
+               <variable value="identifier">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
+               <variable value="id">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
             </dependent>
          </rule>
          <documentation value="If setId doesn't exist, used bundle.identifer"/>
@@ -1585,8 +1757,16 @@ group CompositionClinicalDocumentCH(source bundle : Bundle, source composition :
             </source>
             <dependent>
                <name value="IntegerINT"/>
-               <variable value="valueUnsignedInt"/>
-               <variable value="versionNumber"/>
+               <variable value="valueUnsignedInt">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
+               <variable value="versionNumber">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
             </dependent>
          </rule>
          <documentation value="If versionNumber exists as Composition.ch-ext-epr-versionnumber, then map to ClinicalDocument.versionNumber"/>
@@ -1723,8 +1903,16 @@ group CompositionClinicalDocumentCH(source bundle : Bundle, source composition :
                         </target>
                         <dependent>
                            <name value="AddressAD"/>
-                           <variable value="address"/>
-                           <variable value="addr"/>
+                           <variable value="address">
+                              <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                                 <valueUrl value="id"/>
+                              </extension>
+                           </variable>
+                           <variable value="addr">
+                              <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                                 <valueUrl value="id"/>
+                              </extension>
+                           </variable>
                         </dependent>
                      </rule>
                      <rule>
@@ -1748,8 +1936,16 @@ group CompositionClinicalDocumentCH(source bundle : Bundle, source composition :
                         </target>
                         <dependent>
                            <name value="HumanNameEN"/>
-                           <variable value="humanname"/>
-                           <variable value="en"/>
+                           <variable value="humanname">
+                              <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                                 <valueUrl value="id"/>
+                              </extension>
+                           </variable>
+                           <variable value="en">
+                              <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                                 <valueUrl value="id"/>
+                              </extension>
+                           </variable>
                         </dependent>
                      </rule>
                   </rule>
@@ -1777,8 +1973,16 @@ group CompositionClinicalDocumentCH(source bundle : Bundle, source composition :
                      </target>
                      <dependent>
                         <name value="Organization2CdaOrganization"/>
-                        <variable value="organization"/>
-                        <variable value="receivedOrganization"/>
+                        <variable value="organization">
+                           <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                              <valueUrl value="id"/>
+                           </extension>
+                        </variable>
+                        <variable value="receivedOrganization">
+                           <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                              <valueUrl value="id"/>
+                           </extension>
+                        </variable>
                      </dependent>
                   </rule>
                </rule>
@@ -1814,8 +2018,16 @@ group CompositionClinicalDocumentCH(source bundle : Bundle, source composition :
                      </target>
                      <dependent>
                         <name value="AddressAD"/>
-                        <variable value="address"/>
-                        <variable value="addr"/>
+                        <variable value="address">
+                           <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                              <valueUrl value="id"/>
+                           </extension>
+                        </variable>
+                        <variable value="addr">
+                           <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                              <valueUrl value="id"/>
+                           </extension>
+                        </variable>
                      </dependent>
                   </rule>
                   <rule>
@@ -1839,8 +2051,16 @@ group CompositionClinicalDocumentCH(source bundle : Bundle, source composition :
                      </target>
                      <dependent>
                         <name value="HumanNameEN"/>
-                        <variable value="humanname"/>
-                        <variable value="en"/>
+                        <variable value="humanname">
+                           <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                              <valueUrl value="id"/>
+                           </extension>
+                        </variable>
+                        <variable value="en">
+                           <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                              <valueUrl value="id"/>
+                           </extension>
+                        </variable>
                      </dependent>
                   </rule>
                </rule>
@@ -1869,8 +2089,16 @@ group CompositionClinicalDocumentCH(source bundle : Bundle, source composition :
                   </target>
                   <dependent>
                      <name value="Organization2CdaOrganization"/>
-                     <variable value="organization"/>
-                     <variable value="receivedOrganization"/>
+                     <variable value="organization">
+                        <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                           <valueUrl value="id"/>
+                        </extension>
+                     </variable>
+                     <variable value="receivedOrganization">
+                        <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                           <valueUrl value="id"/>
+                        </extension>
+                     </variable>
                   </dependent>
                </rule>
             </rule>
@@ -1934,8 +2162,16 @@ group CompositionClinicalDocumentCH(source bundle : Bundle, source composition :
                </target>
                <dependent>
                   <name value="DateTimeTS"/>
-                  <variable value="valueDateTime"/>
-                  <variable value="time"/>
+                  <variable value="valueDateTime">
+                     <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                        <valueUrl value="id"/>
+                     </extension>
+                  </variable>
+                  <variable value="time">
+                     <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                        <valueUrl value="id"/>
+                     </extension>
+                  </variable>
                </dependent>
             </rule>
          </rule>
@@ -1984,9 +2220,21 @@ group CompositionClinicalDocumentCH(source bundle : Bundle, source composition :
                         </target>
                         <dependent>
                            <name value="DataEnterer"/>
-                           <variable value="bundle"/>
-                           <variable value="practitionerRole"/>
-                           <variable value="assignedEntity"/>
+                           <variable value="bundle">
+                              <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                                 <valueUrl value="id"/>
+                              </extension>
+                           </variable>
+                           <variable value="practitionerRole">
+                              <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                                 <valueUrl value="id"/>
+                              </extension>
+                           </variable>
+                           <variable value="assignedEntity">
+                              <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                                 <valueUrl value="id"/>
+                              </extension>
+                           </variable>
                         </dependent>
                      </rule>
                   </rule>
@@ -2007,9 +2255,21 @@ group CompositionClinicalDocumentCH(source bundle : Bundle, source composition :
                      </target>
                      <dependent>
                         <name value="DataEnterer"/>
-                        <variable value="bundle"/>
-                        <variable value="practitionerRole"/>
-                        <variable value="assignedEntity"/>
+                        <variable value="bundle">
+                           <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                              <valueUrl value="id"/>
+                           </extension>
+                        </variable>
+                        <variable value="practitionerRole">
+                           <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                              <valueUrl value="id"/>
+                           </extension>
+                        </variable>
+                        <variable value="assignedEntity">
+                           <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                              <valueUrl value="id"/>
+                           </extension>
+                        </variable>
                      </dependent>
                   </rule>
                </rule>
