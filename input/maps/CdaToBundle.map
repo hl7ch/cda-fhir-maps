@@ -13,6 +13,7 @@ conceptmap "cm-v3-administrative-gender" {
 
   s:M == t:male
   s:F == t:female
+  s:UN == t:other
 }
 
 uses "http://hl7.org/fhir/cda/StructureDefinition/ClinicalDocument" alias ClinicalDocument as source
