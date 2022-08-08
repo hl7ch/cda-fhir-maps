@@ -58,6 +58,24 @@ group AnnotationComment(source note: Annotation, target act: Act) {
   note -> act.statusCode as code, code.code = 'completed' "statusCode";
 }
 
+// source: Annotation note (e.g. http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefinition-ch-emed-medicationstatement.html)
+// target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&id=1.3.6.1.4.1.19376.1.5.3.1.4.3
+group NoteToPInstruct(source note: Annotation, target act: Act) {
+  note -> act.classCode = 'ACT' "ACT";  
+  note -> act.moodCode = 'INT' "INT";  
+  note -> act.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.5.3.1.4.3' "templateId";
+  note -> act.templateId as templateId, templateId.root = '2.16.840.1.113883.10.20.1.49' "templateId";
+  note -> act.code as code, code.code = 'PINSTRUCT', code.codeSystem = '1.3.6.1.4.1.19376.1.5.3.2', code.codeSystemName='IHEActCode' "code";
+  note.text as noteText -> act.text as text then {
+    noteText -> text.data = noteText "text";
+    note.extension as extension where $this.url='http://hl7.org/fhir/StructureDefinition/narrativeLink' then {
+      extension.valueUrl as valueUrl -> text.reference as reference, reference.value=valueUrl "reference";
+    } "id";
+    note where (extension.where($this.url='http://hl7.org/fhir/StructureDefinition/narrativeLink').exists()=false) 
+      -> text.reference as reference, reference.value='#refpdf' "reference";
+  } "text"; 
+  note -> act.statusCode as code, code.code = 'completed' "statusCode";
+}
 
 // source: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefinition-ch-emed-medicationstatement.html
 // target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&id=2.16.756.5.30.1.1.10.4.33&effectiveDate=2019-12-11T11:34:24&language=en-US
@@ -174,7 +192,12 @@ group MedicationTreatmentPlanItemEntryContentModule(source bundle : Bundle, sour
   // https://github.com/ehealthsuisse/ch-emed/issues/56
   medicationStatement -> substanceAdministration.repeatNumber as repeatNumber, repeatNumber.nullFlavor = 'NI' "repeatNumberDefault";
 
-  // TODO: Patient Medication Instructions Contains 1.3.6.1.4.1.19376.1.5.3.1.4.3 IHE Patient Medication Instructions (DYNAMIC)
+  // Patient Medication Instructions Contains 1.3.6.1.4.1.19376.1.5.3.1.4.3 IHE Patient Medication Instructions (DYNAMIC)
+  medicationStatement.note as note 
+    -> substanceAdministration.entryRelationship as entryRelationship, entryRelationship.typeCode='COMP', 
+        entryRelationship.act as act 
+          then NoteToPInstruct(note, act) "AnnotationComment";
+
   // TODO: Amount of units of the consumable to dispense
   // TODO: ID of parent container (Community Medication Treatment Plan document)
   // TODO: Precondition Criterion
@@ -183,11 +206,6 @@ group MedicationTreatmentPlanItemEntryContentModule(source bundle : Bundle, sour
     -> substanceAdministration.entryRelationship as entryRelationship, entryRelationship.typeCode='COMP', 
         entryRelationship.substanceAdministration as substanceAdministration 
           then DosageInstructionsNonStructuredEntryContentModule(dosage, substanceAdministration) "DosageInstructionsNonStructuredEntryContentModule";
-
-  medicationStatement.note as note 
-    -> substanceAdministration.entryRelationship as entryRelationship, entryRelationship.typeCode='COMP', 
-        entryRelationship.act as act 
-          then AnnotationComment(note, act) "AnnotationComment";
 
   medicationStatement.extension as extension where $this.url='http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-substitution'
     -> substanceAdministration.entryRelationship as entryRelationship, entryRelationship.typeCode='COMP', 
@@ -429,7 +447,6 @@ group DispenseItemEntryContentModule(source bundle : Bundle, source medicationDi
   // TODO: AUTHOR1 Medication Treatment Plan Author
   // TODO: AUTHOR2 Community Medication Treatment Plan document author
 
-  // TODO: Patient Medication Instructions Contains 1.3.6.1.4.1.19376.1.5.3.1.4.3 IHE Patient Medication Instructions (DYNAMIC)
   medicationDispense.extension as extension where url='http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-treatmentplan' 
     -> supply.entryRelationship as entryRelationship, entryRelationship.typeCode='REFR', 
         entryRelationship.substanceAdministration as substanceAdministration 
@@ -479,10 +496,12 @@ group DispenseItemEntryContentModule(source bundle : Bundle, source medicationDi
     // quantity.unit as unit -> supplyQuantity.unit = unit "unit";
   } "quantity";
   
+
+  // Patient Medication Instructions Contains 1.3.6.1.4.1.19376.1.5.3.1.4.3 IHE Patient Medication Instructions (DYNAMIC)
   medicationDispense.note as note 
     -> supply.entryRelationship as entryRelationship, entryRelationship.typeCode='COMP', 
         entryRelationship.act as act 
-          then AnnotationComment(note, act) "AnnotationComment";
+          then NoteToPInstruct(note, act) "AnnotationComment";
 
   medicationDispense.substitution as substitution
     -> supply.entryRelationship as entryRelationship, entryRelationship.typeCode='COMP', 
@@ -772,7 +791,6 @@ group PrescriptionItemEntryContentModule(source bundle : Bundle, source medicati
             entryRelationship.substanceAdministration as substanceAdministration 
               then MTPReferenceEntryContentModule(extension, substanceAdministration) "MTP-Reference";
 
-  // TODO: Patient Medication Instructions Contains 1.3.6.1.4.1.19376.1.5.3.1.4.3 IHE Patient Medication Instructions (DYNAMIC)
   // TODO: Amount of units of the consumable to dispense
   // TODO: ID of parent container (Community Medication Treatment Plan document)
   // TODO: Precondition Criterion
@@ -782,10 +800,11 @@ group PrescriptionItemEntryContentModule(source bundle : Bundle, source medicati
         entryRelationship.substanceAdministration as substanceAdministration 
           then DosageInstructionsNonStructuredEntryContentModule(dosage, substanceAdministration) "DosageInstructionsNonStructuredEntryContentModule";
 
+  // Patient Medication Instructions Contains 1.3.6.1.4.1.19376.1.5.3.1.4.3 IHE Patient Medication Instructions (DYNAMIC)
   medicationRequest.note as note 
     -> substanceAdministration.entryRelationship as entryRelationship, entryRelationship.typeCode='COMP', 
         entryRelationship.act as act 
-          then AnnotationComment(note, act) "AnnotationComment";
+          then NoteToPInstruct(note, act) "AnnotationComment";
 
   medicationRequest.substitution as substitution
     -> substanceAdministration.entryRelationship as entryRelationship, entryRelationship.typeCode='COMP', 
