@@ -194,7 +194,7 @@ group MedicationTreatmentPlanItemEntryContentModule(source bundle : Bundle, sour
 
   // Patient Medication Instructions Contains 1.3.6.1.4.1.19376.1.5.3.1.4.3 IHE Patient Medication Instructions (DYNAMIC)
   medicationStatement.note as note 
-    -> substanceAdministration.entryRelationship as entryRelationship, entryRelationship.typeCode='COMP', 
+    -> substanceAdministration.entryRelationship as entryRelationship, entryRelationship.typeCode='SUBJ', 
         entryRelationship.act as act 
           then NoteToPInstruct(note, act) "AnnotationComment";
 
@@ -499,7 +499,7 @@ group DispenseItemEntryContentModule(source bundle : Bundle, source medicationDi
 
   // Patient Medication Instructions Contains 1.3.6.1.4.1.19376.1.5.3.1.4.3 IHE Patient Medication Instructions (DYNAMIC)
   medicationDispense.note as note 
-    -> supply.entryRelationship as entryRelationship, entryRelationship.typeCode='COMP', 
+    -> supply.entryRelationship as entryRelationship, entryRelationship.typeCode='SUBJ', 
         entryRelationship.act as act 
           then NoteToPInstruct(note, act) "AnnotationComment";
 
@@ -802,7 +802,7 @@ group PrescriptionItemEntryContentModule(source bundle : Bundle, source medicati
 
   // Patient Medication Instructions Contains 1.3.6.1.4.1.19376.1.5.3.1.4.3 IHE Patient Medication Instructions (DYNAMIC)
   medicationRequest.note as note 
-    -> substanceAdministration.entryRelationship as entryRelationship, entryRelationship.typeCode='COMP', 
+    -> substanceAdministration.entryRelationship as entryRelationship, entryRelationship.typeCode='SUBJ', 
         entryRelationship.act as act 
           then NoteToPInstruct(note, act) "AnnotationComment";
 

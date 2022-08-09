@@ -1,8 +1,23 @@
+HTTP/1.1 200 
+X-Powered-By: HAPI FHIR 6.0.0 REST Server (FHIR Server; FHIR 4.0.1/R4)
+ETag: W/"8"
+X-Request-ID: dsELIyYE3zIP9sce
+Content-Location: https://test.ahdis.ch/matchbox/fhir/StructureMap/CdaChEmedToBundle/_history/8
+Last-Modified: Tue, 09 Aug 2022 13:49:56 GMT
+Location: https://test.ahdis.ch/matchbox/fhir/StructureMap/CdaChEmedToBundle/_history/8
+Content-Encoding: gzip
+Content-Type: application/fhir+xml;charset=UTF-8
+Date: Tue, 09 Aug 2022 13:49:57 GMT
+Via: 1.1 google
+Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+Connection: close
+Transfer-Encoding: chunked
+
 <StructureMap xmlns="http://hl7.org/fhir">
    <id value="CdaChEmedToBundle"/>
    <meta>
-      <versionId value="7"/>
-      <lastUpdated value="2022-08-08T15:00:40.466+00:00"/>
+      <versionId value="8"/>
+      <lastUpdated value="2022-08-09T13:49:56.986+00:00"/>
    </meta>
    <text>
       <status value="generated"/>
@@ -161,7 +176,7 @@ group MedicationTreatmentPlanItemEntryContentModule(source section : Section, so
   src.entryRelationship as entry where ((typeCode = &apos;COMP&apos;) and (substanceAdministration.templateId.root = &apos;2.16.756.5.30.1.1.10.4.52&apos;)) -&gt; medicationStatement.dosage as dosage then DosageInstructionsNonStructuredEntryContentModule(section, entry, dosage) &quot;52&quot;;
   src.entryRelationship as entry where ((typeCode = &apos;COMP&apos;) and (sequenceNumber.value &gt;= 0)) -&gt; medicationStatement.dosage as dosage then DosageInstructionsEntryDosageChange(src, entry, dosage) &quot;36&quot;;
   src.entryRelationship as entry where ((typeCode = &apos;REFR&apos;) and substanceAdministration.templateId.where(root = &apos;1.3.6.1.4.1.19376.1.9.1.3.10&apos;).exists()) -&gt; medicationStatement.extension as ext then MTPReferenceEntryContentModule(entry, ext) &quot;MTPReferenceEntry&quot;;
-  src.entryRelationship as entry where ((typeCode = &apos;COMP&apos;) and act.templateId.where(root = &apos;1.3.6.1.4.1.19376.1.5.3.1.4.3&apos;).exists()) then {
+  src.entryRelationship as entry where ((typeCode = &apos;SUBJ&apos;) and act.templateId.where(root = &apos;1.3.6.1.4.1.19376.1.5.3.1.4.3&apos;).exists()) then {
     entry.act as act -&gt; medicationStatement.note as note then AnnotationComment(section, act, note) &quot;annotation&quot;;
   } &quot;3&quot;;
   src.entryRelationship as entry where ((typeCode = &apos;COMP&apos;) and act.templateId.where(root = &apos;1.3.6.1.4.1.19376.1.9.1.3.9.1&apos;).exists()) then {
@@ -293,7 +308,7 @@ group DispenseItemEntryContentModule(source section : Section, source src : Supp
     };
   };
   src.entryRelationship as entry where ((typeCode = &apos;REFR&apos;) and substanceAdministration.templateId.where(root = &apos;1.3.6.1.4.1.19376.1.9.1.3.10&apos;).exists()) -&gt; medicationDispense.extension as ext then MTPReferenceEntryContentModule(entry, ext) &quot;MTPReferenceEntry&quot;;
-  src.entryRelationship as entry where ((typeCode = &apos;COMP&apos;) and act.templateId.where(root = &apos;1.3.6.1.4.1.19376.1.5.3.1.4.3&apos;).exists()) then {
+  src.entryRelationship as entry where ((typeCode = &apos;SUBJ&apos;) and act.templateId.where(root = &apos;1.3.6.1.4.1.19376.1.5.3.1.4.3&apos;).exists()) then {
     entry.act as act -&gt; medicationDispense.note as note then AnnotationComment(section, act, note) &quot;annotation&quot;;
   } &quot;3&quot;;
   src.entryRelationship as entry where ((typeCode = &apos;COMP&apos;) and act.templateId.where(root = &apos;1.3.6.1.4.1.19376.1.9.1.3.9.2&apos;).exists()) then {
@@ -409,7 +424,7 @@ group PrescriptionItemEntryContentModule(source section : Section, source src : 
   // dosage for split dosing, as sequences are present there
   src.entryRelationship as entry where ((typeCode = &apos;COMP&apos;) and (sequenceNumber.value &gt;= 0)) -&gt; medicationRequest.dosageInstruction as dosage then DosageInstructionsEntryDosageChange(src, entry, dosage) &quot;36&quot;;
   src.entryRelationship as entry where ((typeCode = &apos;REFR&apos;) and substanceAdministration.templateId.where(root = &apos;1.3.6.1.4.1.19376.1.9.1.3.10&apos;).exists()) -&gt; medicationRequest.extension as ext then MTPReferenceEntryContentModule(entry, ext) &quot;MTPReferenceEntry&quot;;
-  src.entryRelationship as entry where ((typeCode = &apos;COMP&apos;) and act.templateId.where(root = &apos;1.3.6.1.4.1.19376.1.5.3.1.4.3&apos;).exists()) then {
+  src.entryRelationship as entry where ((typeCode = &apos;SUBJ&apos;) and act.templateId.where(root = &apos;1.3.6.1.4.1.19376.1.5.3.1.4.3&apos;).exists()) then {
     entry.act as act -&gt; medicationRequest.note as note then AnnotationComment(section, act, note) &quot;annotation&quot;;
   } &quot;3&quot;;
   src.repeatNumber as repeatNumber -&gt; medicationRequest.dispenseRequest as dispenseRequest then {
@@ -2014,7 +2029,7 @@ group InnerExtensionId(source src, target ext : Extension) {
             <context value="src"/>
             <element value="entryRelationship"/>
             <variable value="entry"/>
-            <condition value="((typeCode = 'COMP') and act.templateId.where(root = '1.3.6.1.4.1.19376.1.5.3.1.4.3').exists())"/>
+            <condition value="((typeCode = 'SUBJ') and act.templateId.where(root = '1.3.6.1.4.1.19376.1.5.3.1.4.3').exists())"/>
          </source>
          <rule>
             <name value="annotation"/>
@@ -3174,7 +3189,7 @@ group InnerExtensionId(source src, target ext : Extension) {
             <context value="src"/>
             <element value="entryRelationship"/>
             <variable value="entry"/>
-            <condition value="((typeCode = 'COMP') and act.templateId.where(root = '1.3.6.1.4.1.19376.1.5.3.1.4.3').exists())"/>
+            <condition value="((typeCode = 'SUBJ') and act.templateId.where(root = '1.3.6.1.4.1.19376.1.5.3.1.4.3').exists())"/>
          </source>
          <rule>
             <name value="annotation"/>
@@ -4447,7 +4462,7 @@ group InnerExtensionId(source src, target ext : Extension) {
             <context value="src"/>
             <element value="entryRelationship"/>
             <variable value="entry"/>
-            <condition value="((typeCode = 'COMP') and act.templateId.where(root = '1.3.6.1.4.1.19376.1.5.3.1.4.3').exists())"/>
+            <condition value="((typeCode = 'SUBJ') and act.templateId.where(root = '1.3.6.1.4.1.19376.1.5.3.1.4.3').exists())"/>
          </source>
          <rule>
             <name value="annotation"/>
