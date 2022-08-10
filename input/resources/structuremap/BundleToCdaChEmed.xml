@@ -1,8 +1,8 @@
 <StructureMap xmlns="http://hl7.org/fhir">
    <id value="BundleToCdaChEmed"/>
    <meta>
-      <versionId value="16"/>
-      <lastUpdated value="2022-08-10T11:58:19.323+00:00"/>
+      <versionId value="17"/>
+      <lastUpdated value="2022-08-10T13:05:00.244+00:00"/>
    </meta>
    <text>
       <status value="generated"/>
@@ -174,7 +174,7 @@ group MedicationTreatmentPlanItemEntryContentModule(source bundle : Bundle, sour
 // source: http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured-normal
 // target: https://qligier.github.io/cara-emed-ig/cdachemed/mtp/#in-reserve
 group DosageInReserve(source dosage : Dosage, target substanceAdministration : SubstanceAdministration) {
-  dosage.asNeeded -&gt;  substanceAdministration.entryRelationship as entryRelationship,  entryRelationship.typeCode = &apos;COMP&apos;,  entryRelationship.act as act,  act.classCode = &apos;DEF&apos;,  act.moodCode = &apos;ACT&apos;,  act.templateId as templateId,  templateId.root = &apos;2.16.756.5.30.1.1.10.10&apos;,  act.code as code,  code.code = &apos;225761000&apos;,  code.codeSystem = &apos;2.16.840.1.113883.6.96&apos;,  code.codeSystemName = &apos;SNOMED Clinical Terms&apos;,  code.displayName = &apos;As required (qualifier value)&apos;,  act.statusCode as statuscode,  statuscode.code = &apos;completed&apos; &quot;DosageInReserve&quot;;
+  dosage.asNeeded -&gt;  substanceAdministration.entryRelationship as entryRelationship,  entryRelationship.typeCode = &apos;COMP&apos;,  entryRelationship.act as act,  act.classCode = &apos;ACT&apos;,  act.moodCode = &apos;DEF&apos;,  act.templateId as templateId,  templateId.root = &apos;2.16.756.5.30.1.1.10.10&apos;,  act.code as code,  code.code = &apos;225761000&apos;,  code.codeSystem = &apos;2.16.840.1.113883.6.96&apos;,  code.codeSystemName = &apos;SNOMED Clinical Terms&apos;,  code.displayName = &apos;As required (qualifier value)&apos;,  act.statusCode as statuscode,  statuscode.code = &apos;completed&apos; &quot;DosageInReserve&quot;;
 }
 
 // source: http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured-normal
@@ -2699,7 +2699,7 @@ group PharmaceuticalAdviceItemEntryContentModule(source bundle : Bundle, source 
             <element value="classCode"/>
             <transform value="copy"/>
             <parameter>
-               <valueString value="DEF"/>
+               <valueString value="ACT"/>
             </parameter>
          </target>
          <target>
@@ -2708,7 +2708,7 @@ group PharmaceuticalAdviceItemEntryContentModule(source bundle : Bundle, source 
             <element value="moodCode"/>
             <transform value="copy"/>
             <parameter>
-               <valueString value="ACT"/>
+               <valueString value="DEF"/>
             </parameter>
          </target>
          <target>
