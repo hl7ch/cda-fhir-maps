@@ -225,7 +225,7 @@ group DosageInstructionsEntryDosageChange(source src: substanceAdministration, s
   entry.substanceAdministration as src -> dosage as dosage then DoseQuantity(src, dosage) "doseQuantity";
 }
 
-// effective time start & end for dosage
+// effective time start & end for dosage and check for medicaiton in reserve
 group EffectiveTimeStartEnd(source src: substanceAdministration, target dosage: Dosage) {
   src.effectiveTime: IVL_TS as effectiveTime -> dosage.timing as timing share sharetiming then {
     effectiveTime -> timing.repeat as repeat then {
@@ -239,6 +239,8 @@ group EffectiveTimeStartEnd(source src: substanceAdministration, target dosage: 
       } "period";
     } "repeat";
   } "effectiveTime-IVL-TS";
+  src.entryRelationship as entry where (typeCode='COMP' and act.templateId.where(root='2.16.756.5.30.1.1.10.10').exists() and act.code.code='225761000') 
+  -> dosage.asNeeded = true "MTPReferenceEntry";   
 }
 
 // effective time when for dosage

@@ -1,23 +1,8 @@
-HTTP/1.1 200 
-X-Powered-By: HAPI FHIR 6.0.0 REST Server (FHIR Server; FHIR 4.0.1/R4)
-ETag: W/"8"
-X-Request-ID: dsELIyYE3zIP9sce
-Content-Location: https://test.ahdis.ch/matchbox/fhir/StructureMap/CdaChEmedToBundle/_history/8
-Last-Modified: Tue, 09 Aug 2022 13:49:56 GMT
-Location: https://test.ahdis.ch/matchbox/fhir/StructureMap/CdaChEmedToBundle/_history/8
-Content-Encoding: gzip
-Content-Type: application/fhir+xml;charset=UTF-8
-Date: Tue, 09 Aug 2022 13:49:57 GMT
-Via: 1.1 google
-Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
-Connection: close
-Transfer-Encoding: chunked
-
 <StructureMap xmlns="http://hl7.org/fhir">
    <id value="CdaChEmedToBundle"/>
    <meta>
-      <versionId value="8"/>
-      <lastUpdated value="2022-08-09T13:49:56.986+00:00"/>
+      <versionId value="10"/>
+      <lastUpdated value="2022-08-10T12:21:05.653+00:00"/>
    </meta>
    <text>
       <status value="generated"/>
@@ -197,7 +182,7 @@ group DosageInstructionsEntryDosageChange(source src : substanceAdministration, 
   entry.substanceAdministration as src -&gt; dosage as dosage then DoseQuantity(src, dosage) &quot;doseQuantity&quot;;
 }
 
-// effective time start &amp; end for dosage
+// effective time start &amp; end for dosage and check for medicaiton in reserve
 group EffectiveTimeStartEnd(source src : substanceAdministration, target dosage : Dosage) {
   src.effectiveTime : IVL_TS as effectiveTime -&gt; dosage.timing as timing share sharetiming then {
     effectiveTime -&gt; timing.repeat as repeat then {
@@ -211,6 +196,7 @@ group EffectiveTimeStartEnd(source src : substanceAdministration, target dosage 
       } &quot;period&quot;;
     } &quot;repeat&quot;;
   } &quot;effectiveTime-IVL-TS&quot;;
+  src.entryRelationship as entry where ((typeCode = &apos;COMP&apos;) and act.templateId.where(root = &apos;2.16.756.5.30.1.1.10.10&apos;).exists() and (act.code.code = &apos;225761000&apos;)) -&gt; dosage.asNeeded = true &quot;MTPReferenceEntry&quot;;
 }
 
 // effective time when for dosage
@@ -2264,7 +2250,7 @@ group InnerExtensionId(source src, target ext : Extension) {
    <group>
       <name value="EffectiveTimeStartEnd"/>
       <typeMode value="none"/>
-      <documentation value="effective time start &amp; end for dosage"/>
+      <documentation value="effective time start &amp; end for dosage and check for medicaiton in reserve"/>
       <input>
          <name value="src"/>
          <type value="substanceAdministration"/>
@@ -2369,6 +2355,24 @@ group InnerExtensionId(source src, target ext : Extension) {
                </rule>
             </rule>
          </rule>
+      </rule>
+      <rule>
+         <name value="MTPReferenceEntry"/>
+         <source>
+            <context value="src"/>
+            <element value="entryRelationship"/>
+            <variable value="entry"/>
+            <condition value="((typeCode = 'COMP') and act.templateId.where(root = '2.16.756.5.30.1.1.10.10').exists() and (act.code.code = '225761000'))"/>
+         </source>
+         <target>
+            <context value="dosage"/>
+            <contextType value="variable"/>
+            <element value="asNeeded"/>
+            <transform value="copy"/>
+            <parameter>
+               <valueBoolean value="true"/>
+            </parameter>
+         </target>
       </rule>
    </group>
    <group>
