@@ -98,7 +98,7 @@ group ClinicalDocumentComposition(source src : ClinicalDocument, target tgt : Co
       comp.encompassingEncounter as srcEnc -> tgt.encounter = create('Reference') as reference, reference.reference = ('urn:uuid:'+%encounter.id) then ClinicalDocumentEncounter(srcEnc, bundle, encounter) "srcEncounter";
     } "encompassingEncounter";
   src.effectiveTime -> tgt.date;
-  src.author as srcAuthor ->  bundle.entry as e,  
+  src.author as srcAuthor where assignedAuthor.assignedPerson -> bundle.entry as e,  
     e.resource = create('Practitioner') as practitioner, 
     practitioner.id = uuid() as uuid2,
     e.fullUrl = append('urn:uuid:',uuid2),
@@ -119,6 +119,20 @@ group ClinicalDocumentComposition(source src : ClinicalDocument, target tgt : Co
         tgt.author = create('Reference') as reference2, reference2.reference = ('urn:uuid:'+%organization.id) then ClinicalDocumentOrganization(srcOrg, organization);
     } "author";
   } "srcAuthor";
+  src.author as srcAuthor where assignedAuthor.assignedAuthoringDevice -> bundle.entry as e,  
+    e.resource = create('Device') as device, 
+    device.id = uuid() as uuid2,
+    e.fullUrl = append('urn:uuid:',uuid2),
+    tgt.author = create('Reference') as reference, reference.reference = ('urn:uuid:'+%device.id) then {
+    srcAuthor.time as time -> reference.extension as exttime then ChExtEprTime(time, exttime) "time";
+    srcAuthor.assignedAuthor as assignedAuthor then {
+      assignedAuthor.id -> device.identifier;
+      assignedAuthor.assignedAuthoringDevice as assignedAuthoringDevice -> device.deviceName as deviceName then {
+        assignedAuthoringDevice.manufacturerModelName as manufacturerModelName -> deviceName.name = (manufacturerModelName.dataString);
+        assignedAuthoringDevice.softwareName as softwareName-> deviceName.type = (softwareName.dataString);
+      } "name";
+    } "author";
+  } "srcAuthorDevice";
   src.confidentialityCode -> tgt.confidentiality;
   src.legalAuthenticator as legalAuth ->  bundle.entry as e,  
     e.resource = create('Practitioner') as practitioner, 
