@@ -1,8 +1,8 @@
 <StructureMap xmlns="http://hl7.org/fhir">
    <id value="BundleToCdaChEmed"/>
    <meta>
-      <versionId value="11"/>
-      <lastUpdated value="2022-08-09T13:47:35.990+00:00"/>
+      <versionId value="12"/>
+      <lastUpdated value="2022-08-09T14:09:31.241+00:00"/>
    </meta>
    <text>
       <status value="generated"/>
@@ -165,7 +165,7 @@ group MedicationTreatmentPlanItemEntryContentModule(source bundle : Bundle, sour
   // https://github.com/ehealthsuisse/ch-emed/issues/56
   medicationStatement -&gt;  substanceAdministration.repeatNumber as repeatNumber,  repeatNumber.nullFlavor = &apos;NI&apos; &quot;repeatNumberDefault&quot;;
   // Patient Medication Instructions Contains 1.3.6.1.4.1.19376.1.5.3.1.4.3 IHE Patient Medication Instructions (DYNAMIC)
-  medicationStatement.note as note -&gt;  substanceAdministration.entryRelationship as entryRelationship,  entryRelationship.typeCode = &apos;SUBJ&apos;,  entryRelationship.act as act then NoteToPInstruct(note, act) &quot;AnnotationComment&quot;;
+  medicationStatement.note as note -&gt;  substanceAdministration.entryRelationship as entryRelationship,  entryRelationship.typeCode = &apos;SUBJ&apos;,  entryRelationship.inversionInd = &apos;true&apos;,  entryRelationship.act as act then NoteToPInstruct(note, act) &quot;AnnotationComment&quot;;
   // TODO: Amount of units of the consumable to dispense
   medicationStatement.dosage as dosage where $this.conformsTo(&apos;http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-nonstructured&apos;) -&gt;  substanceAdministration.entryRelationship as entryRelationship,  entryRelationship.typeCode = &apos;COMP&apos;,  entryRelationship.substanceAdministration as substanceAdministration then DosageInstructionsNonStructuredEntryContentModule(dosage, substanceAdministration) &quot;DosageInstructionsNonStructuredEntryContentModule&quot;;
   medicationStatement.extension as extension where $this.url = &apos;http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-substitution&apos; -&gt;  substanceAdministration.entryRelationship as entryRelationship,  entryRelationship.typeCode = &apos;COMP&apos;,  entryRelationship.act as act then SubstitutionStatement(extension, act) &quot;Substitution&quot;;
@@ -386,7 +386,7 @@ group DispenseItemEntryContentModule(source bundle : Bundle, source medicationDi
     quantity.value as value -&gt; supplyQuantity.value = value;
   };
   // Patient Medication Instructions Contains 1.3.6.1.4.1.19376.1.5.3.1.4.3 IHE Patient Medication Instructions (DYNAMIC)
-  medicationDispense.note as note -&gt;  supply.entryRelationship as entryRelationship,  entryRelationship.typeCode = &apos;SUBJ&apos;,  entryRelationship.act as act then NoteToPInstruct(note, act) &quot;AnnotationComment&quot;;
+  medicationDispense.note as note -&gt;  supply.entryRelationship as entryRelationship,  entryRelationship.typeCode = &apos;SUBJ&apos;,  entryRelationship.inversionInd = &apos;true&apos;,  entryRelationship.act as act then NoteToPInstruct(note, act) &quot;AnnotationComment&quot;;
   medicationDispense.substitution as substitution -&gt;  supply.entryRelationship as entryRelationship,  entryRelationship.typeCode = &apos;COMP&apos;,  entryRelationship.act as act then SubstitutionDispense(substitution, act) &quot;Substitution&quot;;
 }
 
@@ -617,7 +617,7 @@ group PrescriptionItemEntryContentModule(source bundle : Bundle, source medicati
   // TODO: Amount of units of the consumable to dispense
   medicationRequest.dosageInstruction as dosage where $this.conformsTo(&apos;http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-nonstructured&apos;) -&gt;  substanceAdministration.entryRelationship as entryRelationship,  entryRelationship.typeCode = &apos;COMP&apos;,  entryRelationship.substanceAdministration as substanceAdministration then DosageInstructionsNonStructuredEntryContentModule(dosage, substanceAdministration) &quot;DosageInstructionsNonStructuredEntryContentModule&quot;;
   // Patient Medication Instructions Contains 1.3.6.1.4.1.19376.1.5.3.1.4.3 IHE Patient Medication Instructions (DYNAMIC)
-  medicationRequest.note as note -&gt;  substanceAdministration.entryRelationship as entryRelationship,  entryRelationship.typeCode = &apos;SUBJ&apos;,  entryRelationship.act as act then NoteToPInstruct(note, act) &quot;AnnotationComment&quot;;
+  medicationRequest.note as note -&gt;  substanceAdministration.entryRelationship as entryRelationship,  entryRelationship.typeCode = &apos;SUBJ&apos;,  entryRelationship.inversionInd = &apos;true&apos;,  entryRelationship.act as act then NoteToPInstruct(note, act) &quot;AnnotationComment&quot;;
   medicationRequest.substitution as substitution -&gt;  substanceAdministration.entryRelationship as entryRelationship,  entryRelationship.typeCode = &apos;COMP&apos;,  entryRelationship.act as act then SubstitutionRequest(substitution, act) &quot;Substitution&quot;;
 }
 
@@ -2527,6 +2527,15 @@ group PharmaceuticalAdviceItemEntryContentModule(source bundle : Bundle, source 
             <transform value="copy"/>
             <parameter>
                <valueString value="SUBJ"/>
+            </parameter>
+         </target>
+         <target>
+            <context value="entryRelationship"/>
+            <contextType value="variable"/>
+            <element value="inversionInd"/>
+            <transform value="copy"/>
+            <parameter>
+               <valueString value="true"/>
             </parameter>
          </target>
          <target>
@@ -5309,6 +5318,15 @@ group PharmaceuticalAdviceItemEntryContentModule(source bundle : Bundle, source 
             <transform value="copy"/>
             <parameter>
                <valueString value="SUBJ"/>
+            </parameter>
+         </target>
+         <target>
+            <context value="entryRelationship"/>
+            <contextType value="variable"/>
+            <element value="inversionInd"/>
+            <transform value="copy"/>
+            <parameter>
+               <valueString value="true"/>
             </parameter>
          </target>
          <target>
@@ -8283,6 +8301,15 @@ group PharmaceuticalAdviceItemEntryContentModule(source bundle : Bundle, source 
             <transform value="copy"/>
             <parameter>
                <valueString value="SUBJ"/>
+            </parameter>
+         </target>
+         <target>
+            <context value="entryRelationship"/>
+            <contextType value="variable"/>
+            <element value="inversionInd"/>
+            <transform value="copy"/>
+            <parameter>
+               <valueString value="true"/>
             </parameter>
          </target>
          <target>
