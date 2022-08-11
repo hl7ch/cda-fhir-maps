@@ -1,8 +1,8 @@
 <StructureMap xmlns="http://hl7.org/fhir">
    <id value="CdaToBundle"/>
    <meta>
-      <versionId value="9"/>
-      <lastUpdated value="2022-08-10T15:06:34.572+00:00"/>
+      <versionId value="13"/>
+      <lastUpdated value="2022-08-11T12:12:48.618+00:00"/>
    </meta>
    <text>
       <status value="generated"/>
@@ -25,6 +25,7 @@ conceptmap &quot;cm-v3-administrative-gender&quot; {
 }
 
 uses &quot;http://hl7.org/fhir/cda/StructureDefinition/ClinicalDocument&quot; alias ClinicalDocument as source
+uses &quot;http://hl7.org/fhir/cda/StructureDefinition/Author&quot; alias Author as source
 uses &quot;http://hl7.org/fhir/cda/StructureDefinition/AssignedAuthor&quot; alias AssignedAuthor as queried
 uses &quot;http://hl7.org/fhir/cda/StructureDefinition/AssignedEntity&quot; alias AssignedEntity as queried
 uses &quot;http://hl7.org/fhir/cda/StructureDefinition/CustodianOrganization&quot; alias CustodianOrganization as queried
@@ -69,11 +70,37 @@ group ClinicalDocumentSection(source cda : ClinicalDocument, source src : Sectio
     cdaText -&gt; fhirText.status = &apos;generated&apos; &quot;narrativeStatus&quot;;
     cdaText as t -&gt; fhirText.div = t &quot;narrativeText&quot;;
   } &quot;cdaText&quot;;
+  src.author as author -&gt; tgt.author = create(&apos;Reference&apos;) as reference then Author(author, reference, bundle);
   src.section as srcSection -&gt; tgt.section as tgtSection then ClinicalDocumentSection(cda, srcSection, patient, tgtSection, bundle);
 }
 
 // _________________________ Entry Level Templates   ________________________
 // _________________________ Header Level Templates _________________________
+group Author(source srcAuthor, target reference, target bundle : Bundle) {
+  srcAuthor where assignedAuthor.assignedPerson -&gt;  bundle.entry as ep,  ep.resource = create(&apos;PractitionerRole&apos;) as practitionerRole,  practitionerRole.id = uuid() as uuid,  ep.fullUrl = append(&apos;urn:uuid:&apos;, uuid),  reference.reference = (&apos;urn:uuid:&apos; + %practitionerRole.id),  bundle.entry as e,  e.resource = create(&apos;Practitioner&apos;) as practitioner,  practitioner.id = uuid() as uuid2,  e.fullUrl = append(&apos;urn:uuid:&apos;, uuid2),  practitionerRole.practitioner = create(&apos;Reference&apos;) as practReference,  practReference.reference = (&apos;urn:uuid:&apos; + %practitioner.id) then {
+    srcAuthor.time as time -&gt; reference.extension as exttime then ChExtEprTime(time, exttime);
+    srcAuthor.assignedAuthor as assignedAuthor then {
+      assignedAuthor.id -&gt; practitioner.identifier;
+      assignedAuthor.addr -&gt; practitioner.address;
+      assignedAuthor.telecom -&gt; practitioner.telecom;
+      assignedAuthor.assignedPerson as person then {
+        person.name -&gt; practitioner.name;
+      } &quot;name&quot;;
+      assignedAuthor.representedOrganization as srcOrg -&gt;  bundle.entry as e2,  e2.resource = create(&apos;Organization&apos;) as organization,  organization.id = uuid() as uuid3,  e2.fullUrl = append(&apos;urn:uuid:&apos;, uuid3),  practitionerRole.organization = create(&apos;Reference&apos;) as reference2,  reference2.reference = (&apos;urn:uuid:&apos; + %organization.id) then ClinicalDocumentOrganization(srcOrg, organization);
+    } &quot;author&quot;;
+  } &quot;srcAuthor&quot;;
+  srcAuthor where assignedAuthor.assignedAuthoringDevice -&gt;  bundle.entry as e,  e.resource = create(&apos;Device&apos;) as device,  device.id = uuid() as uuid2,  e.fullUrl = append(&apos;urn:uuid:&apos;, uuid2),  reference.reference = (&apos;urn:uuid:&apos; + %device.id) then {
+    srcAuthor.time as time -&gt; reference.extension as exttime then ChExtEprTime(time, exttime);
+    srcAuthor.assignedAuthor as assignedAuthor then {
+      assignedAuthor.id -&gt; device.identifier;
+      assignedAuthor.assignedAuthoringDevice as assignedAuthoringDevice -&gt; device.deviceName as deviceName then {
+        assignedAuthoringDevice.manufacturerModelName as manufacturerModelName -&gt;  deviceName.name = (manufacturerModelName.dataString),  deviceName.type = &apos;manufacturer-name&apos;;
+        assignedAuthoringDevice.softwareName as softwareName -&gt; device.modelNumber = (softwareName.dataString);
+      } &quot;name&quot;;
+    } &quot;author&quot;;
+  } &quot;srcAuthorDevice&quot;;
+}
+
 group ClinicalDocumentComposition(source src : ClinicalDocument, target tgt : Composition, target patientResource : Patient, target bundle : Bundle) {
   src.languageCode -&gt; tgt.language;
   src.id where src.setId.exists().not() -&gt; tgt.identifier &quot;identifier&quot;;
@@ -88,28 +115,7 @@ group ClinicalDocumentComposition(source src : ClinicalDocument, target tgt : Co
     comp.encompassingEncounter as srcEnc -&gt;  tgt.encounter = create(&apos;Reference&apos;) as reference,  reference.reference = (&apos;urn:uuid:&apos; + %encounter.id) then ClinicalDocumentEncounter(srcEnc, bundle, encounter) &quot;srcEncounter&quot;;
   } &quot;encompassingEncounter&quot;;
   src.effectiveTime -&gt; tgt.date;
-  src.author as srcAuthor where assignedAuthor.assignedPerson -&gt;  bundle.entry as e,  e.resource = create(&apos;Practitioner&apos;) as practitioner,  practitioner.id = uuid() as uuid2,  e.fullUrl = append(&apos;urn:uuid:&apos;, uuid2),  tgt.author = create(&apos;Reference&apos;) as reference,  reference.reference = (&apos;urn:uuid:&apos; + %practitioner.id) then {
-    srcAuthor.time as time -&gt; reference.extension as exttime then ChExtEprTime(time, exttime);
-    srcAuthor.assignedAuthor as assignedAuthor then {
-      assignedAuthor.id -&gt; practitioner.identifier;
-      assignedAuthor.addr -&gt; practitioner.address;
-      assignedAuthor.telecom -&gt; practitioner.telecom;
-      assignedAuthor.assignedPerson as person then {
-        person.name -&gt; practitioner.name;
-      } &quot;name&quot;;
-      assignedAuthor.representedOrganization as srcOrg -&gt;  bundle.entry as e2,  e2.resource = create(&apos;Organization&apos;) as organization,  organization.id = uuid() as uuid3,  e2.fullUrl = append(&apos;urn:uuid:&apos;, uuid3),  tgt.author = create(&apos;Reference&apos;) as reference2,  reference2.reference = (&apos;urn:uuid:&apos; + %organization.id) then ClinicalDocumentOrganization(srcOrg, organization);
-    } &quot;author&quot;;
-  } &quot;srcAuthor&quot;;
-  src.author as srcAuthor where assignedAuthor.assignedAuthoringDevice -&gt;  bundle.entry as e,  e.resource = create(&apos;Device&apos;) as device,  device.id = uuid() as uuid2,  e.fullUrl = append(&apos;urn:uuid:&apos;, uuid2),  tgt.author = create(&apos;Reference&apos;) as reference,  reference.reference = (&apos;urn:uuid:&apos; + %device.id) then {
-    srcAuthor.time as time -&gt; reference.extension as exttime then ChExtEprTime(time, exttime);
-    srcAuthor.assignedAuthor as assignedAuthor then {
-      assignedAuthor.id -&gt; device.identifier;
-      assignedAuthor.assignedAuthoringDevice as assignedAuthoringDevice -&gt; device.deviceName as deviceName then {
-        assignedAuthoringDevice.manufacturerModelName as manufacturerModelName -&gt; deviceName.name = (manufacturerModelName.dataString);
-        assignedAuthoringDevice.softwareName as softwareName -&gt; deviceName.type = (softwareName.dataString);
-      } &quot;name&quot;;
-    } &quot;author&quot;;
-  } &quot;srcAuthorDevice&quot;;
+  src.author as author -&gt; tgt.author = create(&apos;Reference&apos;) as reference then Author(author, reference, bundle);
   src.confidentialityCode -&gt; tgt.confidentiality;
   src.legalAuthenticator as legalAuth -&gt;  bundle.entry as e,  e.resource = create(&apos;Practitioner&apos;) as practitioner,  practitioner.id = uuid() as uuid2,  e.fullUrl = append(&apos;urn:uuid:&apos;, uuid2) then {
     legalAuth -&gt; tgt.attester as attester then {
@@ -290,6 +296,11 @@ group NarrativeLink(source url, target ext : Extension) {
       <url value="http://hl7.org/fhir/cda/StructureDefinition/ClinicalDocument"/>
       <mode value="source"/>
       <alias value="ClinicalDocument"/>
+   </structure>
+   <structure>
+      <url value="http://hl7.org/fhir/cda/StructureDefinition/Author"/>
+      <mode value="source"/>
+      <alias value="Author"/>
    </structure>
    <structure>
       <url value="http://hl7.org/fhir/cda/StructureDefinition/AssignedAuthor"/>
@@ -778,6 +789,42 @@ group NarrativeLink(source url, target ext : Extension) {
          </rule>
       </rule>
       <rule>
+         <name value="author"/>
+         <source>
+            <context value="src"/>
+            <element value="author"/>
+            <variable value="author"/>
+         </source>
+         <target>
+            <context value="tgt"/>
+            <contextType value="variable"/>
+            <element value="author"/>
+            <variable value="reference"/>
+            <transform value="create"/>
+            <parameter>
+               <valueString value="Reference"/>
+            </parameter>
+         </target>
+         <dependent>
+            <name value="Author"/>
+            <variable value="author">
+               <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                  <valueUrl value="id"/>
+               </extension>
+            </variable>
+            <variable value="reference">
+               <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                  <valueUrl value="id"/>
+               </extension>
+            </variable>
+            <variable value="bundle">
+               <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                  <valueUrl value="id"/>
+               </extension>
+            </variable>
+         </dependent>
+      </rule>
+      <rule>
          <name value="section"/>
          <source>
             <context value="src"/>
@@ -821,9 +868,467 @@ group NarrativeLink(source url, target ext : Extension) {
       </rule>
    </group>
    <group>
-      <name value="ClinicalDocumentComposition"/>
+      <name value="Author"/>
       <typeMode value="none"/>
       <documentation value="_________________________ Entry Level Templates   ________________________&#xd;&#xa;_________________________ Header Level Templates _________________________"/>
+      <input>
+         <name value="srcAuthor"/>
+         <mode value="source"/>
+      </input>
+      <input>
+         <name value="reference"/>
+         <mode value="target"/>
+      </input>
+      <input>
+         <name value="bundle"/>
+         <type value="Bundle"/>
+         <mode value="target"/>
+      </input>
+      <rule>
+         <name value="srcAuthor"/>
+         <source>
+            <context value="srcAuthor"/>
+            <condition value="assignedAuthor.assignedPerson"/>
+         </source>
+         <target>
+            <context value="bundle"/>
+            <contextType value="variable"/>
+            <element value="entry"/>
+            <variable value="ep"/>
+         </target>
+         <target>
+            <context value="ep"/>
+            <contextType value="variable"/>
+            <element value="resource"/>
+            <variable value="practitionerRole"/>
+            <transform value="create"/>
+            <parameter>
+               <valueString value="PractitionerRole"/>
+            </parameter>
+         </target>
+         <target>
+            <context value="practitionerRole"/>
+            <contextType value="variable"/>
+            <element value="id"/>
+            <variable value="uuid"/>
+            <transform value="uuid"/>
+         </target>
+         <target>
+            <context value="ep"/>
+            <contextType value="variable"/>
+            <element value="fullUrl"/>
+            <transform value="append"/>
+            <parameter>
+               <valueString value="urn:uuid:"/>
+            </parameter>
+            <parameter>
+               <valueId value="uuid"/>
+            </parameter>
+         </target>
+         <target>
+            <context value="reference"/>
+            <contextType value="variable"/>
+            <element value="reference"/>
+            <transform value="evaluate"/>
+            <parameter>
+               <valueString value="'urn:uuid:' + %practitionerRole.id"/>
+            </parameter>
+         </target>
+         <target>
+            <context value="bundle"/>
+            <contextType value="variable"/>
+            <element value="entry"/>
+            <variable value="e"/>
+         </target>
+         <target>
+            <context value="e"/>
+            <contextType value="variable"/>
+            <element value="resource"/>
+            <variable value="practitioner"/>
+            <transform value="create"/>
+            <parameter>
+               <valueString value="Practitioner"/>
+            </parameter>
+         </target>
+         <target>
+            <context value="practitioner"/>
+            <contextType value="variable"/>
+            <element value="id"/>
+            <variable value="uuid2"/>
+            <transform value="uuid"/>
+         </target>
+         <target>
+            <context value="e"/>
+            <contextType value="variable"/>
+            <element value="fullUrl"/>
+            <transform value="append"/>
+            <parameter>
+               <valueString value="urn:uuid:"/>
+            </parameter>
+            <parameter>
+               <valueId value="uuid2"/>
+            </parameter>
+         </target>
+         <target>
+            <context value="practitionerRole"/>
+            <contextType value="variable"/>
+            <element value="practitioner"/>
+            <variable value="practReference"/>
+            <transform value="create"/>
+            <parameter>
+               <valueString value="Reference"/>
+            </parameter>
+         </target>
+         <target>
+            <context value="practReference"/>
+            <contextType value="variable"/>
+            <element value="reference"/>
+            <transform value="evaluate"/>
+            <parameter>
+               <valueString value="'urn:uuid:' + %practitioner.id"/>
+            </parameter>
+         </target>
+         <rule>
+            <name value="time"/>
+            <source>
+               <context value="srcAuthor"/>
+               <element value="time"/>
+               <variable value="time"/>
+            </source>
+            <target>
+               <context value="reference"/>
+               <contextType value="variable"/>
+               <element value="extension"/>
+               <variable value="exttime"/>
+            </target>
+            <dependent>
+               <name value="ChExtEprTime"/>
+               <variable value="time">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
+               <variable value="exttime">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
+            </dependent>
+         </rule>
+         <rule>
+            <name value="author"/>
+            <source>
+               <context value="srcAuthor"/>
+               <element value="assignedAuthor"/>
+               <variable value="assignedAuthor"/>
+            </source>
+            <rule>
+               <name value="id"/>
+               <source>
+                  <context value="assignedAuthor"/>
+                  <element value="id"/>
+                  <variable value="vvv"/>
+               </source>
+               <target>
+                  <context value="practitioner"/>
+                  <contextType value="variable"/>
+                  <element value="identifier"/>
+                  <variable value="vvv"/>
+                  <transform value="create"/>
+               </target>
+            </rule>
+            <rule>
+               <name value="addr"/>
+               <source>
+                  <context value="assignedAuthor"/>
+                  <element value="addr"/>
+                  <variable value="vvv"/>
+               </source>
+               <target>
+                  <context value="practitioner"/>
+                  <contextType value="variable"/>
+                  <element value="address"/>
+                  <variable value="vvv"/>
+                  <transform value="create"/>
+               </target>
+            </rule>
+            <rule>
+               <name value="telecom"/>
+               <source>
+                  <context value="assignedAuthor"/>
+                  <element value="telecom"/>
+                  <variable value="vvv"/>
+               </source>
+               <target>
+                  <context value="practitioner"/>
+                  <contextType value="variable"/>
+                  <element value="telecom"/>
+                  <variable value="vvv"/>
+                  <transform value="create"/>
+               </target>
+            </rule>
+            <rule>
+               <name value="name"/>
+               <source>
+                  <context value="assignedAuthor"/>
+                  <element value="assignedPerson"/>
+                  <variable value="person"/>
+               </source>
+               <rule>
+                  <name value="name"/>
+                  <source>
+                     <context value="person"/>
+                     <element value="name"/>
+                     <variable value="vvv"/>
+                  </source>
+                  <target>
+                     <context value="practitioner"/>
+                     <contextType value="variable"/>
+                     <element value="name"/>
+                     <variable value="vvv"/>
+                     <transform value="create"/>
+                  </target>
+               </rule>
+            </rule>
+            <rule>
+               <name value="representedOrganization"/>
+               <source>
+                  <context value="assignedAuthor"/>
+                  <element value="representedOrganization"/>
+                  <variable value="srcOrg"/>
+               </source>
+               <target>
+                  <context value="bundle"/>
+                  <contextType value="variable"/>
+                  <element value="entry"/>
+                  <variable value="e2"/>
+               </target>
+               <target>
+                  <context value="e2"/>
+                  <contextType value="variable"/>
+                  <element value="resource"/>
+                  <variable value="organization"/>
+                  <transform value="create"/>
+                  <parameter>
+                     <valueString value="Organization"/>
+                  </parameter>
+               </target>
+               <target>
+                  <context value="organization"/>
+                  <contextType value="variable"/>
+                  <element value="id"/>
+                  <variable value="uuid3"/>
+                  <transform value="uuid"/>
+               </target>
+               <target>
+                  <context value="e2"/>
+                  <contextType value="variable"/>
+                  <element value="fullUrl"/>
+                  <transform value="append"/>
+                  <parameter>
+                     <valueString value="urn:uuid:"/>
+                  </parameter>
+                  <parameter>
+                     <valueId value="uuid3"/>
+                  </parameter>
+               </target>
+               <target>
+                  <context value="practitionerRole"/>
+                  <contextType value="variable"/>
+                  <element value="organization"/>
+                  <variable value="reference2"/>
+                  <transform value="create"/>
+                  <parameter>
+                     <valueString value="Reference"/>
+                  </parameter>
+               </target>
+               <target>
+                  <context value="reference2"/>
+                  <contextType value="variable"/>
+                  <element value="reference"/>
+                  <transform value="evaluate"/>
+                  <parameter>
+                     <valueString value="'urn:uuid:' + %organization.id"/>
+                  </parameter>
+               </target>
+               <dependent>
+                  <name value="ClinicalDocumentOrganization"/>
+                  <variable value="srcOrg">
+                     <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                        <valueUrl value="id"/>
+                     </extension>
+                  </variable>
+                  <variable value="organization">
+                     <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                        <valueUrl value="id"/>
+                     </extension>
+                  </variable>
+               </dependent>
+            </rule>
+         </rule>
+      </rule>
+      <rule>
+         <name value="srcAuthorDevice"/>
+         <source>
+            <context value="srcAuthor"/>
+            <condition value="assignedAuthor.assignedAuthoringDevice"/>
+         </source>
+         <target>
+            <context value="bundle"/>
+            <contextType value="variable"/>
+            <element value="entry"/>
+            <variable value="e"/>
+         </target>
+         <target>
+            <context value="e"/>
+            <contextType value="variable"/>
+            <element value="resource"/>
+            <variable value="device"/>
+            <transform value="create"/>
+            <parameter>
+               <valueString value="Device"/>
+            </parameter>
+         </target>
+         <target>
+            <context value="device"/>
+            <contextType value="variable"/>
+            <element value="id"/>
+            <variable value="uuid2"/>
+            <transform value="uuid"/>
+         </target>
+         <target>
+            <context value="e"/>
+            <contextType value="variable"/>
+            <element value="fullUrl"/>
+            <transform value="append"/>
+            <parameter>
+               <valueString value="urn:uuid:"/>
+            </parameter>
+            <parameter>
+               <valueId value="uuid2"/>
+            </parameter>
+         </target>
+         <target>
+            <context value="reference"/>
+            <contextType value="variable"/>
+            <element value="reference"/>
+            <transform value="evaluate"/>
+            <parameter>
+               <valueString value="'urn:uuid:' + %device.id"/>
+            </parameter>
+         </target>
+         <rule>
+            <name value="time"/>
+            <source>
+               <context value="srcAuthor"/>
+               <element value="time"/>
+               <variable value="time"/>
+            </source>
+            <target>
+               <context value="reference"/>
+               <contextType value="variable"/>
+               <element value="extension"/>
+               <variable value="exttime"/>
+            </target>
+            <dependent>
+               <name value="ChExtEprTime"/>
+               <variable value="time">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
+               <variable value="exttime">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
+            </dependent>
+         </rule>
+         <rule>
+            <name value="author"/>
+            <source>
+               <context value="srcAuthor"/>
+               <element value="assignedAuthor"/>
+               <variable value="assignedAuthor"/>
+            </source>
+            <rule>
+               <name value="id"/>
+               <source>
+                  <context value="assignedAuthor"/>
+                  <element value="id"/>
+                  <variable value="vvv"/>
+               </source>
+               <target>
+                  <context value="device"/>
+                  <contextType value="variable"/>
+                  <element value="identifier"/>
+                  <variable value="vvv"/>
+                  <transform value="create"/>
+               </target>
+            </rule>
+            <rule>
+               <name value="name"/>
+               <source>
+                  <context value="assignedAuthor"/>
+                  <element value="assignedAuthoringDevice"/>
+                  <variable value="assignedAuthoringDevice"/>
+               </source>
+               <target>
+                  <context value="device"/>
+                  <contextType value="variable"/>
+                  <element value="deviceName"/>
+                  <variable value="deviceName"/>
+               </target>
+               <rule>
+                  <name value="manufacturerModelName"/>
+                  <source>
+                     <context value="assignedAuthoringDevice"/>
+                     <element value="manufacturerModelName"/>
+                     <variable value="manufacturerModelName"/>
+                  </source>
+                  <target>
+                     <context value="deviceName"/>
+                     <contextType value="variable"/>
+                     <element value="name"/>
+                     <transform value="evaluate"/>
+                     <parameter>
+                        <valueString value="manufacturerModelName.dataString"/>
+                     </parameter>
+                  </target>
+                  <target>
+                     <context value="deviceName"/>
+                     <contextType value="variable"/>
+                     <element value="type"/>
+                     <transform value="copy"/>
+                     <parameter>
+                        <valueString value="manufacturer-name"/>
+                     </parameter>
+                  </target>
+               </rule>
+               <rule>
+                  <name value="softwareName"/>
+                  <source>
+                     <context value="assignedAuthoringDevice"/>
+                     <element value="softwareName"/>
+                     <variable value="softwareName"/>
+                  </source>
+                  <target>
+                     <context value="device"/>
+                     <contextType value="variable"/>
+                     <element value="modelNumber"/>
+                     <transform value="evaluate"/>
+                     <parameter>
+                        <valueString value="softwareName.dataString"/>
+                     </parameter>
+                  </target>
+               </rule>
+            </rule>
+         </rule>
+      </rule>
+   </group>
+   <group>
+      <name value="ClinicalDocumentComposition"/>
+      <typeMode value="none"/>
       <input>
          <name value="src"/>
          <type value="ClinicalDocument"/>
@@ -1094,48 +1599,12 @@ group NarrativeLink(source url, target ext : Extension) {
          </target>
       </rule>
       <rule>
-         <name value="srcAuthor"/>
+         <name value="author"/>
          <source>
             <context value="src"/>
             <element value="author"/>
-            <variable value="srcAuthor"/>
-            <condition value="assignedAuthor.assignedPerson"/>
+            <variable value="author"/>
          </source>
-         <target>
-            <context value="bundle"/>
-            <contextType value="variable"/>
-            <element value="entry"/>
-            <variable value="e"/>
-         </target>
-         <target>
-            <context value="e"/>
-            <contextType value="variable"/>
-            <element value="resource"/>
-            <variable value="practitioner"/>
-            <transform value="create"/>
-            <parameter>
-               <valueString value="Practitioner"/>
-            </parameter>
-         </target>
-         <target>
-            <context value="practitioner"/>
-            <contextType value="variable"/>
-            <element value="id"/>
-            <variable value="uuid2"/>
-            <transform value="uuid"/>
-         </target>
-         <target>
-            <context value="e"/>
-            <contextType value="variable"/>
-            <element value="fullUrl"/>
-            <transform value="append"/>
-            <parameter>
-               <valueString value="urn:uuid:"/>
-            </parameter>
-            <parameter>
-               <valueId value="uuid2"/>
-            </parameter>
-         </target>
          <target>
             <context value="tgt"/>
             <contextType value="variable"/>
@@ -1146,354 +1615,24 @@ group NarrativeLink(source url, target ext : Extension) {
                <valueString value="Reference"/>
             </parameter>
          </target>
-         <target>
-            <context value="reference"/>
-            <contextType value="variable"/>
-            <element value="reference"/>
-            <transform value="evaluate"/>
-            <parameter>
-               <valueString value="'urn:uuid:' + %practitioner.id"/>
-            </parameter>
-         </target>
-         <rule>
-            <name value="time"/>
-            <source>
-               <context value="srcAuthor"/>
-               <element value="time"/>
-               <variable value="time"/>
-            </source>
-            <target>
-               <context value="reference"/>
-               <contextType value="variable"/>
-               <element value="extension"/>
-               <variable value="exttime"/>
-            </target>
-            <dependent>
-               <name value="ChExtEprTime"/>
-               <variable value="time">
-                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
-                     <valueUrl value="id"/>
-                  </extension>
-               </variable>
-               <variable value="exttime">
-                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
-                     <valueUrl value="id"/>
-                  </extension>
-               </variable>
-            </dependent>
-         </rule>
-         <rule>
-            <name value="author"/>
-            <source>
-               <context value="srcAuthor"/>
-               <element value="assignedAuthor"/>
-               <variable value="assignedAuthor"/>
-            </source>
-            <rule>
-               <name value="id"/>
-               <source>
-                  <context value="assignedAuthor"/>
-                  <element value="id"/>
-                  <variable value="vvv"/>
-               </source>
-               <target>
-                  <context value="practitioner"/>
-                  <contextType value="variable"/>
-                  <element value="identifier"/>
-                  <variable value="vvv"/>
-                  <transform value="create"/>
-               </target>
-            </rule>
-            <rule>
-               <name value="addr"/>
-               <source>
-                  <context value="assignedAuthor"/>
-                  <element value="addr"/>
-                  <variable value="vvv"/>
-               </source>
-               <target>
-                  <context value="practitioner"/>
-                  <contextType value="variable"/>
-                  <element value="address"/>
-                  <variable value="vvv"/>
-                  <transform value="create"/>
-               </target>
-            </rule>
-            <rule>
-               <name value="telecom"/>
-               <source>
-                  <context value="assignedAuthor"/>
-                  <element value="telecom"/>
-                  <variable value="vvv"/>
-               </source>
-               <target>
-                  <context value="practitioner"/>
-                  <contextType value="variable"/>
-                  <element value="telecom"/>
-                  <variable value="vvv"/>
-                  <transform value="create"/>
-               </target>
-            </rule>
-            <rule>
-               <name value="name"/>
-               <source>
-                  <context value="assignedAuthor"/>
-                  <element value="assignedPerson"/>
-                  <variable value="person"/>
-               </source>
-               <rule>
-                  <name value="name"/>
-                  <source>
-                     <context value="person"/>
-                     <element value="name"/>
-                     <variable value="vvv"/>
-                  </source>
-                  <target>
-                     <context value="practitioner"/>
-                     <contextType value="variable"/>
-                     <element value="name"/>
-                     <variable value="vvv"/>
-                     <transform value="create"/>
-                  </target>
-               </rule>
-            </rule>
-            <rule>
-               <name value="representedOrganization"/>
-               <source>
-                  <context value="assignedAuthor"/>
-                  <element value="representedOrganization"/>
-                  <variable value="srcOrg"/>
-               </source>
-               <target>
-                  <context value="bundle"/>
-                  <contextType value="variable"/>
-                  <element value="entry"/>
-                  <variable value="e2"/>
-               </target>
-               <target>
-                  <context value="e2"/>
-                  <contextType value="variable"/>
-                  <element value="resource"/>
-                  <variable value="organization"/>
-                  <transform value="create"/>
-                  <parameter>
-                     <valueString value="Organization"/>
-                  </parameter>
-               </target>
-               <target>
-                  <context value="organization"/>
-                  <contextType value="variable"/>
-                  <element value="id"/>
-                  <variable value="uuid3"/>
-                  <transform value="uuid"/>
-               </target>
-               <target>
-                  <context value="e2"/>
-                  <contextType value="variable"/>
-                  <element value="fullUrl"/>
-                  <transform value="append"/>
-                  <parameter>
-                     <valueString value="urn:uuid:"/>
-                  </parameter>
-                  <parameter>
-                     <valueId value="uuid3"/>
-                  </parameter>
-               </target>
-               <target>
-                  <context value="tgt"/>
-                  <contextType value="variable"/>
-                  <element value="author"/>
-                  <variable value="reference2"/>
-                  <transform value="create"/>
-                  <parameter>
-                     <valueString value="Reference"/>
-                  </parameter>
-               </target>
-               <target>
-                  <context value="reference2"/>
-                  <contextType value="variable"/>
-                  <element value="reference"/>
-                  <transform value="evaluate"/>
-                  <parameter>
-                     <valueString value="'urn:uuid:' + %organization.id"/>
-                  </parameter>
-               </target>
-               <dependent>
-                  <name value="ClinicalDocumentOrganization"/>
-                  <variable value="srcOrg">
-                     <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
-                        <valueUrl value="id"/>
-                     </extension>
-                  </variable>
-                  <variable value="organization">
-                     <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
-                        <valueUrl value="id"/>
-                     </extension>
-                  </variable>
-               </dependent>
-            </rule>
-         </rule>
-      </rule>
-      <rule>
-         <name value="srcAuthorDevice"/>
-         <source>
-            <context value="src"/>
-            <element value="author"/>
-            <variable value="srcAuthor"/>
-            <condition value="assignedAuthor.assignedAuthoringDevice"/>
-         </source>
-         <target>
-            <context value="bundle"/>
-            <contextType value="variable"/>
-            <element value="entry"/>
-            <variable value="e"/>
-         </target>
-         <target>
-            <context value="e"/>
-            <contextType value="variable"/>
-            <element value="resource"/>
-            <variable value="device"/>
-            <transform value="create"/>
-            <parameter>
-               <valueString value="Device"/>
-            </parameter>
-         </target>
-         <target>
-            <context value="device"/>
-            <contextType value="variable"/>
-            <element value="id"/>
-            <variable value="uuid2"/>
-            <transform value="uuid"/>
-         </target>
-         <target>
-            <context value="e"/>
-            <contextType value="variable"/>
-            <element value="fullUrl"/>
-            <transform value="append"/>
-            <parameter>
-               <valueString value="urn:uuid:"/>
-            </parameter>
-            <parameter>
-               <valueId value="uuid2"/>
-            </parameter>
-         </target>
-         <target>
-            <context value="tgt"/>
-            <contextType value="variable"/>
-            <element value="author"/>
-            <variable value="reference"/>
-            <transform value="create"/>
-            <parameter>
-               <valueString value="Reference"/>
-            </parameter>
-         </target>
-         <target>
-            <context value="reference"/>
-            <contextType value="variable"/>
-            <element value="reference"/>
-            <transform value="evaluate"/>
-            <parameter>
-               <valueString value="'urn:uuid:' + %device.id"/>
-            </parameter>
-         </target>
-         <rule>
-            <name value="time"/>
-            <source>
-               <context value="srcAuthor"/>
-               <element value="time"/>
-               <variable value="time"/>
-            </source>
-            <target>
-               <context value="reference"/>
-               <contextType value="variable"/>
-               <element value="extension"/>
-               <variable value="exttime"/>
-            </target>
-            <dependent>
-               <name value="ChExtEprTime"/>
-               <variable value="time">
-                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
-                     <valueUrl value="id"/>
-                  </extension>
-               </variable>
-               <variable value="exttime">
-                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
-                     <valueUrl value="id"/>
-                  </extension>
-               </variable>
-            </dependent>
-         </rule>
-         <rule>
-            <name value="author"/>
-            <source>
-               <context value="srcAuthor"/>
-               <element value="assignedAuthor"/>
-               <variable value="assignedAuthor"/>
-            </source>
-            <rule>
-               <name value="id"/>
-               <source>
-                  <context value="assignedAuthor"/>
-                  <element value="id"/>
-                  <variable value="vvv"/>
-               </source>
-               <target>
-                  <context value="device"/>
-                  <contextType value="variable"/>
-                  <element value="identifier"/>
-                  <variable value="vvv"/>
-                  <transform value="create"/>
-               </target>
-            </rule>
-            <rule>
-               <name value="name"/>
-               <source>
-                  <context value="assignedAuthor"/>
-                  <element value="assignedAuthoringDevice"/>
-                  <variable value="assignedAuthoringDevice"/>
-               </source>
-               <target>
-                  <context value="device"/>
-                  <contextType value="variable"/>
-                  <element value="deviceName"/>
-                  <variable value="deviceName"/>
-               </target>
-               <rule>
-                  <name value="manufacturerModelName"/>
-                  <source>
-                     <context value="assignedAuthoringDevice"/>
-                     <element value="manufacturerModelName"/>
-                     <variable value="manufacturerModelName"/>
-                  </source>
-                  <target>
-                     <context value="deviceName"/>
-                     <contextType value="variable"/>
-                     <element value="name"/>
-                     <transform value="evaluate"/>
-                     <parameter>
-                        <valueString value="manufacturerModelName.dataString"/>
-                     </parameter>
-                  </target>
-               </rule>
-               <rule>
-                  <name value="softwareName"/>
-                  <source>
-                     <context value="assignedAuthoringDevice"/>
-                     <element value="softwareName"/>
-                     <variable value="softwareName"/>
-                  </source>
-                  <target>
-                     <context value="deviceName"/>
-                     <contextType value="variable"/>
-                     <element value="type"/>
-                     <transform value="evaluate"/>
-                     <parameter>
-                        <valueString value="softwareName.dataString"/>
-                     </parameter>
-                  </target>
-               </rule>
-            </rule>
-         </rule>
+         <dependent>
+            <name value="Author"/>
+            <variable value="author">
+               <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                  <valueUrl value="id"/>
+               </extension>
+            </variable>
+            <variable value="reference">
+               <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                  <valueUrl value="id"/>
+               </extension>
+            </variable>
+            <variable value="bundle">
+               <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                  <valueUrl value="id"/>
+               </extension>
+            </variable>
+         </dependent>
       </rule>
       <rule>
          <name value="confidentialityCode"/>

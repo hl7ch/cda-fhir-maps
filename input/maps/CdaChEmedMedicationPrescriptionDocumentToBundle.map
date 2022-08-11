@@ -74,6 +74,6 @@ group SectionPrescriptionSectionContentModule(source cda : ClinicalDocument, sou
     medicationrequest.id = uuid() as uuid,
     e.fullUrl = append('urn:uuid:',uuid), 
     tgt.entry = create('Reference') as reference, reference.reference = append('urn:uuid:',uuid) then {
-    cdaEntry.substanceAdministration as substanceAdministration then PrescriptionItemEntryContentModule(src, substanceAdministration, patient, medicationrequest);
+    cdaEntry.substanceAdministration as substanceAdministration then PrescriptionItemEntryContentModule(src, substanceAdministration, patient, medicationrequest, bundle);
   } "PrescriptionSectionContentModule";
 }

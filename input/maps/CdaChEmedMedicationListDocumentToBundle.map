@@ -74,21 +74,21 @@ group SectionMedicationListSectionContentModule(source cda : ClinicalDocument, s
     medicationstatement.id = uuid() as uuid,
     e.fullUrl = append('urn:uuid:',uuid), 
     tgt.entry = create('Reference') as reference, reference.reference = append('urn:uuid:',uuid) then {
-    cdaEntry.substanceAdministration as substanceAdministration then MedicationTreatmentPlanItemEntryContentModule(src, substanceAdministration, patient, medicationstatement);
+    cdaEntry.substanceAdministration as substanceAdministration then MedicationTreatmentPlanItemEntryContentModule(src, substanceAdministration, patient, medicationstatement, bundle);
   } "MedicationTreatmentPlanItemEntryContentModule";
 
   src.entry as cdaEntry where (substanceAdministration.templateId.where(root='2.16.756.5.30.1.1.10.4.43')) ->  bundle.entry as e,  e.resource = create('MedicationRequest') as medicationrequest,  
     medicationrequest.id = uuid() as uuid,
     e.fullUrl = append('urn:uuid:',uuid), 
     tgt.entry = create('Reference') as reference, reference.reference = append('urn:uuid:',uuid) then {
-    cdaEntry.substanceAdministration as substanceAdministration then PrescriptionItemEntryContentModule(src, substanceAdministration, patient, medicationrequest);
+    cdaEntry.substanceAdministration as substanceAdministration then PrescriptionItemEntryContentModule(src, substanceAdministration, patient, medicationrequest, bundle);
   } "PrescriptionItemEntryContentModule";
 
   src.entry as cdaEntry where (supply.templateId.where(root='2.16.756.5.30.1.1.10.4.42')) ->  bundle.entry as e,  e.resource = create('MedicationDispense') as medicationdispense,  
     medicationdispense.id = uuid() as uuid,
     e.fullUrl = append('urn:uuid:',uuid), 
     tgt.entry = create('Reference') as reference, reference.reference = append('urn:uuid:',uuid) then {
-    cdaEntry.supply as supply then DispenseItemEntryContentModule(src, supply, patient, medicationdispense);
+    cdaEntry.supply as supply then DispenseItemEntryContentModule(src, supply, patient, medicationdispense, bundle);
   } "DispenseItemEntryContentModule";
   
   src.entry as cdaEntry where (observation.templateId.where(root='2.16.756.5.30.1.1.10.4.44')) ->  bundle.entry as e,  e.resource = create('Observation') as fhirobservation,  

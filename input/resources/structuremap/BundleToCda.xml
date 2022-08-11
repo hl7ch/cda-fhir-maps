@@ -1,8 +1,8 @@
 <StructureMap xmlns="http://hl7.org/fhir">
    <id value="BundleToCda"/>
    <meta>
-      <versionId value="3"/>
-      <lastUpdated value="2022-01-11T22:14:50.980+01:00"/>
+      <versionId value="10"/>
+      <lastUpdated value="2022-08-11T13:52:04.444+00:00"/>
    </meta>
    <text>
       <status value="generated"/>
@@ -25,6 +25,7 @@ uses &quot;http://hl7.org/fhir/cda/StructureDefinition/Section&quot; alias CdaSe
 uses &quot;http://hl7.org/fhir/StructureDefinition/Bundle&quot; alias Bundle as source
 uses &quot;http://hl7.org/fhir/StructureDefinition/Composition&quot; alias Composition as source
 uses &quot;http://hl7.org/fhir/StructureDefinition/Practitioner&quot; alias Practitioner as source
+uses &quot;http://hl7.org/fhir/StructureDefinition/PractitionerRole&quot; alias PractitionerRole as source
 uses &quot;http://hl7.org/fhir/StructureDefinition/Patient&quot; alias Patient as source
 uses &quot;http://hl7.org/fhir/StructureDefinition/Organization&quot; alias Organization as source
 uses &quot;http://hl7.org/fhir/StructureDefinition/BackboneElement&quot; alias BackboneElement as source
@@ -58,6 +59,14 @@ group SectionCdaSection(source bundle : Bundle, source section : BackboneElement
   section.code as code then {
     code.coding as coding where $this.system = &apos;http://loinc.org&apos; -&gt; cdasection.code as cdacode then CodingCE(coding, cdacode) &quot;codingsection&quot;;
   };
+  section.author -&gt; cdasection.author as author then {
+    bundle.entry as entry then {
+      entry.fullUrl where ($this in %section.author.reference) and $this.startsWith(&apos;urn:uuid&apos;) then {
+        entry.resource : PractitionerRole as practitionerRole then PractitionerAuthorRole(bundle, section, practitionerRole, author) &quot;authorPractitionerRole&quot;;
+      } &quot;uuid&quot;;
+      entry.resource as practitionerRole where (&apos;PractitionerRole&apos; + &apos;/&apos; + $this.id) in %section.author.reference then PractitionerAuthorRole(bundle, section, practitionerRole, author) &quot;author&quot;;
+    };
+  };
   section.title as title -&gt;  cdasection.title as cdatitle,  cdatitle.data = title;
   section.text as text then {
     text.div as div -&gt; cdasection.text = div;
@@ -89,8 +98,10 @@ group CompositionClinicalDocument(source bundle : Bundle, source composition : C
     entry.resource as organization where (&apos;Organization&apos; + &apos;/&apos; + $this.id) in %composition.custodian.reference -&gt; cda.custodian as custodian then OrganizationCustodian(organization, custodian) &quot;custodian&quot;;
     entry.fullUrl where ($this in %composition.author.reference) and $this.startsWith(&apos;urn:uuid&apos;) then {
       entry.resource : Practitioner as practitioner then PractitionerAuthor(bundle, composition, practitioner, author) &quot;author&quot;;
+      entry.resource : PractitionerRole as practitionerRole then PractitionerAuthorRole(bundle, composition, practitionerRole, author) &quot;authorPractitionerRole&quot;;
     } &quot;uuid&quot;;
     entry.resource as practitioner where (&apos;Practitioner&apos; + &apos;/&apos; + $this.id) in %composition.author.reference then PractitionerAuthor(bundle, composition, practitioner, author) &quot;author&quot;;
+    entry.resource as practitionerRole where (&apos;PractitionerRole&apos; + &apos;/&apos; + $this.id) in %composition.author.reference then PractitionerAuthorRole(bundle, composition, practitionerRole, author) &quot;author&quot;;
     entry.fullUrl where ($this in %composition.attester.party.reference) and $this.startsWith(&apos;urn:uuid&apos;) then {
       entry.resource : Practitioner as practitioner -&gt; cda.legalAuthenticator as legalAuthenticator then PractitionerLegalAuthenticator(bundle, composition, practitioner, legalAuthenticator) &quot;legalAuthenticator&quot;;
     } &quot;uuid&quot;;
@@ -148,6 +159,36 @@ group PractitionerAuthor(source bundle : Bundle, source composition : Compositio
       entry.resource as organization where (&apos;Organization&apos; + &apos;/&apos; + $this.id) in %composition.author.reference -&gt; assignedAuthor.representedOrganization as cdaorganization then Organization2CdaOrganization(organization, cdaorganization) &quot;organization&quot;;
     } &quot;patient&quot;;
   } &quot;assignedAuthor&quot;;
+}
+
+group PractitionerAuthorRolePractitioner(source bundle : Bundle, source composition, source practitionerRole : PractitionerRole, source src : Practitioner, target tgt : Author) {
+  composition.author as srcauthor then {
+    srcauthor.extension as extensionTime where $this.url = &apos;http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-time&apos; then {
+      extensionTime.valueDateTime as valueDateTime -&gt; tgt.time as time then DateTimeTS(valueDateTime, time) &quot;DateTime&quot;;
+    } &quot;extensionTime&quot;;
+  } &quot;srcAuthor&quot;;
+  bundle.timestamp as valueDateTime where composition.author.extension.where(url = &apos;http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-time&apos;).empty() -&gt; tgt.time as time then DateTimeTS(valueDateTime, time) &quot;DateTimeBundle&quot;;
+  src -&gt; tgt.assignedAuthor as assignedAuthor then {
+    src.identifier as identifier -&gt; assignedAuthor.id as id then IdentifierII(identifier, id) &quot;id&quot;;
+    src.telecom first as telecom -&gt; assignedAuthor.telecom as tel then ContactPointTEL(telecom, tel);
+    src.address as address -&gt; assignedAuthor.addr as ad then AddressAD(address, ad);
+    src.name as name -&gt;  assignedAuthor.assignedPerson as assignedPerson,  assignedPerson.name as en then HumanNameEN(name, en);
+    bundle.entry as entry then {
+      entry.fullUrl where ($this in %practitionerRole.organization.reference) and $this.startsWith(&apos;urn:uuid&apos;) then {
+        entry.resource : Organization as organization -&gt; assignedAuthor.representedOrganization as cdaorganization then Organization2CdaOrganization(organization, cdaorganization) &quot;organization&quot;;
+      } &quot;uuid&quot;;
+      entry.resource as organization where (&apos;Organization&apos; + &apos;/&apos; + $this.id) in %practitionerRole.organization.reference -&gt; assignedAuthor.representedOrganization as cdaorganization then Organization2CdaOrganization(organization, cdaorganization) &quot;organization&quot;;
+    } &quot;patient&quot;;
+  } &quot;assignedAuthor&quot;;
+}
+
+group PractitionerAuthorRole(source bundle : Bundle, source composition : Composition, source src : PractitionerRole, target tgt : Author) {
+  bundle.entry as entry then {
+    entry.fullUrl where ($this in %src.practitioner.reference) and $this.startsWith(&apos;urn:uuid&apos;) then {
+      entry.resource : Practitioner as practitioner then PractitionerAuthorRolePractitioner(bundle, composition, src, practitioner, tgt) &quot;author&quot;;
+    } &quot;uuidp&quot;;
+    entry.resource as practitioner where (&apos;Practitioner&apos; + &apos;/&apos; + $this.id) in %src.practitioner.reference then PractitionerAuthorRolePractitioner(bundle, composition, src, practitioner, tgt) &quot;author&quot;;
+  } &quot;enry&quot;;
 }
 
 group OrganizationCustodian(source src : Organization, target tgt : Custodian) {
@@ -241,6 +282,11 @@ group PractitionerLegalAuthenticator(source bundle : Bundle, source composition 
       <alias value="Practitioner"/>
    </structure>
    <structure>
+      <url value="http://hl7.org/fhir/StructureDefinition/PractitionerRole"/>
+      <mode value="source"/>
+      <alias value="PractitionerRole"/>
+   </structure>
+   <structure>
       <url value="http://hl7.org/fhir/StructureDefinition/Patient"/>
       <mode value="source"/>
       <alias value="Patient"/>
@@ -288,10 +334,26 @@ group PractitionerLegalAuthenticator(source bundle : Bundle, source composition 
          </target>
          <dependent>
             <name value="BundleToClinicalDocument"/>
-            <variable value="bundle"/>
-            <variable value="recordTarget"/>
-            <variable value="author"/>
-            <variable value="cda"/>
+            <variable value="bundle">
+               <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                  <valueUrl value="id"/>
+               </extension>
+            </variable>
+            <variable value="recordTarget">
+               <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                  <valueUrl value="id"/>
+               </extension>
+            </variable>
+            <variable value="author">
+               <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                  <valueUrl value="id"/>
+               </extension>
+            </variable>
+            <variable value="cda">
+               <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                  <valueUrl value="id"/>
+               </extension>
+            </variable>
          </dependent>
       </rule>
    </group>
@@ -375,8 +437,16 @@ group PractitionerLegalAuthenticator(source bundle : Bundle, source composition 
          </target>
          <dependent>
             <name value="IdentifierII"/>
-            <variable value="identifier"/>
-            <variable value="id"/>
+            <variable value="identifier">
+               <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                  <valueUrl value="id"/>
+               </extension>
+            </variable>
+            <variable value="id">
+               <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                  <valueUrl value="id"/>
+               </extension>
+            </variable>
          </dependent>
       </rule>
       <rule>
@@ -394,8 +464,16 @@ group PractitionerLegalAuthenticator(source bundle : Bundle, source composition 
          </target>
          <dependent>
             <name value="InstantTS"/>
-            <variable value="timestamp"/>
-            <variable value="effectiveTime"/>
+            <variable value="timestamp">
+               <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                  <valueUrl value="id"/>
+               </extension>
+            </variable>
+            <variable value="effectiveTime">
+               <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                  <valueUrl value="id"/>
+               </extension>
+            </variable>
          </dependent>
       </rule>
       <rule>
@@ -415,11 +493,31 @@ group PractitionerLegalAuthenticator(source bundle : Bundle, source composition 
             </source>
             <dependent>
                <name value="CompositionClinicalDocument"/>
-               <variable value="bundle"/>
-               <variable value="resource"/>
-               <variable value="recordTarget"/>
-               <variable value="author"/>
-               <variable value="cda"/>
+               <variable value="bundle">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
+               <variable value="resource">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
+               <variable value="recordTarget">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
+               <variable value="author">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
+               <variable value="cda">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
             </dependent>
          </rule>
       </rule>
@@ -466,8 +564,16 @@ group PractitionerLegalAuthenticator(source bundle : Bundle, source composition 
             </source>
             <dependent>
                <name value="IdentifierII"/>
-               <variable value="valueIdentifier"/>
-               <variable value="id"/>
+               <variable value="valueIdentifier">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
+               <variable value="id">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
             </dependent>
          </rule>
       </rule>
@@ -499,8 +605,16 @@ group PractitionerLegalAuthenticator(source bundle : Bundle, source composition 
             </target>
             <dependent>
                <name value="IdentifierII"/>
-               <variable value="identifier"/>
-               <variable value="id"/>
+               <variable value="identifier">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
+               <variable value="id">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
             </dependent>
          </rule>
       </rule>
@@ -527,9 +641,110 @@ group PractitionerLegalAuthenticator(source bundle : Bundle, source composition 
             </target>
             <dependent>
                <name value="CodingCE"/>
-               <variable value="coding"/>
-               <variable value="cdacode"/>
+               <variable value="coding">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
+               <variable value="cdacode">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
             </dependent>
+         </rule>
+      </rule>
+      <rule>
+         <name value="author"/>
+         <source>
+            <context value="section"/>
+            <element value="author"/>
+         </source>
+         <target>
+            <context value="cdasection"/>
+            <contextType value="variable"/>
+            <element value="author"/>
+            <variable value="author"/>
+         </target>
+         <rule>
+            <name value="entry"/>
+            <source>
+               <context value="bundle"/>
+               <element value="entry"/>
+               <variable value="entry"/>
+            </source>
+            <rule>
+               <name value="uuid"/>
+               <source>
+                  <context value="entry"/>
+                  <element value="fullUrl"/>
+                  <condition value="($this in %section.author.reference) and $this.startsWith('urn:uuid')"/>
+               </source>
+               <rule>
+                  <name value="authorPractitionerRole"/>
+                  <source>
+                     <context value="entry"/>
+                     <type value="PractitionerRole"/>
+                     <element value="resource"/>
+                     <variable value="practitionerRole"/>
+                  </source>
+                  <dependent>
+                     <name value="PractitionerAuthorRole"/>
+                     <variable value="bundle">
+                        <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                           <valueUrl value="id"/>
+                        </extension>
+                     </variable>
+                     <variable value="section">
+                        <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                           <valueUrl value="id"/>
+                        </extension>
+                     </variable>
+                     <variable value="practitionerRole">
+                        <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                           <valueUrl value="id"/>
+                        </extension>
+                     </variable>
+                     <variable value="author">
+                        <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                           <valueUrl value="id"/>
+                        </extension>
+                     </variable>
+                  </dependent>
+               </rule>
+            </rule>
+            <rule>
+               <name value="author"/>
+               <source>
+                  <context value="entry"/>
+                  <element value="resource"/>
+                  <variable value="practitionerRole"/>
+                  <condition value="('PractitionerRole' + '/' + $this.id) in %section.author.reference"/>
+               </source>
+               <dependent>
+                  <name value="PractitionerAuthorRole"/>
+                  <variable value="bundle">
+                     <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                        <valueUrl value="id"/>
+                     </extension>
+                  </variable>
+                  <variable value="section">
+                     <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                        <valueUrl value="id"/>
+                     </extension>
+                  </variable>
+                  <variable value="practitionerRole">
+                     <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                        <valueUrl value="id"/>
+                     </extension>
+                  </variable>
+                  <variable value="author">
+                     <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                        <valueUrl value="id"/>
+                     </extension>
+                  </variable>
+               </dependent>
+            </rule>
          </rule>
       </rule>
       <rule>
@@ -635,8 +850,16 @@ group PractitionerLegalAuthenticator(source bundle : Bundle, source composition 
             </target>
             <dependent>
                <name value="CodingCE"/>
-               <variable value="coding"/>
-               <variable value="code"/>
+               <variable value="coding">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
+               <variable value="code">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
             </dependent>
          </rule>
       </rule>
@@ -760,9 +983,21 @@ group PractitionerLegalAuthenticator(source bundle : Bundle, source composition 
                </source>
                <dependent>
                   <name value="PatientRecordTarget"/>
-                  <variable value="patient"/>
-                  <variable value="bundle"/>
-                  <variable value="recordTarget"/>
+                  <variable value="patient">
+                     <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                        <valueUrl value="id"/>
+                     </extension>
+                  </variable>
+                  <variable value="bundle">
+                     <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                        <valueUrl value="id"/>
+                     </extension>
+                  </variable>
+                  <variable value="recordTarget">
+                     <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                        <valueUrl value="id"/>
+                     </extension>
+                  </variable>
                </dependent>
             </rule>
          </rule>
@@ -776,9 +1011,21 @@ group PractitionerLegalAuthenticator(source bundle : Bundle, source composition 
             </source>
             <dependent>
                <name value="PatientRecordTarget"/>
-               <variable value="patient"/>
-               <variable value="bundle"/>
-               <variable value="recordTarget"/>
+               <variable value="patient">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
+               <variable value="bundle">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
+               <variable value="recordTarget">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
             </dependent>
          </rule>
          <rule>
@@ -804,8 +1051,16 @@ group PractitionerLegalAuthenticator(source bundle : Bundle, source composition 
                </target>
                <dependent>
                   <name value="OrganizationCustodian"/>
-                  <variable value="organization"/>
-                  <variable value="custodian"/>
+                  <variable value="organization">
+                     <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                        <valueUrl value="id"/>
+                     </extension>
+                  </variable>
+                  <variable value="custodian">
+                     <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                        <valueUrl value="id"/>
+                     </extension>
+                  </variable>
                </dependent>
             </rule>
          </rule>
@@ -825,8 +1080,16 @@ group PractitionerLegalAuthenticator(source bundle : Bundle, source composition 
             </target>
             <dependent>
                <name value="OrganizationCustodian"/>
-               <variable value="organization"/>
-               <variable value="custodian"/>
+               <variable value="organization">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
+               <variable value="custodian">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
             </dependent>
          </rule>
          <rule>
@@ -846,10 +1109,58 @@ group PractitionerLegalAuthenticator(source bundle : Bundle, source composition 
                </source>
                <dependent>
                   <name value="PractitionerAuthor"/>
-                  <variable value="bundle"/>
-                  <variable value="composition"/>
-                  <variable value="practitioner"/>
-                  <variable value="author"/>
+                  <variable value="bundle">
+                     <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                        <valueUrl value="id"/>
+                     </extension>
+                  </variable>
+                  <variable value="composition">
+                     <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                        <valueUrl value="id"/>
+                     </extension>
+                  </variable>
+                  <variable value="practitioner">
+                     <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                        <valueUrl value="id"/>
+                     </extension>
+                  </variable>
+                  <variable value="author">
+                     <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                        <valueUrl value="id"/>
+                     </extension>
+                  </variable>
+               </dependent>
+            </rule>
+            <rule>
+               <name value="authorPractitionerRole"/>
+               <source>
+                  <context value="entry"/>
+                  <type value="PractitionerRole"/>
+                  <element value="resource"/>
+                  <variable value="practitionerRole"/>
+               </source>
+               <dependent>
+                  <name value="PractitionerAuthorRole"/>
+                  <variable value="bundle">
+                     <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                        <valueUrl value="id"/>
+                     </extension>
+                  </variable>
+                  <variable value="composition">
+                     <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                        <valueUrl value="id"/>
+                     </extension>
+                  </variable>
+                  <variable value="practitionerRole">
+                     <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                        <valueUrl value="id"/>
+                     </extension>
+                  </variable>
+                  <variable value="author">
+                     <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                        <valueUrl value="id"/>
+                     </extension>
+                  </variable>
                </dependent>
             </rule>
          </rule>
@@ -863,10 +1174,58 @@ group PractitionerLegalAuthenticator(source bundle : Bundle, source composition 
             </source>
             <dependent>
                <name value="PractitionerAuthor"/>
-               <variable value="bundle"/>
-               <variable value="composition"/>
-               <variable value="practitioner"/>
-               <variable value="author"/>
+               <variable value="bundle">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
+               <variable value="composition">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
+               <variable value="practitioner">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
+               <variable value="author">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
+            </dependent>
+         </rule>
+         <rule>
+            <name value="author"/>
+            <source>
+               <context value="entry"/>
+               <element value="resource"/>
+               <variable value="practitionerRole"/>
+               <condition value="('PractitionerRole' + '/' + $this.id) in %composition.author.reference"/>
+            </source>
+            <dependent>
+               <name value="PractitionerAuthorRole"/>
+               <variable value="bundle">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
+               <variable value="composition">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
+               <variable value="practitionerRole">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
+               <variable value="author">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
             </dependent>
          </rule>
          <rule>
@@ -892,10 +1251,26 @@ group PractitionerLegalAuthenticator(source bundle : Bundle, source composition 
                </target>
                <dependent>
                   <name value="PractitionerLegalAuthenticator"/>
-                  <variable value="bundle"/>
-                  <variable value="composition"/>
-                  <variable value="practitioner"/>
-                  <variable value="legalAuthenticator"/>
+                  <variable value="bundle">
+                     <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                        <valueUrl value="id"/>
+                     </extension>
+                  </variable>
+                  <variable value="composition">
+                     <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                        <valueUrl value="id"/>
+                     </extension>
+                  </variable>
+                  <variable value="practitioner">
+                     <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                        <valueUrl value="id"/>
+                     </extension>
+                  </variable>
+                  <variable value="legalAuthenticator">
+                     <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                        <valueUrl value="id"/>
+                     </extension>
+                  </variable>
                </dependent>
             </rule>
          </rule>
@@ -915,10 +1290,26 @@ group PractitionerLegalAuthenticator(source bundle : Bundle, source composition 
             </target>
             <dependent>
                <name value="PractitionerLegalAuthenticator"/>
-               <variable value="bundle"/>
-               <variable value="composition"/>
-               <variable value="practitioner"/>
-               <variable value="legalAuthenticator"/>
+               <variable value="bundle">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
+               <variable value="composition">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
+               <variable value="practitioner">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
+               <variable value="legalAuthenticator">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
             </dependent>
          </rule>
       </rule>
@@ -976,9 +1367,21 @@ group PractitionerLegalAuthenticator(source bundle : Bundle, source composition 
             </target>
             <dependent>
                <name value="SectionCdaSection"/>
-               <variable value="bundle"/>
-               <variable value="section"/>
-               <variable value="cdasection"/>
+               <variable value="bundle">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
+               <variable value="section">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
+               <variable value="cdasection">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
             </dependent>
          </rule>
          <documentation value="source.date -> tgt.effectiveTime &quot;effectiveTime&quot;;"/>
@@ -1028,8 +1431,16 @@ group PractitionerLegalAuthenticator(source bundle : Bundle, source composition 
             </target>
             <dependent>
                <name value="IdentifierII"/>
-               <variable value="identifier"/>
-               <variable value="id"/>
+               <variable value="identifier">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
+               <variable value="id">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
             </dependent>
          </rule>
          <rule>
@@ -1047,8 +1458,16 @@ group PractitionerLegalAuthenticator(source bundle : Bundle, source composition 
             </target>
             <dependent>
                <name value="AddressAD"/>
-               <variable value="address"/>
-               <variable value="ad"/>
+               <variable value="address">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
+               <variable value="ad">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
             </dependent>
          </rule>
          <rule>
@@ -1077,8 +1496,16 @@ group PractitionerLegalAuthenticator(source bundle : Bundle, source composition 
                </target>
                <dependent>
                   <name value="HumanNameEN"/>
-                  <variable value="humanname"/>
-                  <variable value="en"/>
+                  <variable value="humanname">
+                     <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                        <valueUrl value="id"/>
+                     </extension>
+                  </variable>
+                  <variable value="en">
+                     <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                        <valueUrl value="id"/>
+                     </extension>
+                  </variable>
                </dependent>
             </rule>
             <rule>
@@ -1096,8 +1523,16 @@ group PractitionerLegalAuthenticator(source bundle : Bundle, source composition 
                </target>
                <dependent>
                   <name value="DateTS"/>
-                  <variable value="birthDate"/>
-                  <variable value="birthTime"/>
+                  <variable value="birthDate">
+                     <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                        <valueUrl value="id"/>
+                     </extension>
+                  </variable>
+                  <variable value="birthTime">
+                     <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                        <valueUrl value="id"/>
+                     </extension>
+                  </variable>
                </dependent>
             </rule>
             <rule>
@@ -1233,8 +1668,16 @@ group PractitionerLegalAuthenticator(source bundle : Bundle, source composition 
             </target>
             <dependent>
                <name value="ContactPointTEL"/>
-               <variable value="telecom"/>
-               <variable value="tel"/>
+               <variable value="telecom">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
+               <variable value="tel">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
             </dependent>
          </rule>
          <rule>
@@ -1266,8 +1709,16 @@ group PractitionerLegalAuthenticator(source bundle : Bundle, source composition 
                   </target>
                   <dependent>
                      <name value="Organization2CdaOrganization"/>
-                     <variable value="managingOrganization"/>
-                     <variable value="providerOrganization"/>
+                     <variable value="managingOrganization">
+                        <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                           <valueUrl value="id"/>
+                        </extension>
+                     </variable>
+                     <variable value="providerOrganization">
+                        <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                           <valueUrl value="id"/>
+                        </extension>
+                     </variable>
                   </dependent>
                </rule>
                <rule>
@@ -1286,8 +1737,16 @@ group PractitionerLegalAuthenticator(source bundle : Bundle, source composition 
                   </target>
                   <dependent>
                      <name value="Organization2CdaOrganization"/>
-                     <variable value="managingOrganization"/>
-                     <variable value="providerOrganization"/>
+                     <variable value="managingOrganization">
+                        <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                           <valueUrl value="id"/>
+                        </extension>
+                     </variable>
+                     <variable value="providerOrganization">
+                        <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                           <valueUrl value="id"/>
+                        </extension>
+                     </variable>
                   </dependent>
                </rule>
             </rule>
@@ -1347,8 +1806,16 @@ group PractitionerLegalAuthenticator(source bundle : Bundle, source composition 
                </target>
                <dependent>
                   <name value="DateTimeTS"/>
-                  <variable value="valueDateTime"/>
-                  <variable value="time"/>
+                  <variable value="valueDateTime">
+                     <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                        <valueUrl value="id"/>
+                     </extension>
+                  </variable>
+                  <variable value="time">
+                     <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                        <valueUrl value="id"/>
+                     </extension>
+                  </variable>
                </dependent>
             </rule>
          </rule>
@@ -1369,8 +1836,16 @@ group PractitionerLegalAuthenticator(source bundle : Bundle, source composition 
          </target>
          <dependent>
             <name value="DateTimeTS"/>
-            <variable value="valueDateTime"/>
-            <variable value="time"/>
+            <variable value="valueDateTime">
+               <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                  <valueUrl value="id"/>
+               </extension>
+            </variable>
+            <variable value="time">
+               <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                  <valueUrl value="id"/>
+               </extension>
+            </variable>
          </dependent>
       </rule>
       <rule>
@@ -1399,8 +1874,16 @@ group PractitionerLegalAuthenticator(source bundle : Bundle, source composition 
             </target>
             <dependent>
                <name value="IdentifierII"/>
-               <variable value="identifier"/>
-               <variable value="id"/>
+               <variable value="identifier">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
+               <variable value="id">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
             </dependent>
          </rule>
          <rule>
@@ -1419,8 +1902,16 @@ group PractitionerLegalAuthenticator(source bundle : Bundle, source composition 
             </target>
             <dependent>
                <name value="ContactPointTEL"/>
-               <variable value="telecom"/>
-               <variable value="tel"/>
+               <variable value="telecom">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
+               <variable value="tel">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
             </dependent>
          </rule>
          <rule>
@@ -1438,8 +1929,16 @@ group PractitionerLegalAuthenticator(source bundle : Bundle, source composition 
             </target>
             <dependent>
                <name value="AddressAD"/>
-               <variable value="address"/>
-               <variable value="ad"/>
+               <variable value="address">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
+               <variable value="ad">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
             </dependent>
          </rule>
          <rule>
@@ -1463,8 +1962,16 @@ group PractitionerLegalAuthenticator(source bundle : Bundle, source composition 
             </target>
             <dependent>
                <name value="HumanNameEN"/>
-               <variable value="name"/>
-               <variable value="en"/>
+               <variable value="name">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
+               <variable value="en">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
             </dependent>
          </rule>
          <rule>
@@ -1497,8 +2004,16 @@ group PractitionerLegalAuthenticator(source bundle : Bundle, source composition 
                   </target>
                   <dependent>
                      <name value="Organization2CdaOrganization"/>
-                     <variable value="organization"/>
-                     <variable value="cdaorganization"/>
+                     <variable value="organization">
+                        <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                           <valueUrl value="id"/>
+                        </extension>
+                     </variable>
+                     <variable value="cdaorganization">
+                        <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                           <valueUrl value="id"/>
+                        </extension>
+                     </variable>
                   </dependent>
                </rule>
             </rule>
@@ -1518,10 +2033,431 @@ group PractitionerLegalAuthenticator(source bundle : Bundle, source composition 
                </target>
                <dependent>
                   <name value="Organization2CdaOrganization"/>
-                  <variable value="organization"/>
-                  <variable value="cdaorganization"/>
+                  <variable value="organization">
+                     <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                        <valueUrl value="id"/>
+                     </extension>
+                  </variable>
+                  <variable value="cdaorganization">
+                     <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                        <valueUrl value="id"/>
+                     </extension>
+                  </variable>
                </dependent>
             </rule>
+         </rule>
+      </rule>
+   </group>
+   <group>
+      <name value="PractitionerAuthorRolePractitioner"/>
+      <typeMode value="none"/>
+      <input>
+         <name value="bundle"/>
+         <type value="Bundle"/>
+         <mode value="source"/>
+      </input>
+      <input>
+         <name value="composition"/>
+         <mode value="source"/>
+      </input>
+      <input>
+         <name value="practitionerRole"/>
+         <type value="PractitionerRole"/>
+         <mode value="source"/>
+      </input>
+      <input>
+         <name value="src"/>
+         <type value="Practitioner"/>
+         <mode value="source"/>
+      </input>
+      <input>
+         <name value="tgt"/>
+         <type value="Author"/>
+         <mode value="target"/>
+      </input>
+      <rule>
+         <name value="srcAuthor"/>
+         <source>
+            <context value="composition"/>
+            <element value="author"/>
+            <variable value="srcauthor"/>
+         </source>
+         <rule>
+            <name value="extensionTime"/>
+            <source>
+               <context value="srcauthor"/>
+               <element value="extension"/>
+               <variable value="extensionTime"/>
+               <condition value="$this.url = 'http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-time'"/>
+            </source>
+            <rule>
+               <name value="DateTime"/>
+               <source>
+                  <context value="extensionTime"/>
+                  <element value="valueDateTime"/>
+                  <variable value="valueDateTime"/>
+               </source>
+               <target>
+                  <context value="tgt"/>
+                  <contextType value="variable"/>
+                  <element value="time"/>
+                  <variable value="time"/>
+               </target>
+               <dependent>
+                  <name value="DateTimeTS"/>
+                  <variable value="valueDateTime">
+                     <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                        <valueUrl value="id"/>
+                     </extension>
+                  </variable>
+                  <variable value="time">
+                     <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                        <valueUrl value="id"/>
+                     </extension>
+                  </variable>
+               </dependent>
+            </rule>
+         </rule>
+      </rule>
+      <rule>
+         <name value="DateTimeBundle"/>
+         <source>
+            <context value="bundle"/>
+            <element value="timestamp"/>
+            <variable value="valueDateTime"/>
+            <condition value="composition.author.extension.where(url = 'http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-time').empty()"/>
+         </source>
+         <target>
+            <context value="tgt"/>
+            <contextType value="variable"/>
+            <element value="time"/>
+            <variable value="time"/>
+         </target>
+         <dependent>
+            <name value="DateTimeTS"/>
+            <variable value="valueDateTime">
+               <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                  <valueUrl value="id"/>
+               </extension>
+            </variable>
+            <variable value="time">
+               <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                  <valueUrl value="id"/>
+               </extension>
+            </variable>
+         </dependent>
+      </rule>
+      <rule>
+         <name value="assignedAuthor"/>
+         <source>
+            <context value="src"/>
+         </source>
+         <target>
+            <context value="tgt"/>
+            <contextType value="variable"/>
+            <element value="assignedAuthor"/>
+            <variable value="assignedAuthor"/>
+         </target>
+         <rule>
+            <name value="id"/>
+            <source>
+               <context value="src"/>
+               <element value="identifier"/>
+               <variable value="identifier"/>
+            </source>
+            <target>
+               <context value="assignedAuthor"/>
+               <contextType value="variable"/>
+               <element value="id"/>
+               <variable value="id"/>
+            </target>
+            <dependent>
+               <name value="IdentifierII"/>
+               <variable value="identifier">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
+               <variable value="id">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
+            </dependent>
+         </rule>
+         <rule>
+            <name value="telecom"/>
+            <source>
+               <context value="src"/>
+               <element value="telecom"/>
+               <listMode value="first"/>
+               <variable value="telecom"/>
+            </source>
+            <target>
+               <context value="assignedAuthor"/>
+               <contextType value="variable"/>
+               <element value="telecom"/>
+               <variable value="tel"/>
+            </target>
+            <dependent>
+               <name value="ContactPointTEL"/>
+               <variable value="telecom">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
+               <variable value="tel">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
+            </dependent>
+         </rule>
+         <rule>
+            <name value="address"/>
+            <source>
+               <context value="src"/>
+               <element value="address"/>
+               <variable value="address"/>
+            </source>
+            <target>
+               <context value="assignedAuthor"/>
+               <contextType value="variable"/>
+               <element value="addr"/>
+               <variable value="ad"/>
+            </target>
+            <dependent>
+               <name value="AddressAD"/>
+               <variable value="address">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
+               <variable value="ad">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
+            </dependent>
+         </rule>
+         <rule>
+            <name value="name"/>
+            <source>
+               <context value="src"/>
+               <element value="name"/>
+               <variable value="name"/>
+            </source>
+            <target>
+               <context value="assignedAuthor"/>
+               <contextType value="variable"/>
+               <element value="assignedPerson"/>
+               <variable value="assignedPerson"/>
+            </target>
+            <target>
+               <context value="assignedPerson"/>
+               <contextType value="variable"/>
+               <element value="name"/>
+               <variable value="en"/>
+            </target>
+            <dependent>
+               <name value="HumanNameEN"/>
+               <variable value="name">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
+               <variable value="en">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
+            </dependent>
+         </rule>
+         <rule>
+            <name value="patient"/>
+            <source>
+               <context value="bundle"/>
+               <element value="entry"/>
+               <variable value="entry"/>
+            </source>
+            <rule>
+               <name value="uuid"/>
+               <source>
+                  <context value="entry"/>
+                  <element value="fullUrl"/>
+                  <condition value="($this in %practitionerRole.organization.reference) and $this.startsWith('urn:uuid')"/>
+               </source>
+               <rule>
+                  <name value="organization"/>
+                  <source>
+                     <context value="entry"/>
+                     <type value="Organization"/>
+                     <element value="resource"/>
+                     <variable value="organization"/>
+                  </source>
+                  <target>
+                     <context value="assignedAuthor"/>
+                     <contextType value="variable"/>
+                     <element value="representedOrganization"/>
+                     <variable value="cdaorganization"/>
+                  </target>
+                  <dependent>
+                     <name value="Organization2CdaOrganization"/>
+                     <variable value="organization">
+                        <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                           <valueUrl value="id"/>
+                        </extension>
+                     </variable>
+                     <variable value="cdaorganization">
+                        <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                           <valueUrl value="id"/>
+                        </extension>
+                     </variable>
+                  </dependent>
+               </rule>
+            </rule>
+            <rule>
+               <name value="organization"/>
+               <source>
+                  <context value="entry"/>
+                  <element value="resource"/>
+                  <variable value="organization"/>
+                  <condition value="('Organization' + '/' + $this.id) in %practitionerRole.organization.reference"/>
+               </source>
+               <target>
+                  <context value="assignedAuthor"/>
+                  <contextType value="variable"/>
+                  <element value="representedOrganization"/>
+                  <variable value="cdaorganization"/>
+               </target>
+               <dependent>
+                  <name value="Organization2CdaOrganization"/>
+                  <variable value="organization">
+                     <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                        <valueUrl value="id"/>
+                     </extension>
+                  </variable>
+                  <variable value="cdaorganization">
+                     <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                        <valueUrl value="id"/>
+                     </extension>
+                  </variable>
+               </dependent>
+            </rule>
+         </rule>
+      </rule>
+   </group>
+   <group>
+      <name value="PractitionerAuthorRole"/>
+      <typeMode value="none"/>
+      <input>
+         <name value="bundle"/>
+         <type value="Bundle"/>
+         <mode value="source"/>
+      </input>
+      <input>
+         <name value="composition"/>
+         <type value="Composition"/>
+         <mode value="source"/>
+      </input>
+      <input>
+         <name value="src"/>
+         <type value="PractitionerRole"/>
+         <mode value="source"/>
+      </input>
+      <input>
+         <name value="tgt"/>
+         <type value="Author"/>
+         <mode value="target"/>
+      </input>
+      <rule>
+         <name value="enry"/>
+         <source>
+            <context value="bundle"/>
+            <element value="entry"/>
+            <variable value="entry"/>
+         </source>
+         <rule>
+            <name value="uuidp"/>
+            <source>
+               <context value="entry"/>
+               <element value="fullUrl"/>
+               <condition value="($this in %src.practitioner.reference) and $this.startsWith('urn:uuid')"/>
+            </source>
+            <rule>
+               <name value="author"/>
+               <source>
+                  <context value="entry"/>
+                  <type value="Practitioner"/>
+                  <element value="resource"/>
+                  <variable value="practitioner"/>
+               </source>
+               <dependent>
+                  <name value="PractitionerAuthorRolePractitioner"/>
+                  <variable value="bundle">
+                     <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                        <valueUrl value="id"/>
+                     </extension>
+                  </variable>
+                  <variable value="composition">
+                     <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                        <valueUrl value="id"/>
+                     </extension>
+                  </variable>
+                  <variable value="src">
+                     <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                        <valueUrl value="id"/>
+                     </extension>
+                  </variable>
+                  <variable value="practitioner">
+                     <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                        <valueUrl value="id"/>
+                     </extension>
+                  </variable>
+                  <variable value="tgt">
+                     <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                        <valueUrl value="id"/>
+                     </extension>
+                  </variable>
+               </dependent>
+            </rule>
+         </rule>
+         <rule>
+            <name value="author"/>
+            <source>
+               <context value="entry"/>
+               <element value="resource"/>
+               <variable value="practitioner"/>
+               <condition value="('Practitioner' + '/' + $this.id) in %src.practitioner.reference"/>
+            </source>
+            <dependent>
+               <name value="PractitionerAuthorRolePractitioner"/>
+               <variable value="bundle">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
+               <variable value="composition">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
+               <variable value="src">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
+               <variable value="practitioner">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
+               <variable value="tgt">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
+            </dependent>
          </rule>
       </rule>
    </group>
@@ -1562,8 +2498,16 @@ group PractitionerLegalAuthenticator(source bundle : Bundle, source composition 
             </target>
             <dependent>
                <name value="Organization2CdaOrganizationCustodian"/>
-               <variable value="src"/>
-               <variable value="representedCustodianOrganization"/>
+               <variable value="src">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
+               <variable value="representedCustodianOrganization">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
             </dependent>
          </rule>
       </rule>
@@ -1596,8 +2540,16 @@ group PractitionerLegalAuthenticator(source bundle : Bundle, source composition 
          </target>
          <dependent>
             <name value="IdentifierII"/>
-            <variable value="identifier"/>
-            <variable value="id"/>
+            <variable value="identifier">
+               <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                  <valueUrl value="id"/>
+               </extension>
+            </variable>
+            <variable value="id">
+               <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                  <valueUrl value="id"/>
+               </extension>
+            </variable>
          </dependent>
       </rule>
       <rule>
@@ -1638,8 +2590,16 @@ group PractitionerLegalAuthenticator(source bundle : Bundle, source composition 
          </target>
          <dependent>
             <name value="AddressAD"/>
-            <variable value="address"/>
-            <variable value="ad"/>
+            <variable value="address">
+               <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                  <valueUrl value="id"/>
+               </extension>
+            </variable>
+            <variable value="ad">
+               <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                  <valueUrl value="id"/>
+               </extension>
+            </variable>
          </dependent>
       </rule>
       <rule>
@@ -1658,8 +2618,16 @@ group PractitionerLegalAuthenticator(source bundle : Bundle, source composition 
          </target>
          <dependent>
             <name value="ContactPointTEL"/>
-            <variable value="telecom"/>
-            <variable value="tel"/>
+            <variable value="telecom">
+               <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                  <valueUrl value="id"/>
+               </extension>
+            </variable>
+            <variable value="tel">
+               <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                  <valueUrl value="id"/>
+               </extension>
+            </variable>
          </dependent>
          <documentation value="target telecom is 0..1"/>
       </rule>
@@ -1692,8 +2660,16 @@ group PractitionerLegalAuthenticator(source bundle : Bundle, source composition 
          </target>
          <dependent>
             <name value="IdentifierII"/>
-            <variable value="identifier"/>
-            <variable value="id"/>
+            <variable value="identifier">
+               <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                  <valueUrl value="id"/>
+               </extension>
+            </variable>
+            <variable value="id">
+               <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                  <valueUrl value="id"/>
+               </extension>
+            </variable>
          </dependent>
       </rule>
       <rule>
@@ -1734,8 +2710,16 @@ group PractitionerLegalAuthenticator(source bundle : Bundle, source composition 
          </target>
          <dependent>
             <name value="AddressAD"/>
-            <variable value="address"/>
-            <variable value="ad"/>
+            <variable value="address">
+               <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                  <valueUrl value="id"/>
+               </extension>
+            </variable>
+            <variable value="ad">
+               <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                  <valueUrl value="id"/>
+               </extension>
+            </variable>
          </dependent>
       </rule>
       <rule>
@@ -1753,8 +2737,16 @@ group PractitionerLegalAuthenticator(source bundle : Bundle, source composition 
          </target>
          <dependent>
             <name value="ContactPointTEL"/>
-            <variable value="telecom"/>
-            <variable value="tel"/>
+            <variable value="telecom">
+               <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                  <valueUrl value="id"/>
+               </extension>
+            </variable>
+            <variable value="tel">
+               <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                  <valueUrl value="id"/>
+               </extension>
+            </variable>
          </dependent>
       </rule>
    </group>
@@ -1824,8 +2816,16 @@ group PractitionerLegalAuthenticator(source bundle : Bundle, source composition 
             </target>
             <dependent>
                <name value="InstantTS"/>
-               <variable value="srcTime"/>
-               <variable value="time"/>
+               <variable value="srcTime">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
+               <variable value="time">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
             </dependent>
          </rule>
       </rule>
@@ -1877,8 +2877,16 @@ group PractitionerLegalAuthenticator(source bundle : Bundle, source composition 
             </target>
             <dependent>
                <name value="IdentifierII"/>
-               <variable value="identifier"/>
-               <variable value="id"/>
+               <variable value="identifier">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
+               <variable value="id">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
             </dependent>
          </rule>
          <rule>
@@ -1902,8 +2910,16 @@ group PractitionerLegalAuthenticator(source bundle : Bundle, source composition 
             </target>
             <dependent>
                <name value="HumanNameEN"/>
-               <variable value="name"/>
-               <variable value="en"/>
+               <variable value="name">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
+               <variable value="en">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
             </dependent>
          </rule>
       </rule>

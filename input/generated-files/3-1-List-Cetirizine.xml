@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:ns2="urn:ihe:pharm">
+    <realmCode code="CHE"/>
+    <typeId root="2.16.840.1.113883.1.3" extension="POCD_HD000040"/>
+    <templateId root="2.16.756.5.30.1.127.1.4"/>
+    <templateId root="1.3.6.1.4.1.19376.1.5.3.1.1.1"/>
+    <templateId root="1.3.6.1.4.1.19376.1.9.1.1.5"/>
+    <templateId root="2.16.756.5.30.1.1.10.1.13"/>
+    <templateId root="2.16.756.5.30.1.1.10.1.9"/>
+    <templateId root="2.16.840.1.113883.10.12.2"/>
+    <templateId root="2.16.840.1.113883.10.12.1"/>
+    <id root="16c4f19b-c0c1-4c35-8c18-624c74caf192"/>
+    <code code="56445-0" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Medication summary">
+        <translation code="721912009" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED CT" displayName="Medication summary document (record artifact)"/>
+    </code>
+    <title language="fr-CH">Liste de médication</title>
+    <effectiveTime value="20220810072849+0000"/>
+    <confidentialityCode code="17621005" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED CT" displayName="Normal (qualifier value)"/>
+    <languageCode code="fr-CH"/>
+    <setId root="16c4f19b-c0c1-4c35-8c18-624c74caf192"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <templateId root="2.16.756.5.30.1.1.10.2.1"/>
+        <patientRole>
+            <id root="2.16.756.5.30.1.191.1.0.2.1" extension="e7963774-9098-445f-9cab-5d52234b52c3"/>
+            <patient>
+                <name use="L">
+                    <family>NEFF-WINGEIER</family>
+                    <given>Trong Sang</given>
+                </name>
+                <administrativeGenderCode code="M" codeSystem="2.16.840.1.113883.5.1" codeSystemName="HL7 AdministrativeGender" displayName="Male"/>
+                <birthTime value="19871008"/>
+            </patient>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <templateId root="2.16.756.5.30.1.1.10.9.23"/>
+        <functionCode code="COMPOSER" codeSystem="2.16.840.1.113883.5.88" codeSystemName="Participation Function" displayName="composer software"/>
+        <time value="20220810072849+0000"/>
+        <assignedAuthor>
+            <id root="2.51.1.3" extension="7601002860123"/>
+            <assignedAuthoringDevice>
+                <manufacturerModelName>CARA's PMP</manufacturerModelName>
+                <softwareName>PMP CARA v0.1</softwareName>
+            </assignedAuthoringDevice>
+        </assignedAuthor>
+    </author>
+    <custodian>
+        <templateId root="2.16.756.5.30.1.1.10.2.3"/>
+        <assignedCustodian>
+            <representedCustodianOrganization>
+                <id root="2.51.1.3" extension="1.2.3.4"/>
+                <name use="L">Hausarzt</name>
+            </representedCustodianOrganization>
+        </assignedCustodian>
+    </custodian>
+    <informationRecipient typeCode="PRCP">
+        <templateId root="2.16.756.5.30.1.1.10.2.4"/>
+        <intendedRecipient>
+            <receivedOrganization>
+                <name use="L">Hausarzt</name>
+            </receivedOrganization>
+        </intendedRecipient>
+    </informationRecipient>
+    <component contextConductionInd="true">
+        <structuredBody>
+            <component>
+                <section>
+                    <templateId root="2.16.756.5.30.1.1.10.3.44"/>
+                    <templateId root="1.3.6.1.4.1.19376.1.9.1.2.5"/>
+                    <code code="10160-0" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="History of medication use"/>
+                    <title language="fr-CH">Liste de médicaments</title>
+                    <text>
+                        <content ID="generator_comment">Cette liste de médication a été générée automatiquement par le PMP le August 10, 2022 at 7:28:49 AM UTC. Les paramètres utilisés pour la génération du document sont : les éléments de type Medication Treatment Plan Item, Prescription Item, Dispense Item et PADV sont inclus ; tous les traitements sont considérés.</content>
+                        <content ID="pwftd.">Texte narratif pour l'item 4340fa56-50ac-4e90-ae3b-dcd35803ec38</content>
+                        <paragraph ID="pwftd.refpdf">Cetirizine Mepha Lactab 10 mg, 0-0-1, durant 3 jours, raison: allergie</paragraph>
+                    </text>
+                    <entry>
+                        <substanceAdministration classCode="SBADM" moodCode="INT">
+                            <templateId root="2.16.756.5.30.1.1.10.4.34"/>
+                            <templateId root="1.3.6.1.4.1.19376.1.9.1.3.7"/>
+                            <templateId root="2.16.840.1.113883.10.20.1.24"/>
+                            <templateId root="1.3.6.1.4.1.19376.1.5.3.1.4.7"/>
+                            <templateId root="1.3.6.1.4.1.19376.1.5.3.1.4.7.1"/>
+                            <id root="4340FA56-50AC-4E90-AE3B-DCD35803EC38"/>
+                            <text>
+                 
+              
+                                <reference value="#refpdf"/>
+                            </text>
+                            <statusCode code="completed"/>
+                            <effectiveTime xsi:type="IVL_TS" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                 
+                 
+              
+                                <low value="20190227"/>
+                                <high value="20190301"/>
+                            </effectiveTime>
+                            <effectiveTime xsi:type="EIVL_TS" operator="A" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                 
+              
+                                <event code="EVE"/>
+                            </effectiveTime>
+                            <repeatNumber nullFlavor="NI"/>
+                            <routeCode code="20053000" codeSystem="0.4.0.127.0.16.1.1.2.1" displayName="Oral use"/>
+                            <doseQuantity value="1" unit="732936001"/>
+                            <consumable>
+                                <manufacturedProduct classCode="MANU">
+                                    <templateId root="1.3.6.1.4.1.19376.1.5.3.1.4.7.2"/>
+                                    <templateId root="2.16.840.1.113883.10.20.1.53"/>
+                                    <manufacturedMaterial classCode="MMAT" determinerCode="KIND">
+                                        <templateId root="2.16.756.5.30.1.1.10.4.33"/>
+                                        <templateId root="1.3.6.1.4.1.19376.1.9.1.3.1"/>
+                                        <code code="7680651190041" codeSystem="2.51.1.1" codeSystemName="GTIN" displayName="CETIRIZIN Mepha Lactab 10 mg blister 10 pce">
+                       
+                    
+                                            <originalText>
+                         
+                      
+                                                <reference value="#refpdf"/>
+                                            </originalText>
+                                        </code>
+                                        <name>CETIRIZIN Mepha Lactab 10 mg blister 10 pce</name>
+                                        <ns2:formCode code="10221000" codeSystem="0.4.0.127.0.16.1.1.2.1" displayName="Film-coated tablet"/>
+                                        <ns2:asContent classCode="CONT">
+                                            <ns2:containerPackagedMedicine classCode="CONT" determinerCode="INSTANCE">
+                                                <ns2:code code="7680651190041" codeSystem="2.51.1.1" codeSystemName="GTIN" displayName="CETIRIZIN Mepha Lactab 10 mg blister 10 pce"/>
+                                                <ns2:name>CETIRIZIN Mepha Lactab 10 mg blister 10 pce</ns2:name>
+                                                <ns2:formCode code="10221000" codeSystem="0.4.0.127.0.16.1.1.2.1" displayName="Film-coated tablet"/>
+                                                <ns2:capacityQuantity value="10" unit="{Piece}"/>
+                                            </ns2:containerPackagedMedicine>
+                                        </ns2:asContent>
+                                        <ns2:ingredient classCode="ACTI">
+                                            <ns2:quantity>
+                         
+                         
+                      
+                                                <numerator value="10" unit="mg"/>
+                                                <denominator value="1" unit="732936001"/>
+                                            </ns2:quantity>
+                                            <ns2:ingredient classCode="MMAT" determinerCode="KIND">
+                                                <ns2:code code="372523007" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED CT" displayName="Cetirizine (substance)"/>
+                                                <ns2:name>Cetirizine</ns2:name>
+                                            </ns2:ingredient>
+                                        </ns2:ingredient>
+                                    </manufacturedMaterial>
+                                </manufacturedProduct>
+                            </consumable>
+                            <author>
+                                <templateId root="2.16.756.5.30.1.1.10.9.23"/>
+                                <time value="20190227110000+0100"/>
+                                <assignedAuthor>
+                                    <id root="2.51.1.3" extension="7601000234322"/>
+                                    <assignedPerson>
+                                        <name>
+           
+           
+        
+                                            <family>Hôpital</family>
+                                            <given>Docteur</given>
+                                        </name>
+                                    </assignedPerson>
+                                </assignedAuthor>
+                            </author>
+                            <entryRelationship typeCode="RSON">
+                                <observation classCode="OBS" moodCode="EVN">
+                                    <templateId root="2.16.756.5.30.1.1.10.4.41"/>
+                                    <code code="75326-9" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Problem"/>
+                                    <text>allergie
+                     
+                  
+                                        <reference value="#pwftd.refpdf"/>
+                                    </text>
+                                    <statusCode code="completed"/>
+                                </observation>
+                            </entryRelationship>
+                            <reference typeCode="XCRPT">
+                                <externalDocument>
+                                    <id root="D940CE30-C6F4-48F8-AA84-99E6188E5FA6"/>
+                                </externalDocument>
+                            </reference>
+                        </substanceAdministration>
+                    </entry>
+                </section>
+            </component>
+        </structuredBody>
+    </component>
+</ClinicalDocument>

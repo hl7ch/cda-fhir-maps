@@ -71,3 +71,18 @@ Accept: application/fhir+xml;fhirVersion=4.0
 Content-Type: application/fhir+xml;fhirVersion=4.0
 
 < ./input/cda-ch-emed/pml-cara.xml
+
+### 5c. Transform Medication List document (2-1-MedicationList.xml) from CDA to FHIR 
+POST {{host}}/StructureMap/$transform?source=http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaChEmedMedicationListDocumentToBundle
+Accept: application/fhir+xml;fhirVersion=4.0
+Content-Type: application/fhir+xml;fhirVersion=4.0
+
+< ./input/cda-ch-emed/pml-cara-test.xml
+
+
+### 5c. Transform Medication List document (2-1-MedicationList.xml) from CDA to FHIR 
+POST {{host}}/StructureMap/$transform?source=http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaChEmedMedicationListDocumentToBundle
+Accept: application/fhir+xml;fhirVersion=4.0
+Content-Type: application/fhir+xml;fhirVersion=4.0
+
+< ./input/generated-files/3-1-List-Cetirizine.xml

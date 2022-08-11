@@ -75,6 +75,6 @@ group SectionDispenseSectionContentModule(source cda : ClinicalDocument, source 
     medicationdispense.id = uuid() as uuid,
     e.fullUrl = append('urn:uuid:',uuid), 
     tgt.entry = create('Reference') as reference, reference.reference = append('urn:uuid:',uuid) then {
-    cdaEntry.supply as supply then DispenseItemEntryContentModule(src, supply, patient, medicationdispense);
+    cdaEntry.supply as supply then DispenseItemEntryContentModule(src, supply, patient, medicationdispense, bundle);
   } "DispenseItemEntryContentModule";
 }

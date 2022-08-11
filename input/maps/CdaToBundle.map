@@ -17,6 +17,7 @@ conceptmap "cm-v3-administrative-gender" {
 }
 
 uses "http://hl7.org/fhir/cda/StructureDefinition/ClinicalDocument" alias ClinicalDocument as source
+uses "http://hl7.org/fhir/cda/StructureDefinition/Author" alias Author as source
 uses "http://hl7.org/fhir/cda/StructureDefinition/AssignedAuthor" alias AssignedAuthor as queried
 uses "http://hl7.org/fhir/cda/StructureDefinition/AssignedEntity" alias AssignedEntity as queried
 uses "http://hl7.org/fhir/cda/StructureDefinition/CustodianOrganization" alias CustodianOrganization as queried
@@ -28,6 +29,7 @@ uses "http://hl7.org/fhir/StructureDefinition/Patient" alias Patient as produced
 uses "http://hl7.org/fhir/StructureDefinition/Person" alias Patient as produced
 uses "http://hl7.org/fhir/StructureDefinition/Practitioner" alias Practitioner as produced
 uses "http://hl7.org/fhir/StructureDefinition/Organization" alias Organization as produced
+
 
 imports "http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaToFhirTypes"
 
@@ -73,13 +75,58 @@ group ClinicalDocumentSection(source cda : ClinicalDocument, source src : Sectio
     cdaText -> fhirText.status = 'generated' "narrativeStatus";
     cdaText as t -> fhirText.div = t "narrativeText";
   } "cdaText";
+  src.author as author -> tgt.author = create('Reference') as reference then Author(author, reference, bundle) "author";
   src.section as srcSection -> tgt.section as tgtSection then ClinicalDocumentSection(cda, srcSection, patient, tgtSection, bundle);
 }
 
 // _________________________ Entry Level Templates   ________________________ 
 
+
 // _________________________ Header Level Templates _________________________ 
 
+group Author(source srcAuthor, target reference, target bundle:  Bundle) {
+  srcAuthor where assignedAuthor.assignedPerson -> 
+    bundle.entry as ep, 
+    ep.resource = create('PractitionerRole') as practitionerRole, 
+    practitionerRole.id = uuid() as uuid,
+    ep.fullUrl = append('urn:uuid:',uuid),
+    reference.reference = ('urn:uuid:'+%practitionerRole.id),
+    bundle.entry as e,  
+    e.resource = create('Practitioner') as practitioner, 
+    practitioner.id = uuid() as uuid2,
+    e.fullUrl = append('urn:uuid:',uuid2),
+    practitionerRole.practitioner = create('Reference') as practReference, practReference.reference = ('urn:uuid:'+%practitioner.id) then {
+    srcAuthor.time as time -> reference.extension as exttime then ChExtEprTime(time, exttime) "time";
+    srcAuthor.assignedAuthor as assignedAuthor then {
+      assignedAuthor.id -> practitioner.identifier;
+      assignedAuthor.addr -> practitioner.address;
+      assignedAuthor.telecom -> practitioner.telecom;
+      assignedAuthor.assignedPerson as person then {
+        person.name -> practitioner.name;
+      } "name";
+      assignedAuthor.representedOrganization as srcOrg ->  
+        bundle.entry as e2,  
+        e2.resource = create('Organization') as organization,
+        organization.id = uuid() as uuid3,
+        e2.fullUrl = append('urn:uuid:',uuid3), 
+        practitionerRole.organization = create('Reference') as reference2, reference2.reference = ('urn:uuid:'+%organization.id) then ClinicalDocumentOrganization(srcOrg, organization);
+    } "author";
+  } "srcAuthor";
+  srcAuthor where assignedAuthor.assignedAuthoringDevice -> bundle.entry as e,  
+    e.resource = create('Device') as device, 
+    device.id = uuid() as uuid2,
+    e.fullUrl = append('urn:uuid:',uuid2),
+    reference.reference = ('urn:uuid:'+%device.id) then {
+    srcAuthor.time as time -> reference.extension as exttime then ChExtEprTime(time, exttime) "time";
+    srcAuthor.assignedAuthor as assignedAuthor then {
+      assignedAuthor.id -> device.identifier;
+      assignedAuthor.assignedAuthoringDevice as assignedAuthoringDevice -> device.deviceName as deviceName then {
+        assignedAuthoringDevice.manufacturerModelName as manufacturerModelName -> deviceName.name = (manufacturerModelName.dataString), deviceName.type = 'manufacturer-name';
+        assignedAuthoringDevice.softwareName as softwareName -> device.modelNumber = (softwareName.dataString);
+      } "name";
+    } "author";
+  } "srcAuthorDevice";
+}
 
 group ClinicalDocumentComposition(source src : ClinicalDocument, target tgt : Composition, target patientResource: Patient, target bundle : Bundle) {
   src.languageCode -> tgt.language;
@@ -98,41 +145,7 @@ group ClinicalDocumentComposition(source src : ClinicalDocument, target tgt : Co
       comp.encompassingEncounter as srcEnc -> tgt.encounter = create('Reference') as reference, reference.reference = ('urn:uuid:'+%encounter.id) then ClinicalDocumentEncounter(srcEnc, bundle, encounter) "srcEncounter";
     } "encompassingEncounter";
   src.effectiveTime -> tgt.date;
-  src.author as srcAuthor where assignedAuthor.assignedPerson -> bundle.entry as e,  
-    e.resource = create('Practitioner') as practitioner, 
-    practitioner.id = uuid() as uuid2,
-    e.fullUrl = append('urn:uuid:',uuid2),
-    tgt.author = create('Reference') as reference, reference.reference = ('urn:uuid:'+%practitioner.id) then {
-    srcAuthor.time as time -> reference.extension as exttime then ChExtEprTime(time, exttime) "time";
-    srcAuthor.assignedAuthor as assignedAuthor then {
-      assignedAuthor.id -> practitioner.identifier;
-      assignedAuthor.addr -> practitioner.address;
-      assignedAuthor.telecom -> practitioner.telecom;
-      assignedAuthor.assignedPerson as person then {
-        person.name -> practitioner.name;
-      } "name";
-      assignedAuthor.representedOrganization as srcOrg ->  
-        bundle.entry as e2,  
-        e2.resource = create('Organization') as organization,
-        organization.id = uuid() as uuid3,
-        e2.fullUrl = append('urn:uuid:',uuid3), 
-        tgt.author = create('Reference') as reference2, reference2.reference = ('urn:uuid:'+%organization.id) then ClinicalDocumentOrganization(srcOrg, organization);
-    } "author";
-  } "srcAuthor";
-  src.author as srcAuthor where assignedAuthor.assignedAuthoringDevice -> bundle.entry as e,  
-    e.resource = create('Device') as device, 
-    device.id = uuid() as uuid2,
-    e.fullUrl = append('urn:uuid:',uuid2),
-    tgt.author = create('Reference') as reference, reference.reference = ('urn:uuid:'+%device.id) then {
-    srcAuthor.time as time -> reference.extension as exttime then ChExtEprTime(time, exttime) "time";
-    srcAuthor.assignedAuthor as assignedAuthor then {
-      assignedAuthor.id -> device.identifier;
-      assignedAuthor.assignedAuthoringDevice as assignedAuthoringDevice -> device.deviceName as deviceName then {
-        assignedAuthoringDevice.manufacturerModelName as manufacturerModelName -> deviceName.name = (manufacturerModelName.dataString);
-        assignedAuthoringDevice.softwareName as softwareName-> deviceName.type = (softwareName.dataString);
-      } "name";
-    } "author";
-  } "srcAuthorDevice";
+  src.author as author -> tgt.author = create('Reference') as reference then Author(author, reference, bundle) "author";
   src.confidentialityCode -> tgt.confidentiality;
   src.legalAuthenticator as legalAuth ->  bundle.entry as e,  
     e.resource = create('Practitioner') as practitioner, 

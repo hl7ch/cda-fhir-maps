@@ -1,0 +1,844 @@
+<Bundle 
+  xmlns="http://hl7.org/fhir">
+  <identifier>
+    <system value="urn:ietf:rfc:3986"/>
+    <value value="urn:uuid:be0835bc-2e92-4c58-ad3d-4452ff551d01"/>
+  </identifier>
+  <type value="document"/>
+  <timestamp value="2022-08-10T13:35:06+00:00"/>
+  <entry>
+    <fullUrl value="urn:uuid:8e535a65-4fc7-4e6d-b089-35ce22eb12ab"/>
+    <resource>
+      <Composition>
+        <language value="fr-CH"/>
+        <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-informationrecipient">
+          <valueReference>
+            <reference value="urn:uuid:2bd72636-5d1a-4539-84bd-7a86e32ffa9c"/>
+          </valueReference>
+        </extension>
+        <identifier>
+          <system value="urn:ietf:rfc:3986"/>
+          <value value="urn:uuid:be0835bc-2e92-4c58-ad3d-4452ff551d01"/>
+        </identifier>
+        <status value="final"/>
+        <type>
+          <coding>
+            <system value="http://loinc.org"/>
+            <code value="56445-0"/>
+            <display value="Medication summary"/>
+          </coding>
+          <coding>
+            <system value="http://snomed.info/sct"/>
+            <code value="721912009"/>
+            <display value="Medication summary document (record artifact)"/>
+          </coding>
+        </type>
+        <subject>
+          <reference value="urn:uuid:e83c2478-fbab-4f62-afc1-bf71c706c0fe"/>
+        </subject>
+        <date value="2022-08-10T13:35:06+00:00"/>
+        <author>
+          <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-time">
+            <valueDateTime value="2022-08-10T13:35:06+00:00"/>
+          </extension>
+          <reference value="urn:uuid:cf6cfb4f-3a7c-4c2b-a8e3-fd088740116f"/>
+        </author>
+        <title value="Liste de médication"/>
+        <confidentiality value="N">
+          <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-confidentialitycode">
+            <valueCodeableConcept>
+              <coding>
+                <system value="http://snomed.info/sct"/>
+                <code value="17621005"/>
+                <display value="Normal (qualifier value)"/>
+              </coding>
+            </valueCodeableConcept>
+          </extension>
+        </confidentiality>
+        <custodian>
+          <reference value="urn:uuid:c5d99b4e-0566-4a18-934d-9d54731505cf"/>
+        </custodian>
+        <section>
+          <title value="Liste de médicaments"/>
+          <code>
+            <coding>
+              <system value="http://loinc.org"/>
+              <code value="10160-0"/>
+              <display value="History of medication use"/>
+            </coding>
+          </code>
+          <text>
+            <status value="generated"/>
+            <div 
+              xmlns="http://www.w3.org/1999/xhtml">
+              <span id="generator_comment">Cette liste de médication a été générée automatiquement par le PMP le August 10, 2022 at 1:35:06 PM UTC. Les paramètres utilisés pour la génération du document sont : les éléments de type Medication Treatment Plan Item, Prescription Item, Dispense Item et PADV sont inclus ; tous les traitements sont considérés.</span>
+              <span id="afakb.">Texte narratif pour l'item ce620825-baf3-4c6c-813f-4c5ad9a85a55</span>
+              <p id="afakb.refpdf">Dafalgan cpr pell 1 g, 1-1-1, dosage avancé: en réserve, raison: douleurs</p>
+            </div>
+          </text>
+          <entry>
+            <reference value="urn:uuid:15cec797-9f76-4cdf-846d-ec7bd865b120"/>
+          </entry>
+          <entry>
+            <reference value="urn:uuid:af20757d-0f06-4c0b-b449-673a93126b33"/>
+          </entry>
+          <entry>
+            <reference value="urn:uuid:72c9ac00-3d65-472f-b68d-73821540e16a"/>
+          </entry>
+          <entry>
+            <reference value="urn:uuid:d7da19b2-88c6-493a-b2ec-dc5191e7e813"/>
+          </entry>
+        </section>
+      </Composition>
+    </resource>
+  </entry>
+  <entry>
+    <fullUrl value="urn:uuid:e83c2478-fbab-4f62-afc1-bf71c706c0fe"/>
+    <resource>
+      <Patient>
+        <identifier>
+          <type>
+            <coding>
+              <system value="http://terminology.hl7.org/CodeSystem/v2-0203"/>
+              <code value="MR"/>
+            </coding>
+          </type>
+          <system value="urn:oid:2.16.756.5.30.1.191.1.0.2.1"/>
+          <value value="68e0258d-20c6-4f6c-8740-00e9e0f0d29f"/>
+        </identifier>
+        <name>
+          <family value="PALOLA"/>
+          <given value="Loris Bertrand"/>
+        </name>
+        <gender value="male"/>
+        <birthDate value="1995-05-23"/>
+      </Patient>
+    </resource>
+  </entry>
+  <entry>
+    <fullUrl value="urn:uuid:cf6cfb4f-3a7c-4c2b-a8e3-fd088740116f"/>
+    <resource>
+      <Device>
+        <identifier>
+          <system value="urn:oid:2.51.1.3"/>
+          <value value="7601002860123"/>
+        </identifier>
+        <deviceName>
+          <name value="CARA's PMP"/>
+          <type value="manufacturer-name"/>
+        </deviceName>
+        <modelNumber value="PMP CARA v0.1"/>
+      </Device>
+    </resource>
+  </entry>
+  <entry>
+    <fullUrl value="urn:uuid:c5d99b4e-0566-4a18-934d-9d54731505cf"/>
+    <resource>
+      <Organization>
+        <identifier>
+          <system value="urn:oid:2.51.1.3"/>
+          <value value="1.2.3.4"/>
+        </identifier>
+        <name value="Hausarzt"/>
+      </Organization>
+    </resource>
+  </entry>
+  <entry>
+    <fullUrl value="urn:uuid:2bd72636-5d1a-4539-84bd-7a86e32ffa9c"/>
+    <resource>
+      <Organization>
+        <name value="Hausarzt"/>
+      </Organization>
+    </resource>
+  </entry>
+  <entry>
+    <fullUrl value="urn:uuid:15cec797-9f76-4cdf-846d-ec7bd865b120"/>
+    <resource>
+      <MedicationStatement>
+        <contained>
+          <Medication>
+            <id value="med"/>
+            <code>
+              <coding>
+                <system value="urn:oid:2.51.1.1"/>
+                <code value="7680563180079"/>
+                <display value="DAFALGAN cpr pell 1 g blister 40 pce"/>
+              </coding>
+              <text value="DAFALGAN cpr pell 1 g blister 40 pce"/>
+            </code>
+            <form>
+              <coding>
+                <system value="urn:oid:0.4.0.127.0.16.1.1.2.1"/>
+                <code value="10221000"/>
+                <display value="Film-coated tablet"/>
+              </coding>
+            </form>
+            <amount>
+              <numerator>
+                <value value="40"/>
+                <unit value="Piece"/>
+                <system value="http://unitsofmeasure.org"/>
+                <code value="{Piece}"/>
+              </numerator>
+              <denominator>
+                <value value="1"/>
+                <unit value="Package"/>
+                <system value="http://unitsofmeasure.org"/>
+                <code value="{Package}"/>
+              </denominator>
+            </amount>
+            <ingredient>
+              <itemCodeableConcept>
+                <coding>
+                  <system value="http://snomed.info/sct"/>
+                  <code value="387517004"/>
+                  <display value="Paracetamol (substance)"/>
+                </coding>
+                <text value="Paracétamol"/>
+              </itemCodeableConcept>
+              <strength>
+                <numerator>
+                  <value value="1"/>
+                  <unit value="gram"/>
+                  <system value="http://unitsofmeasure.org"/>
+                  <code value="g"/>
+                </numerator>
+                <denominator>
+                  <value value="1"/>
+                  <unit value="Tablet (unit of presentation)"/>
+                  <system value="http://snomed.info/sct"/>
+                  <code value="732936001"/>
+                </denominator>
+              </strength>
+            </ingredient>
+          </Medication>
+        </contained>
+        <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
+          <valueUrl value="#refpdf"/>
+        </extension>
+        <extension url="http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-documentauthor">
+          <valueReference>
+            <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-time">
+              <valueDateTime value="2019-02-12T11:00:00+01:00"/>
+            </extension>
+            <reference value="urn:uuid:87835c85-fedf-4bce-8f49-334fa64596e6"/>
+          </valueReference>
+        </extension>
+        <identifier>
+          <system value="urn:ietf:rfc:3986"/>
+          <value value="urn:uuid:ce620825-baf3-4c6c-813f-4c5ad9a85a55"/>
+        </identifier>
+        <status value="completed"/>
+        <medicationReference>
+          <reference value="#med"/>
+        </medicationReference>
+        <subject>
+          <reference value="urn:uuid:e83c2478-fbab-4f62-afc1-bf71c706c0fe"/>
+        </subject>
+        <informationSource>
+          <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-time">
+            <valueDateTime value="2019-02-12T11:00:00+01:00"/>
+          </extension>
+          <reference value="urn:uuid:c3f870cb-18aa-49ec-9380-86720386ef53"/>
+        </informationSource>
+        <reasonCode>
+          <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
+            <valueUrl value="#afakb.refpdf"/>
+          </extension>
+          <text value="douleurs"/>
+        </reasonCode>
+        <dosage>
+          <timing>
+            <repeat>
+              <when value="MORN"/>
+              <when value="NOON"/>
+              <when value="EVE"/>
+            </repeat>
+          </timing>
+          <route>
+            <coding>
+              <system value="urn:oid:0.4.0.127.0.16.1.1.2.1"/>
+              <code value="20053000"/>
+              <display value="Oral use"/>
+            </coding>
+          </route>
+          <doseAndRate>
+            <doseQuantity>
+              <value value="1"/>
+              <unit value="Tablet (unit of presentation)"/>
+              <system value="http://snomed.info/sct"/>
+              <code value="732936001"/>
+            </doseQuantity>
+          </doseAndRate>
+        </dosage>
+      </MedicationStatement>
+    </resource>
+  </entry>
+  <entry>
+    <fullUrl value="urn:uuid:c3f870cb-18aa-49ec-9380-86720386ef53"/>
+    <resource>
+      <PractitionerRole>
+        <practitioner>
+          <reference value="urn:uuid:26ea1df6-ba7e-47d9-bbf1-ece276ea00b1"/>
+        </practitioner>
+      </PractitionerRole>
+    </resource>
+  </entry>
+  <entry>
+    <fullUrl value="urn:uuid:26ea1df6-ba7e-47d9-bbf1-ece276ea00b1"/>
+    <resource>
+      <Practitioner>
+        <identifier>
+          <system value="urn:oid:2.51.1.3"/>
+          <value value="7601000201041"/>
+        </identifier>
+        <name>
+          <family value="RochatFirst"/>
+          <given value="Dr"/>
+          <prefix value="Dr. med."/>
+        </name>
+      </Practitioner>
+    </resource>
+  </entry>
+  <entry>
+    <fullUrl value="urn:uuid:87835c85-fedf-4bce-8f49-334fa64596e6"/>
+    <resource>
+      <PractitionerRole>
+        <practitioner>
+          <reference value="urn:uuid:351dc0c1-f1b7-453d-8184-8ca381b97519"/>
+        </practitioner>
+      </PractitionerRole>
+    </resource>
+  </entry>
+  <entry>
+    <fullUrl value="urn:uuid:351dc0c1-f1b7-453d-8184-8ca381b97519"/>
+    <resource>
+      <Practitioner>
+        <identifier>
+          <system value="urn:oid:2.51.1.3"/>
+          <value value="7601000201041"/>
+        </identifier>
+        <name>
+          <family value="RochatSecond"/>
+          <given value="Dr"/>
+          <prefix value="Dr. med."/>
+        </name>
+      </Practitioner>
+    </resource>
+  </entry>
+  <entry>
+    <fullUrl value="urn:uuid:af20757d-0f06-4c0b-b449-673a93126b33"/>
+    <resource>
+      <MedicationRequest>
+        <contained>
+          <Medication>
+            <id value="med"/>
+            <code>
+              <coding>
+                <system value="urn:oid:2.51.1.1"/>
+                <code value="7680500440334"/>
+                <display value="NORVASC Tabl 10 mg"/>
+              </coding>
+              <text value="NORVASC Tabl 10 mg"/>
+            </code>
+            <form>
+              <coding>
+                <system value="urn:oid:0.4.0.127.0.16.1.1.2.1"/>
+                <code value="10219000"/>
+                <display value="Tablet"/>
+              </coding>
+            </form>
+            <amount>
+              <numerator>
+                <value value="30"/>
+              </numerator>
+              <denominator>
+                <value value="1"/>
+                <unit value="Package"/>
+                <system value="http://unitsofmeasure.org"/>
+                <code value="{Package}"/>
+              </denominator>
+            </amount>
+            <ingredient>
+              <itemCodeableConcept>
+                <coding>
+                  <system value="http://snomed.info/sct"/>
+                  <code value="386864001"/>
+                  <display value="Amlodipine (substance)"/>
+                </coding>
+                <text value="Amlodipine"/>
+              </itemCodeableConcept>
+              <strength>
+                <numerator>
+                  <value value="10"/>
+                  <unit value="milligram"/>
+                  <system value="http://unitsofmeasure.org"/>
+                  <code value="mg"/>
+                </numerator>
+                <denominator>
+                  <value value="1"/>
+                  <unit value="Tablet (unit of presentation)"/>
+                  <system value="http://snomed.info/sct"/>
+                  <code value="732936001"/>
+                </denominator>
+              </strength>
+            </ingredient>
+          </Medication>
+        </contained>
+        <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
+          <valueUrl value="#pre.1"/>
+        </extension>
+        <extension url="http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-documentauthor">
+          <valueReference>
+            <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-time">
+              <valueDateTime value="2019-02-12T11:00:00+01:00"/>
+            </extension>
+            <reference value="urn:uuid:b4c7be81-e974-4215-81b4-0990731a0c64"/>
+          </valueReference>
+        </extension>
+        <extension url="http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-treatmentplan">
+          <extension url="id">
+            <valueIdentifier>
+              <system value="urn:ietf:rfc:3986"/>
+              <value value="urn:uuid:5712fffe-20c6-11e6-b67b-9e71128cae77"/>
+            </valueIdentifier>
+          </extension>
+          <extension url="externalDocumentId">
+            <valueIdentifier>
+              <system value="urn:ietf:rfc:3986"/>
+              <value value="urn:uuid:5712fffe-20c6-11e6-b67b-9e71128cae77"/>
+            </valueIdentifier>
+          </extension>
+        </extension>
+        <identifier>
+          <system value="urn:ietf:rfc:3986"/>
+          <value value="urn:uuid:d41d72ba-2100-11e6-b67b-9e71128cae77"/>
+        </identifier>
+        <status value="completed"/>
+        <intent value="order"/>
+        <medicationReference>
+          <reference value="#med"/>
+        </medicationReference>
+        <subject>
+          <reference value="urn:uuid:e83c2478-fbab-4f62-afc1-bf71c706c0fe"/>
+        </subject>
+        <performer>
+          <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-time">
+            <valueDateTime value="2019-02-12T11:00:00+01:00"/>
+          </extension>
+          <reference value="urn:uuid:d76152bc-a21b-42f6-9841-fc837fa271e6"/>
+        </performer>
+        <reasonCode>
+          <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
+            <valueUrl value="#pre.1.reason"/>
+          </extension>
+        </reasonCode>
+        <dosageInstruction>
+          <timing>
+            <repeat>
+              <boundsPeriod>
+                <start value="2012-02-04"/>
+              </boundsPeriod>
+              <when value="ACM"/>
+              <when value="ACV"/>
+            </repeat>
+          </timing>
+          <route>
+            <coding>
+              <system value="urn:oid:0.4.0.127.0.16.1.1.2.1"/>
+              <code value="20053000"/>
+              <display value="Oral use"/>
+            </coding>
+          </route>
+          <doseAndRate>
+            <doseQuantity>
+              <value value="1"/>
+              <unit value="Tablet (unit of presentation)"/>
+              <system value="http://snomed.info/sct"/>
+              <code value="732936001"/>
+            </doseQuantity>
+          </doseAndRate>
+        </dosageInstruction>
+        <dispenseRequest>
+          <numberOfRepeatsAllowed value="2"/>
+          <quantity>
+            <value value="1"/>
+          </quantity>
+        </dispenseRequest>
+      </MedicationRequest>
+    </resource>
+  </entry>
+  <entry>
+    <fullUrl value="urn:uuid:d76152bc-a21b-42f6-9841-fc837fa271e6"/>
+    <resource>
+      <PractitionerRole>
+        <practitioner>
+          <reference value="urn:uuid:17946328-bb2f-4e88-a380-bf03693b7eb2"/>
+        </practitioner>
+      </PractitionerRole>
+    </resource>
+  </entry>
+  <entry>
+    <fullUrl value="urn:uuid:17946328-bb2f-4e88-a380-bf03693b7eb2"/>
+    <resource>
+      <Practitioner>
+        <identifier>
+          <system value="urn:oid:2.51.1.3"/>
+          <value value="7601000201041"/>
+        </identifier>
+        <name>
+          <family value="RochatFirstPre"/>
+          <given value="Dr"/>
+          <prefix value="Dr. med."/>
+        </name>
+      </Practitioner>
+    </resource>
+  </entry>
+  <entry>
+    <fullUrl value="urn:uuid:b4c7be81-e974-4215-81b4-0990731a0c64"/>
+    <resource>
+      <PractitionerRole>
+        <practitioner>
+          <reference value="urn:uuid:31be8548-50a3-4b76-b089-1fa78858f395"/>
+        </practitioner>
+      </PractitionerRole>
+    </resource>
+  </entry>
+  <entry>
+    <fullUrl value="urn:uuid:31be8548-50a3-4b76-b089-1fa78858f395"/>
+    <resource>
+      <Practitioner>
+        <identifier>
+          <system value="urn:oid:2.51.1.3"/>
+          <value value="7601000201041"/>
+        </identifier>
+        <name>
+          <family value="RochatSecondPre"/>
+          <given value="Dr"/>
+          <prefix value="Dr. med."/>
+        </name>
+      </Practitioner>
+    </resource>
+  </entry>
+  <entry>
+    <fullUrl value="urn:uuid:72c9ac00-3d65-472f-b68d-73821540e16a"/>
+    <resource>
+      <MedicationDispense>
+        <contained>
+          <Medication>
+            <id value="med"/>
+            <code>
+              <coding>
+                <system value="urn:oid:2.51.1.1"/>
+                <code value="7680521101306"/>
+                <display value="BELOC ZOK Ret Tabl 50 mg 30 Stk"/>
+              </coding>
+              <text value="BELOC ZOK Ret Tabl 50 mg"/>
+            </code>
+            <form>
+              <coding>
+                <system value="urn:oid:0.4.0.127.0.16.1.1.2.1"/>
+                <code value="10219000"/>
+                <display value="Tablet"/>
+              </coding>
+            </form>
+            <amount>
+              <numerator>
+                <value value="30"/>
+              </numerator>
+              <denominator>
+                <value value="1"/>
+                <unit value="Package"/>
+                <system value="http://unitsofmeasure.org"/>
+                <code value="{Package}"/>
+              </denominator>
+            </amount>
+            <ingredient>
+              <itemCodeableConcept>
+                <coding>
+                  <system value="http://snomed.info/sct"/>
+                  <code value="372826007"/>
+                  <display value="Metoprolol (substance)"/>
+                </coding>
+                <text value="Metoprolol"/>
+              </itemCodeableConcept>
+              <strength>
+                <numerator>
+                  <value value="50"/>
+                  <unit value="milligram"/>
+                  <system value="http://unitsofmeasure.org"/>
+                  <code value="mg"/>
+                </numerator>
+                <denominator>
+                  <value value="1"/>
+                  <unit value="Tablet (unit of presentation)"/>
+                  <system value="http://snomed.info/sct"/>
+                  <code value="732936001"/>
+                </denominator>
+              </strength>
+            </ingredient>
+          </Medication>
+        </contained>
+        <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
+          <valueUrl value="#dis.1"/>
+        </extension>
+        <extension url="http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-documentauthor">
+          <valueReference>
+            <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-time">
+              <valueDateTime value="2019-02-12T11:00:00+01:00"/>
+            </extension>
+            <reference value="urn:uuid:0d4ed383-f9f6-4bd4-894b-e8adfe61b018"/>
+          </valueReference>
+        </extension>
+        <extension url="http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-treatmentplan">
+          <extension url="id">
+            <valueIdentifier>
+              <system value="urn:ietf:rfc:3986"/>
+              <value value="urn:uuid:17931678-20b4-11e6-b67b-9e71128cca77"/>
+            </valueIdentifier>
+          </extension>
+          <extension url="externalDocumentId">
+            <valueIdentifier>
+              <system value="urn:ietf:rfc:3986"/>
+              <value value="urn:uuid:17931678-20b4-11e6-b67b-9e71128cca77"/>
+            </valueIdentifier>
+          </extension>
+        </extension>
+        <identifier>
+          <system value="urn:ietf:rfc:3986"/>
+          <value value="urn:uuid:d8143fea-4778-11e6-beb8-9e71128cae77"/>
+        </identifier>
+        <status value="completed"/>
+        <medicationReference>
+          <reference value="#med"/>
+        </medicationReference>
+        <subject>
+          <reference value="urn:uuid:e83c2478-fbab-4f62-afc1-bf71c706c0fe"/>
+        </subject>
+        <performer>
+          <actor>
+            <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-time">
+              <valueDateTime value="2019-02-12T11:00:00+01:00"/>
+            </extension>
+            <reference value="urn:uuid:5c7565ab-325a-409e-bbe9-b43096df1d08"/>
+          </actor>
+        </performer>
+        <quantity>
+          <value value="1"/>
+        </quantity>
+        <dosageInstruction>
+          <sequence value="1"/>
+          <timing>
+            <repeat>
+              <boundsPeriod>
+                <start value="2012-02-04"/>
+              </boundsPeriod>
+              <when value="ACM"/>
+            </repeat>
+          </timing>
+          <route>
+            <coding>
+              <system value="urn:oid:0.4.0.127.0.16.1.1.2.1"/>
+              <code value="20053000"/>
+              <display value="Oral use"/>
+            </coding>
+          </route>
+          <doseAndRate>
+            <doseQuantity>
+              <value value="1"/>
+              <unit value="Tablet (unit of presentation)"/>
+              <system value="http://snomed.info/sct"/>
+              <code value="732936001"/>
+            </doseQuantity>
+          </doseAndRate>
+        </dosageInstruction>
+        <dosageInstruction>
+          <sequence value="2"/>
+          <timing>
+            <repeat>
+              <boundsPeriod>
+                <start value="2012-02-04"/>
+              </boundsPeriod>
+              <when value="ACV"/>
+            </repeat>
+          </timing>
+          <route>
+            <coding>
+              <system value="urn:oid:0.4.0.127.0.16.1.1.2.1"/>
+              <code value="20053000"/>
+              <display value="Oral use"/>
+            </coding>
+          </route>
+          <doseAndRate>
+            <doseQuantity>
+              <value value="0.5"/>
+              <unit value="Tablet (unit of presentation)"/>
+              <system value="http://snomed.info/sct"/>
+              <code value="732936001"/>
+            </doseQuantity>
+          </doseAndRate>
+        </dosageInstruction>
+      </MedicationDispense>
+    </resource>
+  </entry>
+  <entry>
+    <fullUrl value="urn:uuid:5c7565ab-325a-409e-bbe9-b43096df1d08"/>
+    <resource>
+      <PractitionerRole>
+        <practitioner>
+          <reference value="urn:uuid:643b6182-d02e-413c-a2bd-7204ce068a3f"/>
+        </practitioner>
+      </PractitionerRole>
+    </resource>
+  </entry>
+  <entry>
+    <fullUrl value="urn:uuid:643b6182-d02e-413c-a2bd-7204ce068a3f"/>
+    <resource>
+      <Practitioner>
+        <identifier>
+          <system value="urn:oid:2.51.1.3"/>
+          <value value="7601000201041"/>
+        </identifier>
+        <name>
+          <family value="RochatFirstDis"/>
+          <given value="Dr"/>
+          <prefix value="Dr. med."/>
+        </name>
+      </Practitioner>
+    </resource>
+  </entry>
+  <entry>
+    <fullUrl value="urn:uuid:0d4ed383-f9f6-4bd4-894b-e8adfe61b018"/>
+    <resource>
+      <PractitionerRole>
+        <practitioner>
+          <reference value="urn:uuid:0921d2b1-2c66-4dc7-b4bd-55f7f3a5140a"/>
+        </practitioner>
+      </PractitionerRole>
+    </resource>
+  </entry>
+  <entry>
+    <fullUrl value="urn:uuid:0921d2b1-2c66-4dc7-b4bd-55f7f3a5140a"/>
+    <resource>
+      <Practitioner>
+        <identifier>
+          <system value="urn:oid:2.51.1.3"/>
+          <value value="7601000201041"/>
+        </identifier>
+        <name>
+          <family value="RochatSecondDis"/>
+          <given value="Dr"/>
+          <prefix value="Dr. med."/>
+        </name>
+      </Practitioner>
+    </resource>
+  </entry>
+  <entry>
+    <fullUrl value="urn:uuid:d7da19b2-88c6-493a-b2ec-dc5191e7e813"/>
+    <resource>
+      <Observation>
+        <extension url="http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-documentauthor">
+          <valueReference>
+            <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-time">
+              <valueDateTime value="2019-02-12T11:00:00+01:00"/>
+            </extension>
+            <reference value="urn:uuid:90c4586f-8fb9-4014-8150-648c3e921006"/>
+          </valueReference>
+        </extension>
+        <extension url="http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-treatmentplan">
+          <extension url="id">
+            <valueIdentifier>
+              <system value="urn:ietf:rfc:3986"/>
+              <value value="urn:uuid:c9f758a1-296c-4710-84d4-e181db8c7478"/>
+            </valueIdentifier>
+          </extension>
+          <extension url="externalDocumentId">
+            <valueIdentifier>
+              <system value="urn:ietf:rfc:3986"/>
+              <value value="urn:uuid:c9f758a1-296c-4710-84d4-e181db8c7478"/>
+            </valueIdentifier>
+          </extension>
+        </extension>
+        <identifier>
+          <system value="urn:ietf:rfc:3986"/>
+          <value value="urn:uuid:8ed02d0a-2971-11e6-b67b-9e71128cae77"/>
+        </identifier>
+        <status value="final"/>
+        <code>
+          <coding>
+            <system value="urn:oid:1.3.6.1.4.1.19376.1.9.2.1"/>
+            <code value="CANCEL"/>
+          </coding>
+        </code>
+        <subject>
+          <reference value="urn:uuid:e83c2478-fbab-4f62-afc1-bf71c706c0fe"/>
+        </subject>
+        <effectiveDateTime value="2012-02-04T14:00:00+01:00"/>
+        <performer>
+          <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-time">
+            <valueDateTime value="2019-02-12T11:00:00+01:00"/>
+          </extension>
+          <reference value="urn:uuid:7d6e6423-80cd-4a70-bc4d-3b0bbf3c9165"/>
+        </performer>
+        <note>
+          <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
+            <valueUrl value="#padv.1.note"/>
+          </extension>
+          <text value="Abgesetzt aufgrund UAW trockener Husten"/>
+        </note>
+      </Observation>
+    </resource>
+  </entry>
+  <entry>
+    <fullUrl value="urn:uuid:7d6e6423-80cd-4a70-bc4d-3b0bbf3c9165"/>
+    <resource>
+      <PractitionerRole>
+        <practitioner>
+          <reference value="urn:uuid:6cb733df-14f8-4ffb-b905-1ce369f69aaf"/>
+        </practitioner>
+      </PractitionerRole>
+    </resource>
+  </entry>
+  <entry>
+    <fullUrl value="urn:uuid:6cb733df-14f8-4ffb-b905-1ce369f69aaf"/>
+    <resource>
+      <Practitioner>
+        <identifier>
+          <system value="urn:oid:2.51.1.3"/>
+          <value value="7601000201041"/>
+        </identifier>
+        <name>
+          <family value="RochatFirstPadv"/>
+          <given value="Dr"/>
+          <prefix value="Dr. med."/>
+        </name>
+      </Practitioner>
+    </resource>
+  </entry>
+  <entry>
+    <fullUrl value="urn:uuid:90c4586f-8fb9-4014-8150-648c3e921006"/>
+    <resource>
+      <PractitionerRole>
+        <practitioner>
+          <reference value="urn:uuid:cef4bfe2-febc-4a65-9b42-233268967e75"/>
+        </practitioner>
+      </PractitionerRole>
+    </resource>
+  </entry>
+  <entry>
+    <fullUrl value="urn:uuid:cef4bfe2-febc-4a65-9b42-233268967e75"/>
+    <resource>
+      <Practitioner>
+        <identifier>
+          <system value="urn:oid:2.51.1.3"/>
+          <value value="7601000201041"/>
+        </identifier>
+        <name>
+          <family value="RochatSecPadv"/>
+          <given value="Dr"/>
+          <prefix value="Dr. med."/>
+        </name>
+      </Practitioner>
+    </resource>
+  </entry>
+</Bundle>

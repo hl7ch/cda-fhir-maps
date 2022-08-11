@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Bundle 
-  xmlns="http://hl7.org/fhir">
+<Bundle xmlns="http://hl7.org/fhir">
   <identifier>
     <system value="urn:ietf:rfc:3986"/>
     <value value="urn:uuid:6b6ed376-a7da-44cb-92d1-e75ce1ae73b0"/>
@@ -43,10 +42,7 @@
           <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-time">
             <valueDateTime value="2012-02-04T14:05:00+01:00"/>
           </extension>
-          <reference value="urn:uuid:734c2b9e-3e55-4648-a3c6-917314b92a44"/>
-        </author>
-        <author>
-          <reference value="urn:uuid:01fc7d81-0fae-4edc-8190-6a807ea1703f"/>
+          <reference value="urn:uuid:c3691484-2226-42bd-9f22-87072c099b6d"/>
         </author>
         <title value="Medikationsplan"/>
         <confidentiality value="N">
@@ -78,10 +74,15 @@
               <display value="History of medication use"/>
             </coding>
           </code>
+          <author>
+            <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-time">
+              <valueDateTime value="2021-08-04T14:05:00+01:00"/>
+            </extension>
+            <reference value="urn:uuid:c3691484-2226-42bd-9f22-87072c099b6d"/>
+          </author>
           <text>
             <status value="generated"/>
-            <div 
-              xmlns="http://www.w3.org/1999/xhtml">
+            <div xmlns="http://www.w3.org/1999/xhtml">
               <span id="refpdf">see pdf</span>
             </div>
           </text>
@@ -103,8 +104,7 @@
           </code>
           <text>
             <status value="generated"/>
-            <div 
-              xmlns="http://www.w3.org/1999/xhtml">
+            <div xmlns="http://www.w3.org/1999/xhtml">
               <span id="co1">
                   Kommentar zu Medication Treatment
               </span>
@@ -122,8 +122,7 @@
           </code>
           <text>
             <status value="generated"/>
-            <div 
-              xmlns="http://www.w3.org/1999/xhtml">Representation of the original view:
+            <div xmlns="http://www.w3.org/1999/xhtml">Representation of the original view:
             
             
               <img src="pdf1"/>
@@ -166,6 +165,19 @@
           <country value="CH"/>
         </address>
       </Patient>
+    </resource>
+  </entry>
+  <entry>
+    <fullUrl value="urn:uuid:c3691484-2226-42bd-9f22-87072c099b6d"/>
+    <resource>
+      <PractitionerRole>
+        <practitioner>
+          <reference value="urn:uuid:734c2b9e-3e55-4648-a3c6-917314b92a44"/>
+        </practitioner>
+        <organization>
+          <reference value="urn:uuid:01fc7d81-0fae-4edc-8190-6a807ea1703f"/>
+        </organization>
+      </PractitionerRole>
     </resource>
   </entry>
   <entry>

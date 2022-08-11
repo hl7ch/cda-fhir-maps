@@ -19,6 +19,7 @@ uses "http://hl7.org/fhir/cda/StructureDefinition/Section" alias CdaSection as t
 uses "http://hl7.org/fhir/StructureDefinition/Bundle" alias Bundle as source
 uses "http://hl7.org/fhir/StructureDefinition/Composition" alias Composition as source
 uses "http://hl7.org/fhir/StructureDefinition/Practitioner" alias Practitioner as source
+uses "http://hl7.org/fhir/StructureDefinition/PractitionerRole" alias PractitionerRole as source
 uses "http://hl7.org/fhir/StructureDefinition/Patient" alias Patient as source
 uses "http://hl7.org/fhir/StructureDefinition/Organization" alias Organization as source
 uses "http://hl7.org/fhir/StructureDefinition/BackboneElement" alias BackboneElement as source
@@ -60,6 +61,14 @@ group SectionCdaSection(source bundle : Bundle, source section: BackboneElement,
   section.code as code then {
     code.coding as coding where $this.system='http://loinc.org' -> cdasection.code as cdacode then CodingCE(coding, cdacode) "codingsection";
   } "code"; 
+  section.author -> cdasection.author as author then {
+    bundle.entry as entry then {
+      entry.fullUrl where ($this in %section.author.reference) and $this.startsWith('urn:uuid')  then {
+        entry.resource: PractitionerRole as practitionerRole then PractitionerAuthorRole(bundle, section, practitionerRole, author) "authorPractitionerRole";
+      } "uuid";
+      entry.resource as practitionerRole where ('PractitionerRole'+'/'+$this.id) in %section.author.reference then PractitionerAuthorRole(bundle, section, practitionerRole, author) "author";
+    } "entry";
+  } "author";
   section.title as title -> cdasection.title as cdatitle, cdatitle.data = title "title";
   section.text as text then {
     text.div as div -> cdasection.text = div "div";
@@ -96,8 +105,10 @@ group CompositionClinicalDocument(source bundle : Bundle, source composition : C
 
     entry.fullUrl where ($this in %composition.author.reference) and $this.startsWith('urn:uuid')  then {
       entry.resource: Practitioner as practitioner then PractitionerAuthor(bundle, composition, practitioner, author) "author";
+      entry.resource: PractitionerRole as practitionerRole then PractitionerAuthorRole(bundle, composition, practitionerRole, author) "authorPractitionerRole";
     } "uuid";
     entry.resource as practitioner where ('Practitioner'+'/'+$this.id) in %composition.author.reference then PractitionerAuthor(bundle, composition, practitioner, author) "author";
+    entry.resource as practitionerRole where ('PractitionerRole'+'/'+$this.id) in %composition.author.reference then PractitionerAuthorRole(bundle, composition, practitionerRole, author) "author";
 
     entry.fullUrl where ($this in %composition.attester.party.reference) and $this.startsWith('urn:uuid')  then {
       entry.resource: Practitioner as practitioner -> cda.legalAuthenticator as legalAuthenticator then PractitionerLegalAuthenticator(bundle, composition, practitioner, legalAuthenticator) "legalAuthenticator";
@@ -170,6 +181,36 @@ group PractitionerAuthor(source bundle : Bundle, source composition : Compositio
       } "patient";
   } "assignedAuthor";
 } 
+
+group PractitionerAuthorRolePractitioner(source bundle : Bundle, source composition, source practitionerRole : PractitionerRole, source src : Practitioner, target tgt : Author) {
+  composition.author as srcauthor then{
+    srcauthor.extension as extensionTime where $this.url='http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-time' then {
+        extensionTime.valueDateTime as valueDateTime -> tgt.time as time then DateTimeTS(valueDateTime,time) "DateTime";
+    } "extensionTime";
+  } "srcAuthor";  
+  bundle.timestamp as valueDateTime where composition.author.extension.where(url='http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-time').empty() -> tgt.time as time then DateTimeTS(valueDateTime,time) "DateTimeBundle";  
+  src -> tgt.assignedAuthor as assignedAuthor then {
+      src.identifier as identifier -> assignedAuthor.id as id then IdentifierII(identifier, id) "id";
+      src.telecom first as telecom -> assignedAuthor.telecom as tel then ContactPointTEL(telecom, tel) "telecom";
+      src.address as address -> assignedAuthor.addr as ad then AddressAD(address, ad) "address";
+      src.name as name -> assignedAuthor.assignedPerson as assignedPerson, assignedPerson.name as en then HumanNameEN(name, en) "name";
+      bundle.entry as entry then {
+        entry.fullUrl where ($this in %practitionerRole.organization.reference) and $this.startsWith('urn:uuid')  then {
+          entry.resource: Organization as organization -> assignedAuthor.representedOrganization as cdaorganization then Organization2CdaOrganization(organization, cdaorganization) "organization";
+        } "uuid";
+        entry.resource as organization where ('Organization'+'/'+$this.id) in %practitionerRole.organization.reference -> assignedAuthor.representedOrganization as cdaorganization then Organization2CdaOrganization(organization, cdaorganization) "organization";
+      } "patient";
+  } "assignedAuthor";
+}
+
+group PractitionerAuthorRole(source bundle : Bundle, source composition : Composition, source src : PractitionerRole, target tgt : Author) {
+  bundle.entry as entry then {
+      entry.fullUrl where ($this in %src.practitioner.reference) and $this.startsWith('urn:uuid')  then {
+        entry.resource: Practitioner as practitioner then PractitionerAuthorRolePractitioner(bundle, composition, src, practitioner, tgt) "author";
+      } "uuidp";
+      entry.resource as practitioner where ('Practitioner'+'/'+$this.id) in %src.practitioner.reference then PractitionerAuthorRolePractitioner(bundle, composition, src, practitioner, tgt) "author";
+  } "enry";
+}
 
 group OrganizationCustodian(source src : Organization, target tgt : Custodian) {
   src -> tgt.assignedCustodian as assignedCustodian then {

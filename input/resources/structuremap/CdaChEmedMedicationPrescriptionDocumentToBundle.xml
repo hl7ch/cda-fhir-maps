@@ -1,59 +1,63 @@
 <StructureMap xmlns="http://hl7.org/fhir">
-   <id value="CdaChEmedMedicationPrescriptionDocumentToBundle"></id>
+   <id value="CdaChEmedMedicationPrescriptionDocumentToBundle"/>
+   <meta>
+      <versionId value="4"/>
+      <lastUpdated value="2022-08-11T14:46:08.127+00:00"/>
+   </meta>
    <text>
-      <status value="generated"></status>
+      <status value="generated"/>
       <div xmlns="http://www.w3.org/1999/xhtml">
-         <pre>map "http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaChEmedMedicationPrescriptionDocumentToBundle" = "CdaChEmedMedicationPrescriptionDocumentToBundle"
+         <pre>map &quot;http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaChEmedMedicationPrescriptionDocumentToBundle&quot; = &quot;CdaChEmedMedicationPrescriptionDocumentToBundle&quot;
 
 // Medication Prescription document,	2.16.756.5.30.1.1.10.1.4
 // 2020-01-22 Michaela Ziegler, copyright ahdis ag, Apache License
 // CDA-CH-EMED:  https://art-decor.org/art-decor/decor-project--cdachemed-
 // FHIR CH-EMED: http://fhir.ch/ig/ch-emed/index.html, http://build.fhir.org/ig/hl7ch/ch-emed/index.html
 
-uses "http://hl7.org/fhir/cda/StructureDefinition/ClinicalDocument" alias ClinicalDocument as source
-uses "http://hl7.org/fhir/cda/StructureDefinition/AssignedAuthor" alias AssignedAuthor as source
-uses "http://hl7.org/fhir/cda/StructureDefinition/AssignedEntity" alias AssignedEntity as source
-uses "http://hl7.org/fhir/cda/StructureDefinition/Author" alias Author as source
-uses "http://hl7.org/fhir/cda/StructureDefinition/CustodianOrganization" alias CustodianOrganization as source
-uses "http://hl7.org/fhir/cda/StructureDefinition/IVL_TS" alias IVL_TS as source
-uses "http://hl7.org/fhir/cda/StructureDefinition/EIVL_TS" alias EIVL_TS as source
-uses "http://hl7.org/fhir/cda/StructureDefinition/Observation" alias Observation as source
-uses "http://hl7.org/fhir/cda/StructureDefinition/PatientRole" alias PatientRole as source
-uses "http://hl7.org/fhir/cda/StructureDefinition/RecordTarget" alias RecordTarget as source
-uses "http://hl7.org/fhir/cda/StructureDefinition/Section" alias Section as source
-uses "http://hl7.org/fhir/cda/StructureDefinition/SubstanceAdministration" alias SubstanceAdministration as source
-uses "http://hl7.org/fhir/cda/StructureDefinition/SXPR_TS" alias SXPR_TS as source
-uses "http://hl7.org/fhir/StructureDefinition/Bundle" alias Bundle as target
-uses "http://hl7.org/fhir/StructureDefinition/Composition" alias Composition as produced
-uses "http://hl7.org/fhir/StructureDefinition/Patient" alias Patient as produced
-uses "http://hl7.org/fhir/StructureDefinition/Practitioner" alias Practitioner as produced
-uses "http://hl7.org/fhir/StructureDefinition/Organization" alias Organization as produced
-uses "http://hl7.org/fhir/StructureDefinition/MedicationRequest" alias MedicationRequest as produced
-uses "http://hl7.org/fhir/StructureDefinition/Dosage" alias Dosage as produced
+uses &quot;http://hl7.org/fhir/cda/StructureDefinition/ClinicalDocument&quot; alias ClinicalDocument as source
+uses &quot;http://hl7.org/fhir/cda/StructureDefinition/AssignedAuthor&quot; alias AssignedAuthor as source
+uses &quot;http://hl7.org/fhir/cda/StructureDefinition/AssignedEntity&quot; alias AssignedEntity as source
+uses &quot;http://hl7.org/fhir/cda/StructureDefinition/Author&quot; alias Author as source
+uses &quot;http://hl7.org/fhir/cda/StructureDefinition/CustodianOrganization&quot; alias CustodianOrganization as source
+uses &quot;http://hl7.org/fhir/cda/StructureDefinition/IVL_TS&quot; alias IVL_TS as source
+uses &quot;http://hl7.org/fhir/cda/StructureDefinition/EIVL_TS&quot; alias EIVL_TS as source
+uses &quot;http://hl7.org/fhir/cda/StructureDefinition/Observation&quot; alias Observation as source
+uses &quot;http://hl7.org/fhir/cda/StructureDefinition/PatientRole&quot; alias PatientRole as source
+uses &quot;http://hl7.org/fhir/cda/StructureDefinition/RecordTarget&quot; alias RecordTarget as source
+uses &quot;http://hl7.org/fhir/cda/StructureDefinition/Section&quot; alias Section as source
+uses &quot;http://hl7.org/fhir/cda/StructureDefinition/SubstanceAdministration&quot; alias SubstanceAdministration as source
+uses &quot;http://hl7.org/fhir/cda/StructureDefinition/SXPR_TS&quot; alias SXPR_TS as source
+uses &quot;http://hl7.org/fhir/StructureDefinition/Bundle&quot; alias Bundle as target
+uses &quot;http://hl7.org/fhir/StructureDefinition/Composition&quot; alias Composition as produced
+uses &quot;http://hl7.org/fhir/StructureDefinition/Patient&quot; alias Patient as produced
+uses &quot;http://hl7.org/fhir/StructureDefinition/Practitioner&quot; alias Practitioner as produced
+uses &quot;http://hl7.org/fhir/StructureDefinition/Organization&quot; alias Organization as produced
+uses &quot;http://hl7.org/fhir/StructureDefinition/MedicationRequest&quot; alias MedicationRequest as produced
+uses &quot;http://hl7.org/fhir/StructureDefinition/Dosage&quot; alias Dosage as produced
 
-imports "http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaToFhirTypes"
-imports "http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaToBundle"
-imports "http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaChToBundle"
-imports "http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaChEmedToBundle"
+imports &quot;http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaToFhirTypes&quot;
+imports &quot;http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaToBundle&quot;
+imports &quot;http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaChToBundle&quot;
+imports &quot;http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaChEmedToBundle&quot;
 
 // source: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.1.4
 // target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-composition-medicationprescription.html
 group CdaChEmedMedicationPrescriptionDocumentToBundle(source cda : ClinicalDocument, target bundle : Bundle) {
-  cda -&gt;  bundle.entry as e,  e.resource = create('Composition') as composition,  composition.id = uuid() as uuid,  e.fullUrl = append('urn:uuid:', uuid),  bundle.entry as e2,  e2.resource = create('Patient') as patient,  patient.id = uuid() as uuid2,  e2.fullUrl = append('urn:uuid:', uuid2) then ClinicalDocumentChEmedMedicationPrescriptionDocumentToBundle(cda, patient, composition, bundle) "ClinicalDocumentToBody";
+  cda -&gt;  bundle.entry as e,  e.resource = create(&apos;Composition&apos;) as composition,  composition.id = uuid() as uuid,  e.fullUrl = append(&apos;urn:uuid:&apos;, uuid),  bundle.entry as e2,  e2.resource = create(&apos;Patient&apos;) as patient,  patient.id = uuid() as uuid2,  e2.fullUrl = append(&apos;urn:uuid:&apos;, uuid2) then ClinicalDocumentChEmedMedicationPrescriptionDocumentToBundle(cda, patient, composition, bundle) &quot;ClinicalDocumentToBody&quot;;
 }
 
 // source: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.1.4
 // target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-composition-medicationprescription.html
 group ClinicalDocumentChEmedMedicationPrescriptionDocumentToBundle(source cda : ClinicalDocument, target patient : Patient, target composition : Composition, target bundle : Bundle) extends ClinicalDocumentToBundle {
-  cda then ClinicalDocumentCompositionCh(cda, composition, patient, bundle) "composition";
+  cda then ClinicalDocumentCompositionCh(cda, composition, patient, bundle) &quot;composition&quot;;
   cda.component as component then {
     component.structuredBody as body then {
       body.component as component then {
-        component.section as srcSection where (templateId.where(root = '2.16.756.5.30.1.1.10.3.10')) -&gt; composition.section as tgtSection then SectionPrescriptionSectionContentModule(cda, srcSection, patient, tgtSection, bundle);
-        component.section as srcSection where (templateId.where(root = '2.16.756.5.30.1.1.10.3.2')) -&gt; composition.section as tgtSection then ClinicalDocumentSection(cda, srcSection, patient, tgtSection, bundle);
-        component.section as srcSection where (templateId.where(root = '2.16.756.5.30.1.1.10.3.45')) -&gt; composition.section as tgtSection then SectionOriginalRepresentation(cda, srcSection, patient, tgtSection, bundle);
+        component.section as srcSection where (templateId.where(root = &apos;2.16.756.5.30.1.1.10.3.10&apos;)) -&gt; composition.section as tgtSection then SectionPrescriptionSectionContentModule(cda, srcSection, patient, tgtSection, bundle);
+        component.section as srcSection where (templateId.where(root = &apos;2.16.756.5.30.1.1.10.3.2&apos;)) -&gt; composition.section as tgtSection then ClinicalDocumentSection(cda, srcSection, patient, tgtSection, bundle);
+        component.section as srcSection where (templateId.where(root = &apos;2.16.756.5.30.1.1.10.3.45&apos;)) -&gt; composition.section as tgtSection then SectionOriginalRepresentation(cda, srcSection, patient, tgtSection, bundle);
       };
-    } "body";
+    } &quot;body&quot;;
   };
 }
 
@@ -61,350 +65,437 @@ group ClinicalDocumentChEmedMedicationPrescriptionDocumentToBundle(source cda : 
 // source: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.3.10
 // target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-composition-medicationprescription.html
 group SectionPrescriptionSectionContentModule(source cda : ClinicalDocument, source src : Section, source patient : Patient, target tgt, target bundle : Bundle) extends ClinicalDocumentSection {
-  src.entry as cdaEntry where (substanceAdministration.templateId.where(root = '2.16.756.5.30.1.1.10.4.43')) -&gt;  bundle.entry as e,  e.resource = create('MedicationRequest') as medicationrequest,  medicationrequest.id = uuid() as uuid,  e.fullUrl = append('urn:uuid:', uuid),  tgt.entry = create('Reference') as reference,  reference.reference = append('urn:uuid:', uuid) then {
-    cdaEntry.substanceAdministration as substanceAdministration then PrescriptionItemEntryContentModule(src, substanceAdministration, patient, medicationrequest);
-  } "PrescriptionSectionContentModule";
+  src.entry as cdaEntry where (substanceAdministration.templateId.where(root = &apos;2.16.756.5.30.1.1.10.4.43&apos;)) -&gt;  bundle.entry as e,  e.resource = create(&apos;MedicationRequest&apos;) as medicationrequest,  medicationrequest.id = uuid() as uuid,  e.fullUrl = append(&apos;urn:uuid:&apos;, uuid),  tgt.entry = create(&apos;Reference&apos;) as reference,  reference.reference = append(&apos;urn:uuid:&apos;, uuid) then {
+    cdaEntry.substanceAdministration as substanceAdministration then PrescriptionItemEntryContentModule(src, substanceAdministration, patient, medicationrequest, bundle);
+  } &quot;PrescriptionSectionContentModule&quot;;
 }
 
 </pre>
       </div>
    </text>
-   <url value="http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaChEmedMedicationPrescriptionDocumentToBundle"></url>
-   <name value="CdaChEmedMedicationPrescriptionDocumentToBundle"></name>
-   <description value="Medication Prescription document,	2.16.756.5.30.1.1.10.1.4
-2020-01-22 Michaela Ziegler, copyright ahdis ag, Apache License
-CDA-CH-EMED:  https://art-decor.org/art-decor/decor-project--cdachemed-
-FHIR CH-EMED: http://fhir.ch/ig/ch-emed/index.html, http://build.fhir.org/ig/hl7ch/ch-emed/index.html"></description>
+   <url value="http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaChEmedMedicationPrescriptionDocumentToBundle"/>
+   <name value="CdaChEmedMedicationPrescriptionDocumentToBundle"/>
+   <description value="Medication Prescription document,&#x9;2.16.756.5.30.1.1.10.1.4&#xd;&#xa;2020-01-22 Michaela Ziegler, copyright ahdis ag, Apache License&#xd;&#xa;CDA-CH-EMED:  https://art-decor.org/art-decor/decor-project--cdachemed-&#xd;&#xa;FHIR CH-EMED: http://fhir.ch/ig/ch-emed/index.html, http://build.fhir.org/ig/hl7ch/ch-emed/index.html"/>
    <structure>
-      <url value="http://hl7.org/fhir/cda/StructureDefinition/ClinicalDocument"></url>
-      <mode value="source"></mode>
-      <alias value="ClinicalDocument"></alias>
+      <url value="http://hl7.org/fhir/cda/StructureDefinition/ClinicalDocument"/>
+      <mode value="source"/>
+      <alias value="ClinicalDocument"/>
    </structure>
    <structure>
-      <url value="http://hl7.org/fhir/cda/StructureDefinition/AssignedAuthor"></url>
-      <mode value="source"></mode>
-      <alias value="AssignedAuthor"></alias>
+      <url value="http://hl7.org/fhir/cda/StructureDefinition/AssignedAuthor"/>
+      <mode value="source"/>
+      <alias value="AssignedAuthor"/>
    </structure>
    <structure>
-      <url value="http://hl7.org/fhir/cda/StructureDefinition/AssignedEntity"></url>
-      <mode value="source"></mode>
-      <alias value="AssignedEntity"></alias>
+      <url value="http://hl7.org/fhir/cda/StructureDefinition/AssignedEntity"/>
+      <mode value="source"/>
+      <alias value="AssignedEntity"/>
    </structure>
    <structure>
-      <url value="http://hl7.org/fhir/cda/StructureDefinition/Author"></url>
-      <mode value="source"></mode>
-      <alias value="Author"></alias>
+      <url value="http://hl7.org/fhir/cda/StructureDefinition/Author"/>
+      <mode value="source"/>
+      <alias value="Author"/>
    </structure>
    <structure>
-      <url value="http://hl7.org/fhir/cda/StructureDefinition/CustodianOrganization"></url>
-      <mode value="source"></mode>
-      <alias value="CustodianOrganization"></alias>
+      <url value="http://hl7.org/fhir/cda/StructureDefinition/CustodianOrganization"/>
+      <mode value="source"/>
+      <alias value="CustodianOrganization"/>
    </structure>
    <structure>
-      <url value="http://hl7.org/fhir/cda/StructureDefinition/IVL_TS"></url>
-      <mode value="source"></mode>
-      <alias value="IVL_TS"></alias>
+      <url value="http://hl7.org/fhir/cda/StructureDefinition/IVL_TS"/>
+      <mode value="source"/>
+      <alias value="IVL_TS"/>
    </structure>
    <structure>
-      <url value="http://hl7.org/fhir/cda/StructureDefinition/EIVL_TS"></url>
-      <mode value="source"></mode>
-      <alias value="EIVL_TS"></alias>
+      <url value="http://hl7.org/fhir/cda/StructureDefinition/EIVL_TS"/>
+      <mode value="source"/>
+      <alias value="EIVL_TS"/>
    </structure>
    <structure>
-      <url value="http://hl7.org/fhir/cda/StructureDefinition/Observation"></url>
-      <mode value="source"></mode>
-      <alias value="Observation"></alias>
+      <url value="http://hl7.org/fhir/cda/StructureDefinition/Observation"/>
+      <mode value="source"/>
+      <alias value="Observation"/>
    </structure>
    <structure>
-      <url value="http://hl7.org/fhir/cda/StructureDefinition/PatientRole"></url>
-      <mode value="source"></mode>
-      <alias value="PatientRole"></alias>
+      <url value="http://hl7.org/fhir/cda/StructureDefinition/PatientRole"/>
+      <mode value="source"/>
+      <alias value="PatientRole"/>
    </structure>
    <structure>
-      <url value="http://hl7.org/fhir/cda/StructureDefinition/RecordTarget"></url>
-      <mode value="source"></mode>
-      <alias value="RecordTarget"></alias>
+      <url value="http://hl7.org/fhir/cda/StructureDefinition/RecordTarget"/>
+      <mode value="source"/>
+      <alias value="RecordTarget"/>
    </structure>
    <structure>
-      <url value="http://hl7.org/fhir/cda/StructureDefinition/Section"></url>
-      <mode value="source"></mode>
-      <alias value="Section"></alias>
+      <url value="http://hl7.org/fhir/cda/StructureDefinition/Section"/>
+      <mode value="source"/>
+      <alias value="Section"/>
    </structure>
    <structure>
-      <url value="http://hl7.org/fhir/cda/StructureDefinition/SubstanceAdministration"></url>
-      <mode value="source"></mode>
-      <alias value="SubstanceAdministration"></alias>
+      <url value="http://hl7.org/fhir/cda/StructureDefinition/SubstanceAdministration"/>
+      <mode value="source"/>
+      <alias value="SubstanceAdministration"/>
    </structure>
    <structure>
-      <url value="http://hl7.org/fhir/cda/StructureDefinition/SXPR_TS"></url>
-      <mode value="source"></mode>
-      <alias value="SXPR_TS"></alias>
+      <url value="http://hl7.org/fhir/cda/StructureDefinition/SXPR_TS"/>
+      <mode value="source"/>
+      <alias value="SXPR_TS"/>
    </structure>
    <structure>
-      <url value="http://hl7.org/fhir/StructureDefinition/Bundle"></url>
-      <mode value="target"></mode>
-      <alias value="Bundle"></alias>
+      <url value="http://hl7.org/fhir/StructureDefinition/Bundle"/>
+      <mode value="target"/>
+      <alias value="Bundle"/>
    </structure>
    <structure>
-      <url value="http://hl7.org/fhir/StructureDefinition/Composition"></url>
-      <mode value="produced"></mode>
-      <alias value="Composition"></alias>
+      <url value="http://hl7.org/fhir/StructureDefinition/Composition"/>
+      <mode value="produced"/>
+      <alias value="Composition"/>
    </structure>
    <structure>
-      <url value="http://hl7.org/fhir/StructureDefinition/Patient"></url>
-      <mode value="produced"></mode>
-      <alias value="Patient"></alias>
+      <url value="http://hl7.org/fhir/StructureDefinition/Patient"/>
+      <mode value="produced"/>
+      <alias value="Patient"/>
    </structure>
    <structure>
-      <url value="http://hl7.org/fhir/StructureDefinition/Practitioner"></url>
-      <mode value="produced"></mode>
-      <alias value="Practitioner"></alias>
+      <url value="http://hl7.org/fhir/StructureDefinition/Practitioner"/>
+      <mode value="produced"/>
+      <alias value="Practitioner"/>
    </structure>
    <structure>
-      <url value="http://hl7.org/fhir/StructureDefinition/Organization"></url>
-      <mode value="produced"></mode>
-      <alias value="Organization"></alias>
+      <url value="http://hl7.org/fhir/StructureDefinition/Organization"/>
+      <mode value="produced"/>
+      <alias value="Organization"/>
    </structure>
    <structure>
-      <url value="http://hl7.org/fhir/StructureDefinition/MedicationRequest"></url>
-      <mode value="produced"></mode>
-      <alias value="MedicationRequest"></alias>
+      <url value="http://hl7.org/fhir/StructureDefinition/MedicationRequest"/>
+      <mode value="produced"/>
+      <alias value="MedicationRequest"/>
    </structure>
    <structure>
-      <url value="http://hl7.org/fhir/StructureDefinition/Dosage"></url>
-      <mode value="produced"></mode>
-      <alias value="Dosage"></alias>
+      <url value="http://hl7.org/fhir/StructureDefinition/Dosage"/>
+      <mode value="produced"/>
+      <alias value="Dosage"/>
    </structure>
-   <import value="http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaToFhirTypes"></import>
-   <import value="http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaToBundle"></import>
-   <import value="http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaChToBundle"></import>
-   <import value="http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaChEmedToBundle"></import>
+   <import value="http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaToFhirTypes"/>
+   <import value="http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaToBundle"/>
+   <import value="http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaChToBundle"/>
+   <import value="http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaChEmedToBundle"/>
    <group>
-      <name value="CdaChEmedMedicationPrescriptionDocumentToBundle"></name>
-      <typeMode value="none"></typeMode>
-      <documentation value="source: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.1.4
-target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-composition-medicationprescription.html"></documentation>
+      <name value="CdaChEmedMedicationPrescriptionDocumentToBundle"/>
+      <typeMode value="none"/>
+      <documentation value="source: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.1.4&#xd;&#xa;target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-composition-medicationprescription.html"/>
       <input>
-         <name value="cda"></name>
-         <type value="ClinicalDocument"></type>
-         <mode value="source"></mode>
+         <name value="cda"/>
+         <type value="ClinicalDocument"/>
+         <mode value="source"/>
       </input>
       <input>
-         <name value="bundle"></name>
-         <type value="Bundle"></type>
-         <mode value="target"></mode>
+         <name value="bundle"/>
+         <type value="Bundle"/>
+         <mode value="target"/>
       </input>
       <rule>
-         <name value="ClinicalDocumentToBody"></name>
+         <name value="ClinicalDocumentToBody"/>
          <source>
-            <context value="cda"></context>
+            <context value="cda"/>
          </source>
          <target>
-            <context value="bundle"></context>
-            <contextType value="variable"></contextType>
-            <element value="entry"></element>
-            <variable value="e"></variable>
+            <context value="bundle"/>
+            <contextType value="variable"/>
+            <element value="entry"/>
+            <variable value="e"/>
          </target>
          <target>
-            <context value="e"></context>
-            <contextType value="variable"></contextType>
-            <element value="resource"></element>
-            <variable value="composition"></variable>
-            <transform value="create"></transform>
+            <context value="e"/>
+            <contextType value="variable"/>
+            <element value="resource"/>
+            <variable value="composition"/>
+            <transform value="create"/>
             <parameter>
-               <valueString value="Composition"></valueString>
+               <valueString value="Composition"/>
             </parameter>
          </target>
          <target>
-            <context value="composition"></context>
-            <contextType value="variable"></contextType>
-            <element value="id"></element>
-            <variable value="uuid"></variable>
-            <transform value="uuid"></transform>
+            <context value="composition"/>
+            <contextType value="variable"/>
+            <element value="id"/>
+            <variable value="uuid"/>
+            <transform value="uuid"/>
          </target>
          <target>
-            <context value="e"></context>
-            <contextType value="variable"></contextType>
-            <element value="fullUrl"></element>
-            <transform value="append"></transform>
+            <context value="e"/>
+            <contextType value="variable"/>
+            <element value="fullUrl"/>
+            <transform value="append"/>
             <parameter>
-               <valueString value="urn:uuid:"></valueString>
+               <valueString value="urn:uuid:"/>
             </parameter>
             <parameter>
-               <valueId value="uuid"></valueId>
-            </parameter>
-         </target>
-         <target>
-            <context value="bundle"></context>
-            <contextType value="variable"></contextType>
-            <element value="entry"></element>
-            <variable value="e2"></variable>
-         </target>
-         <target>
-            <context value="e2"></context>
-            <contextType value="variable"></contextType>
-            <element value="resource"></element>
-            <variable value="patient"></variable>
-            <transform value="create"></transform>
-            <parameter>
-               <valueString value="Patient"></valueString>
+               <valueId value="uuid"/>
             </parameter>
          </target>
          <target>
-            <context value="patient"></context>
-            <contextType value="variable"></contextType>
-            <element value="id"></element>
-            <variable value="uuid2"></variable>
-            <transform value="uuid"></transform>
+            <context value="bundle"/>
+            <contextType value="variable"/>
+            <element value="entry"/>
+            <variable value="e2"/>
          </target>
          <target>
-            <context value="e2"></context>
-            <contextType value="variable"></contextType>
-            <element value="fullUrl"></element>
-            <transform value="append"></transform>
+            <context value="e2"/>
+            <contextType value="variable"/>
+            <element value="resource"/>
+            <variable value="patient"/>
+            <transform value="create"/>
             <parameter>
-               <valueString value="urn:uuid:"></valueString>
+               <valueString value="Patient"/>
+            </parameter>
+         </target>
+         <target>
+            <context value="patient"/>
+            <contextType value="variable"/>
+            <element value="id"/>
+            <variable value="uuid2"/>
+            <transform value="uuid"/>
+         </target>
+         <target>
+            <context value="e2"/>
+            <contextType value="variable"/>
+            <element value="fullUrl"/>
+            <transform value="append"/>
+            <parameter>
+               <valueString value="urn:uuid:"/>
             </parameter>
             <parameter>
-               <valueId value="uuid2"></valueId>
+               <valueId value="uuid2"/>
             </parameter>
          </target>
          <dependent>
-            <name value="ClinicalDocumentChEmedMedicationPrescriptionDocumentToBundle"></name>
-            <variable value="cda"></variable>
-            <variable value="patient"></variable>
-            <variable value="composition"></variable>
-            <variable value="bundle"></variable>
+            <name value="ClinicalDocumentChEmedMedicationPrescriptionDocumentToBundle"/>
+            <variable value="cda">
+               <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                  <valueUrl value="id"/>
+               </extension>
+            </variable>
+            <variable value="patient">
+               <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                  <valueUrl value="id"/>
+               </extension>
+            </variable>
+            <variable value="composition">
+               <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                  <valueUrl value="id"/>
+               </extension>
+            </variable>
+            <variable value="bundle">
+               <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                  <valueUrl value="id"/>
+               </extension>
+            </variable>
          </dependent>
       </rule>
    </group>
    <group>
-      <name value="ClinicalDocumentChEmedMedicationPrescriptionDocumentToBundle"></name>
-      <extends value="ClinicalDocumentToBundle"></extends>
-      <typeMode value="none"></typeMode>
-      <documentation value="source: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.1.4
-target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-composition-medicationprescription.html"></documentation>
+      <name value="ClinicalDocumentChEmedMedicationPrescriptionDocumentToBundle"/>
+      <extends value="ClinicalDocumentToBundle"/>
+      <typeMode value="none"/>
+      <documentation value="source: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.1.4&#xd;&#xa;target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-composition-medicationprescription.html"/>
       <input>
-         <name value="cda"></name>
-         <type value="ClinicalDocument"></type>
-         <mode value="source"></mode>
+         <name value="cda"/>
+         <type value="ClinicalDocument"/>
+         <mode value="source"/>
       </input>
       <input>
-         <name value="patient"></name>
-         <type value="Patient"></type>
-         <mode value="target"></mode>
+         <name value="patient"/>
+         <type value="Patient"/>
+         <mode value="target"/>
       </input>
       <input>
-         <name value="composition"></name>
-         <type value="Composition"></type>
-         <mode value="target"></mode>
+         <name value="composition"/>
+         <type value="Composition"/>
+         <mode value="target"/>
       </input>
       <input>
-         <name value="bundle"></name>
-         <type value="Bundle"></type>
-         <mode value="target"></mode>
+         <name value="bundle"/>
+         <type value="Bundle"/>
+         <mode value="target"/>
       </input>
       <rule>
-         <name value="composition"></name>
+         <name value="composition"/>
          <source>
-            <context value="cda"></context>
+            <context value="cda"/>
          </source>
          <dependent>
-            <name value="ClinicalDocumentCompositionCh"></name>
-            <variable value="cda"></variable>
-            <variable value="composition"></variable>
-            <variable value="patient"></variable>
-            <variable value="bundle"></variable>
+            <name value="ClinicalDocumentCompositionCh"/>
+            <variable value="cda">
+               <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                  <valueUrl value="id"/>
+               </extension>
+            </variable>
+            <variable value="composition">
+               <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                  <valueUrl value="id"/>
+               </extension>
+            </variable>
+            <variable value="patient">
+               <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                  <valueUrl value="id"/>
+               </extension>
+            </variable>
+            <variable value="bundle">
+               <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                  <valueUrl value="id"/>
+               </extension>
+            </variable>
          </dependent>
       </rule>
       <rule>
-         <name value="component"></name>
+         <name value="component"/>
          <source>
-            <context value="cda"></context>
-            <element value="component"></element>
-            <variable value="component"></variable>
+            <context value="cda"/>
+            <element value="component"/>
+            <variable value="component"/>
          </source>
          <rule>
-            <name value="body"></name>
+            <name value="body"/>
             <source>
-               <context value="component"></context>
-               <element value="structuredBody"></element>
-               <variable value="body"></variable>
+               <context value="component"/>
+               <element value="structuredBody"/>
+               <variable value="body"/>
             </source>
             <rule>
-               <name value="component"></name>
+               <name value="component"/>
                <source>
-                  <context value="body"></context>
-                  <element value="component"></element>
-                  <variable value="component"></variable>
+                  <context value="body"/>
+                  <element value="component"/>
+                  <variable value="component"/>
                </source>
                <rule>
-                  <name value="section"></name>
+                  <name value="section"/>
                   <source>
-                     <context value="component"></context>
-                     <element value="section"></element>
-                     <variable value="srcSection"></variable>
-                     <condition value="(templateId.where(root = '2.16.756.5.30.1.1.10.3.10'))"></condition>
+                     <context value="component"/>
+                     <element value="section"/>
+                     <variable value="srcSection"/>
+                     <condition value="(templateId.where(root = '2.16.756.5.30.1.1.10.3.10'))"/>
                   </source>
                   <target>
-                     <context value="composition"></context>
-                     <contextType value="variable"></contextType>
-                     <element value="section"></element>
-                     <variable value="tgtSection"></variable>
+                     <context value="composition"/>
+                     <contextType value="variable"/>
+                     <element value="section"/>
+                     <variable value="tgtSection"/>
                   </target>
                   <dependent>
-                     <name value="SectionPrescriptionSectionContentModule"></name>
-                     <variable value="cda"></variable>
-                     <variable value="srcSection"></variable>
-                     <variable value="patient"></variable>
-                     <variable value="tgtSection"></variable>
-                     <variable value="bundle"></variable>
+                     <name value="SectionPrescriptionSectionContentModule"/>
+                     <variable value="cda">
+                        <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                           <valueUrl value="id"/>
+                        </extension>
+                     </variable>
+                     <variable value="srcSection">
+                        <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                           <valueUrl value="id"/>
+                        </extension>
+                     </variable>
+                     <variable value="patient">
+                        <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                           <valueUrl value="id"/>
+                        </extension>
+                     </variable>
+                     <variable value="tgtSection">
+                        <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                           <valueUrl value="id"/>
+                        </extension>
+                     </variable>
+                     <variable value="bundle">
+                        <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                           <valueUrl value="id"/>
+                        </extension>
+                     </variable>
                   </dependent>
                </rule>
                <rule>
-                  <name value="section"></name>
+                  <name value="section"/>
                   <source>
-                     <context value="component"></context>
-                     <element value="section"></element>
-                     <variable value="srcSection"></variable>
-                     <condition value="(templateId.where(root = '2.16.756.5.30.1.1.10.3.2'))"></condition>
+                     <context value="component"/>
+                     <element value="section"/>
+                     <variable value="srcSection"/>
+                     <condition value="(templateId.where(root = '2.16.756.5.30.1.1.10.3.2'))"/>
                   </source>
                   <target>
-                     <context value="composition"></context>
-                     <contextType value="variable"></contextType>
-                     <element value="section"></element>
-                     <variable value="tgtSection"></variable>
+                     <context value="composition"/>
+                     <contextType value="variable"/>
+                     <element value="section"/>
+                     <variable value="tgtSection"/>
                   </target>
                   <dependent>
-                     <name value="ClinicalDocumentSection"></name>
-                     <variable value="cda"></variable>
-                     <variable value="srcSection"></variable>
-                     <variable value="patient"></variable>
-                     <variable value="tgtSection"></variable>
-                     <variable value="bundle"></variable>
+                     <name value="ClinicalDocumentSection"/>
+                     <variable value="cda">
+                        <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                           <valueUrl value="id"/>
+                        </extension>
+                     </variable>
+                     <variable value="srcSection">
+                        <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                           <valueUrl value="id"/>
+                        </extension>
+                     </variable>
+                     <variable value="patient">
+                        <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                           <valueUrl value="id"/>
+                        </extension>
+                     </variable>
+                     <variable value="tgtSection">
+                        <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                           <valueUrl value="id"/>
+                        </extension>
+                     </variable>
+                     <variable value="bundle">
+                        <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                           <valueUrl value="id"/>
+                        </extension>
+                     </variable>
                   </dependent>
                </rule>
                <rule>
-                  <name value="section"></name>
+                  <name value="section"/>
                   <source>
-                     <context value="component"></context>
-                     <element value="section"></element>
-                     <variable value="srcSection"></variable>
-                     <condition value="(templateId.where(root = '2.16.756.5.30.1.1.10.3.45'))"></condition>
+                     <context value="component"/>
+                     <element value="section"/>
+                     <variable value="srcSection"/>
+                     <condition value="(templateId.where(root = '2.16.756.5.30.1.1.10.3.45'))"/>
                   </source>
                   <target>
-                     <context value="composition"></context>
-                     <contextType value="variable"></contextType>
-                     <element value="section"></element>
-                     <variable value="tgtSection"></variable>
+                     <context value="composition"/>
+                     <contextType value="variable"/>
+                     <element value="section"/>
+                     <variable value="tgtSection"/>
                   </target>
                   <dependent>
-                     <name value="SectionOriginalRepresentation"></name>
-                     <variable value="cda"></variable>
-                     <variable value="srcSection"></variable>
-                     <variable value="patient"></variable>
-                     <variable value="tgtSection"></variable>
-                     <variable value="bundle"></variable>
+                     <name value="SectionOriginalRepresentation"/>
+                     <variable value="cda">
+                        <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                           <valueUrl value="id"/>
+                        </extension>
+                     </variable>
+                     <variable value="srcSection">
+                        <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                           <valueUrl value="id"/>
+                        </extension>
+                     </variable>
+                     <variable value="patient">
+                        <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                           <valueUrl value="id"/>
+                        </extension>
+                     </variable>
+                     <variable value="tgtSection">
+                        <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                           <valueUrl value="id"/>
+                        </extension>
+                     </variable>
+                     <variable value="bundle">
+                        <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                           <valueUrl value="id"/>
+                        </extension>
+                     </variable>
                   </dependent>
                </rule>
             </rule>
@@ -412,114 +503,133 @@ target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-compo
       </rule>
    </group>
    <group>
-      <name value="SectionPrescriptionSectionContentModule"></name>
-      <extends value="ClinicalDocumentSection"></extends>
-      <typeMode value="none"></typeMode>
-      <documentation value="_________________________ Section Level Templates _________________________
-source: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.3.10
-target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-composition-medicationprescription.html"></documentation>
+      <name value="SectionPrescriptionSectionContentModule"/>
+      <extends value="ClinicalDocumentSection"/>
+      <typeMode value="none"/>
+      <documentation value="_________________________ Section Level Templates _________________________&#xd;&#xa;source: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.3.10&#xd;&#xa;target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-composition-medicationprescription.html"/>
       <input>
-         <name value="cda"></name>
-         <type value="ClinicalDocument"></type>
-         <mode value="source"></mode>
+         <name value="cda"/>
+         <type value="ClinicalDocument"/>
+         <mode value="source"/>
       </input>
       <input>
-         <name value="src"></name>
-         <type value="Section"></type>
-         <mode value="source"></mode>
+         <name value="src"/>
+         <type value="Section"/>
+         <mode value="source"/>
       </input>
       <input>
-         <name value="patient"></name>
-         <type value="Patient"></type>
-         <mode value="source"></mode>
+         <name value="patient"/>
+         <type value="Patient"/>
+         <mode value="source"/>
       </input>
       <input>
-         <name value="tgt"></name>
-         <mode value="target"></mode>
+         <name value="tgt"/>
+         <mode value="target"/>
       </input>
       <input>
-         <name value="bundle"></name>
-         <type value="Bundle"></type>
-         <mode value="target"></mode>
+         <name value="bundle"/>
+         <type value="Bundle"/>
+         <mode value="target"/>
       </input>
       <rule>
-         <name value="PrescriptionSectionContentModule"></name>
+         <name value="PrescriptionSectionContentModule"/>
          <source>
-            <context value="src"></context>
-            <element value="entry"></element>
-            <variable value="cdaEntry"></variable>
-            <condition value="(substanceAdministration.templateId.where(root = '2.16.756.5.30.1.1.10.4.43'))"></condition>
+            <context value="src"/>
+            <element value="entry"/>
+            <variable value="cdaEntry"/>
+            <condition value="(substanceAdministration.templateId.where(root = '2.16.756.5.30.1.1.10.4.43'))"/>
          </source>
          <target>
-            <context value="bundle"></context>
-            <contextType value="variable"></contextType>
-            <element value="entry"></element>
-            <variable value="e"></variable>
+            <context value="bundle"/>
+            <contextType value="variable"/>
+            <element value="entry"/>
+            <variable value="e"/>
          </target>
          <target>
-            <context value="e"></context>
-            <contextType value="variable"></contextType>
-            <element value="resource"></element>
-            <variable value="medicationrequest"></variable>
-            <transform value="create"></transform>
+            <context value="e"/>
+            <contextType value="variable"/>
+            <element value="resource"/>
+            <variable value="medicationrequest"/>
+            <transform value="create"/>
             <parameter>
-               <valueString value="MedicationRequest"></valueString>
+               <valueString value="MedicationRequest"/>
             </parameter>
          </target>
          <target>
-            <context value="medicationrequest"></context>
-            <contextType value="variable"></contextType>
-            <element value="id"></element>
-            <variable value="uuid"></variable>
-            <transform value="uuid"></transform>
+            <context value="medicationrequest"/>
+            <contextType value="variable"/>
+            <element value="id"/>
+            <variable value="uuid"/>
+            <transform value="uuid"/>
          </target>
          <target>
-            <context value="e"></context>
-            <contextType value="variable"></contextType>
-            <element value="fullUrl"></element>
-            <transform value="append"></transform>
+            <context value="e"/>
+            <contextType value="variable"/>
+            <element value="fullUrl"/>
+            <transform value="append"/>
             <parameter>
-               <valueString value="urn:uuid:"></valueString>
+               <valueString value="urn:uuid:"/>
             </parameter>
             <parameter>
-               <valueId value="uuid"></valueId>
-            </parameter>
-         </target>
-         <target>
-            <context value="tgt"></context>
-            <contextType value="variable"></contextType>
-            <element value="entry"></element>
-            <variable value="reference"></variable>
-            <transform value="create"></transform>
-            <parameter>
-               <valueString value="Reference"></valueString>
+               <valueId value="uuid"/>
             </parameter>
          </target>
          <target>
-            <context value="reference"></context>
-            <contextType value="variable"></contextType>
-            <element value="reference"></element>
-            <transform value="append"></transform>
+            <context value="tgt"/>
+            <contextType value="variable"/>
+            <element value="entry"/>
+            <variable value="reference"/>
+            <transform value="create"/>
             <parameter>
-               <valueString value="urn:uuid:"></valueString>
+               <valueString value="Reference"/>
+            </parameter>
+         </target>
+         <target>
+            <context value="reference"/>
+            <contextType value="variable"/>
+            <element value="reference"/>
+            <transform value="append"/>
+            <parameter>
+               <valueString value="urn:uuid:"/>
             </parameter>
             <parameter>
-               <valueId value="uuid"></valueId>
+               <valueId value="uuid"/>
             </parameter>
          </target>
          <rule>
-            <name value="substanceAdministration"></name>
+            <name value="substanceAdministration"/>
             <source>
-               <context value="cdaEntry"></context>
-               <element value="substanceAdministration"></element>
-               <variable value="substanceAdministration"></variable>
+               <context value="cdaEntry"/>
+               <element value="substanceAdministration"/>
+               <variable value="substanceAdministration"/>
             </source>
             <dependent>
-               <name value="PrescriptionItemEntryContentModule"></name>
-               <variable value="src"></variable>
-               <variable value="substanceAdministration"></variable>
-               <variable value="patient"></variable>
-               <variable value="medicationrequest"></variable>
+               <name value="PrescriptionItemEntryContentModule"/>
+               <variable value="src">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
+               <variable value="substanceAdministration">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
+               <variable value="patient">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
+               <variable value="medicationrequest">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
+               <variable value="bundle">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
             </dependent>
          </rule>
       </rule>
