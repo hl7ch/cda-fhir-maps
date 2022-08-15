@@ -1,8 +1,8 @@
 <StructureMap xmlns="http://hl7.org/fhir">
    <id value="BundleToCdaChEmed"/>
    <meta>
-      <versionId value="20"/>
-      <lastUpdated value="2022-08-11T14:39:27.567+00:00"/>
+      <versionId value="21"/>
+      <lastUpdated value="2022-08-15T12:39:21.596+00:00"/>
    </meta>
    <text>
       <status value="generated"/>
@@ -135,6 +135,7 @@ group MedicationTreatmentPlanItemEntryContentModule(source bundle : Bundle, sour
   medicationStatement -&gt; substanceAdministration.moodCode = &apos;INT&apos; &quot;INT&quot;;
   medicationStatement -&gt;  substanceAdministration.templateId as templateId,  templateId.root = &apos;2.16.756.5.30.1.1.10.4.34&apos; &quot;CH-PHARM-MedicationTreatmentPlanItemEntryContentModule&quot;;
   medicationStatement -&gt;  substanceAdministration.templateId as templateId,  templateId.root = &apos;1.3.6.1.4.1.19376.1.9.1.3.7&apos; &quot;IHE-PHARM-MTP&quot;;
+  medicationStatement -&gt;  substanceAdministration.templateId as templateId,  templateId.root = &apos;1.3.6.1.4.1.19376.1.9.1.3.6&apos; &quot;	IHE PHARM Dosage Instructions&quot;;
   medicationStatement -&gt;  substanceAdministration.templateId as templateId,  templateId.root = &apos;2.16.840.1.113883.10.20.1.24&apos; &quot;CCD&quot;;
   medicationStatement -&gt;  substanceAdministration.templateId as templateId,  templateId.root = &apos;1.3.6.1.4.1.19376.1.5.3.1.4.7&apos; &quot;PCC-MedicationEntryContentModule&quot;;
   medicationStatement.identifier as identifier -&gt; substanceAdministration.id as id then IdentifierII(identifier, id) &quot;id&quot;;
@@ -626,6 +627,7 @@ group PrescriptionItemEntryContentModule(source bundle : Bundle, source medicati
   medicationRequest -&gt; substanceAdministration.moodCode = &apos;INT&apos; &quot;INT&quot;;
   medicationRequest -&gt;  substanceAdministration.templateId as templateId,  templateId.root = &apos;2.16.756.5.30.1.1.10.4.43&apos; &quot;CH-PHARM-PrescriptionItemEntryContentModule&quot;;
   medicationRequest -&gt;  substanceAdministration.templateId as templateId,  templateId.root = &apos;1.3.6.1.4.1.19376.1.9.1.3.2&apos; &quot;PrescriptionItemEntryTemplateId&quot;;
+  medicationRequest -&gt;  substanceAdministration.templateId as templateId,  templateId.root = &apos;1.3.6.1.4.1.19376.1.9.1.3.6&apos; &quot;	IHE PHARM Dosage Instructions&quot;;
   medicationRequest -&gt;  substanceAdministration.templateId as templateId,  templateId.root = &apos;2.16.840.1.113883.10.20.1.24&apos; &quot;CCD&quot;;
   medicationRequest -&gt;  substanceAdministration.templateId as templateId,  templateId.root = &apos;1.3.6.1.4.1.19376.1.5.3.1.4.7&apos; &quot;PCC-MedicationEntryContentModule&quot;;
   medicationRequest.identifier as identifier -&gt; substanceAdministration.id as id then IdentifierII(identifier, id) &quot;id&quot;;
@@ -2073,6 +2075,27 @@ group PharmaceuticalAdviceItemEntryContentModule(source bundle : Bundle, source 
             <transform value="copy"/>
             <parameter>
                <valueString value="1.3.6.1.4.1.19376.1.9.1.3.7"/>
+            </parameter>
+         </target>
+      </rule>
+      <rule>
+         <name value="&#x9;IHE PHARM Dosage Instructions"/>
+         <source>
+            <context value="medicationStatement"/>
+         </source>
+         <target>
+            <context value="substanceAdministration"/>
+            <contextType value="variable"/>
+            <element value="templateId"/>
+            <variable value="templateId"/>
+         </target>
+         <target>
+            <context value="templateId"/>
+            <contextType value="variable"/>
+            <element value="root"/>
+            <transform value="copy"/>
+            <parameter>
+               <valueString value="1.3.6.1.4.1.19376.1.9.1.3.6"/>
             </parameter>
          </target>
       </rule>
@@ -8330,6 +8353,27 @@ group PharmaceuticalAdviceItemEntryContentModule(source bundle : Bundle, source 
             <transform value="copy"/>
             <parameter>
                <valueString value="1.3.6.1.4.1.19376.1.9.1.3.2"/>
+            </parameter>
+         </target>
+      </rule>
+      <rule>
+         <name value="&#x9;IHE PHARM Dosage Instructions"/>
+         <source>
+            <context value="medicationRequest"/>
+         </source>
+         <target>
+            <context value="substanceAdministration"/>
+            <contextType value="variable"/>
+            <element value="templateId"/>
+            <variable value="templateId"/>
+         </target>
+         <target>
+            <context value="templateId"/>
+            <contextType value="variable"/>
+            <element value="root"/>
+            <transform value="copy"/>
+            <parameter>
+               <valueString value="1.3.6.1.4.1.19376.1.9.1.3.6"/>
             </parameter>
          </target>
       </rule>

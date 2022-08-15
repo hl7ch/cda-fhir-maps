@@ -137,6 +137,7 @@ group MedicationTreatmentPlanItemEntryContentModule(source bundle : Bundle, sour
   medicationStatement -> substanceAdministration.moodCode = 'INT' "INT";  
   medicationStatement -> substanceAdministration.templateId as templateId, templateId.root = '2.16.756.5.30.1.1.10.4.34' "CH-PHARM-MedicationTreatmentPlanItemEntryContentModule";
   medicationStatement -> substanceAdministration.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.9.1.3.7' "IHE-PHARM-MTP";
+  medicationStatement -> substanceAdministration.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.9.1.3.6' "	IHE PHARM Dosage Instructions";
   medicationStatement -> substanceAdministration.templateId as templateId, templateId.root = '2.16.840.1.113883.10.20.1.24' "CCD";
   medicationStatement -> substanceAdministration.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.5.3.1.4.7' "PCC-MedicationEntryContentModule";
 
@@ -789,6 +790,7 @@ group PrescriptionItemEntryContentModule(source bundle : Bundle, source medicati
   medicationRequest -> substanceAdministration.moodCode = 'INT' "INT";  
   medicationRequest -> substanceAdministration.templateId as templateId, templateId.root = '2.16.756.5.30.1.1.10.4.43' "CH-PHARM-PrescriptionItemEntryContentModule";
   medicationRequest -> substanceAdministration.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.9.1.3.2' "PrescriptionItemEntryTemplateId";
+  medicationRequest -> substanceAdministration.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.9.1.3.6' "	IHE PHARM Dosage Instructions";
   medicationRequest -> substanceAdministration.templateId as templateId, templateId.root = '2.16.840.1.113883.10.20.1.24' "CCD";
   medicationRequest -> substanceAdministration.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.5.3.1.4.7' "PCC-MedicationEntryContentModule";
 
