@@ -87,3 +87,11 @@ Accept: application/fhir+xml;fhirVersion=4.0
 Content-Type: application/fhir+xml;fhirVersion=4.0
 
 < ./input/generated-files/1-1-MTPDafalgan.xml
+
+
+### 5c. Transform Medication Treatment Plan document (2-5-MedicationTreatmentPlan.xml) from CDA to FHIR
+POST {{host}}/StructureMap/$transform?source=http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaChEmedMedicationTreatmentPlanDocumentToBundle
+Accept: application/fhir+xml;fhirVersion=4.0
+Content-Type: application/fhir+xml;fhirVersion=4.0
+
+< ./input/generated-files/3-3-CDA.xml

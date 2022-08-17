@@ -1,8 +1,8 @@
 <StructureMap xmlns="http://hl7.org/fhir">
    <id value="CdaChEmedToBundle"/>
    <meta>
-      <versionId value="20"/>
-      <lastUpdated value="2022-08-11T11:30:38.011+00:00"/>
+      <versionId value="25"/>
+      <lastUpdated value="2022-08-17T13:37:23.176+00:00"/>
    </meta>
    <text>
       <status value="generated"/>
@@ -90,10 +90,10 @@ group ManufacturedMaterialEntryContentModuleDispense(source src : Supply, target
         };
       };
     };
-    // dosage for normal dosing, as no sequences are present there
+    // dosage for normal dosing, no sequences and no non-structurdedosings
     src.entryRelationship as entry then {
       entry.substanceAdministration as substanceAdministration then {
-        substanceAdministration where $this.entryRelationship.sequenceNumber.exists() = false -&gt; medicationDispense.dosageInstruction as dosage then DosageInstructionsStartStopFrequency(substanceAdministration, dosage) &quot;dosage&quot;;
+        substanceAdministration where ($this.entryRelationship.sequenceNumber.exists() = false) and ($this.entryRelationship.substanceAdministration.templateId.where($this.root = &apos;2.16.756.5.30.1.1.10.4.52&apos;).exists() = false) -&gt; medicationDispense.dosageInstruction as dosage then DosageInstructionsStartStopFrequency(src, substanceAdministration, dosage) &quot;dosage&quot;;
       };
     } &quot;entry&quot;;
   };
@@ -137,8 +137,8 @@ group ManufacturedMaterialEntryContentModuleStatement(source src : SubstanceAdmi
         };
       };
     };
-    // dosage for normal dosing, as no sequences are present there
-    src where $this.entryRelationship.sequenceNumber.exists() = false -&gt; medicationStatement.dosage as dosage then DosageInstructionsStartStopFrequency(src, dosage) &quot;dosage&quot;;
+    // dosage for normal dosing, as no sequences and no non-structurdedosings
+    src where ($this.entryRelationship.sequenceNumber.exists() = false) and ($this.entryRelationship.substanceAdministration.templateId.where($this.root = &apos;2.16.756.5.30.1.1.10.4.52&apos;).exists() = false) -&gt; medicationStatement.dosage as dosage then DosageInstructionsStartStopFrequency(src, src, dosage) &quot;dosage&quot;;
   };
 }
 
@@ -160,7 +160,7 @@ group MedicationTreatmentPlanItemEntryContentModule(source section : Section, so
   src.entryRelationship as entry where typeCode = &apos;RSON&apos; then {
     entry.observation as observation -&gt; medicationStatement.reasonCode as reasonCode then TreatmentReasonEntryContentModule(section, observation, reasonCode) &quot;reasonCode&quot;;
   } &quot;41&quot;;
-  src.entryRelationship as entry where ((typeCode = &apos;COMP&apos;) and (substanceAdministration.templateId.root = &apos;2.16.756.5.30.1.1.10.4.52&apos;)) -&gt; medicationStatement.dosage as dosage then DosageInstructionsNonStructuredEntryContentModule(section, entry, dosage) &quot;52&quot;;
+  src.entryRelationship as entryRelationship where ((typeCode = &apos;COMP&apos;) and (substanceAdministration.templateId.root = &apos;2.16.756.5.30.1.1.10.4.52&apos;)) -&gt; medicationStatement.dosage as dosage then DosageInstructionsNonStructuredEntryContentModule(src, entryRelationship, dosage) &quot;52&quot;;
   src.entryRelationship as entry where ((typeCode = &apos;COMP&apos;) and (sequenceNumber.value &gt;= 0)) -&gt; medicationStatement.dosage as dosage then DosageInstructionsEntryDosageChange(src, entry, dosage) &quot;36&quot;;
   src.entryRelationship as entry where ((typeCode = &apos;REFR&apos;) and substanceAdministration.templateId.where(root = &apos;1.3.6.1.4.1.19376.1.9.1.3.10&apos;).exists()) -&gt; medicationStatement.extension as ext then MTPReferenceEntryContentModule(entry, ext) &quot;MTPReferenceEntry&quot;;
   src.entryRelationship as entry where ((typeCode = &apos;SUBJ&apos;) and act.templateId.where(root = &apos;1.3.6.1.4.1.19376.1.5.3.1.4.3&apos;).exists()) then {
@@ -178,10 +178,11 @@ group DosageInstructionsEntryDosageChange(source src : substanceAdministration, 
   entry.sequenceNumber as sequenceNumber then {
     sequenceNumber.value as val -&gt; dosage.sequence = val;
   };
-  src as src -&gt; dosage as dosage then EffectiveTimeStartEnd(src, dosage) &quot;effectiveTimeStartEnd&quot;;
-  entry.substanceAdministration as src -&gt; dosage as dosage then EffectiveTimeWhen(src, dosage) &quot;effectiveTimeWhen&quot;;
+  src then EffectiveTimeStartEnd(src, dosage) &quot;effectiveTimeStartEnd&quot;;
+  entry.substanceAdministration as src then EffectiveTimeWhen(src, dosage) &quot;effectiveTimeWhen&quot;;
   src.routeCode as routeCode -&gt; dosage.route as route then CECodeableConcept(routeCode, route);
-  entry.substanceAdministration as src -&gt; dosage as dosage then DoseQuantity(src, dosage) &quot;doseQuantity&quot;;
+  entry.substanceAdministration as src then DoseQuantity(src, dosage) &quot;doseQuantity&quot;;
+  src.entryRelationship where ((typeCode = &apos;COMP&apos;) and act.templateId.where(root = &apos;2.16.756.5.30.1.1.10.10&apos;).exists() and (act.code.code = &apos;225761000&apos;)) -&gt; dosage.asNeeded = true &quot;MTPReferenceEntry&quot;;
 }
 
 // effective time start &amp; end for dosage and check for medicaiton in reserve
@@ -198,7 +199,6 @@ group EffectiveTimeStartEnd(source src : substanceAdministration, target dosage 
       } &quot;period&quot;;
     } &quot;repeat&quot;;
   } &quot;effectiveTime-IVL-TS&quot;;
-  src.entryRelationship as entry where ((typeCode = &apos;COMP&apos;) and act.templateId.where(root = &apos;2.16.756.5.30.1.1.10.10&apos;).exists() and (act.code.code = &apos;225761000&apos;)) -&gt; dosage.asNeeded = true &quot;MTPReferenceEntry&quot;;
 }
 
 // effective time when for dosage
@@ -249,9 +249,9 @@ group MTPReferenceEntryContentModule(source entryrelationship, target ext : Exte
 
 // source: https://art-decor.org/art-decor/decor-templates--ch-pharm-?section=templates&amp;id=2.16.756.5.30.1.1.10.4.52
 // target: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefinition-ch-emed-dosage-nonstructured.html
-group DosageInstructionsNonStructuredEntryContentModule(source section : Section, source entry : Element, target dosage : Dosage) {
+group DosageInstructionsNonStructuredEntryContentModule(source entry, source entryRelationship : Element, target dosage : Dosage) {
   // see MedicationTreatmentPlanItemEntryContentModule
-  entry.substanceAdministration as observation then {
+  entryRelationship.substanceAdministration as observation then {
     observation.text as text then {
       text.data as data -&gt; dosage.text = data &quot;level3&quot;;
       text.reference as reference then {
@@ -259,6 +259,7 @@ group DosageInstructionsNonStructuredEntryContentModule(source section : Section
       };
     };
   } &quot;observation&quot;;
+  entry.entryRelationship where ((typeCode = &apos;COMP&apos;) and act.templateId.where(root = &apos;2.16.756.5.30.1.1.10.10&apos;).exists() and (act.code.code = &apos;225761000&apos;)) -&gt; dosage.asNeeded = true &quot;MTPReferenceEntry&quot;;
 }
 
 // source: Substitution act Contains 1.3.6.1.4.1.19376.1.9.1.3.9.2 IHE Substitution Act Content Module
@@ -290,7 +291,7 @@ group DispenseItemEntryContentModule(source section : Section, source src : Supp
   src -&gt; medicationDispense.contained = create(&apos;Medication&apos;) as medication then ManufacturedMaterialEntryContentModuleDispense(src, medicationDispense, medication) &quot;medication&quot;;
   src.author first as author -&gt;  medicationDispense.performer as performer,  performer.actor = create(&apos;Reference&apos;) as reference then Author(author, reference, bundle);
   src.author last as author where (%src.author.count() = 2) -&gt;  medicationDispense.extension as ext,  ext.url = &apos;http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-documentauthor&apos;,  ext.value = create(&apos;Reference&apos;) as reference then Author(author, reference, bundle) &quot;ch-emed-ext-documentauthor&quot;;
-  src.entryRelationship as entry where ((typeCode = &apos;COMP&apos;) and (substanceAdministration.templateId.root = &apos;2.16.756.5.30.1.1.10.4.52&apos;)) -&gt; medicationDispense.dosageInstruction as dosage then DosageInstructionsNonStructuredEntryContentModule(section, entry, dosage) &quot;52&quot;;
+  src.entryRelationship as entryRelationship where ((typeCode = &apos;COMP&apos;) and (substanceAdministration.templateId.root = &apos;2.16.756.5.30.1.1.10.4.52&apos;)) -&gt; medicationDispense.dosageInstruction as dosage then DosageInstructionsNonStructuredEntryContentModule(src, entryRelationship, dosage) &quot;52&quot;;
   src.entryRelationship as entryRelationship then {
     entryRelationship.substanceAdministration as substanceAdministration then {
       // dosage for split dosing, as sequences are present there
@@ -389,8 +390,8 @@ group ManufacturedMaterialEntryContentModuleRequest(source src : SubstanceAdmini
         };
       };
     };
-    // dosage for normal dosing, as no sequences are present there
-    src where $this.entryRelationship.sequenceNumber.exists() = false -&gt; medicationRequest.dosageInstruction as dosage then DosageInstructionsStartStopFrequency(src, dosage) &quot;dosage&quot;;
+    // dosage for normal dosing, as no sequences are present there and no non-structurdedosings
+    src where ($this.entryRelationship.sequenceNumber.exists() = false) and ($this.entryRelationship.substanceAdministration.templateId.where($this.root = &apos;2.16.756.5.30.1.1.10.4.52&apos;).exists() = false) -&gt; medicationRequest.dosageInstruction as dosage then DosageInstructionsStartStopFrequency(src, src, dosage) &quot;dosage&quot;;
   };
 }
 
@@ -412,7 +413,7 @@ group PrescriptionItemEntryContentModule(source section : Section, source src : 
   src.entryRelationship as entry where typeCode = &apos;RSON&apos; then {
     entry.observation as observation -&gt; medicationRequest.reasonCode as reasonCode then TreatmentReasonEntryContentModule(section, observation, reasonCode) &quot;reasonCode&quot;;
   } &quot;41&quot;;
-  src.entryRelationship as entry where ((typeCode = &apos;COMP&apos;) and (substanceAdministration.templateId.root = &apos;2.16.756.5.30.1.1.10.4.52&apos;)) -&gt; medicationRequest.dosageInstruction as dosage then DosageInstructionsNonStructuredEntryContentModule(section, entry, dosage) &quot;52&quot;;
+  src.entryRelationship as entryRelationship where ((typeCode = &apos;COMP&apos;) and (substanceAdministration.templateId.root = &apos;2.16.756.5.30.1.1.10.4.52&apos;)) -&gt; medicationRequest.dosageInstruction as dosage then DosageInstructionsNonStructuredEntryContentModule(src, entryRelationship, dosage) &quot;52&quot;;
   // dosage for split dosing, as sequences are present there
   src.entryRelationship as entry where ((typeCode = &apos;COMP&apos;) and (sequenceNumber.value &gt;= 0)) -&gt; medicationRequest.dosageInstruction as dosage then DosageInstructionsEntryDosageChange(src, entry, dosage) &quot;36&quot;;
   src.entryRelationship as entry where ((typeCode = &apos;REFR&apos;) and substanceAdministration.templateId.where(root = &apos;1.3.6.1.4.1.19376.1.9.1.3.10&apos;).exists()) -&gt; medicationRequest.extension as ext then MTPReferenceEntryContentModule(entry, ext) &quot;MTPReferenceEntry&quot;;
@@ -433,11 +434,12 @@ group PrescriptionItemEntryContentModule(source section : Section, source src : 
 // source: https://art-decor.org/art-decor/decor-templates--ch-pharm-?id=2.16.756.5.30.1.1.10.4.35
 // target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition/ch-emed-dosage-structured-normal
 // dosage for normal dosing, without sequences
-group DosageInstructionsStartStopFrequency(source src : SubstanceAdministration, target dosage : Dosage) {
-  src as src -&gt; dosage as dosage then EffectiveTimeStartEnd(src, dosage) &quot;effectiveTimeStartEnd&quot;;
-  src as src -&gt; dosage as dosage then EffectiveTimeWhen(src, dosage) &quot;effectiveTimeWhen&quot;;
+group DosageInstructionsStartStopFrequency(source entry, source src : SubstanceAdministration, target dosage : Dosage) {
+  src then EffectiveTimeStartEnd(src, dosage) &quot;effectiveTimeStartEnd&quot;;
+  src then EffectiveTimeWhen(src, dosage) &quot;effectiveTimeWhen&quot;;
   src.routeCode as routeCode -&gt; dosage.route as route then CECodeableConcept(routeCode, route);
-  src as src -&gt; dosage as dosage then DoseQuantity(src, dosage) &quot;doseQuantity&quot;;
+  src then DoseQuantity(src, dosage) &quot;doseQuantity&quot;;
+  entry.entryRelationship where ((typeCode = &apos;COMP&apos;) and act.templateId.where(root = &apos;2.16.756.5.30.1.1.10.10&apos;).exists() and (act.code.code = &apos;225761000&apos;)) -&gt; dosage.asNeeded = true &quot;MTPReferenceEntry&quot;;
 }
 
 // source: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=2.16.756.5.30.1.1.10.4.44
@@ -450,7 +452,7 @@ group PharmaceuticalAdviceItemEntryContentModule(source section : Section, sourc
   src.author first as author -&gt; observation.performer = create(&apos;Reference&apos;) as reference then Author(author, reference, bundle);
   src.author last as author where (%src.author.count() = 2) -&gt;  observation.extension as ext,  ext.url = &apos;http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-documentauthor&apos;,  ext.value = create(&apos;Reference&apos;) as reference then Author(author, reference, bundle) &quot;ch-emed-ext-documentauthor&quot;;
   src.entryRelationship as entry where ((typeCode = &apos;REFR&apos;) and substanceAdministration.templateId.where(root = &apos;1.3.6.1.4.1.19376.1.9.1.3.10&apos;).exists()) -&gt; observation.extension as ext then MTPReferenceEntryContentModule(entry, ext) &quot;MTPReferenceEntry&quot;;
-  src.entryRelationship as entry where ((typeCode = &apos;REFR&apos;) and substanceAdministration.templateId.where(root = &apos;1.3.6.1.4.1.19376.1.9.1.3.7&apos;).exists()) -&gt;  bundle.entry as e,  e.id = uuid() as uuid,  e.fullUrl = append('urn:uuid:', uuid),  e.resource = create('MedicationStatement') as medicationstatement,  observation.extension as ext,  ext.url = 'http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-medicationstatement-changed',  ext.value = create('Reference') as reference,  reference.reference = append('urn:uuid:', uuid) then {
+  src.entryRelationship as entry where ((typeCode = &apos;REFR&apos;) and substanceAdministration.templateId.where(root = &apos;1.3.6.1.4.1.19376.1.9.1.3.7&apos;).exists()) -&gt;  bundle.entry as e,  e.id = uuid() as uuid,  e.fullUrl = append(&apos;urn:uuid:&apos;, uuid),  e.resource = create(&apos;MedicationStatement&apos;) as medicationstatement,  observation.extension as ext,  ext.url = &apos;http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-medicationstatement-changed&apos;,  ext.value = create(&apos;Reference&apos;) as reference,  reference.reference = append(&apos;urn:uuid:&apos;, uuid) then {
     entry.substanceAdministration as substanceAdministration then MedicationTreatmentPlanItemEntryContentModule(section, substanceAdministration, patient, medicationstatement, bundle);
   } &quot;cdaEntry&quot;;
   src.text as text -&gt; observation.note as note then {
@@ -1159,7 +1161,7 @@ group InnerExtensionId(source src, target ext : Extension) {
                   <name value="dosage"/>
                   <source>
                      <context value="substanceAdministration"/>
-                     <condition value="$this.entryRelationship.sequenceNumber.exists() = false"/>
+                     <condition value="($this.entryRelationship.sequenceNumber.exists() = false) and ($this.entryRelationship.substanceAdministration.templateId.where($this.root = '2.16.756.5.30.1.1.10.4.52').exists() = false)"/>
                   </source>
                   <target>
                      <context value="medicationDispense"/>
@@ -1169,6 +1171,11 @@ group InnerExtensionId(source src, target ext : Extension) {
                   </target>
                   <dependent>
                      <name value="DosageInstructionsStartStopFrequency"/>
+                     <variable value="src">
+                        <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                           <valueUrl value="id"/>
+                        </extension>
+                     </variable>
                      <variable value="substanceAdministration">
                         <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
                            <valueUrl value="id"/>
@@ -1182,7 +1189,7 @@ group InnerExtensionId(source src, target ext : Extension) {
                   </dependent>
                </rule>
             </rule>
-            <documentation value="dosage for normal dosing, as no sequences are present there"/>
+            <documentation value="dosage for normal dosing, no sequences and no non-structurdedosings"/>
          </rule>
       </rule>
    </group>
@@ -1700,7 +1707,7 @@ group InnerExtensionId(source src, target ext : Extension) {
             <name value="dosage"/>
             <source>
                <context value="src"/>
-               <condition value="$this.entryRelationship.sequenceNumber.exists() = false"/>
+               <condition value="($this.entryRelationship.sequenceNumber.exists() = false) and ($this.entryRelationship.substanceAdministration.templateId.where($this.root = '2.16.756.5.30.1.1.10.4.52').exists() = false)"/>
             </source>
             <target>
                <context value="medicationStatement"/>
@@ -1715,13 +1722,18 @@ group InnerExtensionId(source src, target ext : Extension) {
                      <valueUrl value="id"/>
                   </extension>
                </variable>
+               <variable value="src">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
                <variable value="dosage">
                   <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
                      <valueUrl value="id"/>
                   </extension>
                </variable>
             </dependent>
-            <documentation value="dosage for normal dosing, as no sequences are present there"/>
+            <documentation value="dosage for normal dosing, as no sequences and no non-structurdedosings"/>
          </rule>
       </rule>
    </group>
@@ -2023,7 +2035,7 @@ group InnerExtensionId(source src, target ext : Extension) {
          <source>
             <context value="src"/>
             <element value="entryRelationship"/>
-            <variable value="entry"/>
+            <variable value="entryRelationship"/>
             <condition value="((typeCode = 'COMP') and (substanceAdministration.templateId.root = '2.16.756.5.30.1.1.10.4.52'))"/>
          </source>
          <target>
@@ -2034,12 +2046,12 @@ group InnerExtensionId(source src, target ext : Extension) {
          </target>
          <dependent>
             <name value="DosageInstructionsNonStructuredEntryContentModule"/>
-            <variable value="section">
+            <variable value="src">
                <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
                   <valueUrl value="id"/>
                </extension>
             </variable>
-            <variable value="entry">
+            <variable value="entryRelationship">
                <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
                   <valueUrl value="id"/>
                </extension>
@@ -2240,16 +2252,7 @@ group InnerExtensionId(source src, target ext : Extension) {
          <name value="effectiveTimeStartEnd"/>
          <source>
             <context value="src"/>
-            <variable value="src"/>
          </source>
-         <target>
-            <contextType value="variable"/>
-            <variable value="dosage"/>
-            <transform value="copy"/>
-            <parameter>
-               <valueId value="dosage"/>
-            </parameter>
-         </target>
          <dependent>
             <name value="EffectiveTimeStartEnd"/>
             <variable value="src">
@@ -2271,14 +2274,6 @@ group InnerExtensionId(source src, target ext : Extension) {
             <element value="substanceAdministration"/>
             <variable value="src"/>
          </source>
-         <target>
-            <contextType value="variable"/>
-            <variable value="dosage"/>
-            <transform value="copy"/>
-            <parameter>
-               <valueId value="dosage"/>
-            </parameter>
-         </target>
          <dependent>
             <name value="EffectiveTimeWhen"/>
             <variable value="src">
@@ -2327,14 +2322,6 @@ group InnerExtensionId(source src, target ext : Extension) {
             <element value="substanceAdministration"/>
             <variable value="src"/>
          </source>
-         <target>
-            <contextType value="variable"/>
-            <variable value="dosage"/>
-            <transform value="copy"/>
-            <parameter>
-               <valueId value="dosage"/>
-            </parameter>
-         </target>
          <dependent>
             <name value="DoseQuantity"/>
             <variable value="src">
@@ -2348,6 +2335,23 @@ group InnerExtensionId(source src, target ext : Extension) {
                </extension>
             </variable>
          </dependent>
+      </rule>
+      <rule>
+         <name value="MTPReferenceEntry"/>
+         <source>
+            <context value="src"/>
+            <element value="entryRelationship"/>
+            <condition value="((typeCode = 'COMP') and act.templateId.where(root = '2.16.756.5.30.1.1.10.10').exists() and (act.code.code = '225761000'))"/>
+         </source>
+         <target>
+            <context value="dosage"/>
+            <contextType value="variable"/>
+            <element value="asNeeded"/>
+            <transform value="copy"/>
+            <parameter>
+               <valueBoolean value="true"/>
+            </parameter>
+         </target>
       </rule>
    </group>
    <group>
@@ -2458,24 +2462,6 @@ group InnerExtensionId(source src, target ext : Extension) {
                </rule>
             </rule>
          </rule>
-      </rule>
-      <rule>
-         <name value="MTPReferenceEntry"/>
-         <source>
-            <context value="src"/>
-            <element value="entryRelationship"/>
-            <variable value="entry"/>
-            <condition value="((typeCode = 'COMP') and act.templateId.where(root = '2.16.756.5.30.1.1.10.10').exists() and (act.code.code = '225761000'))"/>
-         </source>
-         <target>
-            <context value="dosage"/>
-            <contextType value="variable"/>
-            <element value="asNeeded"/>
-            <transform value="copy"/>
-            <parameter>
-               <valueBoolean value="true"/>
-            </parameter>
-         </target>
       </rule>
    </group>
    <group>
@@ -2802,12 +2788,11 @@ group InnerExtensionId(source src, target ext : Extension) {
       <typeMode value="none"/>
       <documentation value="source: https://art-decor.org/art-decor/decor-templates--ch-pharm-?section=templates&amp;id=2.16.756.5.30.1.1.10.4.52&#xd;&#xa;target: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefinition-ch-emed-dosage-nonstructured.html"/>
       <input>
-         <name value="section"/>
-         <type value="Section"/>
+         <name value="entry"/>
          <mode value="source"/>
       </input>
       <input>
-         <name value="entry"/>
+         <name value="entryRelationship"/>
          <type value="Element"/>
          <mode value="source"/>
       </input>
@@ -2819,7 +2804,7 @@ group InnerExtensionId(source src, target ext : Extension) {
       <rule>
          <name value="observation"/>
          <source>
-            <context value="entry"/>
+            <context value="entryRelationship"/>
             <element value="substanceAdministration"/>
             <variable value="observation"/>
          </source>
@@ -2884,6 +2869,23 @@ group InnerExtensionId(source src, target ext : Extension) {
             </rule>
          </rule>
          <documentation value="see MedicationTreatmentPlanItemEntryContentModule"/>
+      </rule>
+      <rule>
+         <name value="MTPReferenceEntry"/>
+         <source>
+            <context value="entry"/>
+            <element value="entryRelationship"/>
+            <condition value="((typeCode = 'COMP') and act.templateId.where(root = '2.16.756.5.30.1.1.10.10').exists() and (act.code.code = '225761000'))"/>
+         </source>
+         <target>
+            <context value="dosage"/>
+            <contextType value="variable"/>
+            <element value="asNeeded"/>
+            <transform value="copy"/>
+            <parameter>
+               <valueBoolean value="true"/>
+            </parameter>
+         </target>
       </rule>
    </group>
    <group>
@@ -3285,7 +3287,7 @@ group InnerExtensionId(source src, target ext : Extension) {
          <source>
             <context value="src"/>
             <element value="entryRelationship"/>
-            <variable value="entry"/>
+            <variable value="entryRelationship"/>
             <condition value="((typeCode = 'COMP') and (substanceAdministration.templateId.root = '2.16.756.5.30.1.1.10.4.52'))"/>
          </source>
          <target>
@@ -3296,12 +3298,12 @@ group InnerExtensionId(source src, target ext : Extension) {
          </target>
          <dependent>
             <name value="DosageInstructionsNonStructuredEntryContentModule"/>
-            <variable value="section">
+            <variable value="src">
                <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
                   <valueUrl value="id"/>
                </extension>
             </variable>
-            <variable value="entry">
+            <variable value="entryRelationship">
                <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
                   <valueUrl value="id"/>
                </extension>
@@ -4332,7 +4334,7 @@ group InnerExtensionId(source src, target ext : Extension) {
             <name value="dosage"/>
             <source>
                <context value="src"/>
-               <condition value="$this.entryRelationship.sequenceNumber.exists() = false"/>
+               <condition value="($this.entryRelationship.sequenceNumber.exists() = false) and ($this.entryRelationship.substanceAdministration.templateId.where($this.root = '2.16.756.5.30.1.1.10.4.52').exists() = false)"/>
             </source>
             <target>
                <context value="medicationRequest"/>
@@ -4347,13 +4349,18 @@ group InnerExtensionId(source src, target ext : Extension) {
                      <valueUrl value="id"/>
                   </extension>
                </variable>
+               <variable value="src">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
                <variable value="dosage">
                   <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
                      <valueUrl value="id"/>
                   </extension>
                </variable>
             </dependent>
-            <documentation value="dosage for normal dosing, as no sequences are present there"/>
+            <documentation value="dosage for normal dosing, as no sequences are present there and no non-structurdedosings"/>
          </rule>
       </rule>
    </group>
@@ -4669,7 +4676,7 @@ group InnerExtensionId(source src, target ext : Extension) {
          <source>
             <context value="src"/>
             <element value="entryRelationship"/>
-            <variable value="entry"/>
+            <variable value="entryRelationship"/>
             <condition value="((typeCode = 'COMP') and (substanceAdministration.templateId.root = '2.16.756.5.30.1.1.10.4.52'))"/>
          </source>
          <target>
@@ -4680,12 +4687,12 @@ group InnerExtensionId(source src, target ext : Extension) {
          </target>
          <dependent>
             <name value="DosageInstructionsNonStructuredEntryContentModule"/>
-            <variable value="section">
+            <variable value="src">
                <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
                   <valueUrl value="id"/>
                </extension>
             </variable>
-            <variable value="entry">
+            <variable value="entryRelationship">
                <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
                   <valueUrl value="id"/>
                </extension>
@@ -4913,6 +4920,10 @@ group InnerExtensionId(source src, target ext : Extension) {
       <typeMode value="none"/>
       <documentation value="source: https://art-decor.org/art-decor/decor-templates--ch-pharm-?id=2.16.756.5.30.1.1.10.4.35&#xd;&#xa;target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition/ch-emed-dosage-structured-normal&#xd;&#xa;dosage for normal dosing, without sequences"/>
       <input>
+         <name value="entry"/>
+         <mode value="source"/>
+      </input>
+      <input>
          <name value="src"/>
          <type value="SubstanceAdministration"/>
          <mode value="source"/>
@@ -4926,16 +4937,7 @@ group InnerExtensionId(source src, target ext : Extension) {
          <name value="effectiveTimeStartEnd"/>
          <source>
             <context value="src"/>
-            <variable value="src"/>
          </source>
-         <target>
-            <contextType value="variable"/>
-            <variable value="dosage"/>
-            <transform value="copy"/>
-            <parameter>
-               <valueId value="dosage"/>
-            </parameter>
-         </target>
          <dependent>
             <name value="EffectiveTimeStartEnd"/>
             <variable value="src">
@@ -4954,16 +4956,7 @@ group InnerExtensionId(source src, target ext : Extension) {
          <name value="effectiveTimeWhen"/>
          <source>
             <context value="src"/>
-            <variable value="src"/>
          </source>
-         <target>
-            <contextType value="variable"/>
-            <variable value="dosage"/>
-            <transform value="copy"/>
-            <parameter>
-               <valueId value="dosage"/>
-            </parameter>
-         </target>
          <dependent>
             <name value="EffectiveTimeWhen"/>
             <variable value="src">
@@ -5009,16 +5002,7 @@ group InnerExtensionId(source src, target ext : Extension) {
          <name value="doseQuantity"/>
          <source>
             <context value="src"/>
-            <variable value="src"/>
          </source>
-         <target>
-            <contextType value="variable"/>
-            <variable value="dosage"/>
-            <transform value="copy"/>
-            <parameter>
-               <valueId value="dosage"/>
-            </parameter>
-         </target>
          <dependent>
             <name value="DoseQuantity"/>
             <variable value="src">
@@ -5032,6 +5016,23 @@ group InnerExtensionId(source src, target ext : Extension) {
                </extension>
             </variable>
          </dependent>
+      </rule>
+      <rule>
+         <name value="MTPReferenceEntry"/>
+         <source>
+            <context value="entry"/>
+            <element value="entryRelationship"/>
+            <condition value="((typeCode = 'COMP') and act.templateId.where(root = '2.16.756.5.30.1.1.10.10').exists() and (act.code.code = '225761000'))"/>
+         </source>
+         <target>
+            <context value="dosage"/>
+            <contextType value="variable"/>
+            <element value="asNeeded"/>
+            <transform value="copy"/>
+            <parameter>
+               <valueBoolean value="true"/>
+            </parameter>
+         </target>
       </rule>
    </group>
    <group>

@@ -101,11 +101,11 @@ group ManufacturedMaterialEntryContentModuleDispense(source src : Supply, target
       } "manufacturedMaterial";
     } "manufacturedProduct";
 
-    // dosage for normal dosing, as no sequences are present there
+    // dosage for normal dosing, no sequences and no non-structurdedosings
     src.entryRelationship as entry then {
       entry.substanceAdministration as substanceAdministration then {
-        substanceAdministration where $this.entryRelationship.sequenceNumber.exists()=false
-          -> medicationDispense.dosageInstruction as dosage then DosageInstructionsStartStopFrequency(substanceAdministration, dosage) "dosage";
+        substanceAdministration where $this.entryRelationship.sequenceNumber.exists()=false and $this.entryRelationship.substanceAdministration.templateId.where($this.root='2.16.756.5.30.1.1.10.4.52').exists()=false
+          -> medicationDispense.dosageInstruction as dosage then DosageInstructionsStartStopFrequency(src, substanceAdministration, dosage) "dosage";
       } "substanceAdministration";
     } "entry";
     
@@ -164,9 +164,10 @@ group ManufacturedMaterialEntryContentModuleStatement(source src : SubstanceAdmi
       } "manufacturedMaterial";
     } "manufacturedProduct";
 
-    // dosage for normal dosing, as no sequences are present there
-    src where $this.entryRelationship.sequenceNumber.exists()=false
-      -> medicationStatement.dosage as dosage then DosageInstructionsStartStopFrequency(src, dosage) "dosage";
+
+    // dosage for normal dosing, as no sequences and no non-structurdedosings
+    src where $this.entryRelationship.sequenceNumber.exists()=false and $this.entryRelationship.substanceAdministration.templateId.where($this.root='2.16.756.5.30.1.1.10.4.52').exists()=false
+      -> medicationStatement.dosage as dosage then DosageInstructionsStartStopFrequency(src, src, dosage) "dosage";
     
   } "consumable";
 }
@@ -196,9 +197,9 @@ group MedicationTreatmentPlanItemEntryContentModule(source section : Section, so
           then TreatmentReasonEntryContentModule(section, observation, reasonCode) "reasonCode";
   } "entryRelationShip-2.16.756.5.30.1.1.10.4.41";
 
-  src.entryRelationship as entry where (typeCode='COMP' and substanceAdministration.templateId.root='2.16.756.5.30.1.1.10.4.52') 
+  src.entryRelationship as entryRelationship where (typeCode='COMP' and substanceAdministration.templateId.root='2.16.756.5.30.1.1.10.4.52') 
     -> medicationStatement.dosage as dosage 
-        then DosageInstructionsNonStructuredEntryContentModule(section, entry, dosage) "entryRelationShip-2.16.756.5.30.1.1.10.4.52";  
+        then DosageInstructionsNonStructuredEntryContentModule(src, entryRelationship, dosage) "entryRelationShip-2.16.756.5.30.1.1.10.4.52";  
 
   src.entryRelationship as entry where (typeCode='COMP' and sequenceNumber.value>=0) 
     -> medicationStatement.dosage as dosage 
@@ -224,10 +225,12 @@ group DosageInstructionsEntryDosageChange(source src: substanceAdministration, s
     sequenceNumber.value as val  -> dosage.sequence = val "value";
   } "sequenceNumber";
 
-  src as src -> dosage as dosage then EffectiveTimeStartEnd(src, dosage) "effectiveTimeStartEnd";
-  entry.substanceAdministration as src -> dosage as dosage then EffectiveTimeWhen(src, dosage) "effectiveTimeWhen";
+  src then EffectiveTimeStartEnd(src, dosage) "effectiveTimeStartEnd";
+  entry.substanceAdministration as src then EffectiveTimeWhen(src, dosage) "effectiveTimeWhen";
   src.routeCode as routeCode -> dosage.route as route then CECodeableConcept(routeCode, route) "routeCode";
-  entry.substanceAdministration as src -> dosage as dosage then DoseQuantity(src, dosage) "doseQuantity";
+  entry.substanceAdministration as src then DoseQuantity(src, dosage) "doseQuantity";
+  src.entryRelationship where (typeCode='COMP' and act.templateId.where(root='2.16.756.5.30.1.1.10.10').exists() and act.code.code='225761000') 
+  -> dosage.asNeeded = true "MTPReferenceEntry";    
 }
 
 // effective time start & end for dosage and check for medicaiton in reserve
@@ -244,8 +247,6 @@ group EffectiveTimeStartEnd(source src: substanceAdministration, target dosage: 
       } "period";
     } "repeat";
   } "effectiveTime-IVL-TS";
-  src.entryRelationship as entry where (typeCode='COMP' and act.templateId.where(root='2.16.756.5.30.1.1.10.10').exists() and act.code.code='225761000') 
-  -> dosage.asNeeded = true "MTPReferenceEntry";   
 }
 
 // effective time when for dosage
@@ -302,9 +303,9 @@ group MTPReferenceEntryContentModule(source entryrelationship, target ext: Exten
 
 // source: https://art-decor.org/art-decor/decor-templates--ch-pharm-?section=templates&id=2.16.756.5.30.1.1.10.4.52
 // target: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefinition-ch-emed-dosage-nonstructured.html
-group DosageInstructionsNonStructuredEntryContentModule(source section : Section, source entry : Element, target dosage : Dosage) {
+group DosageInstructionsNonStructuredEntryContentModule(source entry, source entryRelationship : Element, target dosage : Dosage) {
   // see MedicationTreatmentPlanItemEntryContentModule
-  entry.substanceAdministration as observation then {
+  entryRelationship.substanceAdministration as observation then {
     observation.text as text then {
       text.data as data -> dosage.text = data "level3";
             text.reference as reference then {
@@ -312,6 +313,8 @@ group DosageInstructionsNonStructuredEntryContentModule(source section : Section
       } "reference";
     } "text";
   } "observation";
+  entry.entryRelationship where (typeCode='COMP' and act.templateId.where(root='2.16.756.5.30.1.1.10.10').exists() and act.code.code='225761000') 
+  -> dosage.asNeeded = true "MTPReferenceEntry";    
 }
 
 // source: Substitution act Contains 1.3.6.1.4.1.19376.1.9.1.3.9.2 IHE Substitution Act Content Module
@@ -350,9 +353,9 @@ group DispenseItemEntryContentModule(source section : Section, source src : Supp
       ext.url = 'http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-documentauthor',
       ext.value = create('Reference') as reference then Author(author, reference, bundle) "ch-emed-ext-documentauthor";
 
-  src.entryRelationship as entry where (typeCode='COMP' and substanceAdministration.templateId.root='2.16.756.5.30.1.1.10.4.52') 
+  src.entryRelationship as entryRelationship where (typeCode='COMP' and substanceAdministration.templateId.root='2.16.756.5.30.1.1.10.4.52') 
     -> medicationDispense.dosageInstruction as dosage 
-        then DosageInstructionsNonStructuredEntryContentModule(section, entry, dosage) "entryRelationShip-2.16.756.5.30.1.1.10.4.52";  
+        then DosageInstructionsNonStructuredEntryContentModule(src, entryRelationship, dosage) "entryRelationShip-2.16.756.5.30.1.1.10.4.52";  
 
   src.entryRelationship as entryRelationship then {
     entryRelationship.substanceAdministration as substanceAdministration then {
@@ -479,9 +482,9 @@ group ManufacturedMaterialEntryContentModuleRequest(source src : SubstanceAdmini
       } "manufacturedMaterial";
     } "manufacturedProduct";
 
-    // dosage for normal dosing, as no sequences are present there
-    src where $this.entryRelationship.sequenceNumber.exists()=false
-      -> medicationRequest.dosageInstruction as dosage then DosageInstructionsStartStopFrequency(src, dosage) "dosage";
+    // dosage for normal dosing, as no sequences are present there and no non-structurdedosings
+    src where $this.entryRelationship.sequenceNumber.exists()=false and $this.entryRelationship.substanceAdministration.templateId.where($this.root='2.16.756.5.30.1.1.10.4.52').exists()=false
+      -> medicationRequest.dosageInstruction as dosage then DosageInstructionsStartStopFrequency(src, src, dosage) "dosage";
 
   } "consumable";
 }
@@ -513,9 +516,9 @@ group PrescriptionItemEntryContentModule(source section : Section, source src : 
           then TreatmentReasonEntryContentModule(section, observation, reasonCode) "reasonCode";
   } "entryRelationShip-2.16.756.5.30.1.1.10.4.41";
 
-  src.entryRelationship as entry where (typeCode='COMP' and substanceAdministration.templateId.root='2.16.756.5.30.1.1.10.4.52') 
+  src.entryRelationship as entryRelationship where (typeCode='COMP' and substanceAdministration.templateId.root='2.16.756.5.30.1.1.10.4.52') 
     -> medicationRequest.dosageInstruction as dosage 
-        then DosageInstructionsNonStructuredEntryContentModule(section, entry, dosage) "entryRelationShip-2.16.756.5.30.1.1.10.4.52";  
+        then DosageInstructionsNonStructuredEntryContentModule(src, entryRelationship, dosage) "entryRelationShip-2.16.756.5.30.1.1.10.4.52";  
 
   // dosage for split dosing, as sequences are present there
   src.entryRelationship as entry where (typeCode='COMP' and sequenceNumber.value>=0) 
@@ -545,11 +548,13 @@ group PrescriptionItemEntryContentModule(source section : Section, source src : 
 // source: https://art-decor.org/art-decor/decor-templates--ch-pharm-?id=2.16.756.5.30.1.1.10.4.35 
 // target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition/ch-emed-dosage-structured-normal
 // dosage for normal dosing, without sequences
-group DosageInstructionsStartStopFrequency(source src : SubstanceAdministration, target dosage: Dosage) {
-  src as src -> dosage as dosage then EffectiveTimeStartEnd(src, dosage) "effectiveTimeStartEnd";
-  src as src -> dosage as dosage then EffectiveTimeWhen(src, dosage) "effectiveTimeWhen";
+group DosageInstructionsStartStopFrequency(source entry, source src : SubstanceAdministration, target dosage: Dosage) {
+  src then EffectiveTimeStartEnd(src, dosage) "effectiveTimeStartEnd";
+  src then EffectiveTimeWhen(src, dosage) "effectiveTimeWhen";
   src.routeCode as routeCode -> dosage.route as route then CECodeableConcept(routeCode, route) "routeCode";
-  src as src -> dosage as dosage then DoseQuantity(src, dosage) "doseQuantity";
+  src then DoseQuantity(src, dosage) "doseQuantity";
+  entry.entryRelationship where (typeCode='COMP' and act.templateId.where(root='2.16.756.5.30.1.1.10.10').exists() and act.code.code='225761000') 
+  -> dosage.asNeeded = true "MTPReferenceEntry";    
 }
 
 

@@ -1,0 +1,371 @@
+{
+  "resourceType": "Bundle",
+  "id": "3-3-MTPDermed",
+  "meta": {
+    "profile": [
+      "http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-document-medicationtreatmentplan"
+    ]
+  },
+  "identifier": {
+    "system": "urn:ietf:rfc:3986",
+    "value": "urn:uuid:5f1329d6-8eee-40dc-96a2-905e286e319b"
+  },
+  "type": "document",
+  "timestamp": "2019-03-01T11:00:00+01:00",
+  "entry": [
+    {
+      "fullUrl": "http://test.fhir.ch/r4/Composition/3-3-CompDermed",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "3-3-CompDermed",
+        "meta": {
+          "profile": [
+            "http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-composition-medicationtreatmentplan"
+          ]
+        },
+        "language": "fr-CH",
+        "text": {
+          "status": "extensions",
+          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"fr-CH\" lang=\"fr-CH\"><p><b>Generated Narrative: Composition</b></p><div style=\"display: inline-block; background-color: #d9e0e7; padding: 6px; margin: 4px; border: 1px solid #8da1b4; border-radius: 5px; line-height: 60%\"><p style=\"margin-bottom: 0px\">Resource Composition \"3-3-CompDermed\"  (Language \"fr-CH\") </p><p style=\"margin-bottom: 0px\">Profile: <a href=\"http://fhir.ch/ig/ch-emed/2.1.0/StructureDefinition-ch-emed-composition-medicationtreatmentplan.html\">CH EMED Medication Treatment Plan Composition</a></p></div><p><b>EPR Information Recipient</b>: <a href=\"#Patient_MadameDupontInformationRecipient\">See above (Patient/MadameDupontInformationRecipient)</a></p><p><b>identifier</b>: id: urn:uuid:5f1329d6-8eee-40dc-96a2-905e286e319b</p><p><b>status</b>: final</p><p><b>type</b>: Medication treatment plan.extended <span style=\"background: LightGoldenRodYellow; margin: 4px; border: 1px solid khaki\"> (<a href=\"https://loinc.org/\">LOINC</a>#77603-9; <a href=\"https://browser.ihtsdotools.org/\">SNOMED CT</a>#419891008 \"Record artifact (record artifact)\")</span></p><p><b>date</b>: 2019-03-01 11:00:00+0100</p><p><b>author</b>: <a href=\"#Practitioner_DoctorHospital\">See above (Practitioner/DoctorHospital)</a></p><p><b>title</b>: Décision thérapeutique relative à la médication</p><p><b>confidentiality</b>: N</p><p><b>custodian</b>: <a href=\"#Organization_Hospital\">See above (Organization/Hospital)</a></p></div>"
+        },
+        "extension": [
+          {
+            "url": "http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-informationrecipient",
+            "valueReference": {
+              "reference": "Patient/MadameDupontInformationRecipient"
+            }
+          }
+        ],
+        "identifier": {
+          "system": "urn:ietf:rfc:3986",
+          "value": "urn:uuid:5f1329d6-8eee-40dc-96a2-905e286e319b"
+        },
+        "status": "final",
+        "type": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "77603-9",
+              "display": "Medication treatment plan.extended"
+            },
+            {
+              "system": "http://snomed.info/sct",
+              "code": "419891008",
+              "display": "Record artifact (record artifact)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/MadameDupont"
+        },
+        "date": "2019-03-01T11:00:00+01:00",
+        "author": [
+          {
+            "reference": "Practitioner/DoctorHospital"
+          }
+        ],
+        "title": "Décision thérapeutique relative à la médication",
+        "confidentiality": "N",
+        "_confidentiality": {
+          "extension": [
+            {
+              "url": "http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-confidentialitycode",
+              "valueCodeableConcept": {
+                "coding": [
+                  {
+                    "system": "http://snomed.info/sct",
+                    "code": "17621005",
+                    "display": "Normally accessible"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "custodian": {
+          "reference": "Organization/Hospital"
+        },
+        "section": [
+          {
+            "title": "Plan de traitement médicamenteux",
+            "code": {
+              "coding": [
+                {
+                  "system": "http://loinc.org",
+                  "code": "77604-7",
+                  "display": "Medication treatment plan.brief"
+                }
+              ]
+            },
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p id=\"refpdf\">DER-MED lotion lavante pH5.5, raison: peau sensible, instruction au patient: pour se laver</p></div>"
+            },
+            "entry": [
+              {
+                "reference": "MedicationStatement/3-3-MedStatDermed"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "http://test.fhir.ch/r4/MedicationStatement/3-3-MedStatDermed",
+      "resource": {
+        "resourceType": "MedicationStatement",
+        "id": "3-3-MedStatDermed",
+        "meta": {
+          "profile": [
+            "http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-medicationstatement-treatmentplan"
+          ]
+        },
+        "text": {
+          "status": "generated",
+          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p><b>Generated Narrative: MedicationStatement</b></p><div style=\"display: inline-block; background-color: #d9e0e7; padding: 6px; margin: 4px; border: 1px solid #8da1b4; border-radius: 5px; line-height: 60%\"><p style=\"margin-bottom: 0px\">Resource MedicationStatement \"3-3-MedStatDermed\" </p><p style=\"margin-bottom: 0px\">Profile: <a href=\"http://fhir.ch/ig/ch-emed/2.1.0/StructureDefinition-ch-emed-medicationstatement-treatmentplan.html\">CH EMED MedicationStatement (Medication Treatment Plan document)</a></p></div><p><b>identifier</b>: id: urn:uuid:fc4ce14e-fc6a-4499-a619-98a0a55c5fb8</p><p><b>status</b>: completed</p><p><b>medication</b>: <a name=\"MedDermed\"> </a></p><blockquote><div style=\"display: inline-block; background-color: #d9e0e7; padding: 6px; margin: 4px; border: 1px solid #8da1b4; border-radius: 5px; line-height: 60%\"><p style=\"margin-bottom: 0px\">Resource Medication \"MedDermed\" </p><p style=\"margin-bottom: 0px\">Profile: <a href=\"http://fhir.ch/ig/ch-emed/2.1.0/StructureDefinition-ch-emed-medication.html\">CH EMED Medication</a></p></div><p><b>code</b>: DER-MED lotion lavante pH 5.5 flacon 150 ml (hc 05/21) <span style=\"background: LightGoldenRodYellow; margin: 4px; border: 1px solid khaki\"> (unknown#7680431100390)</span></p><p><b>form</b>: Cutaneous emulsion <span style=\"background: LightGoldenRodYellow; margin: 4px; border: 1px solid khaki\"> (<a href=\"http://fhir.ch/ig/ch-emed/2.1.0/CodeSystem-edqm-standardterms.html\">EDQM - Standard Terms</a>#10516000)</span></p><p><b>amount</b>: 150 milliliter<span style=\"background: LightGoldenRodYellow\"> (Details: UCUM code mL = 'mL')</span>/1 Bottle<span style=\"background: LightGoldenRodYellow\"> (Details: SNOMED CT code 732986007 = 'Bottle (unit of presentation)')</span></p><h3>Ingredients</h3><table class=\"grid\"><tr><td>-</td><td><b>Item[x]</b></td><td><b>Strength</b></td></tr><tr><td>*</td><td>Undécylénamide MEA-sulfosuccinate disodique <span style=\"background: LightGoldenRodYellow; margin: 4px; border: 1px solid khaki\"> ()</span></td><td>30 milligram<span style=\"background: LightGoldenRodYellow\"> (Details: UCUM code mg = 'mg')</span>/1 gram<span style=\"background: LightGoldenRodYellow\"> (Details: UCUM code g = 'g')</span></td></tr></table></blockquote><p><b>subject</b>: <a href=\"#Patient_MadameDupont\">See above (Patient/MadameDupont)</a></p><p><b>reasonCode</b>: peau sensible <span style=\"background: LightGoldenRodYellow; margin: 4px; border: 1px solid khaki\"> ()</span></p><p><b>note</b>: pour se laver</p></div>"
+        },
+        "contained": [
+          {
+            "resourceType": "Medication",
+            "id": "MedDermed",
+            "meta": {
+              "profile": [
+                "http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-medication"
+              ]
+            },
+            "code": {
+              "coding": [
+                {
+                  "system": "urn:oid:2.51.1.1",
+                  "code": "7680431100390",
+                  "display": "DER-MED lotion lavante pH 5.5 flacon 150 ml (hc 05/21)"
+                }
+              ],
+              "text": "DER-MED lotion lavante pH 5.5 flacon 150 ml (hc 05/21)"
+            },
+            "form": {
+              "coding": [
+                {
+                  "system": "urn:oid:0.4.0.127.0.16.1.1.2.1",
+                  "code": "10516000",
+                  "display": "Cutaneous emulsion"
+                }
+              ]
+            },
+            "amount": {
+              "numerator": {
+                "value": 150,
+                "unit": "milliliter",
+                "system": "http://unitsofmeasure.org",
+                "code": "mL"
+              },
+              "denominator": {
+                "value": 1,
+                "unit": "Bottle",
+                "system": "http://snomed.info/sct",
+                "code": "732986007"
+              }
+            },
+            "ingredient": [
+              {
+                "itemCodeableConcept": {
+                  "text": "Undécylénamide MEA-sulfosuccinate disodique"
+                },
+                "strength": {
+                  "numerator": {
+                    "value": 30,
+                    "unit": "milligram",
+                    "system": "http://unitsofmeasure.org",
+                    "code": "mg"
+                  },
+                  "denominator": {
+                    "value": 1,
+                    "unit": "gram",
+                    "system": "http://unitsofmeasure.org",
+                    "code": "g"
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        "identifier": [
+          {
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:fc4ce14e-fc6a-4499-a619-98a0a55c5fb8"
+          }
+        ],
+        "status": "completed",
+        "medicationReference": {
+          "reference": "#MedDermed"
+        },
+        "subject": {
+          "reference": "Patient/MadameDupont"
+        },
+        "reasonCode": [
+          {
+            "text": "peau sensible"
+          }
+        ],
+        "note": [
+          {
+            "text": "pour se laver"
+          }
+        ],
+        "dosage": [
+          {
+            "text": "Dosage selon les instructions au patient",
+            "asNeededBoolean": true
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "http://test.fhir.ch/r4/Patient/MadameDupont",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "MadameDupont",
+        "meta": {
+          "profile": [
+            "http://fhir.ch/ig/ch-core/StructureDefinition/ch-core-patient-epr"
+          ]
+        },
+        "text": {
+          "status": "generated",
+          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p><b>Generated Narrative: Patient</b></p><div style=\"display: inline-block; background-color: #d9e0e7; padding: 6px; margin: 4px; border: 1px solid #8da1b4; border-radius: 5px; line-height: 60%\"><p style=\"margin-bottom: 0px\">Resource Patient \"MadameDupont\" </p><p style=\"margin-bottom: 0px\">Profile: <a href=\"http://fhir.ch/ig/ch-core/2.1.0/StructureDefinition-ch-core-patient-epr.html\">CH Core Patient EPR</a></p></div><p><b>identifier</b>: Medical record number: 12345678</p><p><b>name</b>: Madame Dupont </p><p><b>gender</b>: female</p><p><b>birthDate</b>: 1943-05-15</p></div>"
+        },
+        "identifier": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+                  "code": "MR"
+                }
+              ]
+            },
+            "system": "urn:oid:2.999.756.42.2",
+            "value": "12345678"
+          }
+        ],
+        "name": [
+          {
+            "family": "Dupont",
+            "given": [
+              "Madame"
+            ]
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1943-05-15"
+      }
+    },
+    {
+      "fullUrl": "http://test.fhir.ch/r4/Patient/MadameDupontInformationRecipient",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "MadameDupontInformationRecipient",
+        "meta": {
+          "profile": [
+            "http://fhir.ch/ig/ch-core/StructureDefinition/ch-core-patient"
+          ]
+        },
+        "text": {
+          "status": "generated",
+          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p><b>Generated Narrative: Patient</b></p><div style=\"display: inline-block; background-color: #d9e0e7; padding: 6px; margin: 4px; border: 1px solid #8da1b4; border-radius: 5px; line-height: 60%\"><p style=\"margin-bottom: 0px\">Resource Patient \"MadameDupontInformationRecipient\" </p><p style=\"margin-bottom: 0px\">Profile: <a href=\"http://fhir.ch/ig/ch-core/2.1.0/StructureDefinition-ch-core-patient.html\">CH Core Patient</a></p></div><p><b>name</b>: Madame Dupont </p><p><b>address</b>: Wiesenstr. 12 Zürich 8003 CH </p></div>"
+        },
+        "name": [
+          {
+            "family": "Dupont",
+            "given": [
+              "Madame"
+            ]
+          }
+        ],
+        "address": [
+          {
+            "line": [
+              "Wiesenstr. 12"
+            ],
+            "city": "Zürich",
+            "postalCode": "8003",
+            "country": "CH"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "http://test.fhir.ch/r4/Organization/Hospital",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "Hospital",
+        "meta": {
+          "profile": [
+            "http://fhir.ch/ig/ch-core/StructureDefinition/ch-core-organization-epr"
+          ]
+        },
+        "text": {
+          "status": "generated",
+          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p><b>Generated Narrative: Organization</b></p><div style=\"display: inline-block; background-color: #d9e0e7; padding: 6px; margin: 4px; border: 1px solid #8da1b4; border-radius: 5px; line-height: 60%\"><p style=\"margin-bottom: 0px\">Resource Organization \"Hospital\" </p><p style=\"margin-bottom: 0px\">Profile: <a href=\"http://fhir.ch/ig/ch-core/2.1.0/StructureDefinition-ch-core-organization-epr.html\">CH Core Organization EPR</a></p></div><p><b>identifier</b>: id: 7601000234322</p><p><b>name</b>: Hôpital</p><p><b>address</b>: Spitalgasse 4 Zürich 8005 CH </p></div>"
+        },
+        "identifier": [
+          {
+            "system": "urn:oid:2.51.1.3",
+            "value": "7601000234322"
+          }
+        ],
+        "name": "Hôpital",
+        "address": [
+          {
+            "line": [
+              "Spitalgasse 4"
+            ],
+            "city": "Zürich",
+            "postalCode": "8005",
+            "country": "CH"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "http://test.fhir.ch/r4/Practitioner/DoctorHospital",
+      "resource": {
+        "resourceType": "Practitioner",
+        "id": "DoctorHospital",
+        "meta": {
+          "profile": [
+            "http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-practitioner"
+          ]
+        },
+        "text": {
+          "status": "generated",
+          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p><b>Generated Narrative: Practitioner</b></p><div style=\"display: inline-block; background-color: #d9e0e7; padding: 6px; margin: 4px; border: 1px solid #8da1b4; border-radius: 5px; line-height: 60%\"><p style=\"margin-bottom: 0px\">Resource Practitioner \"DoctorHospital\" </p><p style=\"margin-bottom: 0px\">Profile: <a href=\"http://fhir.ch/ig/ch-emed/2.1.0/StructureDefinition-ch-emed-practitioner.html\">CH EMED Practitioner</a></p></div><p><b>identifier</b>: id: 7601000234322</p><p><b>name</b>: Docteur Hôpital </p><p><b>address</b>: Spitalgasse 4 Zürich 8005 CH </p></div>"
+        },
+        "identifier": [
+          {
+            "system": "urn:oid:2.51.1.3",
+            "value": "7601000234322"
+          }
+        ],
+        "name": [
+          {
+            "family": "Hôpital",
+            "given": [
+              "Docteur"
+            ]
+          }
+        ],
+        "address": [
+          {
+            "line": [
+              "Spitalgasse 4"
+            ],
+            "city": "Zürich",
+            "postalCode": "8005",
+            "country": "CH"
+          }
+        ]
+      }
+    }
+  ]
+}

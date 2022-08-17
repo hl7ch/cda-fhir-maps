@@ -1,8 +1,8 @@
 <StructureMap xmlns="http://hl7.org/fhir">
    <id value="BundleToCdaChEmed"/>
    <meta>
-      <versionId value="21"/>
-      <lastUpdated value="2022-08-15T12:39:21.596+00:00"/>
+      <versionId value="26"/>
+      <lastUpdated value="2022-08-17T12:25:08.790+00:00"/>
    </meta>
    <text>
       <status value="generated"/>
@@ -186,14 +186,18 @@ group MedicationTreatmentPlanItemEntryContentModule(source bundle : Bundle, sour
   // Patient Medication Instructions Contains 1.3.6.1.4.1.19376.1.5.3.1.4.3 IHE Patient Medication Instructions (DYNAMIC)
   medicationStatement.note as note -&gt;  substanceAdministration.entryRelationship as entryRelationship,  entryRelationship.typeCode = &apos;SUBJ&apos;,  entryRelationship.inversionInd = &apos;true&apos;,  entryRelationship.act as act then NoteToPInstruct(note, act) &quot;AnnotationComment&quot;;
   // TODO: Amount of units of the consumable to dispense
-  medicationStatement.dosage as dosage where $this.conformsTo(&apos;http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-nonstructured&apos;) -&gt;  substanceAdministration.entryRelationship as entryRelationship,  entryRelationship.typeCode = &apos;COMP&apos;,  entryRelationship.substanceAdministration as substanceAdministration then DosageInstructionsNonStructuredEntryContentModule(dosage, substanceAdministration) &quot;DosageInstructionsNonStructuredEntryContentModule&quot;;
+  medicationStatement where dosage.where($this.asNeeded).exists() then DosageInReserve(medicationStatement, substanceAdministration) &quot;DosageInReserve&quot;;
+  // FIXME http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-nonstructured does not yet included asNeeded
+  medicationStatement.dosage as dosage where $this.text.exists() then {
+    dosage -&gt;  substanceAdministration.entryRelationship as entryRelationship,  entryRelationship.typeCode = &apos;COMP&apos;,  entryRelationship.substanceAdministration as substanceAdministration then DosageInstructionsNonStructuredEntryContentModule(dosage, substanceAdministration) &quot;DosageInstructionsNonStructuredEntryContentModule&quot;;
+  };
   medicationStatement.extension as extension where $this.url = &apos;http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-substitution&apos; -&gt;  substanceAdministration.entryRelationship as entryRelationship,  entryRelationship.typeCode = &apos;COMP&apos;,  entryRelationship.act as act then SubstitutionStatement(extension, act) &quot;Substitution&quot;;
 }
 
 // source: http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured-normal
 // target: https://qligier.github.io/cara-emed-ig/cdachemed/mtp/#in-reserve
-group DosageInReserve(source dosage : Dosage, target substanceAdministration : SubstanceAdministration) {
-  dosage.asNeeded -&gt;  substanceAdministration.entryRelationship as entryRelationship,  entryRelationship.typeCode = &apos;COMP&apos;,  entryRelationship.act as act,  act.classCode = &apos;ACT&apos;,  act.moodCode = &apos;DEF&apos;,  act.templateId as templateId,  templateId.root = &apos;2.16.756.5.30.1.1.10.10&apos;,  act.code as code,  code.code = &apos;225761000&apos;,  code.codeSystem = &apos;2.16.840.1.113883.6.96&apos;,  code.codeSystemName = &apos;SNOMED Clinical Terms&apos;,  code.displayName = &apos;As required (qualifier value)&apos;,  act.statusCode as statuscode,  statuscode.code = &apos;completed&apos; &quot;DosageInReserve&quot;;
+group DosageInReserve(source dosage, target entry) {
+  dosage -&gt;  entry.entryRelationship as entryRelationship,  entryRelationship.typeCode = &apos;COMP&apos;,  entryRelationship.act as act,  act.classCode = &apos;ACT&apos;,  act.moodCode = &apos;DEF&apos;,  act.templateId as templateId,  templateId.root = &apos;2.16.756.5.30.1.1.10.10&apos;,  act.code as code,  code.code = &apos;225761000&apos;,  code.codeSystem = &apos;2.16.840.1.113883.6.96&apos;,  code.codeSystemName = &apos;SNOMED Clinical Terms&apos;,  code.displayName = &apos;As required (qualifier value)&apos;,  act.statusCode as statuscode,  statuscode.code = &apos;completed&apos; &quot;DosageInReserve&quot;;
 }
 
 // source: http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured-normal
@@ -241,7 +245,6 @@ group EffectiveTimeStartEnd(source dosage : Dosage, target substanceAdministrati
       };
     };
   };
-  dosage.asNeeded then DosageInReserve(dosage, substanceAdministration) &quot;dosageInReverse&quot;;
 }
 
 // dose quantity for dosage (application schema) (Statement)
@@ -411,6 +414,7 @@ group DispenseItemEntryContentModule(source bundle : Bundle, source medicationDi
   medicationDispense where dosageInstruction.count() = 1 then {
     medicationDispense.dosageInstruction as dosage where $this.conformsTo(&apos;http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-nonstructured&apos;) -&gt;  substanceAdministration.templateId as templateId,  templateId.root = &apos;1.3.6.1.4.1.19376.1.5.3.1.4.7.1&apos; &quot;normalDose&quot;;
   } &quot;onylonedosage&quot;;
+  medicationDispense where dosageInstruction.where($this.asNeeded).exists() then DosageInReserve(medicationDispense, supply) &quot;DosageInReserve&quot;;
   // dosage for normal dosing, as no sequences are present there
   medicationDispense.dosageInstruction as dosage where $this.conformsTo(&apos;http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured-normal&apos;) then DosageInstructionsStartStopFrequencySupply(dosage, supply) &quot;DosageSubstanceAdministration&quot;;
   // dosage for split dosing, as sequences are present there
@@ -669,6 +673,7 @@ group PrescriptionItemEntryContentModule(source bundle : Bundle, source medicati
   medicationRequest where dosageInstruction.count() = 1 then {
     medicationRequest.dosageInstruction as dosage where $this.conformsTo(&apos;http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-nonstructured&apos;) -&gt;  substanceAdministration.templateId as templateId,  templateId.root = &apos;1.3.6.1.4.1.19376.1.5.3.1.4.7.1&apos; &quot;normalDose&quot;;
   } &quot;onylonedosage&quot;;
+  medicationRequest where dosageInstruction.where($this.asNeeded).exists() then DosageInReserve(medicationRequest, substanceAdministration) &quot;DosageInReserve&quot;;
   medicationRequest.dosageInstruction as dosage where $this.conformsTo(&apos;http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured-normal-medicationrequest&apos;) then DosageInstructionsStartStopFrequencySubstanceAdministration(dosage, substanceAdministration) &quot;DosageSubstanceAdministration&quot;;
   // dosage for split dosing (with sequences): effectiveTime (start/stop) &amp; routeCode
   medicationRequest.dosageInstruction first as dosage where $this.conformsTo(&apos;http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured-split-medicationrequest&apos;) -&gt; substanceAdministration.entryRelationship as entryRelationship then DosageInstructionsEntryStartStopRoute(dosage, substanceAdministration, entryRelationship) &quot;DosageSubstanceAdministration&quot;;
@@ -2859,37 +2864,14 @@ group PharmaceuticalAdviceItemEntryContentModule(source bundle : Bundle, source 
          <documentation value="Patient Medication Instructions Contains 1.3.6.1.4.1.19376.1.5.3.1.4.3 IHE Patient Medication Instructions (DYNAMIC)"/>
       </rule>
       <rule>
-         <name value="DosageInstructionsNonStructuredEntryContentModule"/>
+         <name value="DosageInReserve"/>
          <source>
             <context value="medicationStatement"/>
-            <element value="dosage"/>
-            <variable value="dosage"/>
-            <condition value="$this.conformsTo('http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-nonstructured')"/>
+            <condition value="dosage.where($this.asNeeded).exists()"/>
          </source>
-         <target>
-            <context value="substanceAdministration"/>
-            <contextType value="variable"/>
-            <element value="entryRelationship"/>
-            <variable value="entryRelationship"/>
-         </target>
-         <target>
-            <context value="entryRelationship"/>
-            <contextType value="variable"/>
-            <element value="typeCode"/>
-            <transform value="copy"/>
-            <parameter>
-               <valueString value="COMP"/>
-            </parameter>
-         </target>
-         <target>
-            <context value="entryRelationship"/>
-            <contextType value="variable"/>
-            <element value="substanceAdministration"/>
-            <variable value="substanceAdministration"/>
-         </target>
          <dependent>
-            <name value="DosageInstructionsNonStructuredEntryContentModule"/>
-            <variable value="dosage">
+            <name value="DosageInReserve"/>
+            <variable value="medicationStatement">
                <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
                   <valueUrl value="id"/>
                </extension>
@@ -2901,6 +2883,56 @@ group PharmaceuticalAdviceItemEntryContentModule(source bundle : Bundle, source 
             </variable>
          </dependent>
          <documentation value="TODO: Amount of units of the consumable to dispense"/>
+      </rule>
+      <rule>
+         <name value="dosage"/>
+         <source>
+            <context value="medicationStatement"/>
+            <element value="dosage"/>
+            <variable value="dosage"/>
+            <condition value="$this.text.exists()"/>
+         </source>
+         <rule>
+            <name value="DosageInstructionsNonStructuredEntryContentModule"/>
+            <source>
+               <context value="dosage"/>
+            </source>
+            <target>
+               <context value="substanceAdministration"/>
+               <contextType value="variable"/>
+               <element value="entryRelationship"/>
+               <variable value="entryRelationship"/>
+            </target>
+            <target>
+               <context value="entryRelationship"/>
+               <contextType value="variable"/>
+               <element value="typeCode"/>
+               <transform value="copy"/>
+               <parameter>
+                  <valueString value="COMP"/>
+               </parameter>
+            </target>
+            <target>
+               <context value="entryRelationship"/>
+               <contextType value="variable"/>
+               <element value="substanceAdministration"/>
+               <variable value="substanceAdministration"/>
+            </target>
+            <dependent>
+               <name value="DosageInstructionsNonStructuredEntryContentModule"/>
+               <variable value="dosage">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
+               <variable value="substanceAdministration">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
+            </dependent>
+         </rule>
+         <documentation value="FIXME http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-nonstructured does not yet included asNeeded"/>
       </rule>
       <rule>
          <name value="Substitution"/>
@@ -2952,22 +2984,19 @@ group PharmaceuticalAdviceItemEntryContentModule(source bundle : Bundle, source 
       <documentation value="source: http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured-normal&#xd;&#xa;target: https://qligier.github.io/cara-emed-ig/cdachemed/mtp/#in-reserve"/>
       <input>
          <name value="dosage"/>
-         <type value="Dosage"/>
          <mode value="source"/>
       </input>
       <input>
-         <name value="substanceAdministration"/>
-         <type value="SubstanceAdministration"/>
+         <name value="entry"/>
          <mode value="target"/>
       </input>
       <rule>
          <name value="DosageInReserve"/>
          <source>
             <context value="dosage"/>
-            <element value="asNeeded"/>
          </source>
          <target>
-            <context value="substanceAdministration"/>
+            <context value="entry"/>
             <contextType value="variable"/>
             <element value="entryRelationship"/>
             <variable value="entryRelationship"/>
@@ -3640,26 +3669,6 @@ group PharmaceuticalAdviceItemEntryContentModule(source bundle : Bundle, source 
                </rule>
             </rule>
          </rule>
-      </rule>
-      <rule>
-         <name value="dosageInReverse"/>
-         <source>
-            <context value="dosage"/>
-            <element value="asNeeded"/>
-         </source>
-         <dependent>
-            <name value="DosageInReserve"/>
-            <variable value="dosage">
-               <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
-                  <valueUrl value="id"/>
-               </extension>
-            </variable>
-            <variable value="substanceAdministration">
-               <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
-                  <valueUrl value="id"/>
-               </extension>
-            </variable>
-         </dependent>
       </rule>
    </group>
    <group>
@@ -5756,6 +5765,26 @@ group PharmaceuticalAdviceItemEntryContentModule(source bundle : Bundle, source 
             </target>
          </rule>
          <documentation value="#24 missing template it if ch-emed-dosage-nonstructured"/>
+      </rule>
+      <rule>
+         <name value="DosageInReserve"/>
+         <source>
+            <context value="medicationDispense"/>
+            <condition value="dosageInstruction.where($this.asNeeded).exists()"/>
+         </source>
+         <dependent>
+            <name value="DosageInReserve"/>
+            <variable value="medicationDispense">
+               <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                  <valueUrl value="id"/>
+               </extension>
+            </variable>
+            <variable value="supply">
+               <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                  <valueUrl value="id"/>
+               </extension>
+            </variable>
+         </dependent>
       </rule>
       <rule>
          <name value="DosageSubstanceAdministration"/>
@@ -8927,6 +8956,26 @@ group PharmaceuticalAdviceItemEntryContentModule(source bundle : Bundle, source 
             </target>
          </rule>
          <documentation value="#24 missing template it if ch-emed-dosage-nonstructured"/>
+      </rule>
+      <rule>
+         <name value="DosageInReserve"/>
+         <source>
+            <context value="medicationRequest"/>
+            <condition value="dosageInstruction.where($this.asNeeded).exists()"/>
+         </source>
+         <dependent>
+            <name value="DosageInReserve"/>
+            <variable value="medicationRequest">
+               <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                  <valueUrl value="id"/>
+               </extension>
+            </variable>
+            <variable value="substanceAdministration">
+               <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                  <valueUrl value="id"/>
+               </extension>
+            </variable>
+         </dependent>
       </rule>
       <rule>
          <name value="DosageSubstanceAdministration"/>
