@@ -180,7 +180,7 @@ group MedicationTreatmentPlanItemEntryContentModule(source bundle : Bundle, sour
 
   // #24 missing template it if ch-emed-dosage-nonstructured
   medicationStatement where dosage.count()=1 then {
-      medicationStatement.dosage as dosage where $this.conformsTo('http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-nonstructured')
+      medicationStatement.dosage as dosage where $this.text.exists()
          -> substanceAdministration.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.5.3.1.4.7.1' "normalDose";
   } "onylonedosage";
   
@@ -223,7 +223,7 @@ group MedicationTreatmentPlanItemEntryContentModule(source bundle : Bundle, sour
   // TODO: Precondition Criterion
   medicationStatement where dosage.where($this.asNeeded).exists() then DosageInReserve(medicationStatement, substanceAdministration) "DosageInReserve";
 
-//  FIXME http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-nonstructured does not yet included asNeeded
+//  FIXME http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-nonstructured does not yet included asNeeded, replace back afterwas all $this.text.exists() instances
 //  medicationStatement.dosage as dosage where $this.conformsTo('http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-nonstructured')
     medicationStatement.dosage as dosage where $this.text.exists() then {
       dosage -> substanceAdministration.entryRelationship as entryRelationship, entryRelationship.typeCode='COMP', 
@@ -514,7 +514,7 @@ group DispenseItemEntryContentModule(source bundle : Bundle, source medicationDi
 
   // #24 missing template it if ch-emed-dosage-nonstructured
     medicationDispense where dosageInstruction.count()=1 then {
-      medicationDispense.dosageInstruction as dosage where $this.conformsTo('http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-nonstructured')
+      medicationDispense.dosageInstruction as dosage where $this.text.exists()
            -> substanceAdministration.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.5.3.1.4.7.1' "normalDose";
     } "onylonedosage";
 
@@ -542,7 +542,7 @@ group DispenseItemEntryContentModule(source bundle : Bundle, source medicationDi
   
   // TODO: Precondition Criterion
 
-  medicationDispense.dosageInstruction as dosage where $this.conformsTo('http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-nonstructured')
+  medicationDispense.dosageInstruction as dosage where $this.text.exists()
     -> supply.entryRelationship as entryRelationship, entryRelationship.typeCode='COMP', 
         entryRelationship.substanceAdministration as substanceAdministration 
           then DosageInstructionsNonStructuredEntryContentModule(dosage, substanceAdministration) "DosageInstructionsNonStructuredEntryContentModule";
@@ -844,7 +844,7 @@ group PrescriptionItemEntryContentModule(source bundle : Bundle, source medicati
 
   // #24 missing template it if ch-emed-dosage-nonstructured
   medicationRequest where dosageInstruction.count()=1 then {
-    medicationRequest.dosageInstruction as dosage where $this.conformsTo('http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-nonstructured')
+    medicationRequest.dosageInstruction as dosage where $this.text.exists()
        -> substanceAdministration.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.5.3.1.4.7.1' "normalDose";
   } "onylonedosage";
 
@@ -877,7 +877,7 @@ group PrescriptionItemEntryContentModule(source bundle : Bundle, source medicati
   // TODO: ID of parent container (Community Medication Treatment Plan document)
   // TODO: Precondition Criterion
 
-  medicationRequest.dosageInstruction as dosage where $this.conformsTo('http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-nonstructured')
+  medicationRequest.dosageInstruction as dosage where $this.text.exists()
     -> substanceAdministration.entryRelationship as entryRelationship, entryRelationship.typeCode='COMP', 
         entryRelationship.substanceAdministration as substanceAdministration 
           then DosageInstructionsNonStructuredEntryContentModule(dosage, substanceAdministration) "DosageInstructionsNonStructuredEntryContentModule";
