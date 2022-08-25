@@ -587,14 +587,22 @@ group PharmaceuticalAdviceItemEntryContentModule(source section : Section, sourc
         entry.substanceAdministration as substanceAdministration then MedicationTreatmentPlanItemEntryContentModule(section, substanceAdministration, patient, medicationstatement, bundle);
       } "cdaEntry";
 
-  src.text as text -> observation.note as note then {
-    text.data as data -> note.text = data "level3observation";
-    text where (data.exists()=false) -> note.text = (%section.text.substring(%section.text.indexOf(%src.text.reference.value.substring(1))).substring(%section.text.substring(%section.text.indexOf(%src.text.reference.value.substring(1))).indexOf('>')+1, %section.text.substring(%section.text.indexOf(%src.text.reference.value.substring(1))).indexOf('<')-%section.text.substring(%section.text.indexOf(%src.text.reference.value.substring(1))).indexOf('>')-1)) "idRef";
-    text.reference as reference then {
-      reference.value as value -> note.extension as ext then NarrativeLink(value, ext) "narrativeLink";
-    } "reference";
-  } "note";
-   
+  src.code where $this.code='COMMENT' then {
+      src.text as text -> observation.note as note then {
+      text.data as data -> note.text = data "level3observation";
+      text where (data.exists()=false) -> note.text = (%section.text.substring(%section.text.indexOf(%src.text.reference.value.substring(1))).substring(%section.text.substring(%section.text.indexOf(%src.text.reference.value.substring(1))).indexOf('>')+1, %section.text.substring(%section.text.indexOf(%src.text.reference.value.substring(1))).indexOf('<')-%section.text.substring(%section.text.indexOf(%src.text.reference.value.substring(1))).indexOf('>')-1)) "idRef";
+      text.reference as reference then {
+        reference.value as value -> note.extension as ext then NarrativeLink(value, ext) "narrativeLink";
+      } "reference";
+    } "note";
+  } "COMMMENT";
+  // Please use the annotation comment to express the reason for the action in PADV OK, CHANGE, SUSPEND, CANCEL, REFUSE #49
+  src.code where ($this.code='COMMENT')=false then {
+    src.entryRelationship as entry where (typeCode='COMP' and act.templateId.where(root='2.16.756.5.30.1.1.10.4.2').exists()) then {
+      entry.act as act  -> observation.note as note then AnnotationComment(act,act,note) "AnnotationCmomnet";
+    } "entryRelationShip-2.16.756.5.30.1.1.10.4.2";  
+  } "AnnotationComment";
+ 
   src.code -> observation.code;
 }
 

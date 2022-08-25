@@ -1,8 +1,8 @@
 <StructureMap xmlns="http://hl7.org/fhir">
    <id value="BundleToCdaChEmed"/>
    <meta>
-      <versionId value="27"/>
-      <lastUpdated value="2022-08-17T14:54:38.506+00:00"/>
+      <versionId value="31"/>
+      <lastUpdated value="2022-08-25T11:47:51.805+00:00"/>
    </meta>
    <text>
       <status value="generated"/>
@@ -729,17 +729,15 @@ group PharmaceuticalAdviceItemEntryContentModule(source bundle : Bundle, source 
     } &quot;fhirauthor&quot;;
   } &quot;author2&quot;;
   fhirobservation.note as note then {
-    note.extension as extension where $this.url = &apos;http://hl7.org/fhir/StructureDefinition/narrativeLink&apos; -&gt;  cdaobservation.text as text,  text.reference as reference then {
-      extension.valueUrl as valueUrl -&gt; reference.value = valueUrl;
-    } &quot;narrativeLink&quot;;
-    note where (extension.where($this.url = &apos;http://hl7.org/fhir/StructureDefinition/narrativeLink&apos;).exists() = false) -&gt;  cdaobservation.text as text,  text.reference as reference,  reference.value = &apos;#refpdf&apos; &quot;reference&quot;;
-  };
-  fhirobservation.note as note -&gt; cdaobservation.text as text then {
-    note.text as noteText -&gt; text.data = noteText;
-    note.extension as extension where $this.url = &apos;http://hl7.org/fhir/StructureDefinition/narrativeLink&apos; then {
-      extension.valueUrl as valueUrl -&gt;  text.reference as reference,  reference.value = valueUrl &quot;reference&quot;;
-    } &quot;id&quot;;
-    note where (extension.where($this.url = &apos;http://hl7.org/fhir/StructureDefinition/narrativeLink&apos;).exists() = false) -&gt;  text.reference as reference,  reference.value = &apos;#refpdf&apos; &quot;reference&quot;;
+    fhirobservation -&gt; cdaobservation.text as text then {
+      note.text as noteText -&gt; text.data = noteText;
+      note.extension as extension where $this.url = &apos;http://hl7.org/fhir/StructureDefinition/narrativeLink&apos; then {
+        extension.valueUrl as valueUrl -&gt;  text.reference as reference,  reference.value = valueUrl &quot;reference&quot;;
+      } &quot;id&quot;;
+      note where (extension.where($this.url = &apos;http://hl7.org/fhir/StructureDefinition/narrativeLink&apos;).exists() = false) -&gt;  text.reference as reference,  reference.value = &apos;#refpdf&apos; &quot;reference&quot;;
+    } &quot;comment&quot;;
+    // Please use the annotation comment to express the reason for the action in PADV OK, CHANGE, SUSPEND, CANCEL, REFUSE #49
+    fhirobservation.code where coding.where($this.code = &apos;COMMENT&apos;).exists() = false -&gt;  cdaobservation.entryRelationship as entryRelationship,  entryRelationship.typeCode = &apos;COMP&apos;,  entryRelationship.act as act then AnnotationComment(note, act) &quot;AnnotationComment&quot;;
   } &quot;text&quot;;
 }
 
@@ -9844,123 +9842,77 @@ group PharmaceuticalAdviceItemEntryContentModule(source bundle : Bundle, source 
          </rule>
       </rule>
       <rule>
-         <name value="note"/>
-         <source>
-            <context value="fhirobservation"/>
-            <element value="note"/>
-            <variable value="note"/>
-         </source>
-         <rule>
-            <name value="narrativeLink"/>
-            <source>
-               <context value="note"/>
-               <element value="extension"/>
-               <variable value="extension"/>
-               <condition value="$this.url = 'http://hl7.org/fhir/StructureDefinition/narrativeLink'"/>
-            </source>
-            <target>
-               <context value="cdaobservation"/>
-               <contextType value="variable"/>
-               <element value="text"/>
-               <variable value="text"/>
-            </target>
-            <target>
-               <context value="text"/>
-               <contextType value="variable"/>
-               <element value="reference"/>
-               <variable value="reference"/>
-            </target>
-            <rule>
-               <name value="valueUrl"/>
-               <source>
-                  <context value="extension"/>
-                  <element value="valueUrl"/>
-                  <variable value="valueUrl"/>
-               </source>
-               <target>
-                  <context value="reference"/>
-                  <contextType value="variable"/>
-                  <element value="value"/>
-                  <transform value="copy"/>
-                  <parameter>
-                     <valueId value="valueUrl"/>
-                  </parameter>
-               </target>
-            </rule>
-         </rule>
-         <rule>
-            <name value="reference"/>
-            <source>
-               <context value="note"/>
-               <condition value="(extension.where($this.url = 'http://hl7.org/fhir/StructureDefinition/narrativeLink').exists() = false)"/>
-            </source>
-            <target>
-               <context value="cdaobservation"/>
-               <contextType value="variable"/>
-               <element value="text"/>
-               <variable value="text"/>
-            </target>
-            <target>
-               <context value="text"/>
-               <contextType value="variable"/>
-               <element value="reference"/>
-               <variable value="reference"/>
-            </target>
-            <target>
-               <context value="reference"/>
-               <contextType value="variable"/>
-               <element value="value"/>
-               <transform value="copy"/>
-               <parameter>
-                  <valueString value="#refpdf"/>
-               </parameter>
-            </target>
-         </rule>
-      </rule>
-      <rule>
          <name value="text"/>
          <source>
             <context value="fhirobservation"/>
             <element value="note"/>
             <variable value="note"/>
          </source>
-         <target>
-            <context value="cdaobservation"/>
-            <contextType value="variable"/>
-            <element value="text"/>
-            <variable value="text"/>
-         </target>
          <rule>
-            <name value="text"/>
+            <name value="comment"/>
             <source>
-               <context value="note"/>
-               <element value="text"/>
-               <variable value="noteText"/>
+               <context value="fhirobservation"/>
             </source>
             <target>
-               <context value="text"/>
+               <context value="cdaobservation"/>
                <contextType value="variable"/>
-               <element value="data"/>
-               <transform value="copy"/>
-               <parameter>
-                  <valueId value="noteText"/>
-               </parameter>
+               <element value="text"/>
+               <variable value="text"/>
             </target>
-         </rule>
-         <rule>
-            <name value="id"/>
-            <source>
-               <context value="note"/>
-               <element value="extension"/>
-               <variable value="extension"/>
-               <condition value="$this.url = 'http://hl7.org/fhir/StructureDefinition/narrativeLink'"/>
-            </source>
+            <rule>
+               <name value="text"/>
+               <source>
+                  <context value="note"/>
+                  <element value="text"/>
+                  <variable value="noteText"/>
+               </source>
+               <target>
+                  <context value="text"/>
+                  <contextType value="variable"/>
+                  <element value="data"/>
+                  <transform value="copy"/>
+                  <parameter>
+                     <valueId value="noteText"/>
+                  </parameter>
+               </target>
+            </rule>
+            <rule>
+               <name value="id"/>
+               <source>
+                  <context value="note"/>
+                  <element value="extension"/>
+                  <variable value="extension"/>
+                  <condition value="$this.url = 'http://hl7.org/fhir/StructureDefinition/narrativeLink'"/>
+               </source>
+               <rule>
+                  <name value="reference"/>
+                  <source>
+                     <context value="extension"/>
+                     <element value="valueUrl"/>
+                     <variable value="valueUrl"/>
+                  </source>
+                  <target>
+                     <context value="text"/>
+                     <contextType value="variable"/>
+                     <element value="reference"/>
+                     <variable value="reference"/>
+                  </target>
+                  <target>
+                     <context value="reference"/>
+                     <contextType value="variable"/>
+                     <element value="value"/>
+                     <transform value="copy"/>
+                     <parameter>
+                        <valueId value="valueUrl"/>
+                     </parameter>
+                  </target>
+               </rule>
+            </rule>
             <rule>
                <name value="reference"/>
                <source>
-                  <context value="extension"/>
-                  <element value="valueUrl"/>
-                  <variable value="valueUrl"/>
+                  <context value="note"/>
+                  <condition value="(extension.where($this.url = 'http://hl7.org/fhir/StructureDefinition/narrativeLink').exists() = false)"/>
                </source>
                <target>
                   <context value="text"/>
@@ -9974,32 +9926,53 @@ group PharmaceuticalAdviceItemEntryContentModule(source bundle : Bundle, source 
                   <element value="value"/>
                   <transform value="copy"/>
                   <parameter>
-                     <valueId value="valueUrl"/>
+                     <valueString value="#refpdf"/>
                   </parameter>
                </target>
             </rule>
          </rule>
          <rule>
-            <name value="reference"/>
+            <name value="AnnotationComment"/>
             <source>
-               <context value="note"/>
-               <condition value="(extension.where($this.url = 'http://hl7.org/fhir/StructureDefinition/narrativeLink').exists() = false)"/>
+               <context value="fhirobservation"/>
+               <element value="code"/>
+               <condition value="coding.where($this.code = 'COMMENT').exists() = false"/>
             </source>
             <target>
-               <context value="text"/>
+               <context value="cdaobservation"/>
                <contextType value="variable"/>
-               <element value="reference"/>
-               <variable value="reference"/>
+               <element value="entryRelationship"/>
+               <variable value="entryRelationship"/>
             </target>
             <target>
-               <context value="reference"/>
+               <context value="entryRelationship"/>
                <contextType value="variable"/>
-               <element value="value"/>
+               <element value="typeCode"/>
                <transform value="copy"/>
                <parameter>
-                  <valueString value="#refpdf"/>
+                  <valueString value="COMP"/>
                </parameter>
             </target>
+            <target>
+               <context value="entryRelationship"/>
+               <contextType value="variable"/>
+               <element value="act"/>
+               <variable value="act"/>
+            </target>
+            <dependent>
+               <name value="AnnotationComment"/>
+               <variable value="note">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
+               <variable value="act">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
+            </dependent>
+            <documentation value="Please use the annotation comment to express the reason for the action in PADV OK, CHANGE, SUSPEND, CANCEL, REFUSE #49"/>
          </rule>
       </rule>
    </group>

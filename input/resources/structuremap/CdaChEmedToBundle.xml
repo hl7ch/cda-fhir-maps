@@ -1,8 +1,8 @@
 <StructureMap xmlns="http://hl7.org/fhir">
    <id value="CdaChEmedToBundle"/>
    <meta>
-      <versionId value="25"/>
-      <lastUpdated value="2022-08-17T13:37:23.176+00:00"/>
+      <versionId value="28"/>
+      <lastUpdated value="2022-08-25T12:20:51.320+00:00"/>
    </meta>
    <text>
       <status value="generated"/>
@@ -455,13 +455,21 @@ group PharmaceuticalAdviceItemEntryContentModule(source section : Section, sourc
   src.entryRelationship as entry where ((typeCode = &apos;REFR&apos;) and substanceAdministration.templateId.where(root = &apos;1.3.6.1.4.1.19376.1.9.1.3.7&apos;).exists()) -&gt;  bundle.entry as e,  e.id = uuid() as uuid,  e.fullUrl = append(&apos;urn:uuid:&apos;, uuid),  e.resource = create(&apos;MedicationStatement&apos;) as medicationstatement,  observation.extension as ext,  ext.url = &apos;http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-medicationstatement-changed&apos;,  ext.value = create(&apos;Reference&apos;) as reference,  reference.reference = append(&apos;urn:uuid:&apos;, uuid) then {
     entry.substanceAdministration as substanceAdministration then MedicationTreatmentPlanItemEntryContentModule(section, substanceAdministration, patient, medicationstatement, bundle);
   } &quot;cdaEntry&quot;;
-  src.text as text -&gt; observation.note as note then {
-    text.data as data -&gt; note.text = data &quot;level3observation&quot;;
-    text where (data.exists() = false) -&gt; note.text = (%section.text.substring(%section.text.indexOf(%src.text.reference.value.substring(1))).substring(%section.text.substring(%section.text.indexOf(%src.text.reference.value.substring(1))).indexOf(&apos;&gt;&apos;) + 1, %section.text.substring(%section.text.indexOf(%src.text.reference.value.substring(1))).indexOf(&apos;&lt;&apos;) - %section.text.substring(%section.text.indexOf(%src.text.reference.value.substring(1))).indexOf(&apos;&gt;&apos;) - 1)) &quot;idRef&quot;;
-    text.reference as reference then {
-      reference.value as value -&gt; note.extension as ext then NarrativeLink(value, ext) &quot;narrativeLink&quot;;
-    };
-  } &quot;note&quot;;
+  src.code where $this.code = &apos;COMMENT&apos; then {
+    src.text as text -&gt; observation.note as note then {
+      text.data as data -&gt; note.text = data &quot;level3observation&quot;;
+      text where (data.exists() = false) -&gt; note.text = (%section.text.substring(%section.text.indexOf(%src.text.reference.value.substring(1))).substring(%section.text.substring(%section.text.indexOf(%src.text.reference.value.substring(1))).indexOf(&apos;&gt;&apos;) + 1, %section.text.substring(%section.text.indexOf(%src.text.reference.value.substring(1))).indexOf(&apos;&lt;&apos;) - %section.text.substring(%section.text.indexOf(%src.text.reference.value.substring(1))).indexOf(&apos;&gt;&apos;) - 1)) &quot;idRef&quot;;
+      text.reference as reference then {
+        reference.value as value -&gt; note.extension as ext then NarrativeLink(value, ext) &quot;narrativeLink&quot;;
+      };
+    } &quot;note&quot;;
+  } &quot;COMMMENT&quot;;
+  // Please use the annotation comment to express the reason for the action in PADV OK, CHANGE, SUSPEND, CANCEL, REFUSE #49
+  src.code where ($this.code = &apos;COMMENT&apos;) = false then {
+    src.entryRelationship as entry where ((typeCode = &apos;COMP&apos;) and act.templateId.where(root = &apos;2.16.756.5.30.1.1.10.4.2&apos;).exists()) then {
+      entry.act as act -&gt; observation.note as note then AnnotationComment(act, act, note) &quot;AnnotationCmomnet&quot;;
+    } &quot;2&quot;;
+  } &quot;AnnotationComment&quot;;
   src.code -&gt; observation.code;
 }
 
@@ -5386,79 +5394,136 @@ group InnerExtensionId(source src, target ext : Extension) {
          </rule>
       </rule>
       <rule>
-         <name value="note"/>
+         <name value="COMMMENT"/>
          <source>
             <context value="src"/>
-            <element value="text"/>
-            <variable value="text"/>
+            <element value="code"/>
+            <condition value="$this.code = 'COMMENT'"/>
          </source>
-         <target>
-            <context value="observation"/>
-            <contextType value="variable"/>
-            <element value="note"/>
-            <variable value="note"/>
-         </target>
          <rule>
-            <name value="level3observation"/>
+            <name value="note"/>
             <source>
-               <context value="text"/>
-               <element value="data"/>
-               <variable value="data"/>
+               <context value="src"/>
+               <element value="text"/>
+               <variable value="text"/>
             </source>
             <target>
-               <context value="note"/>
+               <context value="observation"/>
                <contextType value="variable"/>
-               <element value="text"/>
-               <transform value="copy"/>
-               <parameter>
-                  <valueId value="data"/>
-               </parameter>
+               <element value="note"/>
+               <variable value="note"/>
             </target>
-         </rule>
-         <rule>
-            <name value="idRef"/>
-            <source>
-               <context value="text"/>
-               <condition value="(data.exists() = false)"/>
-            </source>
-            <target>
-               <context value="note"/>
-               <contextType value="variable"/>
-               <element value="text"/>
-               <transform value="evaluate"/>
-               <parameter>
-                  <valueString value="%section.text.substring(%section.text.indexOf(%src.text.reference.value.substring(1))).substring(%section.text.substring(%section.text.indexOf(%src.text.reference.value.substring(1))).indexOf('>') + 1, %section.text.substring(%section.text.indexOf(%src.text.reference.value.substring(1))).indexOf('&lt;') - %section.text.substring(%section.text.indexOf(%src.text.reference.value.substring(1))).indexOf('>') - 1)"/>
-               </parameter>
-            </target>
-         </rule>
-         <rule>
-            <name value="reference"/>
-            <source>
-               <context value="text"/>
-               <element value="reference"/>
-               <variable value="reference"/>
-            </source>
             <rule>
-               <name value="narrativeLink"/>
+               <name value="level3observation"/>
                <source>
-                  <context value="reference"/>
-                  <element value="value"/>
-                  <variable value="value"/>
+                  <context value="text"/>
+                  <element value="data"/>
+                  <variable value="data"/>
                </source>
                <target>
                   <context value="note"/>
                   <contextType value="variable"/>
-                  <element value="extension"/>
-                  <variable value="ext"/>
+                  <element value="text"/>
+                  <transform value="copy"/>
+                  <parameter>
+                     <valueId value="data"/>
+                  </parameter>
+               </target>
+            </rule>
+            <rule>
+               <name value="idRef"/>
+               <source>
+                  <context value="text"/>
+                  <condition value="(data.exists() = false)"/>
+               </source>
+               <target>
+                  <context value="note"/>
+                  <contextType value="variable"/>
+                  <element value="text"/>
+                  <transform value="evaluate"/>
+                  <parameter>
+                     <valueString value="%section.text.substring(%section.text.indexOf(%src.text.reference.value.substring(1))).substring(%section.text.substring(%section.text.indexOf(%src.text.reference.value.substring(1))).indexOf('>') + 1, %section.text.substring(%section.text.indexOf(%src.text.reference.value.substring(1))).indexOf('&lt;') - %section.text.substring(%section.text.indexOf(%src.text.reference.value.substring(1))).indexOf('>') - 1)"/>
+                  </parameter>
+               </target>
+            </rule>
+            <rule>
+               <name value="reference"/>
+               <source>
+                  <context value="text"/>
+                  <element value="reference"/>
+                  <variable value="reference"/>
+               </source>
+               <rule>
+                  <name value="narrativeLink"/>
+                  <source>
+                     <context value="reference"/>
+                     <element value="value"/>
+                     <variable value="value"/>
+                  </source>
+                  <target>
+                     <context value="note"/>
+                     <contextType value="variable"/>
+                     <element value="extension"/>
+                     <variable value="ext"/>
+                  </target>
+                  <dependent>
+                     <name value="NarrativeLink"/>
+                     <variable value="value">
+                        <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                           <valueUrl value="id"/>
+                        </extension>
+                     </variable>
+                     <variable value="ext">
+                        <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                           <valueUrl value="id"/>
+                        </extension>
+                     </variable>
+                  </dependent>
+               </rule>
+            </rule>
+         </rule>
+      </rule>
+      <rule>
+         <name value="AnnotationComment"/>
+         <source>
+            <context value="src"/>
+            <element value="code"/>
+            <condition value="($this.code = 'COMMENT') = false"/>
+         </source>
+         <rule>
+            <name value="entryRelationShip-2.16.756.5.30.1.1.10.4.2"/>
+            <source>
+               <context value="src"/>
+               <element value="entryRelationship"/>
+               <variable value="entry"/>
+               <condition value="((typeCode = 'COMP') and act.templateId.where(root = '2.16.756.5.30.1.1.10.4.2').exists())"/>
+            </source>
+            <rule>
+               <name value="AnnotationCmomnet"/>
+               <source>
+                  <context value="entry"/>
+                  <element value="act"/>
+                  <variable value="act"/>
+               </source>
+               <target>
+                  <context value="observation"/>
+                  <contextType value="variable"/>
+                  <element value="note"/>
+                  <variable value="note"/>
                </target>
                <dependent>
-                  <name value="NarrativeLink"/>
-                  <variable value="value">
+                  <name value="AnnotationComment"/>
+                  <variable value="act">
                      <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
                         <valueUrl value="id"/>
                      </extension>
                   </variable>
-                  <variable value="ext">
+                  <variable value="act">
+                     <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                        <valueUrl value="id"/>
+                     </extension>
+                  </variable>
+                  <variable value="note">
                      <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
                         <valueUrl value="id"/>
                      </extension>
@@ -5466,6 +5531,7 @@ group InnerExtensionId(source src, target ext : Extension) {
                </dependent>
             </rule>
          </rule>
+         <documentation value="Please use the annotation comment to express the reason for the action in PADV OK, CHANGE, SUSPEND, CANCEL, REFUSE #49"/>
       </rule>
       <rule>
          <name value="code"/>

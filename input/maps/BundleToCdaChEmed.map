@@ -948,22 +948,20 @@ group PharmaceuticalAdviceItemEntryContentModule(source bundle : Bundle, source 
     } "fhirauthor";
   } "author2";
 
-  fhirobservation.note as note then { 
-    note.extension as extension where $this.url='http://hl7.org/fhir/StructureDefinition/narrativeLink' -> cdaobservation.text as text, text.reference as reference then {
-      extension.valueUrl as valueUrl -> reference.value = valueUrl "valueUrl";
-    } "narrativeLink";
-    note where (extension.where($this.url='http://hl7.org/fhir/StructureDefinition/narrativeLink').exists()=false) -> 
-      cdaobservation.text as text, text.reference as reference, reference.value='#refpdf' "reference";
-  } "note";
-
-
-  fhirobservation.note as note -> cdaobservation.text as text then {
-    note.text as noteText -> text.data = noteText "text";
-    note.extension as extension where $this.url='http://hl7.org/fhir/StructureDefinition/narrativeLink' then {
-      extension.valueUrl as valueUrl -> text.reference as reference, reference.value=valueUrl "reference";
-    } "id";
-    note where (extension.where($this.url='http://hl7.org/fhir/StructureDefinition/narrativeLink').exists()=false) 
-      -> text.reference as reference, reference.value='#refpdf' "reference";
+  fhirobservation.note as note then {
+    fhirobservation -> cdaobservation.text as text then {
+      note.text as noteText -> text.data = noteText "text";
+      note.extension as extension where $this.url='http://hl7.org/fhir/StructureDefinition/narrativeLink' then {
+        extension.valueUrl as valueUrl -> text.reference as reference, reference.value=valueUrl "reference";
+      } "id";
+      note where (extension.where($this.url='http://hl7.org/fhir/StructureDefinition/narrativeLink').exists()=false) 
+        -> text.reference as reference, reference.value='#refpdf' "reference";
+    } "comment";
+    // Please use the annotation comment to express the reason for the action in PADV OK, CHANGE, SUSPEND, CANCEL, REFUSE #49
+    fhirobservation.code where coding.where($this.code='COMMENT').exists()=false ->    
+    cdaobservation.entryRelationship as entryRelationship, entryRelationship.typeCode='COMP',
+        entryRelationship.act as act 
+          then AnnotationComment(note, act) "AnnotationComment";
   } "text"; 
 
 }
