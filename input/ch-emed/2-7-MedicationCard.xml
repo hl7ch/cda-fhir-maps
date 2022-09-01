@@ -29,6 +29,11 @@
         <status value="final"/>
         <type>
           <coding>
+            <system value="http://loinc.org"/>
+            <code value="56445-0"/>
+            <display value="Medication summary"/>
+          </coding>
+          <coding>
             <system value="http://snomed.info/sct"/>
             <code value="721912009"/>
             <display value="Medication summary document (record artifact)"/>
@@ -130,7 +135,7 @@
               <code value="MR"/>
             </coding>
           </type>
-          <system value="urn:oid:2.999"/>
+          <system value="urn:oid:2.999.1"/>
           <value value="11111111"/>
         </identifier>
         <name>
@@ -161,6 +166,12 @@
           <family value="Hausarzt"/>
           <given value="Familien"/>
         </name>
+        <address>
+          <line value="Krankenstrasse 2"/>
+          <city value="Zürich"/>
+          <postalCode value="8005"/>
+          <country value="CH"/>
+        </address>
       </Practitioner>
     </resource>
   </entry>
@@ -246,7 +257,7 @@
               </numerator>
               <denominator>
                 <value value="1"/>
-               <unit value="Package"/>
+                <unit value="Package"/>
                 <system value="http://unitsofmeasure.org"/>
                 <code value="{Package}"/>
               </denominator>
@@ -305,14 +316,9 @@
         <reasonCode>
           <text value="Bluthochdruck"/>
         </reasonCode>
-        <note>
-          <text value="-"/>
-        </note>
-        <dosage>
-          <text value="Morgens 1 und abends 1/2 Tablette nehmen"/>
-        </dosage>
         <dosage>
           <sequence value="1"/>
+          <patientInstruction value="-"/>
           <timing>
             <repeat>
               <boundsPeriod>
@@ -339,6 +345,7 @@
         </dosage>
         <dosage>
           <sequence value="2"/>
+          <patientInstruction value="-"/>
           <timing>
             <repeat>
               <boundsPeriod>
@@ -457,11 +464,8 @@
         <reasonCode>
           <text value="Bluthochdruck"/>
         </reasonCode>
-        <note>
-          <text value="-"/>
-        </note>
         <dosage>
-
+          <patientInstruction value="-"/>
           <timing>
             <repeat>
               <boundsPeriod>
@@ -486,9 +490,6 @@
               <code value="732936001"/>
             </doseQuantity>
           </doseAndRate>
-        </dosage>
-        <dosage>
-          <text value="Morgens und abends je 1 Tablette nehmen"/>
         </dosage>
       </MedicationStatement>
     </resource>

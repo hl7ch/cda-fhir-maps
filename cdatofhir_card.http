@@ -82,4 +82,11 @@ Content-Type: application/fhir+xml;fhirVersion=4.0
 < ./input/generated-files/cda-ch-emed-2-7-MedicationCard-UUIDfullUrl.xml
 
 
+###
+POST {{host}}/StructureMap/$transform?source=http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaChEmedMedicationCardDocumentToBundle
+Accept: application/fhir+json;fhirVersion=4.0
+Content-Type: application/fhir+xml;fhirVersion=4.0
+
+< ./input/generated-files/cda-ch-annotationcomments.xml
+
 

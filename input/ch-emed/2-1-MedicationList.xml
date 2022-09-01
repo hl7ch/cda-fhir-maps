@@ -92,7 +92,6 @@
                                         <th>Wirkstoffname</th>
                                         <th>Galenische Form</th>
                                         <th>Dosis pro Einheit</th>
-                                        <th>Dosierung</th>
                                         <th>Dos.Morgen</th>
                                         <th>Dos.Mittag</th>
                                         <th>Dos.Abend</th>
@@ -110,7 +109,6 @@
                                         <td id="mtp.1.ingredient">Ramipril</td>
                                         <td id="mtp.1.packageform">Tbl</td>
                                         <td id="mtp.1.dosequantity">2.5 mg</td>
-                                        <td id="mtp.1.dosageintakemode">Morgens 1/2 Tablette nehmen</td>
                                         <td id="mtp.1.dosagemorning">0.5</td>
                                         <td id="mtp.1.dosagelunch">0</td>
                                         <td id="mtp.1.dosageevening">0</td>
@@ -132,7 +130,6 @@
                                         <th>Dosis pro Einheit</th>
                                         <th>Anzahl Packungen</th>
                                         <th>Packungsgrösse</th>
-                                        <th>Dosierung</th>
                                         <th>Dos.Morgen</th>
                                         <th>Dos.Mittag</th>
                                         <th>Dos.Abend</th>
@@ -153,7 +150,6 @@
                                         <td id="dis.1.packageform">Tbl</td>
                                         <td id="dis.1.nopackages">1</td>
                                         <td id="dis.1.packagesize">20</td>
-                                        <td id="dis.1.dosageintakemode">Morgens 1/2 Tablette nehmen</td>
                                         <td id="dis.1.dosagemorning">0.5</td>
                                         <td id="dis.1.dosagelunch">0</td>
                                         <td id="dis.1.dosageevening">0</td>
@@ -190,7 +186,7 @@
                             <code value="MR"/>
                         </coding>
                     </type>
-                    <system value="urn:oid:2.999"/>
+                    <system value="urn:oid:2.999.1"/>
                     <value value="11111111"/>
                 </identifier>
                 <name>
@@ -220,6 +216,12 @@
                     <family value="Hausarzt"/>
                     <given value="Familien"/>
                 </name>
+                <address>
+                    <line value="Krankenstrasse 2"/>
+                    <city value="Zürich"/>
+                    <postalCode value="8005"/>
+                    <country value="CH"/>
+                </address>
             </Practitioner>
         </resource>
     </entry>
@@ -353,6 +355,7 @@
                     <text value="Bluthochdruck"/>
                 </reasonCode>
                 <dosage>
+                    <patientInstruction value="-"/>
                     <timing>
                         <repeat>
                             <boundsPeriod>
@@ -376,12 +379,6 @@
                             <code value="732936001"/>
                         </doseQuantity>
                     </doseAndRate>
-                </dosage>
-                <dosage>
-                    <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
-                        <valueUrl value="#mtp.1.dosageintakemode"/>
-                    </extension>
-                    <text value="Morgens 1/2 Tablette nehmen"/>
                 </dosage>
             </MedicationStatement>
         </resource>
@@ -480,6 +477,7 @@
                     <value value="1"/>
                 </quantity>
                 <dosageInstruction>
+                    <patientInstruction value="-"/>
                     <timing>
                         <repeat>
                             <boundsPeriod>
@@ -503,12 +501,6 @@
                             <code value="732936001"/>
                         </doseQuantity>
                     </doseAndRate>
-                </dosageInstruction>
-                <dosageInstruction>
-                    <extension url="http://hl7.org/fhir/StructureDefinition/narrativeLink">
-                        <valueUrl value="#dis.1.dosageintakemode"/>
-                    </extension>
-                    <text value="Morgens 1/2 Tablette nehmen"/>
                 </dosageInstruction>
             </MedicationDispense>
         </resource>

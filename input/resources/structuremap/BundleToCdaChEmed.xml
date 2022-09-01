@@ -1,8 +1,8 @@
 <StructureMap xmlns="http://hl7.org/fhir">
    <id value="BundleToCdaChEmed"/>
    <meta>
-      <versionId value="31"/>
-      <lastUpdated value="2022-08-25T11:47:51.805+00:00"/>
+      <versionId value="35"/>
+      <lastUpdated value="2022-09-01T20:47:39.978+00:00"/>
    </meta>
    <text>
       <status value="generated"/>
@@ -61,19 +61,19 @@ group AnnotationComment(source note : Annotation, target act : Act) {
 
 // source: Annotation note (e.g. http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefinition-ch-emed-medicationstatement.html)
 // target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=1.3.6.1.4.1.19376.1.5.3.1.4.3
-group NoteToPInstruct(source note : Annotation, target act : Act) {
+group NoteToPInstruct(source note : string, target act : Act) {
   note -&gt; act.classCode = &apos;ACT&apos; &quot;ACT&quot;;
   note -&gt; act.moodCode = &apos;INT&apos; &quot;INT&quot;;
   note -&gt;  act.templateId as templateId,  templateId.root = &apos;1.3.6.1.4.1.19376.1.5.3.1.4.3&apos; &quot;templateId&quot;;
   note -&gt;  act.templateId as templateId,  templateId.root = &apos;2.16.840.1.113883.10.20.1.49&apos; &quot;templateId&quot;;
   note -&gt;  act.code as code,  code.code = &apos;PINSTRUCT&apos;,  code.codeSystem = &apos;1.3.6.1.4.1.19376.1.5.3.2&apos;,  code.codeSystemName = &apos;IHEActCode&apos; &quot;code&quot;;
-  note.text as noteText -&gt; act.text as text then {
-    noteText -&gt; text.data = noteText &quot;text&quot;;
+  note -&gt; act.text as text then {
+    note as noteText -&gt; text.data = noteText &quot;text&quot;;
     note.extension as extension where $this.url = &apos;http://hl7.org/fhir/StructureDefinition/narrativeLink&apos; then {
       extension.valueUrl as valueUrl -&gt;  text.reference as reference,  reference.value = valueUrl &quot;reference&quot;;
     } &quot;id&quot;;
     note where (extension.where($this.url = &apos;http://hl7.org/fhir/StructureDefinition/narrativeLink&apos;).exists() = false) -&gt;  text.reference as reference,  reference.value = &apos;#refpdf&apos; &quot;reference&quot;;
-  };
+  } &quot;text&quot;;
   note -&gt;  act.statusCode as code,  code.code = &apos;completed&apos; &quot;statusCode&quot;;
 }
 
@@ -183,8 +183,8 @@ group MedicationTreatmentPlanItemEntryContentModule(source bundle : Bundle, sour
   medicationStatement.extension as extension where url = &apos;http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-treatmentplan&apos; -&gt;  substanceAdministration.entryRelationship as entryRelationship,  entryRelationship.typeCode = &apos;REFR&apos;,  entryRelationship.substanceAdministration as substanceAdministration then MTPReferenceEntryContentModule(extension, substanceAdministration) &quot;MTP-Reference&quot;;
   // https://github.com/ehealthsuisse/ch-emed/issues/56
   medicationStatement -&gt;  substanceAdministration.repeatNumber as repeatNumber,  repeatNumber.nullFlavor = &apos;NI&apos; &quot;repeatNumberDefault&quot;;
-  // Patient Medication Instructions Contains 1.3.6.1.4.1.19376.1.5.3.1.4.3 IHE Patient Medication Instructions (DYNAMIC)
-  medicationStatement.note as note -&gt;  substanceAdministration.entryRelationship as entryRelationship,  entryRelationship.typeCode = &apos;SUBJ&apos;,  entryRelationship.inversionInd = &apos;true&apos;,  entryRelationship.act as act then NoteToPInstruct(note, act) &quot;AnnotationComment&quot;;
+  // 2.16.756.5.30.1.1.10.4.82 Annotation Comments (DYNAMIC)
+  medicationStatement.note as note -&gt;  substanceAdministration.entryRelationship as entryRelationship,  entryRelationship.typeCode = &apos;COMP&apos;,  entryRelationship.act as act then AnnotationComment(note, act) &quot;AnnotationComment&quot;;
   // TODO: Amount of units of the consumable to dispense
   medicationStatement where dosage.where($this.asNeeded).exists() then DosageInReserve(medicationStatement, substanceAdministration) &quot;DosageInReserve&quot;;
   // FIXME http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-nonstructured does not yet included asNeeded, replace back afterwas all $this.text.exists() instances
@@ -209,6 +209,8 @@ group DosageInstructionsStartStopFrequencySubstanceAdministration(source dosage 
   dosage as dosage -&gt; substanceAdministration as substanceAdministration then EffectiveTimeWhenNormal(dosage, substanceAdministration) &quot;effectiveTimeWhen&quot;;
   dosage.route as route -&gt; substanceAdministration.routeCode as routeCode then CodeableConceptCE(route, routeCode);
   dosage as dosage -&gt; substanceAdministration as substanceAdministration then DoseQuantity(dosage, substanceAdministration) &quot;doseQuantity&quot;;
+  // Patient Medication Instructions Contains 1.3.6.1.4.1.19376.1.5.3.1.4.3 IHE Patient Medication Instructions (DYNAMIC)
+  dosage.patientInstruction as note -&gt;  substanceAdministration.entryRelationship as entryRelationship,  entryRelationship.typeCode = &apos;SUBJ&apos;,  entryRelationship.inversionInd = &apos;true&apos;,  entryRelationship.act as act then NoteToPInstruct(note, act) &quot;NoteToPInstruct&quot;;
 }
 
 // source: http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured-split
@@ -219,6 +221,8 @@ group DosageInstructionsEntryStartStopRoute(source dosage : Dosage, target subst
   dosage -&gt;  substanceAdministration.templateId as templateId,  templateId.root = &apos;1.3.6.1.4.1.19376.1.5.3.1.4.9&apos; &quot;splitDose&quot;;
   dosage as dosage -&gt; substanceAdministration as substanceAdministration then EffectiveTimeStartEnd(dosage, substanceAdministration) &quot;effectiveTimeStartEnd&quot;;
   dosage.route as route -&gt; substanceAdministration.routeCode as routeCode then CodeableConceptCE(route, routeCode);
+  // Patient Medication Instructions Contains 1.3.6.1.4.1.19376.1.5.3.1.4.3 IHE Patient Medication Instructions (DYNAMIC)
+  dosage.patientInstruction as note -&gt;  substanceAdministration.entryRelationship as entryRelationship,  entryRelationship.typeCode = &apos;SUBJ&apos;,  entryRelationship.inversionInd = &apos;true&apos;,  entryRelationship.act as act then NoteToPInstruct(note, act) &quot;NoteToPInstruct&quot;;
 }
 
 // source: http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured-split
@@ -432,8 +436,8 @@ group DispenseItemEntryContentModule(source bundle : Bundle, source medicationDi
   medicationDispense.quantity as quantity -&gt; supply.quantity as supplyQuantity then {
     quantity.value as value -&gt; supplyQuantity.value = value;
   };
-  // Patient Medication Instructions Contains 1.3.6.1.4.1.19376.1.5.3.1.4.3 IHE Patient Medication Instructions (DYNAMIC)
-  medicationDispense.note as note -&gt;  supply.entryRelationship as entryRelationship,  entryRelationship.typeCode = &apos;SUBJ&apos;,  entryRelationship.inversionInd = &apos;true&apos;,  entryRelationship.act as act then NoteToPInstruct(note, act) &quot;AnnotationComment&quot;;
+  // s 2.16.756.5.30.1.1.10.4.82 Annotation Comments (DYNAMIC)
+  medicationDispense.note as note -&gt;  supply.entryRelationship as entryRelationship,  entryRelationship.typeCode = &apos;COMP&apos;,  entryRelationship.act as act then AnnotationComment(note, act) &quot;AnnotationComment&quot;;
   medicationDispense.substitution as substitution -&gt;  supply.entryRelationship as entryRelationship,  entryRelationship.typeCode = &apos;COMP&apos;,  entryRelationship.act as act then SubstitutionDispense(substitution, act) &quot;Substitution&quot;;
 }
 
@@ -453,6 +457,8 @@ group DosageInstructionsStartStopFrequencySupply(source dosage : Dosage, target 
       dosage.route as route -&gt; substanceAdministration.routeCode as routeCode then CodeableConceptCE(route, routeCode);
       dosage -&gt; substanceAdministration as substanceAdministration then DoseQuantity(dosage, substanceAdministration) &quot;doseQuantity&quot;;
       dosage -&gt;  substanceAdministration as substanceAdministration,  substanceAdministration.consumable as consumable,  consumable.manufacturedProduct as manufacturedProduct,  manufacturedProduct.manufacturedMaterial as manufacturedMaterial,  manufacturedMaterial.nullFlavor = &apos;NA&apos; &quot;consumable&quot;;
+      // Patient Medication Instructions Contains 1.3.6.1.4.1.19376.1.5.3.1.4.3 IHE Patient Medication Instructions (DYNAMIC)
+      dosage.patientInstruction as note -&gt;  substanceAdministration.entryRelationship as entryRelationship,  entryRelationship.typeCode = &apos;SUBJ&apos;,  entryRelationship.inversionInd = &apos;true&apos;,  entryRelationship.act as act then NoteToPInstruct(note, act) &quot;NoteToPInstruct&quot;;
     } &quot;substanceAdministration&quot;;
   } &quot;entryRelationship&quot;;
 }
@@ -684,7 +690,7 @@ group PrescriptionItemEntryContentModule(source bundle : Bundle, source medicati
   // TODO: Amount of units of the consumable to dispense
   medicationRequest.dosageInstruction as dosage where $this.text.exists() -&gt;  substanceAdministration.entryRelationship as entryRelationship,  entryRelationship.typeCode = &apos;COMP&apos;,  entryRelationship.substanceAdministration as substanceAdministration then DosageInstructionsNonStructuredEntryContentModule(dosage, substanceAdministration) &quot;DosageInstructionsNonStructuredEntryContentModule&quot;;
   // Patient Medication Instructions Contains 1.3.6.1.4.1.19376.1.5.3.1.4.3 IHE Patient Medication Instructions (DYNAMIC)
-  medicationRequest.note as note -&gt;  substanceAdministration.entryRelationship as entryRelationship,  entryRelationship.typeCode = &apos;SUBJ&apos;,  entryRelationship.inversionInd = &apos;true&apos;,  entryRelationship.act as act then NoteToPInstruct(note, act) &quot;AnnotationComment&quot;;
+  medicationRequest.note as note -&gt;  substanceAdministration.entryRelationship as entryRelationship,  entryRelationship.typeCode = &apos;COMP&apos;,  entryRelationship.act as act then AnnotationComment(note, act) &quot;AnnotationComment&quot;;
   medicationRequest.substitution as substitution -&gt;  substanceAdministration.entryRelationship as entryRelationship,  entryRelationship.typeCode = &apos;COMP&apos;,  entryRelationship.act as act then SubstitutionRequest(substitution, act) &quot;Substitution&quot;;
 }
 
@@ -1116,7 +1122,7 @@ group PharmaceuticalAdviceItemEntryContentModule(source bundle : Bundle, source 
       <documentation value="source: Annotation note (e.g. http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefinition-ch-emed-medicationstatement.html)&#xd;&#xa;target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&amp;id=1.3.6.1.4.1.19376.1.5.3.1.4.3"/>
       <input>
          <name value="note"/>
-         <type value="Annotation"/>
+         <type value="string"/>
          <mode value="source"/>
       </input>
       <input>
@@ -1239,8 +1245,6 @@ group PharmaceuticalAdviceItemEntryContentModule(source bundle : Bundle, source 
          <name value="text"/>
          <source>
             <context value="note"/>
-            <element value="text"/>
-            <variable value="noteText"/>
          </source>
          <target>
             <context value="act"/>
@@ -1251,7 +1255,8 @@ group PharmaceuticalAdviceItemEntryContentModule(source bundle : Bundle, source 
          <rule>
             <name value="text"/>
             <source>
-               <context value="noteText"/>
+               <context value="note"/>
+               <variable value="noteText"/>
             </source>
             <target>
                <context value="text"/>
@@ -2828,16 +2833,7 @@ group PharmaceuticalAdviceItemEntryContentModule(source bundle : Bundle, source 
             <element value="typeCode"/>
             <transform value="copy"/>
             <parameter>
-               <valueString value="SUBJ"/>
-            </parameter>
-         </target>
-         <target>
-            <context value="entryRelationship"/>
-            <contextType value="variable"/>
-            <element value="inversionInd"/>
-            <transform value="copy"/>
-            <parameter>
-               <valueString value="true"/>
+               <valueString value="COMP"/>
             </parameter>
          </target>
          <target>
@@ -2847,7 +2843,7 @@ group PharmaceuticalAdviceItemEntryContentModule(source bundle : Bundle, source 
             <variable value="act"/>
          </target>
          <dependent>
-            <name value="NoteToPInstruct"/>
+            <name value="AnnotationComment"/>
             <variable value="note">
                <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
                   <valueUrl value="id"/>
@@ -2859,7 +2855,7 @@ group PharmaceuticalAdviceItemEntryContentModule(source bundle : Bundle, source 
                </extension>
             </variable>
          </dependent>
-         <documentation value="Patient Medication Instructions Contains 1.3.6.1.4.1.19376.1.5.3.1.4.3 IHE Patient Medication Instructions (DYNAMIC)"/>
+         <documentation value="2.16.756.5.30.1.1.10.4.82 Annotation Comments (DYNAMIC)"/>
       </rule>
       <rule>
          <name value="DosageInReserve"/>
@@ -3252,6 +3248,58 @@ group PharmaceuticalAdviceItemEntryContentModule(source bundle : Bundle, source 
             </variable>
          </dependent>
       </rule>
+      <rule>
+         <name value="NoteToPInstruct"/>
+         <source>
+            <context value="dosage"/>
+            <element value="patientInstruction"/>
+            <variable value="note"/>
+         </source>
+         <target>
+            <context value="substanceAdministration"/>
+            <contextType value="variable"/>
+            <element value="entryRelationship"/>
+            <variable value="entryRelationship"/>
+         </target>
+         <target>
+            <context value="entryRelationship"/>
+            <contextType value="variable"/>
+            <element value="typeCode"/>
+            <transform value="copy"/>
+            <parameter>
+               <valueString value="SUBJ"/>
+            </parameter>
+         </target>
+         <target>
+            <context value="entryRelationship"/>
+            <contextType value="variable"/>
+            <element value="inversionInd"/>
+            <transform value="copy"/>
+            <parameter>
+               <valueString value="true"/>
+            </parameter>
+         </target>
+         <target>
+            <context value="entryRelationship"/>
+            <contextType value="variable"/>
+            <element value="act"/>
+            <variable value="act"/>
+         </target>
+         <dependent>
+            <name value="NoteToPInstruct"/>
+            <variable value="note">
+               <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                  <valueUrl value="id"/>
+               </extension>
+            </variable>
+            <variable value="act">
+               <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                  <valueUrl value="id"/>
+               </extension>
+            </variable>
+         </dependent>
+         <documentation value="Patient Medication Instructions Contains 1.3.6.1.4.1.19376.1.5.3.1.4.3 IHE Patient Medication Instructions (DYNAMIC)"/>
+      </rule>
    </group>
    <group>
       <name value="DosageInstructionsEntryStartStopRoute"/>
@@ -3348,6 +3396,58 @@ group PharmaceuticalAdviceItemEntryContentModule(source bundle : Bundle, source 
                </extension>
             </variable>
          </dependent>
+      </rule>
+      <rule>
+         <name value="NoteToPInstruct"/>
+         <source>
+            <context value="dosage"/>
+            <element value="patientInstruction"/>
+            <variable value="note"/>
+         </source>
+         <target>
+            <context value="substanceAdministration"/>
+            <contextType value="variable"/>
+            <element value="entryRelationship"/>
+            <variable value="entryRelationship"/>
+         </target>
+         <target>
+            <context value="entryRelationship"/>
+            <contextType value="variable"/>
+            <element value="typeCode"/>
+            <transform value="copy"/>
+            <parameter>
+               <valueString value="SUBJ"/>
+            </parameter>
+         </target>
+         <target>
+            <context value="entryRelationship"/>
+            <contextType value="variable"/>
+            <element value="inversionInd"/>
+            <transform value="copy"/>
+            <parameter>
+               <valueString value="true"/>
+            </parameter>
+         </target>
+         <target>
+            <context value="entryRelationship"/>
+            <contextType value="variable"/>
+            <element value="act"/>
+            <variable value="act"/>
+         </target>
+         <dependent>
+            <name value="NoteToPInstruct"/>
+            <variable value="note">
+               <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                  <valueUrl value="id"/>
+               </extension>
+            </variable>
+            <variable value="act">
+               <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                  <valueUrl value="id"/>
+               </extension>
+            </variable>
+         </dependent>
+         <documentation value="Patient Medication Instructions Contains 1.3.6.1.4.1.19376.1.5.3.1.4.3 IHE Patient Medication Instructions (DYNAMIC)"/>
       </rule>
    </group>
    <group>
@@ -6001,16 +6101,7 @@ group PharmaceuticalAdviceItemEntryContentModule(source bundle : Bundle, source 
             <element value="typeCode"/>
             <transform value="copy"/>
             <parameter>
-               <valueString value="SUBJ"/>
-            </parameter>
-         </target>
-         <target>
-            <context value="entryRelationship"/>
-            <contextType value="variable"/>
-            <element value="inversionInd"/>
-            <transform value="copy"/>
-            <parameter>
-               <valueString value="true"/>
+               <valueString value="COMP"/>
             </parameter>
          </target>
          <target>
@@ -6020,7 +6111,7 @@ group PharmaceuticalAdviceItemEntryContentModule(source bundle : Bundle, source 
             <variable value="act"/>
          </target>
          <dependent>
-            <name value="NoteToPInstruct"/>
+            <name value="AnnotationComment"/>
             <variable value="note">
                <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
                   <valueUrl value="id"/>
@@ -6032,7 +6123,7 @@ group PharmaceuticalAdviceItemEntryContentModule(source bundle : Bundle, source 
                </extension>
             </variable>
          </dependent>
-         <documentation value="Patient Medication Instructions Contains 1.3.6.1.4.1.19376.1.5.3.1.4.3 IHE Patient Medication Instructions (DYNAMIC)"/>
+         <documentation value="s 2.16.756.5.30.1.1.10.4.82 Annotation Comments (DYNAMIC)"/>
       </rule>
       <rule>
          <name value="Substitution"/>
@@ -6348,6 +6439,58 @@ group PharmaceuticalAdviceItemEntryContentModule(source bundle : Bundle, source 
                      <valueString value="NA"/>
                   </parameter>
                </target>
+            </rule>
+            <rule>
+               <name value="NoteToPInstruct"/>
+               <source>
+                  <context value="dosage"/>
+                  <element value="patientInstruction"/>
+                  <variable value="note"/>
+               </source>
+               <target>
+                  <context value="substanceAdministration"/>
+                  <contextType value="variable"/>
+                  <element value="entryRelationship"/>
+                  <variable value="entryRelationship"/>
+               </target>
+               <target>
+                  <context value="entryRelationship"/>
+                  <contextType value="variable"/>
+                  <element value="typeCode"/>
+                  <transform value="copy"/>
+                  <parameter>
+                     <valueString value="SUBJ"/>
+                  </parameter>
+               </target>
+               <target>
+                  <context value="entryRelationship"/>
+                  <contextType value="variable"/>
+                  <element value="inversionInd"/>
+                  <transform value="copy"/>
+                  <parameter>
+                     <valueString value="true"/>
+                  </parameter>
+               </target>
+               <target>
+                  <context value="entryRelationship"/>
+                  <contextType value="variable"/>
+                  <element value="act"/>
+                  <variable value="act"/>
+               </target>
+               <dependent>
+                  <name value="NoteToPInstruct"/>
+                  <variable value="note">
+                     <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                        <valueUrl value="id"/>
+                     </extension>
+                  </variable>
+                  <variable value="act">
+                     <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                        <valueUrl value="id"/>
+                     </extension>
+                  </variable>
+               </dependent>
+               <documentation value="Patient Medication Instructions Contains 1.3.6.1.4.1.19376.1.5.3.1.4.3 IHE Patient Medication Instructions (DYNAMIC)"/>
             </rule>
          </rule>
       </rule>
@@ -9223,16 +9366,7 @@ group PharmaceuticalAdviceItemEntryContentModule(source bundle : Bundle, source 
             <element value="typeCode"/>
             <transform value="copy"/>
             <parameter>
-               <valueString value="SUBJ"/>
-            </parameter>
-         </target>
-         <target>
-            <context value="entryRelationship"/>
-            <contextType value="variable"/>
-            <element value="inversionInd"/>
-            <transform value="copy"/>
-            <parameter>
-               <valueString value="true"/>
+               <valueString value="COMP"/>
             </parameter>
          </target>
          <target>
@@ -9242,7 +9376,7 @@ group PharmaceuticalAdviceItemEntryContentModule(source bundle : Bundle, source 
             <variable value="act"/>
          </target>
          <dependent>
-            <name value="NoteToPInstruct"/>
+            <name value="AnnotationComment"/>
             <variable value="note">
                <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
                   <valueUrl value="id"/>

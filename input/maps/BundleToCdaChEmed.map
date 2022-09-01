@@ -60,14 +60,14 @@ group AnnotationComment(source note: Annotation, target act: Act) {
 
 // source: Annotation note (e.g. http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefinition-ch-emed-medicationstatement.html)
 // target: https://art-decor.org/art-decor/decor-templates--cdachemed-?section=templates&id=1.3.6.1.4.1.19376.1.5.3.1.4.3
-group NoteToPInstruct(source note: Annotation, target act: Act) {
+group NoteToPInstruct(source note: string, target act: Act) {
   note -> act.classCode = 'ACT' "ACT";  
   note -> act.moodCode = 'INT' "INT";  
   note -> act.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.5.3.1.4.3' "templateId";
   note -> act.templateId as templateId, templateId.root = '2.16.840.1.113883.10.20.1.49' "templateId";
   note -> act.code as code, code.code = 'PINSTRUCT', code.codeSystem = '1.3.6.1.4.1.19376.1.5.3.2', code.codeSystemName='IHEActCode' "code";
-  note.text as noteText -> act.text as text then {
-    noteText -> text.data = noteText "text";
+  note -> act.text as text then {
+    note as noteText -> text.data = noteText "text";
     note.extension as extension where $this.url='http://hl7.org/fhir/StructureDefinition/narrativeLink' then {
       extension.valueUrl as valueUrl -> text.reference as reference, reference.value=valueUrl "reference";
     } "id";
@@ -211,12 +211,11 @@ group MedicationTreatmentPlanItemEntryContentModule(source bundle : Bundle, sour
   // https://github.com/ehealthsuisse/ch-emed/issues/56
   medicationStatement -> substanceAdministration.repeatNumber as repeatNumber, repeatNumber.nullFlavor = 'NI' "repeatNumberDefault";
 
-  // Patient Medication Instructions Contains 1.3.6.1.4.1.19376.1.5.3.1.4.3 IHE Patient Medication Instructions (DYNAMIC)
+  //  2.16.756.5.30.1.1.10.4.82 Annotation Comments (DYNAMIC)
   medicationStatement.note as note 
-    -> substanceAdministration.entryRelationship as entryRelationship, entryRelationship.typeCode='SUBJ',
-        entryRelationship.inversionInd = 'true',
-        entryRelationship.act as act 
-          then NoteToPInstruct(note, act) "AnnotationComment";
+     -> substanceAdministration.entryRelationship as entryRelationship, entryRelationship.typeCode='COMP',
+         entryRelationship.act as act 
+           then AnnotationComment(note, act) "AnnotationComment";
 
   // TODO: Amount of units of the consumable to dispense
   // TODO: ID of parent container (Community Medication Treatment Plan document)
@@ -266,6 +265,12 @@ group DosageInstructionsStartStopFrequencySubstanceAdministration(source dosage:
   dosage as dosage -> substanceAdministration as substanceAdministration then EffectiveTimeWhenNormal(dosage, substanceAdministration) "effectiveTimeWhen";
   dosage.route as route -> substanceAdministration.routeCode as routeCode then CodeableConceptCE(route, routeCode) "route";
   dosage as dosage -> substanceAdministration as substanceAdministration then DoseQuantity(dosage, substanceAdministration) "doseQuantity";
+  // Patient Medication Instructions Contains 1.3.6.1.4.1.19376.1.5.3.1.4.3 IHE Patient Medication Instructions (DYNAMIC)
+  dosage.patientInstruction as note 
+     -> substanceAdministration.entryRelationship as entryRelationship, entryRelationship.typeCode='SUBJ',
+         entryRelationship.inversionInd = 'true',
+         entryRelationship.act as act 
+         then NoteToPInstruct(note, act) "NoteToPInstruct";
 }
 
 // source: http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured-split
@@ -277,6 +282,12 @@ group DosageInstructionsEntryStartStopRoute(source dosage: Dosage, target substa
 
   dosage as dosage -> substanceAdministration as substanceAdministration then EffectiveTimeStartEnd(dosage, substanceAdministration) "effectiveTimeStartEnd";
   dosage.route as route -> substanceAdministration.routeCode as routeCode then CodeableConceptCE(route, routeCode) "route";
+  // Patient Medication Instructions Contains 1.3.6.1.4.1.19376.1.5.3.1.4.3 IHE Patient Medication Instructions (DYNAMIC)
+  dosage.patientInstruction as note 
+     -> substanceAdministration.entryRelationship as entryRelationship, entryRelationship.typeCode='SUBJ',
+         entryRelationship.inversionInd = 'true',
+         entryRelationship.act as act 
+         then NoteToPInstruct(note, act) "NoteToPInstruct";
 }
 
 // source: http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-dosage-structured-split
@@ -557,12 +568,11 @@ group DispenseItemEntryContentModule(source bundle : Bundle, source medicationDi
   } "quantity";
   
 
-  // Patient Medication Instructions Contains 1.3.6.1.4.1.19376.1.5.3.1.4.3 IHE Patient Medication Instructions (DYNAMIC)
+  // s 2.16.756.5.30.1.1.10.4.82 Annotation Comments (DYNAMIC)
   medicationDispense.note as note 
-    -> supply.entryRelationship as entryRelationship, entryRelationship.typeCode='SUBJ', 
-    entryRelationship.inversionInd = 'true',
+    -> supply.entryRelationship as entryRelationship, entryRelationship.typeCode='COMP', 
     entryRelationship.act as act 
-          then NoteToPInstruct(note, act) "AnnotationComment";
+          then AnnotationComment(note, act) "AnnotationComment";
 
   medicationDispense.substitution as substitution
     -> supply.entryRelationship as entryRelationship, entryRelationship.typeCode='COMP', 
@@ -589,6 +599,12 @@ group DosageInstructionsStartStopFrequencySupply(source dosage: Dosage, target s
       dosage -> substanceAdministration as substanceAdministration, substanceAdministration.consumable as consumable,
         consumable.manufacturedProduct as manufacturedProduct, manufacturedProduct.manufacturedMaterial as manufacturedMaterial,
         manufacturedMaterial.nullFlavor='NA' "consumable";
+        // Patient Medication Instructions Contains 1.3.6.1.4.1.19376.1.5.3.1.4.3 IHE Patient Medication Instructions (DYNAMIC)
+        dosage.patientInstruction as note 
+        -> substanceAdministration.entryRelationship as entryRelationship, entryRelationship.typeCode='SUBJ',
+            entryRelationship.inversionInd = 'true',
+            entryRelationship.act as act 
+            then NoteToPInstruct(note, act) "NoteToPInstruct";
     } "substanceAdministration";
   }"entryRelationship";
 }
@@ -884,10 +900,9 @@ group PrescriptionItemEntryContentModule(source bundle : Bundle, source medicati
 
   // Patient Medication Instructions Contains 1.3.6.1.4.1.19376.1.5.3.1.4.3 IHE Patient Medication Instructions (DYNAMIC)
   medicationRequest.note as note 
-    -> substanceAdministration.entryRelationship as entryRelationship, entryRelationship.typeCode='SUBJ',
-        entryRelationship.inversionInd = 'true', 
+    -> substanceAdministration.entryRelationship as entryRelationship, entryRelationship.typeCode='COMP',
         entryRelationship.act as act 
-          then NoteToPInstruct(note, act) "AnnotationComment";
+          then AnnotationComment(note, act) "AnnotationComment";
 
   medicationRequest.substitution as substitution
     -> substanceAdministration.entryRelationship as entryRelationship, entryRelationship.typeCode='COMP', 
