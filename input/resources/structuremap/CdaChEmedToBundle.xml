@@ -1,8 +1,8 @@
 <StructureMap xmlns="http://hl7.org/fhir">
    <id value="CdaChEmedToBundle"/>
    <meta>
-      <versionId value="33"/>
-      <lastUpdated value="2022-09-01T21:21:54.139+00:00"/>
+      <versionId value="37"/>
+      <lastUpdated value="2022-09-14T15:22:30.953+00:00"/>
    </meta>
    <text>
       <status value="generated"/>
@@ -168,13 +168,16 @@ group MedicationTreatmentPlanItemEntryContentModule(source section : Section, so
   } &quot;41&quot;;
   src.entryRelationship as entryRelationship where ((typeCode = &apos;COMP&apos;) and (substanceAdministration.templateId.root = &apos;2.16.756.5.30.1.1.10.4.52&apos;)) -&gt; medicationStatement.dosage as dosage then DosageInstructionsNonStructuredEntryContentModule(src, entryRelationship, dosage) &quot;52&quot;;
   src.entryRelationship as entry where ((typeCode = &apos;COMP&apos;) and (sequenceNumber.value &gt;= 0)) -&gt; medicationStatement.dosage as dosage then DosageInstructionsEntryDosageChange(src, entry, dosage) &quot;36&quot;;
-  src.entryRelationship as entry where ((typeCode = &apos;REFR&apos;) and substanceAdministration.templateId.where(root = &apos;1.3.6.1.4.1.19376.1.9.1.3.10&apos;).exists()) -&gt; medicationStatement.extension as ext then MTPReferenceEntryContentModule(entry, ext) &quot;MTPReferenceEntry&quot;;
+  src.entryRelationship as entry where ((typeCode = &apos;REFR&apos;) and substanceAdministration.templateId.where(root = &apos;1.3.6.1.4.1.19376.1.9.1.3.10&apos;).exists()) then {
+    entry.substanceAdministration as substanceAdministration -&gt; medicationStatement.extension as ext then MTPReferenceEntryContentModule(substanceAdministration, ext) &quot;MTPReferenceEntry&quot;;
+  } &quot;reference&quot;;
   src.entryRelationship as entry where ((typeCode = &apos;COMP&apos;) and act.templateId.where(root = &apos;1.3.6.1.4.1.19376.1.5.3.1.4.2&apos;).exists()) then {
     entry.act as act -&gt; medicationStatement.note as note then AnnotationComment(section, act, note) &quot;annotation&quot;;
   } &quot;2&quot;;
   src.entryRelationship as entry where ((typeCode = &apos;COMP&apos;) and act.templateId.where(root = &apos;1.3.6.1.4.1.19376.1.9.1.3.9.1&apos;).exists()) then {
     entry.act as act -&gt; medicationStatement as medicationStatement then SubstitutionStatement(act, medicationStatement) &quot;substitution&quot;;
   } &quot;1&quot;;
+  src.reference where typeCode = &apos;XCRPT&apos; -&gt; medicationStatement.extension as ext then MTPReferenceEntryContentModule(src, ext) &quot;ReferenceXCRPT&quot;;
 }
 
 // source https://art-decor.org/art-decor/decor-templates--ch-pharm-?id=2.16.756.5.30.1.1.10.4.36
@@ -244,9 +247,41 @@ group TreatmentReasonEntryContentModule(source section : Section, source observa
 
 // source: https://art-decor.org/art-decor/decor-templates--ch-pharm-?section=templates&amp;id=2.16.756.5.30.1.1.10.4.45
 // target: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefinition-ch-emed-ext-treatmentplan.html
-group MTPReferenceEntryContentModule(source entryrelationship, target ext : Extension) {
-  entryrelationship -&gt; ext.url = &apos;http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-treatmentplan&apos; &quot;url&quot;;
-  entryrelationship.substanceAdministration as substanceAdministration then {
+group MTPReferenceEntryContentModule(source substanceAdministration, target ext : Extension) {
+  substanceAdministration -&gt; ext.url = &apos;http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-treatmentplan&apos; then {
+    substanceAdministration.id as id -&gt; ext.extension as ext then InnerExtensionId(id, ext) &quot;innerExtensionId&quot;;
+    substanceAdministration.reference as reference then {
+      reference.externalDocument as externalDocument then {
+        externalDocument.id as id -&gt; ext.extension as ext then InnerExtensionExternalDocumentId(id, ext) &quot;innerExtensionExternalDocumentId&quot;;
+      };
+    } &quot;substanceAdministration&quot;;
+  } &quot;id&quot;;
+}
+
+group PREReferenceEntryContentModule(source substanceAdministration, target ext : Extension) {
+  substanceAdministration -&gt; ext.url = &apos;http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-prescription&apos; then {
+    substanceAdministration.id as id -&gt; ext.extension as ext then InnerExtensionId(id, ext) &quot;innerExtensionId&quot;;
+    substanceAdministration.reference as reference then {
+      reference.externalDocument as externalDocument then {
+        externalDocument.id as id -&gt; ext.extension as ext then InnerExtensionExternalDocumentId(id, ext) &quot;innerExtensionExternalDocumentId&quot;;
+      };
+    } &quot;substanceAdministration&quot;;
+  } &quot;id&quot;;
+}
+
+group PADVReferenceEntryContentModule(source substanceAdministration, target ext : Extension) {
+  substanceAdministration -&gt; ext.url = &apos;http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-dispense&apos; then {
+    substanceAdministration.id as id -&gt; ext.extension as ext then InnerExtensionId(id, ext) &quot;innerExtensionId&quot;;
+    substanceAdministration.reference as reference then {
+      reference.externalDocument as externalDocument then {
+        externalDocument.id as id -&gt; ext.extension as ext then InnerExtensionExternalDocumentId(id, ext) &quot;innerExtensionExternalDocumentId&quot;;
+      };
+    } &quot;substanceAdministration&quot;;
+  } &quot;id&quot;;
+}
+
+group DISReferenceEntryContentModule(source substanceAdministration, target ext : Extension) {
+  substanceAdministration -&gt; ext.url = &apos;http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-pharmaceuticaladvice&apos; then {
     substanceAdministration.id as id -&gt; ext.extension as ext then InnerExtensionId(id, ext) &quot;innerExtensionId&quot;;
     substanceAdministration.reference as reference then {
       reference.externalDocument as externalDocument then {
@@ -310,13 +345,16 @@ group DispenseItemEntryContentModule(source section : Section, source src : Supp
       substanceAdministration.entryRelationship as entryRelationship where ((typeCode = &apos;COMP&apos;) and (sequenceNumber.value &gt;= 0)) -&gt; medicationDispense.dosageInstruction as dosage then DosageInstructionsEntryDosageChange(substanceAdministration, entryRelationship, dosage) &quot;36&quot;;
     };
   };
-  src.entryRelationship as entry where ((typeCode = &apos;REFR&apos;) and substanceAdministration.templateId.where(root = &apos;1.3.6.1.4.1.19376.1.9.1.3.10&apos;).exists()) -&gt; medicationDispense.extension as ext then MTPReferenceEntryContentModule(entry, ext) &quot;MTPReferenceEntry&quot;;
+  src.entryRelationship as entry where ((typeCode = &apos;REFR&apos;) and substanceAdministration.templateId.where(root = &apos;1.3.6.1.4.1.19376.1.9.1.3.10&apos;).exists()) then {
+    entry.substanceAdministration as substanceAdministration -&gt; medicationDispense.extension as ext then MTPReferenceEntryContentModule(substanceAdministration, ext) &quot;MTPReferenceEntry&quot;;
+  } &quot;reference&quot;;
   src.entryRelationship as entry where ((typeCode = &apos;COMP&apos;) and act.templateId.where(root = &apos;1.3.6.1.4.1.19376.1.5.3.1.4.2&apos;).exists()) then {
     entry.act as act -&gt; medicationDispense.note as note then AnnotationComment(section, act, note) &quot;annotation&quot;;
   } &quot;2&quot;;
   src.entryRelationship as entry where ((typeCode = &apos;COMP&apos;) and act.templateId.where(root = &apos;1.3.6.1.4.1.19376.1.9.1.3.9.2&apos;).exists()) then {
     entry.act as act -&gt; medicationDispense as medicationDispense then SubstitutionDispense(act, medicationDispense) &quot;substitution&quot;;
   } &quot;2&quot;;
+  src.reference where typeCode = &apos;XCRPT&apos; -&gt; src.extension as ext then DISReferenceEntryContentModule(medicationDispense, ext) &quot;ReferenceXCRPT&quot;;
 }
 
 // dose quantity for dosage (application schema)
@@ -428,7 +466,9 @@ group PrescriptionItemEntryContentModule(source section : Section, source src : 
   src.entryRelationship as entryRelationship where ((typeCode = &apos;COMP&apos;) and (substanceAdministration.templateId.root = &apos;2.16.756.5.30.1.1.10.4.52&apos;)) -&gt; medicationRequest.dosageInstruction as dosage then DosageInstructionsNonStructuredEntryContentModule(src, entryRelationship, dosage) &quot;52&quot;;
   // dosage for split dosing, as sequences are present there
   src.entryRelationship as entry where ((typeCode = &apos;COMP&apos;) and (sequenceNumber.value &gt;= 0)) -&gt; medicationRequest.dosageInstruction as dosage then DosageInstructionsEntryDosageChange(src, entry, dosage) &quot;36&quot;;
-  src.entryRelationship as entry where ((typeCode = &apos;REFR&apos;) and substanceAdministration.templateId.where(root = &apos;1.3.6.1.4.1.19376.1.9.1.3.10&apos;).exists()) -&gt; medicationRequest.extension as ext then MTPReferenceEntryContentModule(entry, ext) &quot;MTPReferenceEntry&quot;;
+  src.entryRelationship as entry where ((typeCode = &apos;REFR&apos;) and substanceAdministration.templateId.where(root = &apos;1.3.6.1.4.1.19376.1.9.1.3.10&apos;).exists()) then {
+    entry.substanceAdministration as substanceAdministration -&gt; medicationRequest.extension as ext then MTPReferenceEntryContentModule(substanceAdministration, ext) &quot;MTPReferenceEntry&quot;;
+  } &quot;reference&quot;;
   src.entryRelationship as entry where ((typeCode = &apos;COMP&apos;) and act.templateId.where(root = &apos;1.3.6.1.4.1.19376.1.5.3.1.4.2&apos;).exists()) then {
     entry.act as act -&gt; medicationRequest.note as note then AnnotationComment(section, act, note) &quot;annotation&quot;;
   } &quot;2&quot;;
@@ -441,6 +481,7 @@ group PrescriptionItemEntryContentModule(source section : Section, source src : 
   src.entryRelationship as entry where ((typeCode = &apos;COMP&apos;) and act.templateId.where(root = &apos;1.3.6.1.4.1.19376.1.9.1.3.9.1&apos;).exists()) then {
     entry.act as act -&gt; medicationRequest as medicationRequest then SubstitutionRequest(act, medicationRequest) &quot;substitution&quot;;
   } &quot;1&quot;;
+  src.reference where typeCode = &apos;XCRPT&apos; -&gt; medicationRequest.extension as ext then PREReferenceEntryContentModule(src, ext) &quot;ReferenceXCRPT&quot;;
 }
 
 // source: https://art-decor.org/art-decor/decor-templates--ch-pharm-?id=2.16.756.5.30.1.1.10.4.35
@@ -466,7 +507,9 @@ group PharmaceuticalAdviceItemEntryContentModule(source section : Section, sourc
   src.effectiveTime as effectiveTime -&gt; observation.effective = create(&apos;dateTime&apos;) as value then TSDateTime(effectiveTime, value) &quot;value&quot;;
   src.author first as author -&gt; observation.performer = create(&apos;Reference&apos;) as reference then Author(author, reference, bundle);
   src.author last as author where (%src.author.count() = 2) -&gt;  observation.extension as ext,  ext.url = &apos;http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-documentauthor&apos;,  ext.value = create(&apos;Reference&apos;) as reference then Author(author, reference, bundle) &quot;ch-emed-ext-documentauthor&quot;;
-  src.entryRelationship as entry where ((typeCode = &apos;REFR&apos;) and substanceAdministration.templateId.where(root = &apos;1.3.6.1.4.1.19376.1.9.1.3.10&apos;).exists()) -&gt; observation.extension as ext then MTPReferenceEntryContentModule(entry, ext) &quot;MTPReferenceEntry&quot;;
+  src.entryRelationship as entry where ((typeCode = &apos;REFR&apos;) and substanceAdministration.templateId.where(root = &apos;1.3.6.1.4.1.19376.1.9.1.3.10&apos;).exists()) then {
+    entry.substanceAdministration as substanceAdministration -&gt; observation.extension as ext then MTPReferenceEntryContentModule(substanceAdministration, ext) &quot;MTPReferenceEntry&quot;;
+  } &quot;reference&quot;;
   src.entryRelationship as entry where ((typeCode = &apos;REFR&apos;) and substanceAdministration.templateId.where(root = &apos;1.3.6.1.4.1.19376.1.9.1.3.7&apos;).exists()) -&gt;  bundle.entry as e,  e.id = uuid() as uuid,  e.fullUrl = append(&apos;urn:uuid:&apos;, uuid),  e.resource = create(&apos;MedicationStatement&apos;) as medicationstatement,  observation.extension as ext,  ext.url = &apos;http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-medicationstatement-changed&apos;,  ext.value = create(&apos;Reference&apos;) as reference,  reference.reference = append(&apos;urn:uuid:&apos;, uuid) then {
     entry.substanceAdministration as substanceAdministration then MedicationTreatmentPlanItemEntryContentModule(section, substanceAdministration, patient, medicationstatement, bundle);
   } &quot;cdaEntry&quot;;
@@ -486,6 +529,7 @@ group PharmaceuticalAdviceItemEntryContentModule(source section : Section, sourc
     } &quot;2&quot;;
   } &quot;AnnotationComment&quot;;
   src.code -&gt; observation.code;
+  src.reference where typeCode = &apos;XCRPT&apos; -&gt; observation.extension as ext then PADVReferenceEntryContentModule(src, ext) &quot;ReferenceXCRPT&quot;;
 }
 
 // _________________________ Template Type not specified   _________________________
@@ -2159,32 +2203,40 @@ group InnerExtensionId(source src, target ext : Extension) {
          </dependent>
       </rule>
       <rule>
-         <name value="MTPReferenceEntry"/>
+         <name value="reference"/>
          <source>
             <context value="src"/>
             <element value="entryRelationship"/>
             <variable value="entry"/>
             <condition value="((typeCode = 'REFR') and substanceAdministration.templateId.where(root = '1.3.6.1.4.1.19376.1.9.1.3.10').exists())"/>
          </source>
-         <target>
-            <context value="medicationStatement"/>
-            <contextType value="variable"/>
-            <element value="extension"/>
-            <variable value="ext"/>
-         </target>
-         <dependent>
-            <name value="MTPReferenceEntryContentModule"/>
-            <variable value="entry">
-               <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
-                  <valueUrl value="id"/>
-               </extension>
-            </variable>
-            <variable value="ext">
-               <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
-                  <valueUrl value="id"/>
-               </extension>
-            </variable>
-         </dependent>
+         <rule>
+            <name value="MTPReferenceEntry"/>
+            <source>
+               <context value="entry"/>
+               <element value="substanceAdministration"/>
+               <variable value="substanceAdministration"/>
+            </source>
+            <target>
+               <context value="medicationStatement"/>
+               <contextType value="variable"/>
+               <element value="extension"/>
+               <variable value="ext"/>
+            </target>
+            <dependent>
+               <name value="MTPReferenceEntryContentModule"/>
+               <variable value="substanceAdministration">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
+               <variable value="ext">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
+            </dependent>
+         </rule>
       </rule>
       <rule>
          <name value="entryRelationShip-1.3.6.1.4.1.19376.1.5.3.1.4.2"/>
@@ -2264,6 +2316,33 @@ group InnerExtensionId(source src, target ext : Extension) {
                </variable>
             </dependent>
          </rule>
+      </rule>
+      <rule>
+         <name value="ReferenceXCRPT"/>
+         <source>
+            <context value="src"/>
+            <element value="reference"/>
+            <condition value="typeCode = 'XCRPT'"/>
+         </source>
+         <target>
+            <context value="medicationStatement"/>
+            <contextType value="variable"/>
+            <element value="extension"/>
+            <variable value="ext"/>
+         </target>
+         <dependent>
+            <name value="MTPReferenceEntryContentModule"/>
+            <variable value="src">
+               <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                  <valueUrl value="id"/>
+               </extension>
+            </variable>
+            <variable value="ext">
+               <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                  <valueUrl value="id"/>
+               </extension>
+            </variable>
+         </dependent>
       </rule>
    </group>
    <group>
@@ -2773,7 +2852,7 @@ group InnerExtensionId(source src, target ext : Extension) {
       <typeMode value="none"/>
       <documentation value="source: https://art-decor.org/art-decor/decor-templates--ch-pharm-?section=templates&amp;id=2.16.756.5.30.1.1.10.4.45&#xd;&#xa;target: http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefinition-ch-emed-ext-treatmentplan.html"/>
       <input>
-         <name value="entryrelationship"/>
+         <name value="substanceAdministration"/>
          <mode value="source"/>
       </input>
       <input>
@@ -2782,9 +2861,9 @@ group InnerExtensionId(source src, target ext : Extension) {
          <mode value="target"/>
       </input>
       <rule>
-         <name value="url"/>
+         <name value="id"/>
          <source>
-            <context value="entryrelationship"/>
+            <context value="substanceAdministration"/>
          </source>
          <target>
             <context value="ext"/>
@@ -2795,14 +2874,300 @@ group InnerExtensionId(source src, target ext : Extension) {
                <valueString value="http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-treatmentplan"/>
             </parameter>
          </target>
+         <rule>
+            <name value="innerExtensionId"/>
+            <source>
+               <context value="substanceAdministration"/>
+               <element value="id"/>
+               <variable value="id"/>
+            </source>
+            <target>
+               <context value="ext"/>
+               <contextType value="variable"/>
+               <element value="extension"/>
+               <variable value="ext"/>
+            </target>
+            <dependent>
+               <name value="InnerExtensionId"/>
+               <variable value="id">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
+               <variable value="ext">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
+            </dependent>
+         </rule>
+         <rule>
+            <name value="substanceAdministration"/>
+            <source>
+               <context value="substanceAdministration"/>
+               <element value="reference"/>
+               <variable value="reference"/>
+            </source>
+            <rule>
+               <name value="externalDocument"/>
+               <source>
+                  <context value="reference"/>
+                  <element value="externalDocument"/>
+                  <variable value="externalDocument"/>
+               </source>
+               <rule>
+                  <name value="innerExtensionExternalDocumentId"/>
+                  <source>
+                     <context value="externalDocument"/>
+                     <element value="id"/>
+                     <variable value="id"/>
+                  </source>
+                  <target>
+                     <context value="ext"/>
+                     <contextType value="variable"/>
+                     <element value="extension"/>
+                     <variable value="ext"/>
+                  </target>
+                  <dependent>
+                     <name value="InnerExtensionExternalDocumentId"/>
+                     <variable value="id">
+                        <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                           <valueUrl value="id"/>
+                        </extension>
+                     </variable>
+                     <variable value="ext">
+                        <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                           <valueUrl value="id"/>
+                        </extension>
+                     </variable>
+                  </dependent>
+               </rule>
+            </rule>
+         </rule>
       </rule>
+   </group>
+   <group>
+      <name value="PREReferenceEntryContentModule"/>
+      <typeMode value="none"/>
+      <input>
+         <name value="substanceAdministration"/>
+         <mode value="source"/>
+      </input>
+      <input>
+         <name value="ext"/>
+         <type value="Extension"/>
+         <mode value="target"/>
+      </input>
       <rule>
          <name value="id"/>
          <source>
-            <context value="entryrelationship"/>
-            <element value="substanceAdministration"/>
-            <variable value="substanceAdministration"/>
+            <context value="substanceAdministration"/>
          </source>
+         <target>
+            <context value="ext"/>
+            <contextType value="variable"/>
+            <element value="url"/>
+            <transform value="copy"/>
+            <parameter>
+               <valueString value="http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-prescription"/>
+            </parameter>
+         </target>
+         <rule>
+            <name value="innerExtensionId"/>
+            <source>
+               <context value="substanceAdministration"/>
+               <element value="id"/>
+               <variable value="id"/>
+            </source>
+            <target>
+               <context value="ext"/>
+               <contextType value="variable"/>
+               <element value="extension"/>
+               <variable value="ext"/>
+            </target>
+            <dependent>
+               <name value="InnerExtensionId"/>
+               <variable value="id">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
+               <variable value="ext">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
+            </dependent>
+         </rule>
+         <rule>
+            <name value="substanceAdministration"/>
+            <source>
+               <context value="substanceAdministration"/>
+               <element value="reference"/>
+               <variable value="reference"/>
+            </source>
+            <rule>
+               <name value="externalDocument"/>
+               <source>
+                  <context value="reference"/>
+                  <element value="externalDocument"/>
+                  <variable value="externalDocument"/>
+               </source>
+               <rule>
+                  <name value="innerExtensionExternalDocumentId"/>
+                  <source>
+                     <context value="externalDocument"/>
+                     <element value="id"/>
+                     <variable value="id"/>
+                  </source>
+                  <target>
+                     <context value="ext"/>
+                     <contextType value="variable"/>
+                     <element value="extension"/>
+                     <variable value="ext"/>
+                  </target>
+                  <dependent>
+                     <name value="InnerExtensionExternalDocumentId"/>
+                     <variable value="id">
+                        <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                           <valueUrl value="id"/>
+                        </extension>
+                     </variable>
+                     <variable value="ext">
+                        <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                           <valueUrl value="id"/>
+                        </extension>
+                     </variable>
+                  </dependent>
+               </rule>
+            </rule>
+         </rule>
+      </rule>
+   </group>
+   <group>
+      <name value="PADVReferenceEntryContentModule"/>
+      <typeMode value="none"/>
+      <input>
+         <name value="substanceAdministration"/>
+         <mode value="source"/>
+      </input>
+      <input>
+         <name value="ext"/>
+         <type value="Extension"/>
+         <mode value="target"/>
+      </input>
+      <rule>
+         <name value="id"/>
+         <source>
+            <context value="substanceAdministration"/>
+         </source>
+         <target>
+            <context value="ext"/>
+            <contextType value="variable"/>
+            <element value="url"/>
+            <transform value="copy"/>
+            <parameter>
+               <valueString value="http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-dispense"/>
+            </parameter>
+         </target>
+         <rule>
+            <name value="innerExtensionId"/>
+            <source>
+               <context value="substanceAdministration"/>
+               <element value="id"/>
+               <variable value="id"/>
+            </source>
+            <target>
+               <context value="ext"/>
+               <contextType value="variable"/>
+               <element value="extension"/>
+               <variable value="ext"/>
+            </target>
+            <dependent>
+               <name value="InnerExtensionId"/>
+               <variable value="id">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
+               <variable value="ext">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
+            </dependent>
+         </rule>
+         <rule>
+            <name value="substanceAdministration"/>
+            <source>
+               <context value="substanceAdministration"/>
+               <element value="reference"/>
+               <variable value="reference"/>
+            </source>
+            <rule>
+               <name value="externalDocument"/>
+               <source>
+                  <context value="reference"/>
+                  <element value="externalDocument"/>
+                  <variable value="externalDocument"/>
+               </source>
+               <rule>
+                  <name value="innerExtensionExternalDocumentId"/>
+                  <source>
+                     <context value="externalDocument"/>
+                     <element value="id"/>
+                     <variable value="id"/>
+                  </source>
+                  <target>
+                     <context value="ext"/>
+                     <contextType value="variable"/>
+                     <element value="extension"/>
+                     <variable value="ext"/>
+                  </target>
+                  <dependent>
+                     <name value="InnerExtensionExternalDocumentId"/>
+                     <variable value="id">
+                        <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                           <valueUrl value="id"/>
+                        </extension>
+                     </variable>
+                     <variable value="ext">
+                        <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                           <valueUrl value="id"/>
+                        </extension>
+                     </variable>
+                  </dependent>
+               </rule>
+            </rule>
+         </rule>
+      </rule>
+   </group>
+   <group>
+      <name value="DISReferenceEntryContentModule"/>
+      <typeMode value="none"/>
+      <input>
+         <name value="substanceAdministration"/>
+         <mode value="source"/>
+      </input>
+      <input>
+         <name value="ext"/>
+         <type value="Extension"/>
+         <mode value="target"/>
+      </input>
+      <rule>
+         <name value="id"/>
+         <source>
+            <context value="substanceAdministration"/>
+         </source>
+         <target>
+            <context value="ext"/>
+            <contextType value="variable"/>
+            <element value="url"/>
+            <transform value="copy"/>
+            <parameter>
+               <valueString value="http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-pharmaceuticaladvice"/>
+            </parameter>
+         </target>
          <rule>
             <name value="innerExtensionId"/>
             <source>
@@ -3488,32 +3853,40 @@ group InnerExtensionId(source src, target ext : Extension) {
          </rule>
       </rule>
       <rule>
-         <name value="MTPReferenceEntry"/>
+         <name value="reference"/>
          <source>
             <context value="src"/>
             <element value="entryRelationship"/>
             <variable value="entry"/>
             <condition value="((typeCode = 'REFR') and substanceAdministration.templateId.where(root = '1.3.6.1.4.1.19376.1.9.1.3.10').exists())"/>
          </source>
-         <target>
-            <context value="medicationDispense"/>
-            <contextType value="variable"/>
-            <element value="extension"/>
-            <variable value="ext"/>
-         </target>
-         <dependent>
-            <name value="MTPReferenceEntryContentModule"/>
-            <variable value="entry">
-               <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
-                  <valueUrl value="id"/>
-               </extension>
-            </variable>
-            <variable value="ext">
-               <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
-                  <valueUrl value="id"/>
-               </extension>
-            </variable>
-         </dependent>
+         <rule>
+            <name value="MTPReferenceEntry"/>
+            <source>
+               <context value="entry"/>
+               <element value="substanceAdministration"/>
+               <variable value="substanceAdministration"/>
+            </source>
+            <target>
+               <context value="medicationDispense"/>
+               <contextType value="variable"/>
+               <element value="extension"/>
+               <variable value="ext"/>
+            </target>
+            <dependent>
+               <name value="MTPReferenceEntryContentModule"/>
+               <variable value="substanceAdministration">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
+               <variable value="ext">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
+            </dependent>
+         </rule>
       </rule>
       <rule>
          <name value="entryRelationShip-1.3.6.1.4.1.19376.1.5.3.1.4.2"/>
@@ -3593,6 +3966,33 @@ group InnerExtensionId(source src, target ext : Extension) {
                </variable>
             </dependent>
          </rule>
+      </rule>
+      <rule>
+         <name value="ReferenceXCRPT"/>
+         <source>
+            <context value="src"/>
+            <element value="reference"/>
+            <condition value="typeCode = 'XCRPT'"/>
+         </source>
+         <target>
+            <context value="src"/>
+            <contextType value="variable"/>
+            <element value="extension"/>
+            <variable value="ext"/>
+         </target>
+         <dependent>
+            <name value="DISReferenceEntryContentModule"/>
+            <variable value="medicationDispense">
+               <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                  <valueUrl value="id"/>
+               </extension>
+            </variable>
+            <variable value="ext">
+               <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                  <valueUrl value="id"/>
+               </extension>
+            </variable>
+         </dependent>
       </rule>
    </group>
    <group>
@@ -4861,32 +5261,40 @@ group InnerExtensionId(source src, target ext : Extension) {
          <documentation value="dosage for split dosing, as sequences are present there"/>
       </rule>
       <rule>
-         <name value="MTPReferenceEntry"/>
+         <name value="reference"/>
          <source>
             <context value="src"/>
             <element value="entryRelationship"/>
             <variable value="entry"/>
             <condition value="((typeCode = 'REFR') and substanceAdministration.templateId.where(root = '1.3.6.1.4.1.19376.1.9.1.3.10').exists())"/>
          </source>
-         <target>
-            <context value="medicationRequest"/>
-            <contextType value="variable"/>
-            <element value="extension"/>
-            <variable value="ext"/>
-         </target>
-         <dependent>
-            <name value="MTPReferenceEntryContentModule"/>
-            <variable value="entry">
-               <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
-                  <valueUrl value="id"/>
-               </extension>
-            </variable>
-            <variable value="ext">
-               <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
-                  <valueUrl value="id"/>
-               </extension>
-            </variable>
-         </dependent>
+         <rule>
+            <name value="MTPReferenceEntry"/>
+            <source>
+               <context value="entry"/>
+               <element value="substanceAdministration"/>
+               <variable value="substanceAdministration"/>
+            </source>
+            <target>
+               <context value="medicationRequest"/>
+               <contextType value="variable"/>
+               <element value="extension"/>
+               <variable value="ext"/>
+            </target>
+            <dependent>
+               <name value="MTPReferenceEntryContentModule"/>
+               <variable value="substanceAdministration">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
+               <variable value="ext">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
+            </dependent>
+         </rule>
       </rule>
       <rule>
          <name value="entryRelationShip-1.3.6.1.4.1.19376.1.5.3.1.4.2"/>
@@ -5035,6 +5443,33 @@ group InnerExtensionId(source src, target ext : Extension) {
                </variable>
             </dependent>
          </rule>
+      </rule>
+      <rule>
+         <name value="ReferenceXCRPT"/>
+         <source>
+            <context value="src"/>
+            <element value="reference"/>
+            <condition value="typeCode = 'XCRPT'"/>
+         </source>
+         <target>
+            <context value="medicationRequest"/>
+            <contextType value="variable"/>
+            <element value="extension"/>
+            <variable value="ext"/>
+         </target>
+         <dependent>
+            <name value="PREReferenceEntryContentModule"/>
+            <variable value="src">
+               <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                  <valueUrl value="id"/>
+               </extension>
+            </variable>
+            <variable value="ext">
+               <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                  <valueUrl value="id"/>
+               </extension>
+            </variable>
+         </dependent>
       </rule>
    </group>
    <group>
@@ -5393,32 +5828,40 @@ group InnerExtensionId(source src, target ext : Extension) {
          </dependent>
       </rule>
       <rule>
-         <name value="MTPReferenceEntry"/>
+         <name value="reference"/>
          <source>
             <context value="src"/>
             <element value="entryRelationship"/>
             <variable value="entry"/>
             <condition value="((typeCode = 'REFR') and substanceAdministration.templateId.where(root = '1.3.6.1.4.1.19376.1.9.1.3.10').exists())"/>
          </source>
-         <target>
-            <context value="observation"/>
-            <contextType value="variable"/>
-            <element value="extension"/>
-            <variable value="ext"/>
-         </target>
-         <dependent>
-            <name value="MTPReferenceEntryContentModule"/>
-            <variable value="entry">
-               <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
-                  <valueUrl value="id"/>
-               </extension>
-            </variable>
-            <variable value="ext">
-               <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
-                  <valueUrl value="id"/>
-               </extension>
-            </variable>
-         </dependent>
+         <rule>
+            <name value="MTPReferenceEntry"/>
+            <source>
+               <context value="entry"/>
+               <element value="substanceAdministration"/>
+               <variable value="substanceAdministration"/>
+            </source>
+            <target>
+               <context value="observation"/>
+               <contextType value="variable"/>
+               <element value="extension"/>
+               <variable value="ext"/>
+            </target>
+            <dependent>
+               <name value="MTPReferenceEntryContentModule"/>
+               <variable value="substanceAdministration">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
+               <variable value="ext">
+                  <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                     <valueUrl value="id"/>
+                  </extension>
+               </variable>
+            </dependent>
+         </rule>
       </rule>
       <rule>
          <name value="cdaEntry"/>
@@ -5691,6 +6134,33 @@ group InnerExtensionId(source src, target ext : Extension) {
             <variable value="vvv"/>
             <transform value="create"/>
          </target>
+      </rule>
+      <rule>
+         <name value="ReferenceXCRPT"/>
+         <source>
+            <context value="src"/>
+            <element value="reference"/>
+            <condition value="typeCode = 'XCRPT'"/>
+         </source>
+         <target>
+            <context value="observation"/>
+            <contextType value="variable"/>
+            <element value="extension"/>
+            <variable value="ext"/>
+         </target>
+         <dependent>
+            <name value="PADVReferenceEntryContentModule"/>
+            <variable value="src">
+               <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                  <valueUrl value="id"/>
+               </extension>
+            </variable>
+            <variable value="ext">
+               <extension url="http://hl7.org/fhir/tools/StructureDefinition/original-item-type">
+                  <valueUrl value="id"/>
+               </extension>
+            </variable>
+         </dependent>
       </rule>
    </group>
    <group>
