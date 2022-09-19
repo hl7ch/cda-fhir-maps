@@ -1,8 +1,8 @@
 <StructureMap xmlns="http://hl7.org/fhir">
    <id value="CdaChEmedToBundle"/>
    <meta>
-      <versionId value="38"/>
-      <lastUpdated value="2022-09-19T12:37:20.749+00:00"/>
+      <versionId value="39"/>
+      <lastUpdated value="2022-09-19T12:51:01.842+00:00"/>
    </meta>
    <text>
       <status value="generated"/>
@@ -354,7 +354,7 @@ group DispenseItemEntryContentModule(source section : Section, source src : Supp
   src.entryRelationship as entry where ((typeCode = &apos;COMP&apos;) and act.templateId.where(root = &apos;1.3.6.1.4.1.19376.1.9.1.3.9.2&apos;).exists()) then {
     entry.act as act -&gt; medicationDispense as medicationDispense then SubstitutionDispense(act, medicationDispense) &quot;substitution&quot;;
   } &quot;2&quot;;
-  src.reference where typeCode = &apos;XCRPT&apos; -&gt; src.extension as ext then DISReferenceEntryContentModule(medicationDispense, ext) &quot;ReferenceXCRPT&quot;;
+  src.reference where typeCode = &apos;XCRPT&apos; -&gt; medicationDispense.extension as ext then DISReferenceEntryContentModule(medicationDispense, ext) &quot;ReferenceXCRPT&quot;;
 }
 
 // dose quantity for dosage (application schema)
@@ -3975,7 +3975,7 @@ group InnerExtensionId(source src, target ext : Extension) {
             <condition value="typeCode = 'XCRPT'"/>
          </source>
          <target>
-            <context value="src"/>
+            <context value="medicationDispense"/>
             <contextType value="variable"/>
             <element value="extension"/>
             <variable value="ext"/>
