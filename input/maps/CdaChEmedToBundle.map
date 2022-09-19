@@ -323,7 +323,7 @@ group PREReferenceEntryContentModule(source substanceAdministration, target ext:
 }
 
 group PADVReferenceEntryContentModule(source substanceAdministration, target ext: Extension) {
-  substanceAdministration -> ext.url = 'http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-dispense' then {
+  substanceAdministration -> ext.url = 'http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-pharmaceuticaladvice' then {
     substanceAdministration.id as id -> ext.extension as ext then InnerExtensionId(id, ext) "innerExtensionId";
     substanceAdministration.reference as reference then {
       reference.externalDocument as externalDocument then {
@@ -334,7 +334,7 @@ group PADVReferenceEntryContentModule(source substanceAdministration, target ext
 }
 
 group DISReferenceEntryContentModule(source substanceAdministration, target ext: Extension) {
-  substanceAdministration -> ext.url = 'http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-pharmaceuticaladvice' then {
+  substanceAdministration -> ext.url = 'http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-dispense' then {
     substanceAdministration.id as id -> ext.extension as ext then InnerExtensionId(id, ext) "innerExtensionId";
     substanceAdministration.reference as reference then {
       reference.externalDocument as externalDocument then {

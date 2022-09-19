@@ -1,8 +1,8 @@
 <StructureMap xmlns="http://hl7.org/fhir">
    <id value="CdaChEmedToBundle"/>
    <meta>
-      <versionId value="37"/>
-      <lastUpdated value="2022-09-14T15:22:30.953+00:00"/>
+      <versionId value="38"/>
+      <lastUpdated value="2022-09-19T12:37:20.749+00:00"/>
    </meta>
    <text>
       <status value="generated"/>
@@ -270,7 +270,7 @@ group PREReferenceEntryContentModule(source substanceAdministration, target ext 
 }
 
 group PADVReferenceEntryContentModule(source substanceAdministration, target ext : Extension) {
-  substanceAdministration -&gt; ext.url = &apos;http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-dispense&apos; then {
+  substanceAdministration -&gt; ext.url = &apos;http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-pharmaceuticaladvice&apos; then {
     substanceAdministration.id as id -&gt; ext.extension as ext then InnerExtensionId(id, ext) &quot;innerExtensionId&quot;;
     substanceAdministration.reference as reference then {
       reference.externalDocument as externalDocument then {
@@ -281,7 +281,7 @@ group PADVReferenceEntryContentModule(source substanceAdministration, target ext
 }
 
 group DISReferenceEntryContentModule(source substanceAdministration, target ext : Extension) {
-  substanceAdministration -&gt; ext.url = &apos;http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-pharmaceuticaladvice&apos; then {
+  substanceAdministration -&gt; ext.url = &apos;http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-dispense&apos; then {
     substanceAdministration.id as id -&gt; ext.extension as ext then InnerExtensionId(id, ext) &quot;innerExtensionId&quot;;
     substanceAdministration.reference as reference then {
       reference.externalDocument as externalDocument then {
@@ -3067,7 +3067,7 @@ group InnerExtensionId(source src, target ext : Extension) {
             <element value="url"/>
             <transform value="copy"/>
             <parameter>
-               <valueString value="http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-dispense"/>
+               <valueString value="http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-pharmaceuticaladvice"/>
             </parameter>
          </target>
          <rule>
@@ -3165,7 +3165,7 @@ group InnerExtensionId(source src, target ext : Extension) {
             <element value="url"/>
             <transform value="copy"/>
             <parameter>
-               <valueString value="http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-pharmaceuticaladvice"/>
+               <valueString value="http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-dispense"/>
             </parameter>
          </target>
          <rule>
