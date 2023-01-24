@@ -20,13 +20,13 @@ uses &quot;http://hl7.org/fhir/cda/StructureDefinition/AssignedAuthor&quot; alia
 uses &quot;http://hl7.org/fhir/cda/StructureDefinition/AssignedEntity&quot; alias AssignedEntity as target
 uses &quot;http://hl7.org/fhir/cda/StructureDefinition/Author&quot; alias Author as target
 uses &quot;http://hl7.org/fhir/cda/StructureDefinition/CustodianOrganization&quot; alias CustodianOrganization as target
-uses &quot;http://hl7.org/fhir/cda/StructureDefinition/IVL_TS&quot; alias IVL_TS as target
-uses &quot;http://hl7.org/fhir/cda/StructureDefinition/EIVL_TS&quot; alias EIVL_TS as target
+uses &quot;http://hl7.org/fhir/cda/StructureDefinition/IVL-TS&quot; alias IVL_TS as target
+uses &quot;http://hl7.org/fhir/cda/StructureDefinition/EIVL-TS&quot; alias EIVL_TS as target
 uses &quot;http://hl7.org/fhir/cda/StructureDefinition/PatientRole&quot; alias PatientRole as target
 uses &quot;http://hl7.org/fhir/cda/StructureDefinition/RecordTarget&quot; alias RecordTarget as target
 uses &quot;http://hl7.org/fhir/cda/StructureDefinition/Section&quot; alias Section as target
 uses &quot;http://hl7.org/fhir/cda/StructureDefinition/SubstanceAdministration&quot; alias SubstanceAdministration as target
-uses &quot;http://hl7.org/fhir/cda/StructureDefinition/SXPR_TS&quot; alias SXPR_TS as target
+uses &quot;http://hl7.org/fhir/cda/StructureDefinition/SXPR-TS&quot; alias SXPR_TS as target
 uses &quot;http://hl7.org/fhir/cda/StructureDefinition/Supply&quot; alias Supply as target
 uses &quot;http://hl7.org/fhir/StructureDefinition/Bundle&quot; alias Bundle as source
 uses &quot;http://hl7.org/fhir/StructureDefinition/Composition&quot; alias Composition as source
@@ -669,12 +669,12 @@ group PharmaceuticalAdviceItemEntryContentModule(source bundle : Bundle, source 
       <alias value="CustodianOrganization"/>
    </structure>
    <structure>
-      <url value="http://hl7.org/fhir/cda/StructureDefinition/IVL_TS"/>
+      <url value="http://hl7.org/fhir/cda/StructureDefinition/IVL-TS"/>
       <mode value="target"/>
       <alias value="IVL_TS"/>
    </structure>
    <structure>
-      <url value="http://hl7.org/fhir/cda/StructureDefinition/EIVL_TS"/>
+      <url value="http://hl7.org/fhir/cda/StructureDefinition/EIVL-TS"/>
       <mode value="target"/>
       <alias value="EIVL_TS"/>
    </structure>
@@ -699,7 +699,7 @@ group PharmaceuticalAdviceItemEntryContentModule(source bundle : Bundle, source 
       <alias value="SubstanceAdministration"/>
    </structure>
    <structure>
-      <url value="http://hl7.org/fhir/cda/StructureDefinition/SXPR_TS"/>
+      <url value="http://hl7.org/fhir/cda/StructureDefinition/SXPR-TS"/>
       <mode value="target"/>
       <alias value="SXPR_TS"/>
    </structure>

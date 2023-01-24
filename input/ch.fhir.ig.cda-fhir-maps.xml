@@ -9,7 +9,7 @@
     </div>
   </text>
   <url value="http://fhir.ch/ig/cda-fhir-maps/ImplementationGuide/ch.fhir.ig.cda-fhir-maps"/>
-  <version value="0.3.0"/>
+  <version value="0.4.0-cibuild"/>
   <name value="CDA_FHIR_MAPS"/>
   <title value="CDA-FHIR-Maps (R4)"/>
   <status value="active"/>

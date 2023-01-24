@@ -43,7 +43,7 @@ uses "http://hl7.org/fhir/cda/StructureDefinition/TEL" as source
 uses "http://hl7.org/fhir/StructureDefinition/ContactPoint" as target
 uses "http://hl7.org/fhir/cda/StructureDefinition/BL" as source
 uses "http://hl7.org/fhir/StructureDefinition/boolean" as target
-uses "http://hl7.org/fhir/cda/StructureDefinition/IVL_TS" as source
+uses "http://hl7.org/fhir/cda/StructureDefinition/IVL-TS" as source
 uses "http://hl7.org/fhir/StructureDefinition/Period" as target
 
 group Any(source src, target tgt) {
@@ -358,7 +358,7 @@ FHIR: http://hl7.org/fhir/r4/"></description>
       <mode value="target"></mode>
    </structure>
    <structure>
-      <url value="http://hl7.org/fhir/cda/StructureDefinition/IVL_TS"></url>
+      <url value="http://hl7.org/fhir/cda/StructureDefinition/IVL-TS"></url>
       <mode value="source"></mode>
    </structure>
    <structure>

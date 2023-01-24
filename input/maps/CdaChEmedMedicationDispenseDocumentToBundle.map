@@ -12,15 +12,15 @@ uses "http://hl7.org/fhir/cda/StructureDefinition/AssignedAuthor" alias Assigned
 uses "http://hl7.org/fhir/cda/StructureDefinition/AssignedEntity" alias AssignedEntity as source
 uses "http://hl7.org/fhir/cda/StructureDefinition/Author" alias Author as source
 uses "http://hl7.org/fhir/cda/StructureDefinition/CustodianOrganization" alias CustodianOrganization as source
-uses "http://hl7.org/fhir/cda/StructureDefinition/IVL_TS" alias IVL_TS as source
-uses "http://hl7.org/fhir/cda/StructureDefinition/EIVL_TS" alias EIVL_TS as source
+uses "http://hl7.org/fhir/cda/StructureDefinition/IVL-TS" alias IVL_TS as source
+uses "http://hl7.org/fhir/cda/StructureDefinition/EIVL-TS" alias EIVL_TS as source
 uses "http://hl7.org/fhir/cda/StructureDefinition/Observation" alias Observation as source
 uses "http://hl7.org/fhir/cda/StructureDefinition/PatientRole" alias PatientRole as source
 uses "http://hl7.org/fhir/cda/StructureDefinition/RecordTarget" alias RecordTarget as source
 uses "http://hl7.org/fhir/cda/StructureDefinition/Section" alias Section as source
 uses "http://hl7.org/fhir/cda/StructureDefinition/SubstanceAdministration" alias SubstanceAdministration as source
 uses "http://hl7.org/fhir/cda/StructureDefinition/Supply" alias Supply as source
-uses "http://hl7.org/fhir/cda/StructureDefinition/SXPR_TS" alias SXPR_TS as source
+uses "http://hl7.org/fhir/cda/StructureDefinition/SXPR-TS" alias SXPR_TS as source
 
 uses "http://hl7.org/fhir/StructureDefinition/Bundle" alias Bundle as target
 uses "http://hl7.org/fhir/StructureDefinition/Composition" alias Composition as produced
