@@ -29,13 +29,13 @@
   <fhirVersion value="4.0.1"/>
   <dependsOn id="cdacore">
       <uri value="http://hl7.org/fhir/cda/ImplementationGuide/hl7.fhir.cda"/>
-      <packageId value="hl7.fhir.cda"/>
-      <version value="dev"/>
+      <packageId value="hl7.cda.uv.core"/>
+      <version value="2.1.0-draft1"/>
    </dependsOn>
    <dependsOn id="chemed">
       <uri value="http://fhir.ch/ig/ch-emed/ImplementationGuide/ch.fhir.ig.ch-emed"/>
       <packageId value="ch.fhir.ig.ch-emed"/>
-      <version value="2.0.0"/>
+      <version value="3.0.0"/>
    </dependsOn>
   <definition>
     <!-- References to structure maps -->
