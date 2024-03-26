@@ -7,19 +7,19 @@ map "http://fhir.ch/ig/cda-fhir-maps/StructureMap/BundleToCdaChEmedMedicationTre
 // FHIR CH-EMED: http://fhir.ch/ig/ch-emed/index.html
 
 
-uses "http://hl7.org/fhir/cda/StructureDefinition/ClinicalDocument" alias ClinicalDocument as target
-uses "http://hl7.org/fhir/cda/StructureDefinition/AssignedAuthor" alias AssignedAuthor as target
-uses "http://hl7.org/fhir/cda/StructureDefinition/AssignedEntity" alias AssignedEntity as target
-uses "http://hl7.org/fhir/cda/StructureDefinition/Author" alias Author as target
-uses "http://hl7.org/fhir/cda/StructureDefinition/CustodianOrganization" alias CustodianOrganization as target
-uses "http://hl7.org/fhir/cda/StructureDefinition/IVL-TS" alias IVL_TS as target
-uses "http://hl7.org/fhir/cda/StructureDefinition/EIVL-TS" alias EIVL_TS as target
-uses "http://hl7.org/fhir/cda/StructureDefinition/PatientRole" alias PatientRole as target
-uses "http://hl7.org/fhir/cda/StructureDefinition/RecordTarget" alias RecordTarget as target
-uses "http://hl7.org/fhir/cda/StructureDefinition/Section" alias Section as target
-uses "http://hl7.org/fhir/cda/StructureDefinition/SubstanceAdministration" alias SubstanceAdministration as target
-uses "http://hl7.org/fhir/cda/StructureDefinition/SXPR-TS" alias SXPR_TS as target
-uses "http://hl7.org/fhir/cda/StructureDefinition/Supply" alias Supply as target
+uses "http://hl7.org/cda/stds/core/StructureDefinition/ClinicalDocument" alias ClinicalDocument as target
+uses "http://hl7.org/cda/stds/core/StructureDefinition/AssignedAuthor" alias AssignedAuthor as target
+uses "http://hl7.org/cda/stds/core/StructureDefinition/AssignedEntity" alias AssignedEntity as target
+uses "http://hl7.org/cda/stds/core/StructureDefinition/Author" alias Author as target
+uses "http://hl7.org/cda/stds/core/StructureDefinition/CustodianOrganization" alias CustodianOrganization as target
+uses "http://hl7.org/cda/stds/core/StructureDefinition/IVL-TS" alias IVL_TS as target
+uses "http://hl7.org/cda/stds/core/StructureDefinition/EIVL-TS" alias EIVL_TS as target
+uses "http://hl7.org/cda/stds/core/StructureDefinition/PatientRole" alias PatientRole as target
+uses "http://hl7.org/cda/stds/core/StructureDefinition/RecordTarget" alias RecordTarget as target
+uses "http://hl7.org/cda/stds/core/StructureDefinition/Section" alias Section as target
+uses "http://hl7.org/cda/stds/core/StructureDefinition/SubstanceAdministration" alias SubstanceAdministration as target
+uses "http://hl7.org/cda/stds/core/StructureDefinition/SXPR-TS" alias SXPR_TS as target
+uses "http://hl7.org/cda/stds/core/StructureDefinition/Supply" alias Supply as target
 
 uses "http://hl7.org/fhir/StructureDefinition/Bundle" alias Bundle as source
 uses "http://hl7.org/fhir/StructureDefinition/Composition" alias Composition as source
