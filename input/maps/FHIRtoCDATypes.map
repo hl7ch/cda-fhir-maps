@@ -147,16 +147,18 @@ group CodeableConceptCE(source src : CodeableConcept, target tgt : CE) extends A
 //}
 
 group AddressAD(source src : Address, target tgt : AD) extends Any <<types>> {
-  src.line as v -> tgt.streetAddressLine as line, line.data = v "streetAddress";
-  src.postalCode as v -> tgt.postalCode as postalCode, postalCode.data = v;
-  src where $this.postalCode.exists()=false -> tgt.postalCode as postalCode, postalCode.nullFlavor = 'NI' "nullFlavor";
-  src.city as v -> tgt.city as city, city.data = v;
-  src where $this.city.exists()=false -> tgt.city as city, city.nullFlavor = 'NI' "nullFlavor";
-  src.state as v -> tgt.state as state, state.data = v;
-  src.district as v -> tgt.county as county, county.data = v;
-  src.country as v -> tgt.country as country, country.data = v;
-  src where $this.country.exists()=false -> tgt.country as country, country.nullFlavor = 'NI' "nullFlavor";
   src.use as c -> tgt.use = translate(c, '#addressUse', 'code') "addressUse";
+  src -> tgt.item as item then {
+    src.line as v -> item.streetAddressLine as line, line.data = v "streetAddress";
+    src.postalCode as v -> item.postalCode as postalCode, postalCode.data = v;
+    src where $this.postalCode.exists()=false -> item.postalCode as postalCode, postalCode.nullFlavor = 'NI' "nullFlavor";
+    src.city as v -> item.city as city, city.data = v;
+    src where $this.city.exists()=false -> item.city as city, city.nullFlavor = 'NI' "nullFlavor";
+    src.state as v -> item.state as state, state.data = v;
+    src.district as v -> item.county as county, county.data = v;
+    src.country as v -> item.country as country, country.data = v;
+    src where $this.country.exists()=false -> item.country as country, country.nullFlavor = 'NI' "nullFlavor";    
+  } "addritem";  
 }
 
 group ContactPointTEL(source src : ContactPoint, target tgt : TEL) extends Any <<types>> {
@@ -169,12 +171,14 @@ group ContactPointTEL(source src : ContactPoint, target tgt : TEL) extends Any <
 }
 
 group HumanNameEN(source src : HumanName, target tgt : EN) extends Any <<types>> {
-  src.family as v -> tgt.family as family, family.data = v;
-  src.given as v -> tgt.given as given, given.data = v;
-  src.prefix as v -> tgt.prefix as prefix, prefix.data = v;
-  src.suffix as v -> tgt.suffix as suffix, suffix.data = v;
-  // src.use as c -> tgt.use = translate(c, 'http://hl7.org/fhir/ConceptMap/cm-name-use-v3', 'code');
-  // src.validTime -> tgt.period;
+  src -> tgt.item as item then {
+    src.family as v -> item.family as family, family.data = v;
+    src.given as v -> item.given as given, given.data = v;
+    src.prefix as v -> item.prefix as prefix, prefix.data = v;
+    src.suffix as v -> item.suffix as suffix, suffix.data = v;
+    // src.use as c -> item.use = translate(c, 'http://hl7.org/fhir/ConceptMap/cm-name-use-v3', 'code');
+    // src.validTime -> item.period;
+  } "addritem";  
 }
 
 group QuantityPQ(source src : Quantity, target tgt : PQ) extends Any <<types>> {
