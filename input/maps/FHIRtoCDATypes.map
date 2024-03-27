@@ -49,7 +49,7 @@ conceptmap "addressUse" {
 
 
 uses "http://hl7.org/fhir/StructureDefinition/Identifier" as source
-uses "http://hl7.org/fhir/cda/StructureDefinition/II" as target
+uses "http://hl7.org/cda/stds/core/StructureDefinition/II" as target
 
 
 group Any(source src, target tgt) {
