@@ -93,10 +93,13 @@
           <title value="Gewünschte Untersuchung"/>
           <text>
             <status value="additional"/>
-            <div xmlns="http://www.w3.org/1999/xhtml"> Der Patient erwartet Ihr Aufgebot zur Untersuchung.
-              <br/>
-              <i>Spezifizierung der gewünschten Untersuchung</i>
-              <br/>
+            <div xmlns="http://www.w3.org/1999/xhtml">
+              <span style="font-style: italic">
+              Der Patient erwartet Ihr Aufgebot zur Untersuchung.
+                <br/>              
+              Spezifizierung der gewünschten Untersuchung
+                <br/> 
+              </span>
             </div>
           </text>
         </section>
@@ -105,7 +108,9 @@
           <text>
             <status value="additional"/>
             <div xmlns="http://www.w3.org/1999/xhtml">
-              <i>Angaben zum gewünschten Termin</i>
+              <span style="font-style: italic">
+              Angaben zum gewünschten Termin
+              </span>
             </div>
           </text>
         </section>
@@ -114,7 +119,9 @@
           <text>
             <status value="additional"/>
             <div xmlns="http://www.w3.org/1999/xhtml">
-              <i>Grund für die Durchführung der Untersuchung und Angaben zum aktuellen Leiden resp. zum Grund der Untersuchung</i>
+              <span style="font-style: italic">
+              Grund für die Durchführung der Untersuchung und Angaben zum aktuellen Leiden resp. zum Grund der Untersuchung
+              </span>
             </div>
           </text>
         </section>
@@ -123,11 +130,12 @@
           <text>
             <status value="additional"/>
             <div xmlns="http://www.w3.org/1999/xhtml">
-              <i>Erfolgte Voruntersuchungen
+              <span style="font-style: italic">
+              Erfolgte Voruntersuchungen
                 <br/>
- Befundkopie – Empfänger
-              </i>
-              <br/>
+              Befundkopie - Empfänger              
+                <br/>
+              </span>  
             </div>
           </text>
         </section>
@@ -136,15 +144,16 @@
           <text>
             <status value="additional"/>
             <div xmlns="http://www.w3.org/1999/xhtml">
-              <i>Beschreibung des aktuellen Leidens
+              <span style="font-style: italic">
+              Beschreibung des aktuellen Leidens
                 <br/>
- Schwangerschaft ja / nein
+              Schwangerschaft ja / nein
                 <br/>
- Laborwerte (Quick / Tc, Kreatinin)
+              Laborwerte (Quick / Tc, Kreatinin)
                 <br/>
- Bekannte Allergien
-              </i>
-              <br/>
+              Bekannte Allergien
+                <br/>
+              </span>              
             </div>
           </text>
         </section>
