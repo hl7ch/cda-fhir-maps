@@ -48,7 +48,7 @@ group AnnotationComment(source note: Annotation, target act: Act) {
   note -> act.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.5.3.1.4.2' "templateId";
   note -> act.code as code, code.code = '48767-8', code.codeSystem = '2.16.840.1.113883.6.1', code.displayName='Annotation comment', code.codeSystemName='LOINC' "code";
   note.text as noteText -> act.text as text then {
-    noteText -> text.data = noteText "text";
+    noteText -> text.xmlText = noteText "text";
     note.extension as extension where $this.url='http://hl7.org/fhir/StructureDefinition/narrativeLink' then {
       extension.valueUrl as valueUrl -> text.reference as reference, reference.value=valueUrl "reference";
     } "id";
@@ -283,7 +283,7 @@ group TreatmentReasonEntryContentModule(source reasonCode : Coding, target obser
   reasonCode -> observation.templateId as templateId, templateId.root = '2.16.756.5.30.1.1.10.4.41' "TreatmentReasonEntryContentModule";
   reasonCode -> observation.code as code, code.code = '75326-9', code.codeSystem = '2.16.840.1.113883.6.1', code.displayName='Problem', code.codeSystemName='LOINC' "code";
   reasonCode.text as reasonText -> observation.text as text then {
-    reasonText -> text.data = reasonText "text";
+    reasonText -> text.xmlText = reasonText "text";
     reasonCode.extension as extension where $this.url='http://hl7.org/fhir/StructureDefinition/narrativeLink' then {
       extension.valueUrl as valueUrl -> text.reference as reference, reference.value=valueUrl "reference";
     } "id";
@@ -327,7 +327,7 @@ group DosageInstructionsNonStructuredEntryContentModule(source dosage : Dosage, 
   dosage -> substanceAdministration.templateId as templateId, templateId.root = '2.16.756.5.30.1.1.10.4.52' "templateId";
 
   dosage.text as noteText -> substanceAdministration.text as text then {
-    noteText -> text.data = noteText "text";
+    noteText -> text.xmlText = noteText "text";
     dosage.extension as extension where $this.url='http://hl7.org/fhir/StructureDefinition/narrativeLink' then {
       extension.valueUrl as valueUrl -> text.reference as reference, reference.value=valueUrl "reference";
     } "id";
@@ -872,7 +872,7 @@ group PharmaceuticalAdviceItemEntryContentModule(source bundle : Bundle, source 
 
 
   fhirobservation.note as note -> cdaobservation.text as text then {
-    note.text as noteText -> text.data = noteText "text";
+    note.text as noteText -> text.xmlText = noteText "text";
     note.extension as extension where $this.url='http://hl7.org/fhir/StructureDefinition/narrativeLink' then {
       extension.valueUrl as valueUrl -> text.reference as reference, reference.value=valueUrl "reference";
     } "id";

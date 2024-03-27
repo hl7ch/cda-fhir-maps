@@ -60,7 +60,7 @@ group SectionCdaSection(source bundle : Bundle, source section: BackboneElement,
   section.code as code then {
     code.coding as coding where $this.system='http://loinc.org' -> cdasection.code as cdacode then CodingCE(coding, cdacode) "codingsection";
   } "code"; 
-  section.title as title -> cdasection.title as cdatitle, cdatitle.data = title "title";
+  section.title as title -> cdasection.title as cdatitle, cdatitle.xmlText = title "title";
   section.text as text then {
     text.div as div -> cdasection.text = div "div";
   } "text";
@@ -76,7 +76,7 @@ group CompositionClinicalDocument(source bundle : Bundle, source composition : C
     type.coding as coding where $this.system='http://loinc.org' -> cda.code as code share docCode then CodingCE(coding,code) "code";
   } "type";  
   composition.title as title -> cda.title as t then {
-    title -> t.data = title "titleInner";
+    title -> t.xmlText = title "titleInner";
   } "title";
   composition.confidentiality as conf -> cda.confidentialityCode as cdaconf then {
     conf -> cdaconf.code = conf "conf";
@@ -181,7 +181,7 @@ group Organization2CdaOrganizationCustodian(source src : Organization, target tg
   src.identifier as identifier -> tgt.id as id then IdentifierII(identifier, id) "id";
   src.name as name -> tgt.name as t then {
     name -> t.item as item then {
-      name -> item.data = name "nameInner";
+      name -> item.xmlText = name "nameInner";
     } "item";
   } "name";
   src.address as address -> tgt.addr as ad then AddressAD(address, ad) "address";
@@ -193,7 +193,7 @@ group Organization2CdaOrganization(source src : Organization, target tgt : CdaOr
   src.identifier as identifier -> tgt.id as id then IdentifierII(identifier, id) "id";
   src.name as name -> tgt.name as t then {
     name -> t.item as item then {
-      name -> item.data = name "nameInner";
+      name -> item.xmlText = name "nameInner";
     } "item";
   } "name";
   src.address as address -> tgt.addr as ad then AddressAD(address, ad) "address";

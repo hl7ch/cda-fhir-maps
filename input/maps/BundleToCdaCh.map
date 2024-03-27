@@ -95,10 +95,10 @@ group SectionCdaOriginalRepresentationObservationMedia(source binary : Binary, s
 group SectionCdaOriginalRepresentation(source bundle : Bundle, source section: Section, target cdasection: CdaSection) extends SectionCdaSection{
   section -> cdasection.templateId as templateId, templateId.root='2.16.756.5.30.1.1.10.3.45' "templateId";
   section where title.exists().not() then {
-    section where (%bundle.entry[0].resource.language.startsWith('de')) -> cdasection.title as title, title.data = 'Original Darstellung' "titleDE";
-    section where (%bundle.entry[0].resource.language.startsWith('fr')) -> cdasection.title as title, title.data = 'Représentation originale' "titleFR";
-    section where (%bundle.entry[0].resource.language.startsWith('it')) -> cdasection.title as title, title.data = 'Rappresentazione originale' "titleIT";
-    section where (%bundle.entry[0].resource.language.startsWith('en')) -> cdasection.title as title, title.data = 'Original representation' "titleEN";
+    section where (%bundle.entry[0].resource.language.startsWith('de')) -> cdasection.title as title, title.xmlText = 'Original Darstellung' "titleDE";
+    section where (%bundle.entry[0].resource.language.startsWith('fr')) -> cdasection.title as title, title.xmlText = 'Représentation originale' "titleFR";
+    section where (%bundle.entry[0].resource.language.startsWith('it')) -> cdasection.title as title, title.xmlText = 'Rappresentazione originale' "titleIT";
+    section where (%bundle.entry[0].resource.language.startsWith('en')) -> cdasection.title as title, title.xmlText = 'Original representation' "titleEN";
   } "defaulttitles";
   bundle.entry as entry then {
     entry.fullUrl where ($this in %section.entry.reference) and $this.startsWith('urn:uuid')  then {

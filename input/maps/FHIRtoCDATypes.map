@@ -149,14 +149,14 @@ group CodeableConceptCE(source src : CodeableConcept, target tgt : CE) extends A
 group AddressAD(source src : Address, target tgt : AD) extends Any <<types>> {
   src.use as c -> tgt.use = translate(c, '#addressUse', 'code') "addressUse";
   src -> tgt.item as item then {
-    src.line as v -> item.streetAddressLine as line, line.data = v "streetAddress";
-    src.postalCode as v -> item.postalCode as postalCode, postalCode.data = v;
+    src.line as v -> item.streetAddressLine as line, line.xmlText = v "streetAddress";
+    src.postalCode as v -> item.postalCode as postalCode, postalCode.xmlText = v;
     src where $this.postalCode.exists()=false -> item.postalCode as postalCode, postalCode.nullFlavor = 'NI' "nullFlavor";
-    src.city as v -> item.city as city, city.data = v;
+    src.city as v -> item.city as city, city.xmlText = v;
     src where $this.city.exists()=false -> item.city as city, city.nullFlavor = 'NI' "nullFlavor";
-    src.state as v -> item.state as state, state.data = v;
-    src.district as v -> item.county as county, county.data = v;
-    src.country as v -> item.country as country, country.data = v;
+    src.state as v -> item.state as state, state.xmlText = v;
+    src.district as v -> item.county as county, county.xmlText = v;
+    src.country as v -> item.country as country, country.xmlText = v;
     src where $this.country.exists()=false -> item.country as country, country.nullFlavor = 'NI' "nullFlavor";    
   } "addritem";  
 }
@@ -172,10 +172,10 @@ group ContactPointTEL(source src : ContactPoint, target tgt : TEL) extends Any <
 
 group HumanNameEN(source src : HumanName, target tgt : EN) extends Any <<types>> {
   src -> tgt.item as item then {
-    src.family as v -> item.family as family, family.data = v;
-    src.given as v -> item.given as given, given.data = v;
-    src.prefix as v -> item.prefix as prefix, prefix.data = v;
-    src.suffix as v -> item.suffix as suffix, suffix.data = v;
+    src.family as v -> item.family as family, family.xmlText = v;
+    src.given as v -> item.given as given, given.xmlText = v;
+    src.prefix as v -> item.prefix as prefix, prefix.xmlText = v;
+    src.suffix as v -> item.suffix as suffix, suffix.xmlText = v;
     // src.use as c -> item.use = translate(c, 'http://hl7.org/fhir/ConceptMap/cm-name-use-v3', 'code');
     // src.validTime -> item.period;
   } "addritem";  
