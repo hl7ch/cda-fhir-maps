@@ -7,19 +7,19 @@ map "http://fhir.ch/ig/cda-fhir-maps/StructureMap/BundleToCdaChEmed" = "BundleTo
 // FHIR CH-EMED: http://fhir.ch/ig/ch-emed/index.html
 //
 
-uses "http://hl7.org/fhir/cda/StructureDefinition/ClinicalDocument" alias ClinicalDocument as target
-uses "http://hl7.org/fhir/cda/StructureDefinition/AssignedAuthor" alias AssignedAuthor as target
-uses "http://hl7.org/fhir/cda/StructureDefinition/AssignedEntity" alias AssignedEntity as target
-uses "http://hl7.org/fhir/cda/StructureDefinition/Author" alias Author as target
-uses "http://hl7.org/fhir/cda/StructureDefinition/CustodianOrganization" alias CustodianOrganization as target
-uses "http://hl7.org/fhir/cda/StructureDefinition/IVL-TS" alias IVL_TS as target
-uses "http://hl7.org/fhir/cda/StructureDefinition/EIVL-TS" alias EIVL_TS as target
-uses "http://hl7.org/fhir/cda/StructureDefinition/PatientRole" alias PatientRole as target
-uses "http://hl7.org/fhir/cda/StructureDefinition/RecordTarget" alias RecordTarget as target
-uses "http://hl7.org/fhir/cda/StructureDefinition/Section" alias Section as target
-uses "http://hl7.org/fhir/cda/StructureDefinition/SubstanceAdministration" alias SubstanceAdministration as target
-uses "http://hl7.org/fhir/cda/StructureDefinition/SXPR-TS" alias SXPR_TS as target
-uses "http://hl7.org/fhir/cda/StructureDefinition/Supply" alias Supply as target
+uses "http://hl7.org/cda/stds/core/StructureDefinition/ClinicalDocument" alias ClinicalDocument as target
+uses "http://hl7.org/cda/stds/core/StructureDefinition/AssignedAuthor" alias AssignedAuthor as target
+uses "http://hl7.org/cda/stds/core/StructureDefinition/AssignedEntity" alias AssignedEntity as target
+uses "http://hl7.org/cda/stds/core/StructureDefinition/Author" alias Author as target
+uses "http://hl7.org/cda/stds/core/StructureDefinition/CustodianOrganization" alias CustodianOrganization as target
+uses "http://hl7.org/cda/stds/core/StructureDefinition/IVL-TS" alias IVL_TS as target
+uses "http://hl7.org/cda/stds/core/StructureDefinition/EIVL-TS" alias EIVL_TS as target
+uses "http://hl7.org/cda/stds/core/StructureDefinition/PatientRole" alias PatientRole as target
+uses "http://hl7.org/cda/stds/core/StructureDefinition/RecordTarget" alias RecordTarget as target
+uses "http://hl7.org/cda/stds/core/StructureDefinition/Section" alias Section as target
+uses "http://hl7.org/cda/stds/core/StructureDefinition/SubstanceAdministration" alias SubstanceAdministration as target
+uses "http://hl7.org/cda/stds/core/StructureDefinition/SXPR-TS" alias SXPR_TS as target
+uses "http://hl7.org/cda/stds/core/StructureDefinition/Supply" alias Supply as target
 
 uses "http://hl7.org/fhir/StructureDefinition/Bundle" alias Bundle as source
 uses "http://hl7.org/fhir/StructureDefinition/Composition" alias Composition as source
@@ -48,7 +48,7 @@ group AnnotationComment(source note: Annotation, target act: Act) {
   note -> act.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.5.3.1.4.2' "templateId";
   note -> act.code as code, code.code = '48767-8', code.codeSystem = '2.16.840.1.113883.6.1', code.displayName='Annotation comment', code.codeSystemName='LOINC' "code";
   note.text as noteText -> act.text as text then {
-    noteText -> text.data = noteText "text";
+    noteText -> text.xmlText = noteText "text";
     note.extension as extension where $this.url='http://hl7.org/fhir/StructureDefinition/narrativeLink' then {
       extension.valueUrl as valueUrl -> text.reference as reference, reference.value=valueUrl "reference";
     } "id";
@@ -67,8 +67,12 @@ group ManufacturedMaterialEntryContentModuleStatement(source bundle : Bundle, so
   medication -> manufacturedMaterial.templateId as templateId, templateId.root = '2.16.756.5.30.1.1.10.4.33' "CH-PHARM-ManufacturedMaterialContentModule";
   medication -> manufacturedMaterial.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.9.1.3.1' "templateId";
   medication.code as code then {
-    code.text as text -> manufacturedMaterial.name as name, name.other = text "brandname";
-  } "name";
+    code.text as text -> manufacturedMaterial.name as name then {
+      text -> name.item as item then {
+        text -> item.xmlText = text "inner";
+      } "item";
+    } "manufacturedMaterialname";
+  } "brandname";
   medication.code as code then {
     // #mtpc.no.brandedmedication
     code.extension as extension where $this.url='http://hl7.org/fhir/StructureDefinition/narrativeLink' -> manufacturedMaterial.code as code then {
@@ -87,7 +91,11 @@ group ManufacturedMaterialEntryContentModuleStatement(source bundle : Bundle, so
     code -> containerPackagedMedicine.classCode = 'CONT' "CONT";  
     code -> containerPackagedMedicine.determinerCode = 'INSTANCE' "INSTANCE";  
     code.coding as coding -> containerPackagedMedicine.code as ce then CodingCE(coding,ce) "pharm-code";
-    code.text as text -> containerPackagedMedicine.name as name, name.other = text "pharm-name";
+    code.text as text -> containerPackagedMedicine.name as name then {
+      text -> name.item as item then {
+        text -> item.xmlText = text "inner";
+      } "item";
+    } "pharm-name";
     medication.form as form then {
       form.coding as coding -> containerPackagedMedicine.formCode as formCode then CodingCE(coding, formCode) "pharm-formCode";
     } "form";   
@@ -103,7 +111,11 @@ group ManufacturedMaterialEntryContentModuleStatement(source bundle : Bundle, so
     ingredient.itemCodeableConcept as itemCodeableConcept -> ingredient.ingredient as pharmsubstance	then {
       itemCodeableConcept -> pharmsubstance.classCode = 'MMAT' "MMAT";
       itemCodeableConcept -> pharmsubstance.determinerCode = 'KIND' "KIND";
-      itemCodeableConcept.text as text -> pharmsubstance.name as name, name.other = text "name";
+      itemCodeableConcept.text as text -> pharmsubstance.name as name then {
+        text -> name.item as item then {
+          text -> item.xmlText = text "inner";
+        } "item";
+      } "pharmsubstancename";      
       itemCodeableConcept.coding as coding then {
         coding -> pharmsubstance.code as ce then CodingCE(coding, ce) "formCode";
       } "coding";
@@ -271,7 +283,7 @@ group TreatmentReasonEntryContentModule(source reasonCode : Coding, target obser
   reasonCode -> observation.templateId as templateId, templateId.root = '2.16.756.5.30.1.1.10.4.41' "TreatmentReasonEntryContentModule";
   reasonCode -> observation.code as code, code.code = '75326-9', code.codeSystem = '2.16.840.1.113883.6.1', code.displayName='Problem', code.codeSystemName='LOINC' "code";
   reasonCode.text as reasonText -> observation.text as text then {
-    reasonText -> text.data = reasonText "text";
+    reasonText -> text.xmlText = reasonText "text";
     reasonCode.extension as extension where $this.url='http://hl7.org/fhir/StructureDefinition/narrativeLink' then {
       extension.valueUrl as valueUrl -> text.reference as reference, reference.value=valueUrl "reference";
     } "id";
@@ -315,7 +327,7 @@ group DosageInstructionsNonStructuredEntryContentModule(source dosage : Dosage, 
   dosage -> substanceAdministration.templateId as templateId, templateId.root = '2.16.756.5.30.1.1.10.4.52' "templateId";
 
   dosage.text as noteText -> substanceAdministration.text as text then {
-    noteText -> text.data = noteText "text";
+    noteText -> text.xmlText = noteText "text";
     dosage.extension as extension where $this.url='http://hl7.org/fhir/StructureDefinition/narrativeLink' then {
       extension.valueUrl as valueUrl -> text.reference as reference, reference.value=valueUrl "reference";
     } "id";
@@ -351,7 +363,11 @@ group ManufacturedMaterialEntryContentModuleDispense(source bundle : Bundle, sou
   medication -> manufacturedMaterial.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.9.1.3.1' "templateId";
   
   medication.code as code then {
-    code.text as text -> manufacturedMaterial.name as name, name.other = text "brandname";
+    code.text as text -> manufacturedMaterial.name as name then {
+      text -> name.item as item then {
+        text -> item.xmlText = text "inner";
+      } "item";
+    } "brandname";
   } "name";
 
   medication.code as code then {
@@ -374,7 +390,11 @@ group ManufacturedMaterialEntryContentModuleDispense(source bundle : Bundle, sou
     code -> containerPackagedMedicine.classCode = 'CONT' "CONT";  
     code -> containerPackagedMedicine.determinerCode = 'INSTANCE' "INSTANCE";  
     code.coding as coding -> containerPackagedMedicine.code as ce then CodingCE(coding,ce) "pharm-code";
-    code.text as text -> containerPackagedMedicine.name as name, name.other = text "pharm-name";
+    code.text as text -> containerPackagedMedicine.name as name then {
+      text -> name.item as item then {
+        text -> item.xmlText = text "inner";
+      } "item";
+    } "pharm-name";
     medication.form as form then {
       form.coding as coding -> containerPackagedMedicine.formCode as formCode then CodingCE(coding, formCode) "pharm-formCode";
     } "form"; 
@@ -391,7 +411,11 @@ group ManufacturedMaterialEntryContentModuleDispense(source bundle : Bundle, sou
     ingredient.itemCodeableConcept as itemCodeableConcept -> ingredient.ingredient as pharmsubstance	then {
       itemCodeableConcept -> pharmsubstance.classCode = 'MMAT' "MMAT";
       itemCodeableConcept -> pharmsubstance.determinerCode = 'KIND' "KIND";
-      itemCodeableConcept.text as text -> pharmsubstance.name as name, name.other = text "name";
+      itemCodeableConcept.text as text -> pharmsubstance.name as name then {
+        text -> name.item as item then {
+          text -> item.xmlText = text "inner";
+        } "item";
+      } "pharmsubstancename";
       itemCodeableConcept.coding as coding then {
         coding -> pharmsubstance.code as ce then CodingCE(coding, ce) "formCode";
       } "coding";
@@ -646,7 +670,11 @@ group ManufacturedMaterialEntryContentModulePrescription(source bundle : Bundle,
   medication -> manufacturedMaterial.templateId as templateId, templateId.root = '2.16.756.5.30.1.1.10.4.33' "CH-PHARM-ManufacturedMaterialContentModule";
   medication -> manufacturedMaterial.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.9.1.3.1' "templateId";
   medication.code as code then {
-    code.text as text -> manufacturedMaterial.name as name, name.other = text "brandname";
+    code.text as text -> manufacturedMaterial.name as name then {
+      text -> name.item as item then {
+        text -> item.xmlText = text "inner";
+      } "item";
+    } "manufacturedMaterialname";
   } "name";
   medication.code as code then {
     // #pre.no.brandedmedication
@@ -666,7 +694,11 @@ group ManufacturedMaterialEntryContentModulePrescription(source bundle : Bundle,
     code -> containerPackagedMedicine.classCode = 'CONT' "CONT";  
     code -> containerPackagedMedicine.determinerCode = 'INSTANCE' "INSTANCE";  
     code.coding as coding -> containerPackagedMedicine.code as ce then CodingCE(coding,ce) "pharm-code";
-    code.text as text -> containerPackagedMedicine.name as name, name.other = text "pharm-name";
+    code.text as text -> containerPackagedMedicine.name as name then {
+      text -> name.item as item then {
+        text -> item.xmlText = text "inner";
+      } "item";
+    } "containerPackagedMedicinename";
     medication.form as form then {
       form.coding as coding -> containerPackagedMedicine.formCode as formCode then CodingCE(coding, formCode) "pharm-formCode";
     } "form"; 
@@ -698,7 +730,11 @@ group ManufacturedMaterialEntryContentModulePrescription(source bundle : Bundle,
     ingredient.itemCodeableConcept as itemCodeableConcept -> ingredient.ingredient as pharmsubstance	then {
       itemCodeableConcept -> pharmsubstance.classCode = 'MMAT' "MMAT";
       itemCodeableConcept -> pharmsubstance.determinerCode = 'KIND' "KIND";
-      itemCodeableConcept.text as text -> pharmsubstance.name as name, name.other = text "name";
+      itemCodeableConcept.text as text -> pharmsubstance.name as name then {
+        text -> name.item as item then {
+          text -> item.xmlText = text "inner";
+        } "item";
+      } "pharmsubstancename";
       itemCodeableConcept.coding as coding then {
         coding -> pharmsubstance.code as ce then CodingCE(coding, ce) "formCode";
       } "coding";
@@ -836,7 +872,7 @@ group PharmaceuticalAdviceItemEntryContentModule(source bundle : Bundle, source 
 
 
   fhirobservation.note as note -> cdaobservation.text as text then {
-    note.text as noteText -> text.data = noteText "text";
+    note.text as noteText -> text.xmlText = noteText "text";
     note.extension as extension where $this.url='http://hl7.org/fhir/StructureDefinition/narrativeLink' then {
       extension.valueUrl as valueUrl -> text.reference as reference, reference.value=valueUrl "reference";
     } "id";
