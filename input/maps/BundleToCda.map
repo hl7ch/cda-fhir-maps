@@ -179,7 +179,11 @@ group OrganizationCustodian(source src : Organization, target tgt : Custodian) {
 
 group Organization2CdaOrganizationCustodian(source src : Organization, target tgt : CdaOrganization) {
   src.identifier as identifier -> tgt.id as id then IdentifierII(identifier, id) "id";
-  src.name as name -> tgt.name as orgname, orgname.other = name "name";
+  src.name as name -> tgt.name as t then {
+    name -> t.item as item then {
+      name -> item.data = name "nameInner";
+    } "item";
+  } "name";
   src.address as address -> tgt.addr as ad then AddressAD(address, ad) "address";
   // target telecom is 0..1
   src.telecom first as telecom -> tgt.telecom as tel then ContactPointTEL(telecom, tel);
@@ -187,7 +191,11 @@ group Organization2CdaOrganizationCustodian(source src : Organization, target tg
 
 group Organization2CdaOrganization(source src : Organization, target tgt : CdaOrganization) {
   src.identifier as identifier -> tgt.id as id then IdentifierII(identifier, id) "id";
-  src.name as name -> tgt.name as orgname, orgname.other = name "name";
+  src.name as name -> tgt.name as t then {
+    name -> t.item as item then {
+      name -> item.data = name "nameInner";
+    } "item";
+  } "name";
   src.address as address -> tgt.addr as ad then AddressAD(address, ad) "address";
   src.telecom as telecom -> tgt.telecom as tel then ContactPointTEL(telecom, tel);
 }

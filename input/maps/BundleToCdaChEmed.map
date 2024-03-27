@@ -67,8 +67,12 @@ group ManufacturedMaterialEntryContentModuleStatement(source bundle : Bundle, so
   medication -> manufacturedMaterial.templateId as templateId, templateId.root = '2.16.756.5.30.1.1.10.4.33' "CH-PHARM-ManufacturedMaterialContentModule";
   medication -> manufacturedMaterial.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.9.1.3.1' "templateId";
   medication.code as code then {
-    code.text as text -> manufacturedMaterial.name as name, name.other = text "brandname";
-  } "name";
+    code.text as text -> manufacturedMaterial.name as name then {
+      text -> name.item as item then {
+        text -> item.xmlText = text "inner";
+      } "item";
+    } "manufacturedMaterialname";
+  } "brandname";
   medication.code as code then {
     // #mtpc.no.brandedmedication
     code.extension as extension where $this.url='http://hl7.org/fhir/StructureDefinition/narrativeLink' -> manufacturedMaterial.code as code then {
@@ -87,7 +91,11 @@ group ManufacturedMaterialEntryContentModuleStatement(source bundle : Bundle, so
     code -> containerPackagedMedicine.classCode = 'CONT' "CONT";  
     code -> containerPackagedMedicine.determinerCode = 'INSTANCE' "INSTANCE";  
     code.coding as coding -> containerPackagedMedicine.code as ce then CodingCE(coding,ce) "pharm-code";
-    code.text as text -> containerPackagedMedicine.name as name, name.other = text "pharm-name";
+    code.text as text -> containerPackagedMedicine.name as name then {
+      text -> name.item as item then {
+        text -> item.xmlText = text "inner";
+      } "item";
+    } "pharm-name";
     medication.form as form then {
       form.coding as coding -> containerPackagedMedicine.formCode as formCode then CodingCE(coding, formCode) "pharm-formCode";
     } "form";   
@@ -103,7 +111,11 @@ group ManufacturedMaterialEntryContentModuleStatement(source bundle : Bundle, so
     ingredient.itemCodeableConcept as itemCodeableConcept -> ingredient.ingredient as pharmsubstance	then {
       itemCodeableConcept -> pharmsubstance.classCode = 'MMAT' "MMAT";
       itemCodeableConcept -> pharmsubstance.determinerCode = 'KIND' "KIND";
-      itemCodeableConcept.text as text -> pharmsubstance.name as name, name.other = text "name";
+      itemCodeableConcept.text as text -> pharmsubstance.name as name then {
+        text -> name.item as item then {
+          text -> item.xmlText = text "inner";
+        } "item";
+      } "pharmsubstancename";      
       itemCodeableConcept.coding as coding then {
         coding -> pharmsubstance.code as ce then CodingCE(coding, ce) "formCode";
       } "coding";
@@ -351,7 +363,11 @@ group ManufacturedMaterialEntryContentModuleDispense(source bundle : Bundle, sou
   medication -> manufacturedMaterial.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.9.1.3.1' "templateId";
   
   medication.code as code then {
-    code.text as text -> manufacturedMaterial.name as name, name.other = text "brandname";
+    code.text as text -> manufacturedMaterial.name as name then {
+      text -> name.item as item then {
+        text -> item.xmlText = text "inner";
+      } "item";
+    } "brandname";
   } "name";
 
   medication.code as code then {
@@ -374,7 +390,11 @@ group ManufacturedMaterialEntryContentModuleDispense(source bundle : Bundle, sou
     code -> containerPackagedMedicine.classCode = 'CONT' "CONT";  
     code -> containerPackagedMedicine.determinerCode = 'INSTANCE' "INSTANCE";  
     code.coding as coding -> containerPackagedMedicine.code as ce then CodingCE(coding,ce) "pharm-code";
-    code.text as text -> containerPackagedMedicine.name as name, name.other = text "pharm-name";
+    code.text as text -> containerPackagedMedicine.name as name then {
+      text -> name.item as item then {
+        text -> item.xmlText = text "inner";
+      } "item";
+    } "pharm-name";
     medication.form as form then {
       form.coding as coding -> containerPackagedMedicine.formCode as formCode then CodingCE(coding, formCode) "pharm-formCode";
     } "form"; 
@@ -391,7 +411,11 @@ group ManufacturedMaterialEntryContentModuleDispense(source bundle : Bundle, sou
     ingredient.itemCodeableConcept as itemCodeableConcept -> ingredient.ingredient as pharmsubstance	then {
       itemCodeableConcept -> pharmsubstance.classCode = 'MMAT' "MMAT";
       itemCodeableConcept -> pharmsubstance.determinerCode = 'KIND' "KIND";
-      itemCodeableConcept.text as text -> pharmsubstance.name as name, name.other = text "name";
+      itemCodeableConcept.text as text -> pharmsubstance.name as name then {
+        text -> name.item as item then {
+          text -> item.xmlText = text "inner";
+        } "item";
+      } "pharmsubstancename";
       itemCodeableConcept.coding as coding then {
         coding -> pharmsubstance.code as ce then CodingCE(coding, ce) "formCode";
       } "coding";
@@ -646,7 +670,11 @@ group ManufacturedMaterialEntryContentModulePrescription(source bundle : Bundle,
   medication -> manufacturedMaterial.templateId as templateId, templateId.root = '2.16.756.5.30.1.1.10.4.33' "CH-PHARM-ManufacturedMaterialContentModule";
   medication -> manufacturedMaterial.templateId as templateId, templateId.root = '1.3.6.1.4.1.19376.1.9.1.3.1' "templateId";
   medication.code as code then {
-    code.text as text -> manufacturedMaterial.name as name, name.other = text "brandname";
+    code.text as text -> manufacturedMaterial.name as name then {
+      text -> name.item as item then {
+        text -> item.xmlText = text "inner";
+      } "item";
+    } "manufacturedMaterialname";
   } "name";
   medication.code as code then {
     // #pre.no.brandedmedication
@@ -666,7 +694,11 @@ group ManufacturedMaterialEntryContentModulePrescription(source bundle : Bundle,
     code -> containerPackagedMedicine.classCode = 'CONT' "CONT";  
     code -> containerPackagedMedicine.determinerCode = 'INSTANCE' "INSTANCE";  
     code.coding as coding -> containerPackagedMedicine.code as ce then CodingCE(coding,ce) "pharm-code";
-    code.text as text -> containerPackagedMedicine.name as name, name.other = text "pharm-name";
+    code.text as text -> containerPackagedMedicine.name as name then {
+      text -> name.item as item then {
+        text -> item.xmlText = text "inner";
+      } "item";
+    } "containerPackagedMedicinename";
     medication.form as form then {
       form.coding as coding -> containerPackagedMedicine.formCode as formCode then CodingCE(coding, formCode) "pharm-formCode";
     } "form"; 
@@ -698,7 +730,11 @@ group ManufacturedMaterialEntryContentModulePrescription(source bundle : Bundle,
     ingredient.itemCodeableConcept as itemCodeableConcept -> ingredient.ingredient as pharmsubstance	then {
       itemCodeableConcept -> pharmsubstance.classCode = 'MMAT' "MMAT";
       itemCodeableConcept -> pharmsubstance.determinerCode = 'KIND' "KIND";
-      itemCodeableConcept.text as text -> pharmsubstance.name as name, name.other = text "name";
+      itemCodeableConcept.text as text -> pharmsubstance.name as name then {
+        text -> name.item as item then {
+          text -> item.xmlText = text "inner";
+        } "item";
+      } "pharmsubstancename";
       itemCodeableConcept.coding as coding then {
         coding -> pharmsubstance.code as ce then CodingCE(coding, ce) "formCode";
       } "coding";
