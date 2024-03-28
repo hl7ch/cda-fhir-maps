@@ -17,7 +17,7 @@ uses "http://hl7.org/fhir/StructureDefinition/Composition" alias Composition as 
 uses "http://hl7.org/fhir/StructureDefinition/Patient" alias Patient as target
 uses "http://hl7.org/fhir/StructureDefinition/Person" alias Person as target
 uses "http://hl7.org/fhir/StructureDefinition/Practitioner" alias Practitioner as target
-uses "http://hl7.org/fhir/StructureDefinition/Practitioner" alias PractitionerRole as target
+uses "http://hl7.org/fhir/StructureDefinition/PractitionerRole" alias PractitionerRole as target
 uses "http://hl7.org/fhir/StructureDefinition/Organization" alias Organization as target
 
 imports "http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaToFhirTypes"
