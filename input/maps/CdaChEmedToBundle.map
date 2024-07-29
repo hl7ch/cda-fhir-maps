@@ -7,28 +7,28 @@ map "http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaChEmedToBundle" = "CdaChEme
 // FHIR CH-EMED: http://fhir.ch/ig/ch-emed/index.html
 //
 
-uses "http://hl7.org/fhir/cda/StructureDefinition/ClinicalDocument" alias ClinicalDocument as source
-uses "http://hl7.org/fhir/cda/StructureDefinition/AssignedAuthor" alias AssignedAuthor as source
-uses "http://hl7.org/fhir/cda/StructureDefinition/AssignedEntity" alias AssignedEntity as source
-uses "http://hl7.org/fhir/cda/StructureDefinition/Author" alias Author as source
-uses "http://hl7.org/fhir/cda/StructureDefinition/CustodianOrganization" alias CustodianOrganization as source
-uses "http://hl7.org/fhir/cda/StructureDefinition/IVL-TS" alias IVL_TS as source
-uses "http://hl7.org/fhir/cda/StructureDefinition/EIVL-TS" alias EIVL_TS as source
-uses "http://hl7.org/fhir/cda/StructureDefinition/Observation" alias Observation as source
-uses "http://hl7.org/fhir/cda/StructureDefinition/PatientRole" alias PatientRole as source
-uses "http://hl7.org/fhir/cda/StructureDefinition/RecordTarget" alias RecordTarget as source
-uses "http://hl7.org/fhir/cda/StructureDefinition/Section" alias Section as source
-uses "http://hl7.org/fhir/cda/StructureDefinition/SubstanceAdministration" alias SubstanceAdministration as source
-uses "http://hl7.org/fhir/cda/StructureDefinition/SXPR-TS" alias SXPR_TS as source
+uses "http://hl7.org/cda/stds/core/StructureDefinition/ClinicalDocument" alias ClinicalDocument as source
+uses "http://hl7.org/cda/stds/core/StructureDefinition/AssignedAuthor" alias AssignedAuthor as source
+uses "http://hl7.org/cda/stds/core/StructureDefinition/AssignedEntity" alias AssignedEntity as source
+uses "http://hl7.org/cda/stds/core/StructureDefinition/Author" alias Author as source
+uses "http://hl7.org/cda/stds/core/StructureDefinition/CustodianOrganization" alias CustodianOrganization as source
+uses "http://hl7.org/cda/stds/core/StructureDefinition/IVL-TS" alias IVL_TS as source
+uses "http://hl7.org/cda/stds/core/StructureDefinition/EIVL-TS" alias EIVL_TS as source
+uses "http://hl7.org/cda/stds/core/StructureDefinition/Observation" alias Observation as source
+uses "http://hl7.org/cda/stds/core/StructureDefinition/PatientRole" alias PatientRole as source
+uses "http://hl7.org/cda/stds/core/StructureDefinition/RecordTarget" alias RecordTarget as source
+uses "http://hl7.org/cda/stds/core/StructureDefinition/Section" alias Section as source
+uses "http://hl7.org/cda/stds/core/StructureDefinition/SubstanceAdministration" alias SubstanceAdministration as source
+uses "http://hl7.org/cda/stds/core/StructureDefinition/SXPR-TS" alias SXPR_TS as source
 
 uses "http://hl7.org/fhir/StructureDefinition/Bundle" alias Bundle as target
-uses "http://hl7.org/fhir/StructureDefinition/Composition" alias Composition as produced
-uses "http://hl7.org/fhir/StructureDefinition/Patient" alias Patient as produced
-uses "http://hl7.org/fhir/StructureDefinition/Practitioner" alias Practitioner as produced
-uses "http://hl7.org/fhir/StructureDefinition/Organization" alias Organization as produced
-uses "http://hl7.org/fhir/StructureDefinition/MedicationStatement" alias MedicationStatement as produced
-uses "http://hl7.org/fhir/StructureDefinition/Dosage" alias Dosage as produced
-uses "http://hl7.org/fhir/StructureDefinition/Observation" alias Observation as produced
+uses "http://hl7.org/fhir/StructureDefinition/Composition" alias Composition as target
+uses "http://hl7.org/fhir/StructureDefinition/Patient" alias Patient as target
+uses "http://hl7.org/fhir/StructureDefinition/Practitioner" alias Practitioner as target
+uses "http://hl7.org/fhir/StructureDefinition/Organization" alias Organization as target
+uses "http://hl7.org/fhir/StructureDefinition/MedicationStatement" alias MedicationStatement as target
+uses "http://hl7.org/fhir/StructureDefinition/Dosage" alias Dosage as target
+uses "http://hl7.org/fhir/StructureDefinition/Observation" alias Observation as target
 
 imports "http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaToFhirTypes"
 imports "http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaToBundle"
@@ -41,7 +41,7 @@ imports "http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaChToBundle"
 // target: Annotation note (e.g. http://build.fhir.org/ig/hl7ch/ch-emed/branches/master/StructureDefinition-ch-emed-medicationstatement.html)
 group AnnotationComment(source act: Act, target note: Annotation) {
   act.text as text then {
-    text.data as data -> note.text = data "level3";
+    text.xmlText as data -> note.text = data "level3";
     text.reference as reference then {
       reference.value as value -> note.extension as ext then NarrativeLink(value, ext) "narrativeLink";
     } "reference";
@@ -70,13 +70,13 @@ group ManufacturedMaterialEntryContentModuleDispense(source src : Supply, target
     product.manufacturedProduct as manufacturedProduct then {
       manufacturedProduct.manufacturedMaterial as manufacturedMaterial then {
 
-        manufacturedMaterial.name as name where asContent.exists()=false -> medication.code as fhircode, fhircode.text = (%manufacturedMaterial.name.other) "medication.code";
+        manufacturedMaterial.name as name where asContent.exists()=false -> medication.code as fhircode, fhircode.text = (%manufacturedMaterial.name.item.xmlText) "medication.code";
 
         manufacturedMaterial.asContent as asContent then {
           asContent.containerPackagedMedicine as containerPackagedMedicine then {
-            containerPackagedMedicine.code as code -> medication.code as fhircode share medcode then CECodeableConcept(code, fhircode) "medication.code";
-            containerPackagedMedicine.name as name -> medication.code as fhircode share medcode then { 
-              name -> fhircode.text = (%name.other)  "medication.code.text";
+            containerPackagedMedicine.code as code -> medication.code as fhircode then CECodeableConcept(code, fhircode) "medication.code";
+            containerPackagedMedicine.name as name -> medication.code as fhircode then { 
+              name -> fhircode.text = (%name.item.xmlText)  "medication.code.text";
               } "code.text";
 
             containerPackagedMedicine.formCode as formCode -> medication.form as form then CECodeableConcept(formCode, form)  "medication.formCode";
@@ -95,7 +95,7 @@ group ManufacturedMaterialEntryContentModuleDispense(source src : Supply, target
         manufacturedMaterial.ingredient as ingredient -> medication.ingredient as ing then {
           ingredient.quantity as quantity -> ing.strength = create('Ratio') as strength then EmedRTOPQPQRatio(quantity, strength) "strength";
           ingredient.ingredient as medingredient then {
-              medingredient.code as code -> ing.item = create('CodeableConcept') as ingcode, ingcode.text = (%medingredient.name.other) then CECodeableConcept(code, ingcode) "ingredientCode";
+              medingredient.code as code -> ing.item = create('CodeableConcept') as ingcode, ingcode.text = (%medingredient.name.item.xmlText) then CECodeableConcept(code, ingcode) "ingredientCode";
           } "ingredient.ingredient";
         } "ingredient";
       } "manufacturedMaterial";
@@ -132,13 +132,13 @@ group ManufacturedMaterialEntryContentModuleStatement(source src : SubstanceAdmi
     consumable.manufacturedProduct as manufacturedProduct then {
       manufacturedProduct.manufacturedMaterial as manufacturedMaterial then {
 
-        manufacturedMaterial.name as name where asContent.exists()=false -> medication.code as fhircode, fhircode.text = (%manufacturedMaterial.name.other) "medication.code";
+        manufacturedMaterial.name as name where asContent.exists()=false -> medication.code as fhircode, fhircode.text = (%manufacturedMaterial.name.item.xmlText) "medication.code";
 
         manufacturedMaterial.asContent as asContent then {
           asContent.containerPackagedMedicine as containerPackagedMedicine then {
-            containerPackagedMedicine.code as code -> medication.code as fhircode share medcode then CECodeableConcept(code, fhircode) "medication.code";
-            containerPackagedMedicine.name as name -> medication.code as fhircode share medcode then { 
-              name -> fhircode.text = (%name.other)  "medication.code.text";
+            containerPackagedMedicine.code as code -> medication.code as fhircode then CECodeableConcept(code, fhircode) "medication.code";
+            containerPackagedMedicine.name as name -> medication.code as fhircode then { 
+              name -> fhircode.text = (%name.item.xmlText)  "medication.code.text";
             } "code.text";
 
             containerPackagedMedicine.formCode as formCode -> medication.form as form then CECodeableConcept(formCode, form)  "medication.formCode";
@@ -159,7 +159,7 @@ group ManufacturedMaterialEntryContentModuleStatement(source src : SubstanceAdmi
         manufacturedMaterial.ingredient as ingredient -> medication.ingredient as ing then {
           ingredient.quantity as quantity -> ing.strength = create('Ratio') as strength then EmedRTOPQPQRatio(quantity, strength) "strength";
           ingredient.ingredient as medingredient then {
-              medingredient.code as code -> ing.item = create('CodeableConcept') as ingcode, ingcode.text = (%medingredient.name.other) then CECodeableConcept(code, ingcode) "ingredientCode";
+              medingredient.code as code -> ing.item = create('CodeableConcept') as ingcode, ingcode.text = (%medingredient.name.item.xmlText) then CECodeableConcept(code, ingcode) "ingredientCode";
           } "ingredient.ingredient";
         } "ingredient";
       } "manufacturedMaterial";
@@ -178,7 +178,7 @@ group ManufacturedMaterialEntryContentModuleStatement(source src : SubstanceAdmi
 group MedicationTreatmentPlanItemEntryContentModule(source section : Section, source src : SubstanceAdministration, source patient : Patient, target medicationStatement : MedicationStatement) {
 //  src.templateId as template then TemplateID(template, medicationStatement) "templateId";
   src.id -> medicationStatement.identifier;
-  patient -> medicationStatement.subject = create('Reference') as reference, reference.reference = ('urn:uuid:'+%patient.id) "patient";
+  patient -> medicationStatement.subject = create('Reference') as reference, reference.reference = ('urn:uuid:'+%patient.id) "uuidpatient";
   src -> medicationStatement.status = 'completed' "completed";  src.text as text then {
     text.reference as reference then {
       reference.value as value -> medicationStatement.extension as ext then NarrativeLink(value, ext) "narrativeLink";
@@ -228,7 +228,7 @@ group DosageInstructionsEntryDosageChange(source src: substanceAdministration, s
 
 // effective time start & end for dosage
 group EffectiveTimeStartEnd(source src: substanceAdministration, target dosage: Dosage) {
-  src.effectiveTime: IVL_TS as effectiveTime -> dosage.timing as timing share sharetiming then {
+  src.effectiveTime: IVL_TS as effectiveTime -> dosage.timing as timing then {
     effectiveTime -> timing.repeat as repeat then {
       effectiveTime -> repeat.bounds = create('Period') as period then {
         effectiveTime.low as low then {
@@ -244,14 +244,14 @@ group EffectiveTimeStartEnd(source src: substanceAdministration, target dosage: 
 
 // effective time when for dosage
 group EffectiveTimeWhen(source src: substanceAdministration, target dosage: Dosage) {
-  src.effectiveTime: EIVL_TS as effectiveTime -> dosage.timing as timing share sharetiming then {
+  src.effectiveTime: EIVL_TS as effectiveTime -> dosage.timing as timing then {
     effectiveTime -> timing.repeat as repeat then {
       effectiveTime.event as event then {
         event.code as code -> repeat.when = code "code";
       } "event";
     } "repeat";
   } "effectiveTime-EIVL-TS";
-  src.effectiveTime: SXPR_TS as effectiveTime -> dosage.timing as timing share sharetiming then {
+  src.effectiveTime: SXPR_TS as effectiveTime -> dosage.timing as timing then {
     effectiveTime -> timing.repeat as repeat then {
       effectiveTime.comp as comp then {
         comp.event as event then {
@@ -272,7 +272,7 @@ group TreatmentReasonEntryContentModule(source section : Section, source observa
     // res = (%a.substring(%a.indexOf('>')+1, %a.indexOf('<')-%a.indexOf('>')-1))
     // a = %section.text.substring(%section.text.indexOf((%observation.text.reference.value.substring(1))))
     observation.text as text then {
-      text.data as data -> reasonCode.text = data "level3";
+      text.xmlText as data -> reasonCode.text = data "level3";
       text.reference as reference then {
         reference.value as value -> reasonCode.extension as ext then NarrativeLink(value, ext) "narrativeLink";
       } "reference";
@@ -300,7 +300,7 @@ group DosageInstructionsNonStructuredEntryContentModule(source section : Section
   // see MedicationTreatmentPlanItemEntryContentModule
   entry.substanceAdministration as observation then {
     observation.text as text then {
-      text.data as data -> dosage.text = data "level3";
+      text.xmlText as data -> dosage.text = data "level3";
             text.reference as reference then {
         reference.value as value -> dosage.extension as ext then NarrativeLink(value, ext) "narrativeLink";
       } "reference";
@@ -330,7 +330,7 @@ group SubstitutionDispense(source act: Act, target medicationDispense: Medicatio
 group DispenseItemEntryContentModule(source section : Section, source src : Supply, source patient : Patient, target medicationDispense : MedicationDispense) {
 //  src.templateId as template then TemplateID(template, medicationDispense) "templateId";
   src.id -> medicationDispense.identifier;
-  patient -> medicationDispense.subject = create('Reference') as reference, reference.reference = ('urn:uuid:'+%patient.id) "patient";
+  patient -> medicationDispense.subject = create('Reference') as reference, reference.reference = ('urn:uuid:'+%patient.id) "uuidpatient";
   src -> medicationDispense.status = 'completed' "completed";  
   src.text as text then {
     text.reference as reference then {
@@ -358,7 +358,7 @@ group DispenseItemEntryContentModule(source section : Section, source src : Supp
     -> medicationDispense.extension as ext then MTPReferenceEntryContentModule(entry, ext) "MTPReferenceEntry";   
 
   src.entryRelationship as entry where (typeCode='COMP' and act.templateId.where(root='2.16.756.5.30.1.1.10.4.2').exists()) then {
-    entry.act as act -> medicationDispense.note as note then AnnotationComment(sact, note) "annotation";
+    entry.act as act -> medicationDispense.note as note then AnnotationComment(act, note) "annotation";
   } "entryRelationShip-2.16.756.5.30.1.1.10.4.2";  
 
   src.entryRelationship as entry where (typeCode='COMP' and act.templateId.where(root='1.3.6.1.4.1.19376.1.9.1.3.9.2').exists()) then {
@@ -437,13 +437,13 @@ group ManufacturedMaterialEntryContentModuleRequest(source src : SubstanceAdmini
     consumable.manufacturedProduct as manufacturedProduct then {
       manufacturedProduct.manufacturedMaterial as manufacturedMaterial then {
 
-        manufacturedMaterial.name as name where asContent.exists()=false -> medication.code as fhircode, fhircode.text = (%manufacturedMaterial.name.other) "medication.code";
+        manufacturedMaterial.name as name where asContent.exists()=false -> medication.code as fhircode, fhircode.text = (%manufacturedMaterial.name.item.xmlText) "medication.code";
 
         manufacturedMaterial.asContent as asContent then {
           asContent.containerPackagedMedicine as containerPackagedMedicine then {
-            containerPackagedMedicine.code as code -> medication.code as fhircode share medcode then CECodeableConcept(code, fhircode) "medication.code";
-            containerPackagedMedicine.name as name -> medication.code as fhircode share medcode then { 
-              name -> fhircode.text = (%name.other)  "medication.code.text";
+            containerPackagedMedicine.code as code -> medication.code as fhircode then CECodeableConcept(code, fhircode) "medication.code";
+            containerPackagedMedicine.name as name -> medication.code as fhircode then { 
+              name -> fhircode.text = (%name.item.xmlText)  "medication.code.text";
             } "code.text";
             containerPackagedMedicine.formCode as formCode -> medication.form as form then CECodeableConcept(formCode, form)  "medication.formCode";
             
@@ -462,7 +462,7 @@ group ManufacturedMaterialEntryContentModuleRequest(source src : SubstanceAdmini
         manufacturedMaterial.ingredient as ingredient -> medication.ingredient as ing then {
           ingredient.quantity as quantity -> ing.strength = create('Ratio') as strength then EmedRTOPQPQRatio(quantity, strength) "strength";
           ingredient.ingredient as medingredient then {
-              medingredient.code as code -> ing.item = create('CodeableConcept') as ingcode, ingcode.text = (%medingredient.name.other) then CECodeableConcept(code, ingcode) "ingredientCode";
+              medingredient.code as code -> ing.item = create('CodeableConcept') as ingcode, ingcode.text = (%medingredient.name.item.xmlText) then CECodeableConcept(code, ingcode) "ingredientCode";
           } "ingredient.ingredient";
         } "ingredient";
       } "manufacturedMaterial";
@@ -481,7 +481,7 @@ group ManufacturedMaterialEntryContentModuleRequest(source src : SubstanceAdmini
 group PrescriptionItemEntryContentModule(source section : Section, source src : SubstanceAdministration, source patient : Patient, target medicationRequest : MedicationRequest) {
   
   src.id -> medicationRequest.identifier;
-  patient -> medicationRequest.subject = create('Reference') as reference, reference.reference = ('urn:uuid:'+%patient.id)  "patient";
+  patient -> medicationRequest.subject = create('Reference') as reference, reference.reference = ('urn:uuid:'+%patient.id)  "uuidpatient";
   src -> medicationRequest.status = 'completed' "completed";
   src -> medicationRequest.intent = 'order' "order";
   src.text as text then {
@@ -541,7 +541,7 @@ group DosageInstructionsStartStopFrequency(source src : SubstanceAdministration,
 // target: http://build.fhir.org/ig/hl7ch/ch-emed/StructureDefinition-ch-emed-observation.html
 group PharmaceuticalAdviceItemEntryContentModule(source section : Section, source src : Observation, source patient : Patient, target observation : Observation, target bundle: Bundle) {
   src.id -> observation.identifier;
-  patient -> observation.subject = create('Reference') as reference, reference.reference = ('urn:uuid:'+%patient.id) "patient";
+  patient -> observation.subject = create('Reference') as reference, reference.reference = ('urn:uuid:'+%patient.id) "uuidpatient";
   src -> observation.status = 'final' "final";
 
   src.effectiveTime as effectiveTime -> observation.effective = create('dateTime') as value then TSDateTime(effectiveTime, value) "value";
@@ -562,7 +562,7 @@ group PharmaceuticalAdviceItemEntryContentModule(source section : Section, sourc
       } "cdaEntry";
 
   src.text as text -> observation.note as note then {
-    text.data as data -> note.text = data "level3observation";
+    text.xmlText as data -> note.text = data "level3observation";
     text where (data.exists()=false) -> note.text = (%section.text.substring(%section.text.indexOf(%src.text.reference.value.substring(1))).substring(%section.text.substring(%section.text.indexOf(%src.text.reference.value.substring(1))).indexOf('>')+1, %section.text.substring(%section.text.indexOf(%src.text.reference.value.substring(1))).indexOf('<')-%section.text.substring(%section.text.indexOf(%src.text.reference.value.substring(1))).indexOf('>')-1)) "idRef";
     text.reference as reference then {
       reference.value as value -> note.extension as ext then NarrativeLink(value, ext) "narrativeLink";

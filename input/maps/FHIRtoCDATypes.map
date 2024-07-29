@@ -48,8 +48,33 @@ conceptmap "addressUse" {
 }
 
 
-uses "http://hl7.org/fhir/StructureDefinition/Identifier" as source
-uses "http://hl7.org/fhir/cda/StructureDefinition/II" as target
+uses "http://hl7.org/fhir/StructureDefinition/Identifier" alias Identifier as source
+uses "http://hl7.org/fhir/StructureDefinition/instant" alias instant as source
+uses "http://hl7.org/fhir/StructureDefinition/integer" alias integer as source
+uses "http://hl7.org/fhir/StructureDefinition/dateTime" alias dateTime as source
+uses "http://hl7.org/fhir/StructureDefinition/code" alias code as source
+uses "http://hl7.org/fhir/StructureDefinition/CodeableConcept" alias CodeableConcept as source
+uses "http://hl7.org/fhir/StructureDefinition/string" alias string as source
+uses "http://hl7.org/fhir/StructureDefinition/HumanName" alias HumanName as source
+uses "http://hl7.org/fhir/StructureDefinition/Address" alias Address as source
+uses "http://hl7.org/fhir/StructureDefinition/ContactPoint" alias ContactPoint as source
+uses "http://hl7.org/fhir/StructureDefinition/boolean" alias boolean as source
+uses "http://hl7.org/fhir/StructureDefinition/Period" alias Period as source
+
+uses "http://hl7.org/cda/stds/core/StructureDefinition/II" alias II as target
+uses "http://hl7.org/cda/stds/core/StructureDefinition/INT" alias INT as target
+uses "http://hl7.org/cda/stds/core/StructureDefinition/ED" alias ED as target
+uses "http://hl7.org/cda/stds/core/StructureDefinition/PN" alias PN as target
+uses "http://hl7.org/cda/stds/core/StructureDefinition/II" alias II as target
+uses "http://hl7.org/cda/stds/core/StructureDefinition/TS" alias TS as target
+uses "http://hl7.org/cda/stds/core/StructureDefinition/CS" alias CS as target
+uses "http://hl7.org/cda/stds/core/StructureDefinition/CE" alias CE as target
+uses "http://hl7.org/cda/stds/core/StructureDefinition/ST" alias ST as target
+uses "http://hl7.org/cda/stds/core/StructureDefinition/EN" alias EN as target
+uses "http://hl7.org/cda/stds/core/StructureDefinition/AD" alias AD as target
+uses "http://hl7.org/cda/stds/core/StructureDefinition/TEL" alias TEL as target
+uses "http://hl7.org/cda/stds/core/StructureDefinition/BL" alias BL as target
+uses "http://hl7.org/cda/stds/core/StructureDefinition/IVL-TS" alias IVL_TS as target
 
 
 group Any(source src, target tgt) {

@@ -15,18 +15,18 @@ conceptmap "cm-v3-administrative-gender" {
   s:F == t:female
 }
 
-uses "http://hl7.org/fhir/cda/StructureDefinition/ClinicalDocument" alias ClinicalDocument as source
-uses "http://hl7.org/fhir/cda/StructureDefinition/AssignedAuthor" alias AssignedAuthor as queried
-uses "http://hl7.org/fhir/cda/StructureDefinition/AssignedEntity" alias AssignedEntity as queried
-uses "http://hl7.org/fhir/cda/StructureDefinition/CustodianOrganization" alias CustodianOrganization as queried
-uses "http://hl7.org/fhir/cda/StructureDefinition/Section" alias Section as queried
-uses "http://hl7.org/fhir/cda/StructureDefinition/PatientRole" alias PatientRole as queried
+uses "http://hl7.org/cda/stds/core/StructureDefinition/ClinicalDocument" alias ClinicalDocument as source
+uses "http://hl7.org/cda/stds/core/StructureDefinition/AssignedAuthor" alias AssignedAuthor as source
+uses "http://hl7.org/cda/stds/core/StructureDefinition/AssignedEntity" alias AssignedEntity as source
+uses "http://hl7.org/cda/stds/core/StructureDefinition/CustodianOrganization" alias CustodianOrganization as source
+uses "http://hl7.org/cda/stds/core/StructureDefinition/Section" alias Section as source
+uses "http://hl7.org/cda/stds/core/StructureDefinition/PatientRole" alias PatientRole as source
 uses "http://hl7.org/fhir/StructureDefinition/Bundle" alias Bundle as target
-uses "http://hl7.org/fhir/StructureDefinition/Composition" alias Composition as produced
-uses "http://hl7.org/fhir/StructureDefinition/Patient" alias Patient as produced
-uses "http://hl7.org/fhir/StructureDefinition/Person" alias Patient as produced
-uses "http://hl7.org/fhir/StructureDefinition/Practitioner" alias Practitioner as produced
-uses "http://hl7.org/fhir/StructureDefinition/Organization" alias Organization as produced
+uses "http://hl7.org/fhir/StructureDefinition/Composition" alias Composition as target
+uses "http://hl7.org/fhir/StructureDefinition/Patient" alias Patient as target
+uses "http://hl7.org/fhir/StructureDefinition/Person" alias Person as target
+uses "http://hl7.org/fhir/StructureDefinition/Practitioner" alias Practitioner as target
+uses "http://hl7.org/fhir/StructureDefinition/Organization" alias Organization as target
 
 imports "http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaToFhirTypes"
 
@@ -66,7 +66,7 @@ group ClinicalDocumentToBundle(source cda : ClinicalDocument, target patient : P
 
 group ClinicalDocumentSection(source cda : ClinicalDocument, source src : Section, source patient : Patient, target tgt, target bundle: Bundle) {
   src.id as id where ($this.root=%cda.id.root)=false -> tgt.extension as ext then ChExtEprSectionId(id, ext) "sectionId";
-  src.title as t -> tgt.title = (t.dataString);
+  src.title as t -> tgt.title = (t.xmlText);
   src.code -> tgt.code;
   src.text as cdaText -> tgt.text as fhirText then {
     cdaText -> fhirText.status = 'generated' "narrativeStatus";
@@ -86,7 +86,7 @@ group ClinicalDocumentComposition(source src : ClinicalDocument, target tgt : Co
   src.setId -> tgt.identifier "identifier";
   src -> tgt.status = 'final' "status";
   src.code -> tgt.type;
-  src.title as t -> tgt.title = (t.dataString);
+  src.title as t -> tgt.title = (t.xmlText);
   src.recordTarget as recordTarget then {
     recordTarget.patientRole as patient -> tgt.subject = create('Reference') as reference, reference.reference = ('urn:uuid:'+%patientResource.id) then ClinicalDocumentPatientRole(patient, patientResource, bundle) "subject";
   } "patientRole";
@@ -202,7 +202,7 @@ group ClinicalDocumentPatientRole(source src : PatientRole, target tgt : Patient
     patient.languageCommunication as language -> tgt.communication as communication then {
       language.languageCode -> communication.language "communication"; // preference: for language.preferenceInd make communication.preferred
     } "language";
-  } "patient";
+  } "patientrole";
   src.providerOrganization as org ->  bundle.entry as e,  
     e.resource = create('Organization') as organization,  
     organization.id = uuid() as uuid3,
