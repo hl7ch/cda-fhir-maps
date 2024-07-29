@@ -73,7 +73,7 @@ group SectionCdaSection(source bundle : Bundle, source section: BackboneElement,
 
 group CompositionClinicalDocument(source bundle : Bundle, source composition : Composition, target recordTarget: RecordTarget, target author: Author, target cda : ClinicalDocument) {
   composition.type as type then {
-    type.coding as coding where $this.system='http://loinc.org' -> cda.code as code share docCode then CodingCE(coding,code) "code";
+    type.coding as coding where $this.system='http://loinc.org' -> cda.code as code then CodingCE(coding,code) "code";
   } "type";  
   composition.title as title -> cda.title as t then {
     title -> t.xmlText = title "titleInner";
@@ -85,9 +85,9 @@ group CompositionClinicalDocument(source bundle : Bundle, source composition : C
   composition.language as language -> cda.languageCode as languageCode, languageCode.code = language  "languageCode";
   bundle.entry as entry then {
     entry.fullUrl where ($this in %composition.subject.reference) and $this.startsWith('urn:uuid') then {
-      entry.resource: Patient as patient then PatientRecordTarget(patient, bundle, recordTarget) "patient";
+      entry.resource: Patient as patient then PatientRecordTarget(patient, bundle, recordTarget) "entrypatient";
     } "uuid";
-    entry.resource as patient where ('Patient'+'/'+$this.id) in %composition.subject.reference then PatientRecordTarget(patient, bundle, recordTarget) "patient";
+    entry.resource as patient where ('Patient'+'/'+$this.id) in %composition.subject.reference then PatientRecordTarget(patient, bundle, recordTarget) "entrypatient";
     
     entry.fullUrl where ($this in %composition.custodian.reference) and $this.startsWith('urn:uuid') then {
       entry.resource: Organization as organization -> cda.custodian as custodian then OrganizationCustodian(organization, custodian) "custodian";
@@ -131,7 +131,7 @@ group PatientRecordTarget(source src : Patient, source bundle: Bundle, target tg
         v as v where $this = 'female' -> adminGender.displayName = 'Female' "female";
         v as v where $this = 'other' -> adminGender.displayName = 'Undifferentiated' "other";
       } "gender";
-    } "patient";
+    } "patientrecordtarget";
     src.telecom as telecom -> patientRole.telecom as tel then ContactPointTEL(telecom, tel);
     src.managingOrganization as managingOrganization then {
       bundle.entry as entry then {
@@ -167,7 +167,7 @@ group PractitionerAuthor(source bundle : Bundle, source composition : Compositio
           entry.resource: Organization as organization -> assignedAuthor.representedOrganization as cdaorganization then Organization2CdaOrganization(organization, cdaorganization) "organization";
         } "uuid";
         entry.resource as organization where ('Organization'+'/'+$this.id) in %composition.author.reference -> assignedAuthor.representedOrganization as cdaorganization then Organization2CdaOrganization(organization, cdaorganization) "organization";
-      } "patient";
+      } "enry";
   } "assignedAuthor";
 } 
 

@@ -44,7 +44,7 @@ group CdaChEmedMedicationCardDocumentToBundle(source cda : ClinicalDocument, tar
              composition.id = uuid() as uuid,
              e.fullUrl = append('urn:uuid:',uuid),
              bundle.entry as e2, 
-             e2.resource = create('Patient') as patient,patient share patient,
+             e2.resource = create('Patient') as patient,
              patient.id = uuid() as uuid2,
              e2.fullUrl = append('urn:uuid:',uuid2)
              then ClinicalDocumentChEmedMedicationCardDocumentToBundle(cda, patient, composition, bundle) "ClinicalDocumentToBody";

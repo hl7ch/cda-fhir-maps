@@ -66,7 +66,7 @@ group ClinicalDocumentToBundle(source cda : ClinicalDocument, target patient : P
 
 group ClinicalDocumentSection(source cda : ClinicalDocument, source src : Section, source patient : Patient, target tgt, target bundle: Bundle) {
   src.id as id where ($this.root=%cda.id.root)=false -> tgt.extension as ext then ChExtEprSectionId(id, ext) "sectionId";
-  src.title as t -> tgt.title = (t.dataString);
+  src.title as t -> tgt.title = (t.xmlText);
   src.code -> tgt.code;
   src.text as cdaText -> tgt.text as fhirText then {
     cdaText -> fhirText.status = 'generated' "narrativeStatus";
@@ -86,7 +86,7 @@ group ClinicalDocumentComposition(source src : ClinicalDocument, target tgt : Co
   src.setId -> tgt.identifier "identifier";
   src -> tgt.status = 'final' "status";
   src.code -> tgt.type;
-  src.title as t -> tgt.title = (t.dataString);
+  src.title as t -> tgt.title = (t.xmlText);
   src.recordTarget as recordTarget then {
     recordTarget.patientRole as patient -> tgt.subject = create('Reference') as reference, reference.reference = ('urn:uuid:'+%patientResource.id) then ClinicalDocumentPatientRole(patient, patientResource, bundle) "subject";
   } "patientRole";
@@ -202,7 +202,7 @@ group ClinicalDocumentPatientRole(source src : PatientRole, target tgt : Patient
     patient.languageCommunication as language -> tgt.communication as communication then {
       language.languageCode -> communication.language "communication"; // preference: for language.preferenceInd make communication.preferred
     } "language";
-  } "patient";
+  } "patientrole";
   src.providerOrganization as org ->  bundle.entry as e,  
     e.resource = create('Organization') as organization,  
     organization.id = uuid() as uuid3,

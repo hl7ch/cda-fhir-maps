@@ -102,10 +102,10 @@ group SectionCdaOriginalRepresentation(source bundle : Bundle, source section: S
   } "defaulttitles";
   bundle.entry as entry then {
     entry.fullUrl where ($this in %section.entry.reference) and $this.startsWith('urn:uuid')  then {
-        entry.resource as binary then SectionCdaOriginalRepresentationObservationMedia(binary, section, cdasection) "patient";
+        entry.resource as binary then SectionCdaOriginalRepresentationObservationMedia(binary, section, cdasection) "binary";
     } "fullUrlAsUuid";
-    entry.resource as binary where ('Binary'+'/'+$this.id) in %section.entry.reference then SectionCdaOriginalRepresentationObservationMedia(binary, section, cdasection) "patient";
-  } "patient";
+    entry.resource as binary where ('Binary'+'/'+$this.id) in %section.entry.reference then SectionCdaOriginalRepresentationObservationMedia(binary, section, cdasection) "binary";
+  } "enty";
 }
 
 // _________________________ Entry Level Templates   ________________________ 
@@ -189,18 +189,18 @@ group CompositionClinicalDocumentCH(source bundle : Bundle, source composition :
     extension.valueReference as valueReference then {
         bundle.entry as entry then {
           entry.fullUrl where ($this in %valueReference.reference) and $this.startsWith('urn:uuid')  then {
-            entry.resource: Patient as patient -> informationRecipient.intendedRecipient as intendedRecipient share intendedRecipient then {
+            entry.resource: Patient as patient -> informationRecipient.intendedRecipient as intendedRecipient  then {
               patient.address as address ->  intendedRecipient.addr as addr then AddressAD(address, addr) "address";
               patient.name as humanname -> intendedRecipient.informationRecipient as informationRecipient2, informationRecipient2.name as en then HumanNameEN(humanname, en) "name";        
             } "fullUrlPatient";
-            entry.resource: Organization as organization -> informationRecipient.intendedRecipient as intendedRecipient share intendedRecipient,
+            entry.resource: Organization as organization -> informationRecipient.intendedRecipient as intendedRecipient,
              intendedRecipient.receivedOrganization as receivedOrganization then Organization2CdaOrganization(organization, receivedOrganization) "organization";	
           } "uuid";
-         entry.resource:Patient as patient where (($this.id=%valueReference.reference.substring(8)) or ($this.id=%valueReference.reference.substring(9))) -> informationRecipient.intendedRecipient as intendedRecipient share intendedRecipient  then {
+         entry.resource:Patient as patient where (($this.id=%valueReference.reference.substring(8)) or ($this.id=%valueReference.reference.substring(9))) -> informationRecipient.intendedRecipient as intendedRecipient then {
             patient.address as address ->  intendedRecipient.addr as addr then AddressAD(address, addr) "address";
             patient.name as humanname -> intendedRecipient.informationRecipient as informationRecipient2, informationRecipient2.name as en then HumanNameEN(humanname, en) "name";
          } "intendedRecipient";
-         entry.resource:Organization as organization where (($this.id=%valueReference.reference.substring(13)) or ($this.id=%valueReference.reference.substring(9))) -> informationRecipient.intendedRecipient as intendedRecipient share intendedRecipient,
+         entry.resource:Organization as organization where (($this.id=%valueReference.reference.substring(13)) or ($this.id=%valueReference.reference.substring(9))) -> informationRecipient.intendedRecipient as intendedRecipient,
              intendedRecipient.receivedOrganization as receivedOrganization then Organization2CdaOrganization(organization, receivedOrganization) "organization";	
         } "entry";
       } "valueReference";
